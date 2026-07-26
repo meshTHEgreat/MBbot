@@ -1,6 +1,6 @@
-// This is the only public setting for the private GitHub Actions control page.
-// Authentication stays on GitHub; never add a browser token here.
+// Public control-plane location only. The access-key digest and GitHub token
+// belong in the private dispatch gateway and must never be added here.
 window.MBbotSiteConfig = Object.freeze({
-  backtestWorkflowUrl:
-    "https://github.com/meshTHEgreat/mbbot-backtest-control/actions/workflows/run-local-backtest.yml",
+  backtestDispatchUrl:
+    "https://mbbot-backtest-dispatch.alhazmimeshari.workers.dev",
 });

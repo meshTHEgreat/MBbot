@@ -191,38 +191,407 @@
   }
 
   function initializeBacktestControl() {
-    const runLink = document.getElementById("run-backtest-link");
-    const runsLink = document.getElementById("view-backtest-runs");
+    const form = document.getElementById("backtest-form");
+    const submit = document.getElementById("run-backtest-button");
     const status = document.getElementById("backtest-control-status");
-    if (!runLink || !runsLink) return;
-    const configured = window.MBbotSiteConfig?.backtestWorkflowUrl;
-    let workflowUrl;
-    try {
-      workflowUrl = new URL(configured);
-      if (
-        workflowUrl.protocol !== "https:" ||
-        workflowUrl.hostname !== "github.com" ||
-        !workflowUrl.pathname.includes("/actions/workflows/")
-      ) {
-        throw new Error("Unsupported workflow URL");
-      }
-    } catch {
-      status.textContent =
-        "Backtest control is not configured. Ask the repository owner to set the private workflow URL.";
+    const stateLabel = document.getElementById("runner-state-title");
+    const state = document.querySelector(".runner-state");
+    const runTitle = document.getElementById("backtest-run-title");
+    const error = document.getElementById("backtest-control-error");
+    const resultActions = document.getElementById("backtest-result-actions");
+    const resultLink = document.getElementById("backtest-result-link");
+    const profile = form?.elements.namedItem("dataset_profile");
+    const symbolInputs = [
+      ...(form?.querySelectorAll('input[name="symbol"]') || []),
+    ];
+    const symbolsError = document.getElementById("symbols-error");
+    const model = window.MBbotBacktestControlModel;
+    if (
+      !form ||
+      !submit ||
+      !status ||
+      !stateLabel ||
+      !state ||
+      !runTitle ||
+      !error ||
+      !resultActions ||
+      !resultLink ||
+      !profile ||
+      !model
+    ) {
       return;
     }
-    const actionsUrl = new URL(workflowUrl);
-    actionsUrl.pathname =
-      `${workflowUrl.pathname.split("/actions/workflows/")[0]}/actions`;
-    actionsUrl.search = "";
-    actionsUrl.hash = "";
-    [
-      [runLink, workflowUrl.href],
-      [runsLink, actionsUrl.href],
-    ].forEach(([link, href]) => {
-      link.href = href;
-      link.removeAttribute("aria-disabled");
+
+    const configured = window.MBbotSiteConfig?.backtestDispatchUrl;
+    let gatewayUrl = null;
+    try {
+      const parsed = new URL(configured);
+      const loopback =
+        parsed.protocol === "http:" &&
+        ["127.0.0.1", "localhost", "[::1]"].includes(parsed.hostname);
+      if (
+        (parsed.protocol !== "https:" && !loopback) ||
+        !parsed.hostname ||
+        parsed.username ||
+        parsed.password ||
+        parsed.search ||
+        parsed.hash
+      ) {
+        throw new Error("Unsupported dispatch gateway URL");
+      }
+      gatewayUrl = parsed.href.replace(/\/+$/, "");
+    } catch {
+      submit.disabled = true;
+    }
+
+    function setRunnerState(nextState, title, message, heading) {
+      state.dataset.state = nextState;
+      stateLabel.textContent = title;
+      status.textContent = message;
+      if (heading) runTitle.textContent = heading;
+    }
+
+    function clearError() {
+      error.hidden = true;
+      error.textContent = "";
+      symbolsError.textContent = "";
+      form
+        .querySelectorAll('[aria-invalid="true"]')
+        .forEach((control) => control.removeAttribute("aria-invalid"));
+    }
+
+    function showError(message, fieldName = null) {
+      error.textContent = message;
+      error.hidden = false;
+      error.focus();
+      setRunnerState(
+        "error",
+        "Request needs attention",
+        "Nothing was queued. Your settings are preserved below.",
+        "Correct the highlighted setting and try again.",
+      );
+      if (fieldName === "symbols") {
+        symbolsError.textContent = message;
+        symbolInputs[0]?.focus();
+        return;
+      }
+      const field = form.elements.namedItem(fieldName);
+      if (field instanceof HTMLElement) {
+        field.setAttribute("aria-invalid", "true");
+        field.focus();
+      }
+    }
+
+    const selectionsByProfile = new Map([
+      [
+        "databento-opra-2026-06",
+        new Set(symbolInputs.filter((input) => input.checked).map((input) => input.value)),
+      ],
+      ["thetadata-spy-2025-08-19", new Set(["SPY"])],
+    ]);
+    let previousProfile = profile.value;
+
+    function applyProfileSymbols() {
+      selectionsByProfile.set(
+        previousProfile,
+        new Set(
+          symbolInputs
+            .filter((input) => input.checked && !input.disabled)
+            .map((input) => input.value),
+        ),
+      );
+      const available = new Set(model.PROFILE_SYMBOLS[profile.value] || []);
+      const remembered =
+        selectionsByProfile.get(profile.value) || new Set(available);
+      symbolInputs.forEach((input) => {
+        const supported = available.has(input.value);
+        input.disabled = !supported;
+        input.closest("label")?.classList.toggle("is-disabled", !supported);
+        input.checked = supported && remembered.has(input.value);
+      });
+      if (!symbolInputs.some((input) => input.checked && !input.disabled)) {
+        const firstAvailable = symbolInputs.find((input) => !input.disabled);
+        if (firstAvailable) firstAvailable.checked = true;
+      }
+      previousProfile = profile.value;
+      clearError();
+    }
+
+    function readValues() {
+      const value = (name) => {
+        const field = form.elements.namedItem(name);
+        return field instanceof HTMLInputElement ||
+          field instanceof HTMLSelectElement
+          ? field.value
+          : "";
+      };
+      const checked = (name) => {
+        const field = form.elements.namedItem(name);
+        return field instanceof HTMLInputElement && field.checked;
+      };
+      return {
+        dataset_profile: value("dataset_profile"),
+        experiment_label: value("experiment_label").trim(),
+        symbols: symbolInputs
+          .filter((input) => input.checked && !input.disabled)
+          .map((input) => input.value),
+        macd_fast_period: value("macd_fast_period"),
+        macd_slow_period: value("macd_slow_period"),
+        macd_signal_period: value("macd_signal_period"),
+        macd_ema_seed_method: value("macd_ema_seed_method"),
+        zero_line_filter_enabled: checked("zero_line_filter_enabled"),
+        rsi_enabled: checked("rsi_enabled"),
+        max_premium_enabled: checked("max_premium_enabled"),
+        max_spread_enabled: checked("max_spread_enabled"),
+        entry_window_enabled: checked("entry_window_enabled"),
+        profit_target_enabled: checked("profit_target_enabled"),
+        opposite_macd_enabled: checked("opposite_macd_enabled"),
+        time_exit_enabled: checked("time_exit_enabled"),
+        rsi_period: value("rsi_period"),
+        rsi_minimum: value("rsi_minimum"),
+        rsi_maximum: value("rsi_maximum"),
+        max_premium: value("max_premium"),
+        max_spread_percent: value("max_spread_percent"),
+        spread_denominator: value("spread_denominator"),
+        allow_zero_dte: checked("allow_zero_dte"),
+        scan_next_strike_if_nearest_fails: checked(
+          "scan_next_strike_if_nearest_fails",
+        ),
+        fallback_to_next_expiration: checked(
+          "fallback_to_next_expiration",
+        ),
+        profit_target_percent: value("profit_target_percent"),
+        commission_per_contract: value("commission_per_contract"),
+        contracts_per_trade: value("contracts_per_trade"),
+        entry_delay_minutes: value("entry_delay_minutes"),
+        entry_cutoff_minutes: value("entry_cutoff_minutes"),
+        force_exit_time_riyadh: value("force_exit_time_riyadh"),
+        validate_only: checked("validate_only"),
+      };
+    }
+
+    function accessKey() {
+      const field = form.elements.namedItem("runner_access_key");
+      return field instanceof HTMLInputElement ? field.value : "";
+    }
+
+    async function gatewayRequest(path, key, options = {}) {
+      const response = await fetch(`${gatewayUrl}${path}`, {
+        ...options,
+        headers: {
+          authorization: `Bearer ${key}`,
+          ...(options.body ? { "content-type": "application/json" } : {}),
+        },
+        cache: "no-store",
+      });
+      let payload = {};
+      try {
+        payload = await response.json();
+      } catch {
+        payload = {};
+      }
+      if (!response.ok) {
+        throw new Error(
+          payload.message ||
+            `The dispatch gateway returned HTTP ${response.status}.`,
+        );
+      }
+      return payload;
+    }
+
+    const wait = (milliseconds) =>
+      new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+
+    async function waitForPublishedReport(reportPath) {
+      if (!/^reports\/github-\d+-\d+\.html$/.test(reportPath || "")) {
+        throw new Error("The runner returned an invalid report path.");
+      }
+      setRunnerState(
+        "publishing",
+        "Publishing verified report",
+        "The replay passed verification. Waiting for GitHub Pages to publish it.",
+        "The calculation is complete; the archive is updating.",
+      );
+      for (let attempt = 0; attempt < 60; attempt += 1) {
+        try {
+          const separator = reportPath.includes("?") ? "&" : "?";
+          const response = await fetch(
+            `${reportPath}${separator}published=${Date.now()}`,
+            { cache: "no-store" },
+          );
+          if (response.ok) {
+            resultLink.href = reportPath;
+            resultActions.hidden = false;
+            const keyField = form.elements.namedItem("runner_access_key");
+            if (keyField instanceof HTMLInputElement) keyField.value = "";
+            setRunnerState(
+              "success",
+              "Report published",
+              "The verified run is now available in the archive and comparison view.",
+              "Your experiment is ready to inspect.",
+            );
+            return;
+          }
+        } catch {
+          // A Pages deployment can temporarily be unavailable while publishing.
+        }
+        await wait(10_000);
+      }
+      throw new Error(
+        "The backtest completed, but the report is still waiting for GitHub Pages. Refresh the archive shortly.",
+      );
+    }
+
+    async function followRun(runId, key) {
+      for (let attempt = 0; attempt < 1080; attempt += 1) {
+        const payload = await gatewayRequest(
+          `/api/backtests/${encodeURIComponent(runId)}`,
+          key,
+        );
+        if (payload.status === "queued") {
+          setRunnerState(
+            "queued",
+            "Waiting for local runner",
+            "GitHub accepted the request. It will remain queued safely if the PC is offline.",
+            `Backtest #${payload.run_number || runId} is queued.`,
+          );
+        } else if (payload.status === "in_progress") {
+          setRunnerState(
+            "running",
+            "Offline replay running",
+            "The local PC is validating data, replaying trades, and verifying the saved result.",
+            `Backtest #${payload.run_number || runId} is running.`,
+          );
+        } else if (payload.status === "completed") {
+          if (payload.conclusion !== "success") {
+            throw new Error(
+              `The backtest finished with status ${payload.conclusion || "unknown"}. No report was published.`,
+            );
+          }
+          if (payload.validation_only) {
+            if (keyField instanceof HTMLInputElement) keyField.value = "";
+            setRunnerState(
+              "success",
+              "Validation complete",
+              "The local PC verified the configuration, offline guard, and selected dataset. No backtest was run and no report was published.",
+              `Validation #${payload.run_number || runId} completed successfully.`,
+            );
+            return;
+          }
+          if (!payload.report_path) {
+            throw new Error(
+              "The backtest succeeded but did not return a report path.",
+            );
+          }
+          await waitForPublishedReport(payload.report_path);
+          return;
+        }
+        await wait(payload.status === "queued" ? 15_000 : 10_000);
+      }
+      throw new Error(
+        "The run exceeded the three-hour monitoring window. It may still be visible after refreshing the archive.",
+      );
+    }
+
+    profile.addEventListener("change", applyProfileSymbols);
+    form
+      .querySelectorAll("[data-controls]")
+      .forEach((toggle) => {
+        const applyRuleState = () => {
+          String(toggle.dataset.controls || "")
+            .split(",")
+            .map((name) => name.trim())
+            .filter(Boolean)
+            .forEach((name) => {
+              const controlled = form.elements.namedItem(name);
+              if (!(controlled instanceof HTMLElement)) return;
+              controlled.toggleAttribute("disabled", !toggle.checked);
+              controlled
+                .closest(".control-field")
+                ?.classList.toggle("is-rule-disabled", !toggle.checked);
+            });
+        };
+        toggle.addEventListener("change", applyRuleState);
+        applyRuleState();
+      });
+    symbolInputs.forEach((input) => {
+      input.addEventListener("change", () => {
+        symbolsError.textContent = "";
+      });
     });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      clearError();
+      resultActions.hidden = true;
+      if (!gatewayUrl) {
+        showError(
+          "Direct submission is not configured yet. The private gateway URL must be deployed first.",
+        );
+        return;
+      }
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const key = accessKey();
+      if (!key) {
+        showError("Enter the runner access key.", "runner_access_key");
+        return;
+      }
+      let inputs;
+      try {
+        inputs = model.buildInputs(readValues());
+      } catch (reason) {
+        showError(reason.message, reason.field);
+        return;
+      }
+
+      submit.disabled = true;
+      form.setAttribute("aria-busy", "true");
+      setRunnerState(
+        "authorizing",
+        "Authorizing request",
+        "Checking the access key and validating the experiment on the private gateway.",
+        "Submitting without leaving this page.",
+      );
+      try {
+        const payload = await gatewayRequest("/api/backtests", key, {
+          method: "POST",
+          body: JSON.stringify({ inputs }),
+        });
+        if (!payload.run_id) {
+          setRunnerState(
+            "queued",
+            "Request accepted",
+            "The workflow was queued. Refresh the archive after the local runner finishes.",
+            "The request is safely queued.",
+          );
+          return;
+        }
+        await followRun(payload.run_id, key);
+      } catch (reason) {
+        showError(
+          reason instanceof Error
+            ? reason.message
+            : "The request could not be completed.",
+        );
+      } finally {
+        submit.disabled = false;
+        form.removeAttribute("aria-busy");
+      }
+    });
+
+    applyProfileSymbols();
+    if (gatewayUrl) {
+      setRunnerState(
+        "ready",
+        "Direct submission ready",
+        "Choose settings, enter the shared runner key, and queue the offline replay.",
+        "The page stays here during the run.",
+      );
+      submit.disabled = false;
+    }
   }
 
   function findSetting(report, suffix) {
@@ -1453,6 +1822,21 @@
         list,
         "Dataset identifier",
         automation.dataset_identifier,
+      );
+      appendDefinition(list, "Data access", automation.data_access_mode);
+      appendDefinition(
+        list,
+        "Provider API access",
+        automation.provider_api_access === false
+          ? "disabled"
+          : automation.provider_api_access,
+      );
+      appendDefinition(
+        list,
+        "Project Python network",
+        automation.project_python_network_access === false
+          ? "blocked"
+          : automation.project_python_network_access,
       );
       appendDefinition(list, "Python", automation.python_version);
       appendDefinition(

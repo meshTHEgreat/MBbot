@@ -7,6 +7,7 @@
   <title>MBbot Research Desk</title>
   <link rel="stylesheet" href="assets/styles.css">
   <script src="assets/site-config.js" defer></script>
+  <script src="assets/backtest-control-model.js" defer></script>
   <script src="assets/site.js" defer></script>
 </head>
 <body data-page="home">
@@ -57,38 +58,305 @@
 
     <section class="backtest-control" id="backtest-control"
              aria-labelledby="backtest-control-title">
-      <div class="control-copy">
-        <p class="section-label">Connected execution</p>
-        <h2 id="backtest-control-title">Backtest Control</h2>
-        <p>
-          Start a trusted replay on the connected local PC, then return here
-          when the new report has been published to the archive.
-        </p>
-        <div class="control-actions">
-          <a class="primary-action" id="run-backtest-link" href="#"
-             target="_blank" rel="noreferrer" aria-disabled="true"
-             aria-describedby="runner-requirements">
-            Run Backtest
-          </a>
-          <a class="secondary-action" id="view-backtest-runs" href="#"
-             target="_blank" rel="noreferrer" aria-disabled="true">
-            View Backtest Runs
-          </a>
+      <header class="control-heading">
+        <div>
+          <p class="section-label">Direct offline execution</p>
+          <h2 id="backtest-control-title">Build the experiment here.</h2>
         </div>
-      </div>
-      <div class="runner-card" id="runner-requirements">
-        <span class="runner-state">
-          <span class="runner-state-dot" aria-hidden="true"></span>
-          Local runner required
-        </span>
-        <strong>The PC and its self-hosted runner must be online.</strong>
         <p>
-          If either is offline, GitHub safely leaves the job queued until the
-          dedicated runner reconnects.
+          Choose one symbol or a basket, change the strategy, and queue the
+          replay without leaving this page. The request can use only an
+          allowlisted dataset already stored on the local PC.
         </p>
-        <small id="backtest-control-status" aria-live="polite">
-          Opening GitHub Actions keeps authentication and parameters private.
-        </small>
+      </header>
+
+      <div class="control-workbench">
+        <form class="backtest-form" id="backtest-form" novalidate>
+          <div class="control-field-grid control-field-grid--intro">
+            <label class="control-field">
+              <span>Experiment label</span>
+              <input name="experiment_label" type="text"
+                     value="Baseline replay" maxlength="80"
+                     pattern="[A-Za-z0-9][A-Za-z0-9 _.,()/+\-]{0,79}"
+                     required autocomplete="off">
+              <small>Used in the archive and comparison view.</small>
+            </label>
+            <label class="control-field">
+              <span>Local dataset</span>
+              <select name="dataset_profile" required>
+                <option value="databento-opra-2026-06" selected>
+                  Databento OPRA · June 2026 · five symbols
+                </option>
+                <option value="thetadata-spy-2025-08-19">
+                  ThetaData official sample · SPY · 19 Aug 2025
+                </option>
+              </select>
+              <small>No provider request can be made from this control.</small>
+            </label>
+          </div>
+
+          <fieldset class="control-fieldset symbol-fieldset">
+            <legend>Universe</legend>
+            <p class="fieldset-help">
+              Select any available combination. At least one symbol is required.
+            </p>
+            <div class="symbol-picker" id="backtest-symbol-picker">
+              <label><input type="checkbox" name="symbol" value="QQQ" checked><span>QQQ</span></label>
+              <label><input type="checkbox" name="symbol" value="SPY" checked><span>SPY</span></label>
+              <label><input type="checkbox" name="symbol" value="TSLA" checked><span>TSLA</span></label>
+              <label><input type="checkbox" name="symbol" value="AAPL" checked><span>AAPL</span></label>
+              <label><input type="checkbox" name="symbol" value="NVDA" checked><span>NVDA</span></label>
+            </div>
+            <small class="field-error" id="symbols-error"></small>
+          </fieldset>
+
+          <fieldset class="control-fieldset">
+            <legend>Entry signal · option-contract MACD</legend>
+            <p class="fieldset-help">
+              The crossover is calculated from completed five-minute candles
+              of the selected option contract.
+            </p>
+            <div class="control-field-grid control-field-grid--four">
+              <label class="control-field">
+                <span>Fast EMA</span>
+                <input name="macd_fast_period" type="number" value="12"
+                       min="1" max="1000" step="1" required inputmode="numeric">
+              </label>
+              <label class="control-field">
+                <span>Slow EMA</span>
+                <input name="macd_slow_period" type="number" value="26"
+                       min="2" max="1000" step="1" required inputmode="numeric">
+              </label>
+              <label class="control-field">
+                <span>Signal EMA</span>
+                <input name="macd_signal_period" type="number" value="9"
+                       min="1" max="1000" step="1" required inputmode="numeric">
+              </label>
+              <label class="control-field">
+                <span>EMA seed</span>
+                <select name="macd_ema_seed_method" required>
+                  <option value="sma" selected>SMA warm-up</option>
+                  <option value="first">First close</option>
+                </select>
+              </label>
+            </div>
+            <label class="control-check">
+              <input name="zero_line_filter_enabled" type="checkbox">
+              <span>
+                <strong>Apply zero-line filter</strong>
+                <small>Off for the confirmed baseline.</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <details class="control-disclosure">
+            <summary>
+              <span>RSI filter</span>
+              <small>Built in · disabled by default</small>
+            </summary>
+            <fieldset class="control-fieldset">
+              <legend class="visually-hidden">RSI filter settings</legend>
+              <label class="control-check">
+                <input name="rsi_enabled" type="checkbox">
+                <span>
+                  <strong>Enable RSI filter</strong>
+                  <small>Uses Wilder RSI on the same option-contract candles.</small>
+                </span>
+              </label>
+              <div class="control-field-grid control-field-grid--three">
+                <label class="control-field">
+                  <span>Period</span>
+                  <input name="rsi_period" type="number" value="14"
+                         min="1" max="1000" step="1" required>
+                </label>
+                <label class="control-field">
+                  <span>Minimum</span>
+                  <input name="rsi_minimum" type="number" value="0"
+                         min="0" max="100" step="0.1" required>
+                </label>
+                <label class="control-field">
+                  <span>Maximum</span>
+                  <input name="rsi_maximum" type="number" value="100"
+                         min="0" max="100" step="0.1" required>
+                </label>
+              </div>
+            </fieldset>
+          </details>
+
+          <details class="control-disclosure" open>
+            <summary>
+              <span>Contract selection</span>
+              <small>Premium, spread, expiry, and strike fallback</small>
+            </summary>
+            <fieldset class="control-fieldset">
+              <legend class="visually-hidden">Contract selection settings</legend>
+              <div class="control-field-grid control-field-grid--three">
+                <label class="control-field" data-rule-field="max_premium_enabled">
+                  <span>Maximum ask</span>
+                  <span class="input-affix"><span>$</span><input name="max_premium"
+                        type="number" value="4" min="0.01" max="100"
+                        step="0.01" required></span>
+                </label>
+                <label class="control-field" data-rule-field="max_spread_enabled">
+                  <span>Maximum spread</span>
+                  <span class="input-affix"><input name="max_spread_percent"
+                        type="number" value="50" min="0.01" max="200"
+                        step="0.01" required><span>%</span></span>
+                </label>
+                <label class="control-field">
+                  <span>Spread denominator</span>
+                  <select name="spread_denominator" required>
+                    <option value="midpoint" selected>Midpoint</option>
+                    <option value="ask">Ask</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-check-grid">
+                <label class="control-check">
+                  <input name="max_premium_enabled" type="checkbox"
+                         data-controls="max_premium" checked>
+                  <span><strong>Premium cap enabled</strong><small>Uncheck to ignore the price cap.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="max_spread_enabled" type="checkbox"
+                         data-controls="max_spread_percent" checked>
+                  <span><strong>Spread cap enabled</strong><small>Uncheck to ignore the spread cap.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="allow_zero_dte" type="checkbox" checked>
+                  <span><strong>Allow 0DTE</strong><small>Same-day expiry is eligible.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="scan_next_strike_if_nearest_fails"
+                         type="checkbox" checked>
+                  <span><strong>Scan next strike</strong><small>Continue after a failed nearest strike.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="fallback_to_next_expiration"
+                         type="checkbox" checked>
+                  <span><strong>Next expiry fallback</strong><small>Continue if nearest expiry has no match.</small></span>
+                </label>
+              </div>
+            </fieldset>
+          </details>
+
+          <details class="control-disclosure">
+            <summary>
+              <span>Schedule, exit, and sizing</span>
+              <small>Riyadh time is explicit</small>
+            </summary>
+            <fieldset class="control-fieldset">
+              <legend class="visually-hidden">Schedule, exit, and sizing settings</legend>
+              <div class="control-field-grid control-field-grid--three">
+                <label class="control-field" data-rule-field="entry_window_enabled">
+                  <span>Entry delay after open</span>
+                  <span class="input-affix"><input name="entry_delay_minutes"
+                        type="number" value="15" min="0" max="240"
+                        step="1" required><span>min</span></span>
+                </label>
+                <label class="control-field" data-rule-field="entry_window_enabled">
+                  <span>Stop entries before close</span>
+                  <span class="input-affix"><input name="entry_cutoff_minutes"
+                        type="number" value="60" min="0" max="240"
+                        step="1" required><span>min</span></span>
+                </label>
+                <label class="control-field" data-rule-field="time_exit_enabled">
+                  <span>Forced exit · Asia/Riyadh</span>
+                  <input name="force_exit_time_riyadh" type="time"
+                         value="22:20" required>
+                </label>
+                <label class="control-field" data-rule-field="profit_target_enabled">
+                  <span>Profit target</span>
+                  <span class="input-affix"><input name="profit_target_percent"
+                        type="number" value="20" min="0.1" max="500"
+                        step="0.1" required><span>%</span></span>
+                </label>
+                <label class="control-field">
+                  <span>Contracts per trade</span>
+                  <input name="contracts_per_trade" type="number" value="1"
+                         min="1" max="100" step="1" required>
+                </label>
+                <label class="control-field">
+                  <span>Commission per contract</span>
+                  <span class="input-affix"><span>$</span><input
+                        name="commission_per_contract" type="number" value="0"
+                        min="0" max="100" step="0.01" required></span>
+                </label>
+              </div>
+              <div class="control-check-grid">
+                <label class="control-check">
+                  <input name="entry_window_enabled" type="checkbox"
+                         data-controls="entry_delay_minutes,entry_cutoff_minutes"
+                         checked>
+                  <span><strong>Entry window enabled</strong><small>Use the delay and pre-close cutoff.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="profit_target_enabled" type="checkbox"
+                         data-controls="profit_target_percent" checked>
+                  <span><strong>Profit target enabled</strong><small>Exit when the configured return is reached.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="opposite_macd_enabled" type="checkbox" checked>
+                  <span><strong>Reverse MACD exit enabled</strong><small>Exit on the first opposite crossover.</small></span>
+                </label>
+                <label class="control-check">
+                  <input name="time_exit_enabled" type="checkbox"
+                         data-controls="force_exit_time_riyadh" checked>
+                  <span><strong>Timed exit enabled</strong><small>Use the explicit Asia/Riyadh time.</small></span>
+                </label>
+              </div>
+            </fieldset>
+          </details>
+
+          <div class="control-submit-panel">
+            <label class="control-field control-access-key">
+              <span>Runner access key</span>
+              <input name="runner_access_key" type="password" required
+                     maxlength="256" autocomplete="off"
+                     aria-describedby="runner-access-help">
+              <small id="runner-access-help">
+                Shared only with trusted testers; never saved by this page.
+              </small>
+            </label>
+            <label class="control-check control-check--compact">
+              <input name="validate_only" type="checkbox">
+              <span><strong>Validate only</strong><small>Do not run or publish.</small></span>
+            </label>
+            <button class="primary-action control-submit" id="run-backtest-button"
+                    type="submit">
+              Queue offline backtest
+            </button>
+          </div>
+          <div class="control-error" id="backtest-control-error"
+               role="alert" tabindex="-1" hidden></div>
+        </form>
+
+        <aside class="runner-card" id="runner-requirements"
+               aria-labelledby="runner-state-title">
+          <span class="runner-state" data-state="setup">
+            <span class="runner-state-dot" aria-hidden="true"></span>
+            <span id="runner-state-title">Gateway setup pending</span>
+          </span>
+          <strong id="backtest-run-title">The page stays here during the run.</strong>
+          <p id="backtest-control-status" aria-live="polite">
+            Direct submission will activate after the private dispatch gateway
+            URL is configured.
+          </p>
+          <ol class="execution-route" aria-label="Backtest execution route">
+            <li><span>1</span><div><strong>Validate request</strong><small>Browser and gateway check every field.</small></div></li>
+            <li><span>2</span><div><strong>Queue trusted workflow</strong><small>No GitHub credential enters the browser.</small></div></li>
+            <li><span>3</span><div><strong>Replay on local PC</strong><small>Market data remains offline and API access is blocked.</small></div></li>
+            <li><span>4</span><div><strong>Publish the receipt</strong><small>The verified result joins this archive and comparison view.</small></div></li>
+          </ol>
+          <div class="control-result-actions" id="backtest-result-actions" hidden>
+            <a class="primary-action" id="backtest-result-link" href="#">
+              Open completed report
+            </a>
+            <a class="secondary-action" href="compare.html">
+              Compare experiments
+            </a>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -245,9 +513,9 @@
 
   <footer class="site-footer">
     <p>Research backtests only. Not financial advice. Past or simulated performance does not predict future results.</p>
-    <p>Site generated <time datetime="2026-07-26T17:32:25.473221Z">2026-07-26T17:32:25.473221Z</time>.</p>
+    <p>Site generated <time datetime="2026-07-26T21:12:01.572987Z">2026-07-26T21:12:01.572987Z</time>.</p>
   </footer>
 
-  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T17:32:25.473221Z","reports":[]}</script>
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T21:12:01.572987Z","reports":[]}</script>
 </body>
 </html>
