@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare MBbot backtest experiments and strategy settings.">
+  <title>Compare experiments · MBbot Research Desk</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/report-model.js" defer></script>
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="compare">
+  <a class="skip-link" href="#main-content">Skip to comparison</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Backtest intelligence</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="index.html">Archive</a>
+      <a href="compare.html" aria-current="page">Compare</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html">Research desk</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Compare</span>
+    </nav>
+    <header class="compare-hero">
+      <p class="kicker">Controlled comparison</p>
+      <h1>Find the difference.<br><em>Question the reason.</em></h1>
+      <p>
+        Metrics and changed settings are aligned side by side. Dataset warnings
+        remain visible because unlike inputs can make a precise comparison invalid.
+      </p>
+    </header>
+
+    <section class="comparison-picker" aria-labelledby="picker-title">
+      <div>
+        <p class="section-label">Selection</p>
+        <h2 id="picker-title">Choose 2–4 experiments</h2>
+        <p>Selection order sets the reference run. You can change it below.</p>
+      </div>
+      <div class="comparison-picker-panel">
+        <label class="comparison-search">
+          <span>Find an experiment</span>
+          <input id="comparison-search" type="search" autocomplete="off"
+                 placeholder="Title, tag, status, or setting…">
+        </label>
+        <div id="comparison-options" class="comparison-options"></div>
+        <output id="comparison-status" aria-live="polite"></output>
+      </div>
+    </section>
+
+    <section class="compare-warning" id="compare-warning" aria-labelledby="warning-title">
+      <p class="section-label">Interpretation guardrail</p>
+      <h2 id="warning-title">Association is not attribution</h2>
+      <p>
+        A changed setting can coincide with a changed result without causing it.
+        Check date range, symbols, data coverage, fill model, commission, and sample
+        size before forming a hypothesis.
+      </p>
+    </section>
+
+    <section class="comparison-results" id="comparison-results" aria-labelledby="results-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">Outcome</p>
+          <h2 id="results-title">Metric comparison</h2>
+        </div>
+        <p id="compatibility-note">Select at least two reports.</p>
+      </div>
+      <div class="comparison-run-key" id="comparison-run-key"
+           aria-label="Selected experiment key"></div>
+      <div class="comparison-compatibility" id="comparison-compatibility"
+           aria-label="Dataset and replay compatibility checks"></div>
+      <div class="mobile-comparison-list" id="metric-cards"
+           aria-label="Metric comparison"></div>
+      <div class="table-scroll desktop-comparison-ledger" tabindex="0"
+           aria-label="Scrollable metric comparison">
+        <table class="comparison-table">
+          <thead><tr id="metrics-head"><th scope="col">Metric</th></tr></thead>
+          <tbody id="metrics-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="comparison-results" aria-labelledby="differences-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">Inputs</p>
+          <h2 id="differences-title">Settings that differ</h2>
+        </div>
+        <p>Identical settings are intentionally omitted to reduce noise.</p>
+      </div>
+      <div class="mobile-comparison-list" id="settings-cards"
+           aria-label="Settings that differ"></div>
+      <div class="table-scroll desktop-comparison-ledger" tabindex="0"
+           aria-label="Scrollable settings comparison">
+        <table class="comparison-table settings-comparison">
+          <thead><tr id="settings-head"><th scope="col">Setting</th></tr></thead>
+          <tbody id="settings-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="settings-empty" hidden>
+        <span class="empty-glyph" aria-hidden="true">=</span>
+        <h3>No recorded settings differ</h3>
+        <p>The runs may share a configuration or lack complete snapshots.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Research backtests only. Not financial advice. Verify results independently before any financial decision.</p>
+    <p><a href="index.html">Return to the experiment archive</a></p>
+  </footer>
+
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T16:02:29.023625Z","reports":[]}</script>
+</body>
+</html>

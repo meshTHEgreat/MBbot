@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive MBbot backtest archive and experiment reports.">
+  <title>MBbot Research Desk</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/site.js" defer></script>
+</head>
+<body data-page="home">
+  <a class="skip-link" href="#main-content">Skip to reports</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Backtest intelligence</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="#archive" aria-current="page">Archive</a>
+      <a href="compare.html">Compare</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="kicker">Experiment ledger / <span id="report-count">0 runs</span></p>
+        <h1 id="hero-title">Read the result.<br><em>Trace the decision.</em></h1>
+        <p class="lede">
+          Every run keeps its settings, data conditions, trades, and next question
+          together—so a better number never loses the reason behind it.
+        </p>
+        <div class="hero-actions">
+          <a class="primary-action" id="latest-report-link" href="#archive">Open latest report</a>
+          <a class="secondary-action" href="#archive">Browse the ledger</a>
+        </div>
+      </div>
+      <section class="latest-tape" id="latest-tape" aria-label="Latest report summary">
+        <div class="empty-inline">
+          <span class="preview-status">Research desk ready</span>
+          <strong>Waiting for the first experiment.</strong>
+          <span>
+            The latest result, confidence notes, settings, and validation trail
+            will surface here automatically.
+          </span>
+        </div>
+      </section>
+    </section>
+
+    <section class="capability-section" id="capabilities" aria-labelledby="capability-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">Built for investigation</p>
+          <h2 id="capability-title">From result to evidence</h2>
+        </div>
+        <p>
+          Follow every experiment from headline performance to the exact inputs
+          and executions that produced it.
+        </p>
+      </div>
+      <div class="capability-grid">
+        <article class="capability-card capability-card-featured">
+          <span class="capability-index" aria-hidden="true">01</span>
+          <div>
+            <h3>Validate every trade</h3>
+            <p>
+              Inspect entry and exit time, fill price, market context, trigger
+              values, and source rows against your chart.
+            </p>
+          </div>
+          <div class="feature-proof" aria-hidden="true">
+            <span>ENTRY · 09:42:15</span>
+            <strong>43,218.50</strong>
+            <small>RSI 31.8 · MACD cross · spread 0.02%</small>
+          </div>
+        </article>
+        <article class="capability-card">
+          <span class="capability-index" aria-hidden="true">02</span>
+          <div>
+            <h3>Compare controlled changes</h3>
+            <p>
+              Align up to four runs, choose the reference, and see metric and
+              setting deltas without losing dataset compatibility warnings.
+            </p>
+          </div>
+        </article>
+        <article class="capability-card">
+          <span class="capability-index" aria-hidden="true">03</span>
+          <div>
+            <h3>Reproduce the result</h3>
+            <p>
+              Keep the complete configuration, data fingerprint, assumptions,
+              quality notes, and run provenance beside each outcome.
+            </p>
+          </div>
+        </article>
+        <article class="capability-card">
+          <span class="capability-index" aria-hidden="true">04</span>
+          <div>
+            <h3>Review anywhere</h3>
+            <p>
+              Move from a mobile summary to a full desktop ledger with the same
+              evidence, comparison controls, and shareable report links.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="desk-summary" aria-labelledby="desk-summary-title">
+      <div>
+        <p class="section-label">Research desk</p>
+        <h2 id="desk-summary-title">What the archive says now</h2>
+      </div>
+      <div class="summary-metrics" id="portfolio-summary">
+        <p class="empty-inline">Waiting for report data.</p>
+      </div>
+    </section>
+
+    <section class="archive-section" id="archive" aria-labelledby="archive-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">Backtest archive</p>
+          <h2 id="archive-title">Experiments, ordered your way</h2>
+        </div>
+        <p>
+          Select 2–4 compatible runs to compare. A comparison shows association,
+          not proof that one setting caused the outcome.
+        </p>
+      </div>
+
+      <form class="archive-controls" id="archive-controls" role="search">
+        <label class="search-field">
+          <span>Search reports</span>
+          <input id="report-search" type="search" autocomplete="off"
+                 placeholder="Title, tag, symbol, setting…">
+        </label>
+        <label>
+          <span>Status</span>
+          <select id="status-filter">
+            <option value="all">All statuses</option>
+            <option value="verified">Verified</option>
+            <option value="research">Research</option>
+            <option value="unverified">Unverified</option>
+            <option value="demo">Demo</option>
+          </select>
+        </label>
+        <label>
+          <span>Order</span>
+          <select id="report-order">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="pnl-desc">Highest net P&amp;L</option>
+            <option value="drawdown-asc">Lowest drawdown</option>
+            <option value="trades-desc">Most trades</option>
+          </select>
+        </label>
+        <button class="quiet-button clear-filters" type="reset">Clear filters</button>
+      </form>
+
+      <div class="table-status">
+        <output id="archive-status" aria-live="polite">Loading reports…</output>
+        <span>Times shown in your local timezone · select up to four</span>
+      </div>
+      <div class="mobile-archive-list" id="archive-cards" aria-label="Report archive"></div>
+      <div class="table-scroll desktop-archive-ledger" tabindex="0" aria-label="Scrollable report archive">
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th scope="col"><span class="sr-only">Select for comparison</span></th>
+              <th scope="col">Run</th>
+              <th scope="col">Created</th>
+              <th scope="col">Status</th>
+              <th scope="col">Trades</th>
+              <th scope="col">Win rate</th>
+              <th scope="col">Net P&amp;L</th>
+              <th scope="col">Drawdown</th>
+            </tr>
+          </thead>
+          <tbody id="archive-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="archive-empty" hidden>
+        <span class="empty-glyph" aria-hidden="true">∅</span>
+        <h3 id="archive-empty-title">No reports match this view</h3>
+        <p id="archive-empty-copy">Clear the filters or add another result.</p>
+        <button class="secondary-action clear-filters" type="button">Clear filters</button>
+      </div>
+    </section>
+  </main>
+
+  <aside class="compare-tray" id="compare-tray" aria-labelledby="compare-tray-title" hidden>
+    <div>
+      <strong id="compare-tray-title">Compare experiments</strong>
+      <span id="compare-selection-count">0 of 4 selected</span>
+    </div>
+    <div class="compare-selection" id="compare-selection"></div>
+    <a class="primary-action" id="compare-link" href="compare.html" aria-disabled="true">Compare selected</a>
+  </aside>
+
+  <footer class="site-footer">
+    <p>Research backtests only. Not financial advice. Past or simulated performance does not predict future results.</p>
+    <p>Site generated <time datetime="2026-07-26T16:02:29.023625Z">2026-07-26T16:02:29.023625Z</time>.</p>
+  </footer>
+
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T16:02:29.023625Z","reports":[]}</script>
+</body>
+</html>
