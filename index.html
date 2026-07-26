@@ -6,6 +6,7 @@
   <meta name="description" content="Interactive MBbot backtest archive and experiment reports.">
   <title>MBbot Research Desk</title>
   <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/site-config.js" defer></script>
   <script src="assets/site.js" defer></script>
 </head>
 <body data-page="home">
@@ -19,6 +20,7 @@
       </span>
     </a>
     <nav aria-label="Primary">
+      <a href="#backtest-control">Run</a>
       <a href="#archive" aria-current="page">Archive</a>
       <a href="compare.html">Compare</a>
       <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
@@ -51,6 +53,43 @@
           </span>
         </div>
       </section>
+    </section>
+
+    <section class="backtest-control" id="backtest-control"
+             aria-labelledby="backtest-control-title">
+      <div class="control-copy">
+        <p class="section-label">Connected execution</p>
+        <h2 id="backtest-control-title">Backtest Control</h2>
+        <p>
+          Start a trusted replay on the connected local PC, then return here
+          when the new report has been published to the archive.
+        </p>
+        <div class="control-actions">
+          <a class="primary-action" id="run-backtest-link" href="#"
+             target="_blank" rel="noreferrer" aria-disabled="true"
+             aria-describedby="runner-requirements">
+            Run Backtest
+          </a>
+          <a class="secondary-action" id="view-backtest-runs" href="#"
+             target="_blank" rel="noreferrer" aria-disabled="true">
+            View Backtest Runs
+          </a>
+        </div>
+      </div>
+      <div class="runner-card" id="runner-requirements">
+        <span class="runner-state">
+          <span class="runner-state-dot" aria-hidden="true"></span>
+          Local runner required
+        </span>
+        <strong>The PC and its self-hosted runner must be online.</strong>
+        <p>
+          If either is offline, GitHub safely leaves the job queued until the
+          dedicated runner reconnects.
+        </p>
+        <small id="backtest-control-status" aria-live="polite">
+          Opening GitHub Actions keeps authentication and parameters private.
+        </small>
+      </div>
     </section>
 
     <section class="capability-section" id="capabilities" aria-labelledby="capability-title">
@@ -206,9 +245,9 @@
 
   <footer class="site-footer">
     <p>Research backtests only. Not financial advice. Past or simulated performance does not predict future results.</p>
-    <p>Site generated <time datetime="2026-07-26T16:02:29.023625Z">2026-07-26T16:02:29.023625Z</time>.</p>
+    <p>Site generated <time datetime="2026-07-26T17:32:25.473221Z">2026-07-26T17:32:25.473221Z</time>.</p>
   </footer>
 
-  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T16:02:29.023625Z","reports":[]}</script>
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T17:32:25.473221Z","reports":[]}</script>
 </body>
 </html>

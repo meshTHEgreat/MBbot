@@ -190,6 +190,41 @@
       .join(" ");
   }
 
+  function initializeBacktestControl() {
+    const runLink = document.getElementById("run-backtest-link");
+    const runsLink = document.getElementById("view-backtest-runs");
+    const status = document.getElementById("backtest-control-status");
+    if (!runLink || !runsLink) return;
+    const configured = window.MBbotSiteConfig?.backtestWorkflowUrl;
+    let workflowUrl;
+    try {
+      workflowUrl = new URL(configured);
+      if (
+        workflowUrl.protocol !== "https:" ||
+        workflowUrl.hostname !== "github.com" ||
+        !workflowUrl.pathname.includes("/actions/workflows/")
+      ) {
+        throw new Error("Unsupported workflow URL");
+      }
+    } catch {
+      status.textContent =
+        "Backtest control is not configured. Ask the repository owner to set the private workflow URL.";
+      return;
+    }
+    const actionsUrl = new URL(workflowUrl);
+    actionsUrl.pathname =
+      `${workflowUrl.pathname.split("/actions/workflows/")[0]}/actions`;
+    actionsUrl.search = "";
+    actionsUrl.hash = "";
+    [
+      [runLink, workflowUrl.href],
+      [runsLink, actionsUrl.href],
+    ].forEach(([link, href]) => {
+      link.href = href;
+      link.removeAttribute("aria-disabled");
+    });
+  }
+
   function findSetting(report, suffix) {
     const item = (report.strategy?.settings_flat || []).find(
       (candidate) =>
@@ -359,6 +394,7 @@
         report.status,
         ...(report.tags || []),
         JSON.stringify(report.dataset || {}),
+        JSON.stringify(report.automation || {}),
         settingsText(report),
       ]
         .join(" ")
@@ -444,6 +480,14 @@
             className: "run-subtitle",
             text: (report.tags || []).join(" · ") || report.id,
           }),
+          ...(report.automation?.workflow_run_number
+            ? [
+                element("p", {
+                  className: "run-automation",
+                  text: `Workflow #${report.automation.workflow_run_number} / ${report.automation.actor || "unknown actor"}`,
+                }),
+              ]
+            : []),
           element("dl", { className: "archive-card-metrics" }, [
             element("div", {}, [
               element("dt", { text: "Trades" }),
@@ -482,6 +526,14 @@
             text: (report.tags || []).join(" · ") || report.id,
           }),
         ]);
+        if (report.automation?.workflow_run_number) {
+          titleCell.append(
+            element("span", {
+              className: "run-automation",
+              text: `Workflow #${report.automation.workflow_run_number} / ${report.automation.actor || "unknown actor"}`,
+            }),
+          );
+        }
         const pnl = element("td", {
           className: valueClass(report.metrics.net_pnl),
           text: formatMoney(report.metrics.net_pnl),
@@ -1346,6 +1398,17 @@
     list.append(dd);
   }
 
+  function safeGitHubUrl(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && url.hostname === "github.com"
+        ? url.href
+        : null;
+    } catch {
+      return null;
+    }
+  }
+
   function renderProvenance(report) {
     const list = document.getElementById("provenance-list");
     const dataset = report.dataset || {};
@@ -1356,6 +1419,65 @@
     appendDefinition(list, "Configuration", provenance.config_name);
     appendDefinition(list, "Configuration SHA-256", provenance.config_sha256);
     appendDefinition(list, "Strategy fingerprint", report.strategy?.fingerprint);
+    const automation = report.automation || {};
+    if (Object.keys(automation).length) {
+      appendDefinition(list, "Execution status", automation.status);
+      appendDefinition(
+        list,
+        "Workflow run",
+        automation.workflow_run_number
+          ? `#${automation.workflow_run_number} / ID ${automation.workflow_run_id}`
+          : automation.workflow_run_id,
+        safeGitHubUrl(automation.run_url),
+      );
+      appendDefinition(list, "Requested by", automation.actor);
+      appendDefinition(
+        list,
+        "Requested (UTC)",
+        formatPreciseDate(automation.requested_at_utc),
+      );
+      appendDefinition(
+        list,
+        "Requested (project time)",
+        automation.requested_at_project_time,
+      );
+      appendDefinition(list, "Source branch", automation.source_branch);
+      appendDefinition(list, "Source commit", automation.source_commit_sha);
+      appendDefinition(
+        list,
+        "Backtest script SHA-256",
+        automation.backtest_script_sha256,
+      );
+      appendDefinition(list, "Dataset profile", automation.dataset_profile);
+      appendDefinition(
+        list,
+        "Dataset identifier",
+        automation.dataset_identifier,
+      );
+      appendDefinition(list, "Python", automation.python_version);
+      appendDefinition(
+        list,
+        "Application",
+        automation.application_version,
+      );
+      appendDefinition(
+        list,
+        "Started",
+        formatPreciseDate(automation.started_at_utc),
+      );
+      appendDefinition(
+        list,
+        "Ended",
+        formatPreciseDate(automation.ended_at_utc),
+      );
+      appendDefinition(
+        list,
+        "Duration",
+        automation.duration_seconds === undefined
+          ? null
+          : `${formatNumber(automation.duration_seconds)} seconds`,
+      );
+    }
     appendDefinition(
       list,
       "Dataset window",
@@ -2043,6 +2165,7 @@
   }
 
   initializeTheme();
+  initializeBacktestControl();
   if (page === "home") renderHome();
   if (page === "report") renderReport();
   if (page === "compare") renderComparison();

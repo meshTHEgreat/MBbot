@@ -461,6 +461,87 @@ td:not(:first-child),
   text-transform: uppercase;
 }
 
+.backtest-control {
+  position: relative;
+  display: grid;
+  width: var(--page);
+  margin: 0 auto;
+  padding: clamp(32px, 6vw, 64px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 86% 18%, var(--accent-soft), transparent 34%),
+    linear-gradient(135deg, var(--surface), var(--surface-soft));
+  box-shadow: var(--shadow);
+  gap: 30px;
+  overflow: hidden;
+}
+
+.backtest-control::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--accent);
+  content: "";
+}
+
+.control-copy h2 {
+  margin-bottom: 16px;
+  font-size: clamp(2rem, 5vw, 4rem);
+  letter-spacing: -0.045em;
+}
+
+.control-copy > p:not(.section-label) {
+  max-width: 680px;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+}
+
+.control-actions {
+  display: flex;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.runner-card {
+  display: grid;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--canvas-raised) 88%, transparent);
+  align-content: center;
+  gap: 10px;
+}
+
+.runner-card p,
+.runner-card small {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.runner-state {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 8px;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.runner-state-dot {
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
 .desk-summary,
 .archive-section,
 .capability-section,
@@ -756,6 +837,14 @@ tbody tr:hover {
 .archive-card h3 {
   margin-bottom: 4px;
   font-size: 1.22rem;
+}
+
+.run-automation {
+  display: block;
+  margin: 7px 0 0;
+  color: var(--text-faint);
+  font-family: var(--font-data);
+  font-size: 0.68rem;
 }
 
 .archive-card .run-subtitle {
@@ -2653,6 +2742,11 @@ h1 {
 
   .capability-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .backtest-control {
+    grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+    align-items: stretch;
   }
 
   .capability-card {
