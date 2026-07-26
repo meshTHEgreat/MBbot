@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+        content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
+  <title>Learn the backtest · MBbot Research Desk</title>
+  <link rel="stylesheet" href="assets/styles.css?v=9a48f94e47a1">
+  <script src="assets/site.js?v=9a48f94e47a1" defer></script>
+  <script src="assets/learn.js?v=9a48f94e47a1" defer></script>
+</head>
+<body data-page="learn">
+  <a class="skip-link" href="#main-content">
+    <span data-lang-content="en">Skip to the guide</span>
+    <span data-lang-content="ar" lang="ar" hidden>الانتقال إلى الدليل</span>
+  </a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Backtest intelligence</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="index.html#backtest-control">Run</a>
+      <a href="index.html#archive">Archive</a>
+      <a href="compare.html">Compare</a>
+      <a href="learn.html" aria-current="page">Learn</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content" class="learn-page">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="index.html">
+        <span data-lang-content="en">Research desk</span>
+        <span data-lang-content="ar" lang="ar" hidden>منصة الأبحاث</span>
+      </a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">
+        <span data-lang-content="en">Learn</span>
+        <span data-lang-content="ar" lang="ar" hidden>الدليل</span>
+      </span>
+    </nav>
+
+    <header class="learn-hero" aria-labelledby="learn-title">
+      <div class="learn-hero-copy">
+        <p class="kicker">
+          <span data-lang-content="en">MBbot research guide</span>
+          <span data-lang-content="ar" lang="ar" hidden>الدليل البحثي لاستراتيجية MBbot</span>
+        </p>
+        <h1 id="learn-title">
+          <span data-lang-content="en">Know the hypothesis.<br><em>Then change it.</em></span>
+          <span data-lang-content="ar" lang="ar" hidden>
+            افهم الفرضية أولاً.<br><em>ثم اختبر تعديلها.</em>
+          </span>
+        </h1>
+        <p class="lede" data-lang-content="en">
+          This guide explains the experimental options backtest, what every
+          control changes, what remains fixed, and how a result is produced
+          from offline market data.
+        </p>
+        <p class="lede" data-lang-content="ar" lang="ar" hidden>
+          يشرح هذا الدليل الاختبار التاريخي التجريبي لعقود الخيارات، وأثر كل
+          متغير قابل للتعديل، والعناصر الثابتة، وآلية إنتاج النتيجة بالاعتماد
+          على بيانات سوق محفوظة محلياً.
+        </p>
+        <div class="learn-hero-actions">
+          <a class="primary-action" href="index.html#backtest-control">
+            <span data-lang-content="en">Open the backtest controls</span>
+            <span data-lang-content="ar" lang="ar" hidden>فتح إعدادات الاختبار</span>
+          </a>
+          <a class="secondary-action" href="#strategy-map">
+            <span data-lang-content="en">Trace the strategy</span>
+            <span data-lang-content="ar" lang="ar" hidden>استعراض مسار الاستراتيجية</span>
+          </a>
+        </div>
+      </div>
+
+      <aside class="language-console" aria-labelledby="language-title">
+        <p class="section-label" id="language-title">
+          <span data-lang-content="en">Guide language</span>
+          <span data-lang-content="ar" lang="ar" hidden>لغة الدليل</span>
+        </p>
+        <div class="language-switch" id="learn-language-switch"
+             role="group" aria-label="Guide language">
+          <button type="button" data-language="en" aria-pressed="true">English</button>
+          <button type="button" data-language="ar" aria-pressed="false" lang="ar">العربية المالية</button>
+        </div>
+        <p data-lang-content="en">
+          Arabic mode changes this page only. The backtest controls and report
+          portal remain in English.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          يقتصر التحويل إلى العربية على صفحة الدليل هذه، بينما تبقى إعدادات
+          الاختبار وبقية منصة التقارير باللغة الإنجليزية.
+        </p>
+        <output id="learn-language-status" class="visually-hidden"
+                aria-live="polite"></output>
+      </aside>
+    </header>
+
+    <section class="research-boundary" aria-label="Research boundaries">
+      <article>
+        <span>01</span>
+        <strong data-lang-content="en">Offline market data only</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>بيانات سوق محلية فقط</strong>
+        <small data-lang-content="en">The page cannot request a provider download.</small>
+        <small data-lang-content="ar" lang="ar" hidden>لا تستطيع الصفحة طلب تنزيل من مزود بيانات.</small>
+      </article>
+      <article>
+        <span>02</span>
+        <strong data-lang-content="en">No brokerage orders</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>لا توجد أوامر وساطة</strong>
+        <small data-lang-content="en">This is research software, not execution software.</small>
+        <small data-lang-content="ar" lang="ar" hidden>هذه أداة بحثية وليست نظاماً لتنفيذ الصفقات.</small>
+      </article>
+      <article>
+        <span>03</span>
+        <strong data-lang-content="en">Five-minute contract candles</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>شموع العقد لفاصل خمس دقائق</strong>
+        <small data-lang-content="en">Signals use completed option-contract trade-close bars.</small>
+        <small data-lang-content="ar" lang="ar" hidden>تُحتسب الإشارة من إغلاق شمعة مكتملة للعقد.</small>
+      </article>
+      <article>
+        <span>04</span>
+        <strong data-lang-content="en">Ask in · bid out</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>دخول بسعر الطلب وخروج بسعر العرض</strong>
+        <small data-lang-content="en">The replay includes the executable spread cost.</small>
+        <small data-lang-content="ar" lang="ar" hidden>تتضمن المحاكاة أثر الفارق السعري القابل للتنفيذ.</small>
+      </article>
+    </section>
+
+    <section class="learn-section strategy-map" id="strategy-map"
+             aria-labelledby="strategy-map-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">The experimental strategy</span>
+            <span data-lang-content="ar" lang="ar" hidden>الاستراتيجية التجريبية</span>
+          </p>
+          <h2 id="strategy-map-title">
+            <span data-lang-content="en">From dataset to verified receipt</span>
+            <span data-lang-content="ar" lang="ar" hidden>من مجموعة البيانات إلى إيصال تحقق موثّق</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          Each stage must pass in chronological order. A missing bar, stale
+          underlying point, invalid quote, or failed filter means no entry.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          يجب اجتياز كل مرحلة وفق ترتيبها الزمني. ويؤدي غياب شمعة، أو تقادم
+          سعر الأصل، أو عدم صلاحية التسعير، أو فشل أحد المرشحات إلى عدم الدخول.
+        </p>
+      </header>
+
+      <ol class="strategy-rail">
+        <li>
+          <span class="strategy-number">01</span>
+          <div>
+            <h3 data-lang-content="en">Choose an available dataset and universe</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>اختيار مجموعة بيانات متاحة ونطاق الرموز</h3>
+            <p data-lang-content="en">
+              The selected local profile defines its dates and supported
+              symbols. The browser cannot alter a filesystem path or request
+              additional dates.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يحدد الملف المحلي المختار التواريخ والرموز المتاحة، ولا يمكن
+              للمتصفح تعديل مسار الملفات أو طلب تواريخ إضافية.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="strategy-number">02</span>
+          <div>
+            <h3 data-lang-content="en">Find the nearest eligible call and put</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>تحديد أقرب عقد شراء وعقد بيع مؤهلين</h3>
+            <p data-lang-content="en">
+              The replay starts with the nearest permitted expiration. Calls
+              use the nearest strike at or below spot; puts use the nearest
+              strike at or above spot. Price and spread caps are strict
+              “less-than” filters.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              تبدأ المحاكاة بأقرب تاريخ انتهاء مسموح. ويُختار لعقد الشراء أقرب
+              سعر تنفيذ يساوي سعر الأصل أو يقل عنه، ولعقد البيع أقرب سعر تنفيذ
+              يساويه أو يزيد عليه. ويُطبَّق حدّا السعر والفارق بصيغة «أقل من»
+              بصورة صارمة.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="strategy-number">03</span>
+          <div>
+            <h3 data-lang-content="en">Wait for a bullish MACD crossover</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>انتظار تقاطع إيجابي لمؤشر MACD</h3>
+            <p data-lang-content="en">
+              On the selected option contract’s own completed five-minute
+              chart, the previous MACD must be at or below its signal line and
+              the current MACD must be above it. A bearish crossover is not an
+              entry in this experimental test.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              على الرسم الخاص بعقد الخيار نفسه ولفاصل خمس دقائق مكتمل، يجب أن
+              تكون قيمة MACD السابقة مساوية لخط الإشارة أو أدنى منه، ثم تصبح
+              القيمة الحالية أعلى من خط الإشارة. ولا يُعد التقاطع السلبي إشارة
+              دخول في هذا الاختبار التجريبي.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="strategy-number">04</span>
+          <div>
+            <h3 data-lang-content="en">Enter at the first qualifying ask</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الدخول بأول سعر طلب مؤهل</h3>
+            <p data-lang-content="en">
+              The quote must occur at or after the completed signal bar and no
+              more than 15 seconds later. If call and put both signal on the
+              same bar, both entries are rejected.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يجب أن يَرِد التسعير عند اكتمال شمعة الإشارة أو بعده، وبفاصل لا
+              يتجاوز 15 ثانية. وإذا ظهرت إشارة متزامنة لعقد الشراء وعقد البيع
+              على الشمعة نفسها، تُرفض الإشارتان معاً.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="strategy-number">05</span>
+          <div>
+            <h3 data-lang-content="en">Exit on the first observed condition</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الخروج عند أول شرط متحقق زمنياً</h3>
+            <p data-lang-content="en">
+              A later executable bid closes the position when the profit
+              target, an opposite completed-bar MACD crossover, or the
+              configured Riyadh-time exit occurs first.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يُغلق المركز بأول سعر عرض قابل للتنفيذ بعد تحقق أول شرط زمنياً:
+              هدف الربح، أو تقاطع MACD عكسي على شمعة مكتملة، أو موعد الخروج
+              المحدد بتوقيت الرياض.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="strategy-number">06</span>
+          <div>
+            <h3 data-lang-content="en">Replay again and verify every receipt field</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>إعادة المحاكاة والتحقق من جميع حقول الإيصال</h3>
+            <p data-lang-content="en">
+              MBbot repeats the deterministic replay and compares timestamps,
+              fills, indicators, source rows, and fingerprints before a report
+              can be published.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يعيد MBbot تشغيل المحاكاة الحتمية ويقارن التوقيتات وأسعار التنفيذ
+              والمؤشرات وصفوف المصدر والبصمات الرقمية قبل السماح بنشر التقرير.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <aside class="separation-note">
+        <strong data-lang-content="en">Do not merge this backtest with the live signal logic.</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>لا تخلط منطق هذا الاختبار بمنطق الإشارات الحية.</strong>
+        <p data-lang-content="en">
+          The live bot currently reads the underlying’s completed five-minute
+          chart and maps bullish to calls and bearish to puts. This isolated
+          backtest instead monitors eligible option contracts independently and
+          requires a bullish crossover on the contract being entered.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          يعتمد البوت الحي حالياً على الرسم المكتمل للأصل الأساسي لفاصل خمس
+          دقائق، فيربط التقاطع الإيجابي بعقد شراء والتقاطع السلبي بعقد بيع.
+          أما هذا الاختبار المعزول فيراقب عقود الخيارات المؤهلة بصورة مستقلة،
+          ويشترط تقاطعاً إيجابياً على العقد المراد الدخول فيه.
+        </p>
+      </aside>
+    </section>
+
+    <section class="learn-section universe-lab" id="universe"
+             aria-labelledby="universe-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Universe explorer</span>
+            <span data-lang-content="ar" lang="ar" hidden>استكشاف نطاق الرموز</span>
+          </p>
+          <h2 id="universe-title">
+            <span data-lang-content="en">What each symbol adds to the experiment</span>
+            <span data-lang-content="ar" lang="ar" hidden>ما الذي يضيفه كل رمز إلى التجربة</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          Selecting a symbol changes the contracts included in the replay. It
+          does not change the strategy rules.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          يؤدي اختيار الرمز إلى تغيير العقود الداخلة في المحاكاة، ولا يغير
+          قواعد الاستراتيجية نفسها.
+        </p>
+      </header>
+
+      <div class="explorer-layout">
+        <label class="explorer-select">
+          <span data-lang-content="en">Inspect a symbol</span>
+          <span data-lang-content="ar" lang="ar" hidden>اختر رمزاً للاستعراض</span>
+          <select id="learn-symbol-select">
+            <option value="QQQ">QQQ</option>
+            <option value="SPY">SPY</option>
+            <option value="TSLA">TSLA</option>
+            <option value="AAPL">AAPL</option>
+            <option value="NVDA">NVDA</option>
+          </select>
+        </label>
+
+        <div class="symbol-panels" id="learn-symbol-panels" aria-live="polite">
+          <article class="symbol-panel" data-symbol-panel="QQQ">
+            <span class="instrument-type">ETF · Nasdaq-100</span>
+            <h3>QQQ</h3>
+            <p data-lang-content="en">
+              A broad Nasdaq-100 exchange-traded fund. It gives the test a
+              diversified, growth-oriented index product rather than one
+              company’s event risk.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              صندوق متداول يتتبع مؤشر Nasdaq-100. ويضيف إلى الاختبار تعرضاً
+              واسعاً لمنتج مؤشري ذي طابع نمو، بدلاً من مخاطر أحداث شركة واحدة.
+            </p>
+            <dl>
+              <div><dt data-lang-content="en">Use it to ask</dt><dt data-lang-content="ar" lang="ar" hidden>السؤال البحثي</dt>
+                <dd data-lang-content="en">Does the rule behave consistently in a broad technology-heavy product?</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>هل تتسم القاعدة بالاتساق في منتج واسع ذي وزن تقني مرتفع؟</dd></div>
+              <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
+                <dd data-lang-content="en">ETF results are not a proxy for single-company options.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>لا تمثل نتائج الصندوق بديلاً عن نتائج خيارات شركة منفردة.</dd></div>
+            </dl>
+          </article>
+
+          <article class="symbol-panel" data-symbol-panel="SPY" hidden>
+            <span class="instrument-type">ETF · S&amp;P 500</span>
+            <h3>SPY</h3>
+            <p data-lang-content="en">
+              A broad S&amp;P 500 exchange-traded fund. It is useful as a
+              large-cap US market reference within the same exact rules.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              صندوق متداول يتتبع مؤشر S&amp;P 500، ويصلح مرجعاً واسعاً لسوق
+              الأسهم الأمريكية كبيرة القيمة ضمن القواعد ذاتها.
+            </p>
+            <dl>
+              <div><dt data-lang-content="en">Available now</dt><dt data-lang-content="ar" lang="ar" hidden>المتاح حالياً</dt>
+                <dd data-lang-content="en">The retained real-provider ThetaData sample supports SPY only, for one session.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>تدعم عينة ThetaData المحفوظة من مزود فعلي رمز SPY فقط ولجلسة واحدة.</dd></div>
+              <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
+                <dd data-lang-content="en">One session validates the pipeline; it cannot establish performance.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>تتحقق الجلسة الواحدة من سلامة المسار التقني، ولا تكفي لإثبات الأداء.</dd></div>
+            </dl>
+          </article>
+
+          <article class="symbol-panel" data-symbol-panel="TSLA" hidden>
+            <span class="instrument-type">Single company · Consumer discretionary</span>
+            <h3>TSLA</h3>
+            <p data-lang-content="en">
+              Tesla is a single-company equity. It lets the experiment examine
+              how the same contract rules behave when company-specific price
+              movement and option pricing dominate.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يمثل TSLA سهماً لشركة منفردة، ويتيح دراسة سلوك قواعد اختيار العقد
+              نفسها عندما تهيمن حركة السعر الخاصة بالشركة وتسعير خياراتها.
+            </p>
+            <dl>
+              <div><dt data-lang-content="en">Use it to ask</dt><dt data-lang-content="ar" lang="ar" hidden>السؤال البحثي</dt>
+                <dd data-lang-content="en">Do premium and spread caps remove too many otherwise valid signals?</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>هل تستبعد حدود السعر والفارق عدداً كبيراً من الإشارات المستوفية لبقية الشروط؟</dd></div>
+              <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
+                <dd data-lang-content="en">Compare it separately from ETFs before aggregating results.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>ينبغي مقارنته منفصلاً عن الصناديق المتداولة قبل تجميع النتائج.</dd></div>
+            </dl>
+          </article>
+
+          <article class="symbol-panel" data-symbol-panel="AAPL" hidden>
+            <span class="instrument-type">Single company · Technology</span>
+            <h3>AAPL</h3>
+            <p data-lang-content="en">
+              Apple is a single-company equity. Including it tests the same
+              selection and execution rules on a different options surface
+              without changing MACD or exit logic.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يمثل AAPL سهماً لشركة منفردة، ويختبر قواعد الاختيار والتنفيذ نفسها
+              على هيكل مختلف لعقود الخيارات من دون تغيير منطق MACD أو الخروج.
+            </p>
+            <dl>
+              <div><dt data-lang-content="en">Use it to ask</dt><dt data-lang-content="ar" lang="ar" hidden>السؤال البحثي</dt>
+                <dd data-lang-content="en">Does the signal remain after applying executable ask and bid quotes?</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>هل تبقى الإشارة قائمة بعد تطبيق أسعار الطلب والعرض القابلة للتنفيذ؟</dd></div>
+              <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
+                <dd data-lang-content="en">A ticker is not a risk control; position size remains separate.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>اختيار الرمز ليس أداة لضبط المخاطر؛ فحجم المركز متغير مستقل.</dd></div>
+            </dl>
+          </article>
+
+          <article class="symbol-panel" data-symbol-panel="NVDA" hidden>
+            <span class="instrument-type">Single company · Technology</span>
+            <h3>NVDA</h3>
+            <p data-lang-content="en">
+              NVIDIA is a single-company equity. It adds another distinct
+              options market for checking whether a result is tied to one
+              ticker rather than to the rule.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يمثل NVDA سهماً لشركة منفردة، ويضيف سوق خيارات مختلفاً للتحقق مما
+              إذا كانت النتيجة مرتبطة برمز بعينه بدلاً من ارتباطها بالقاعدة.
+            </p>
+            <dl>
+              <div><dt data-lang-content="en">Use it to ask</dt><dt data-lang-content="ar" lang="ar" hidden>السؤال البحثي</dt>
+                <dd data-lang-content="en">Does the outcome persist across another single-name options market?</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>هل تستمر النتيجة عند تطبيقها على سوق خيارات لسهم منفرد آخر؟</dd></div>
+              <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
+                <dd data-lang-content="en">Cross-symbol comparisons require the same dates and compatible data quality.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>تتطلب المقارنة بين الرموز تواريخ موحدة وجودة بيانات متوافقة.</dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+
+      <p class="lab-note" data-lang-content="en">
+        Start with one symbol to isolate behavior. Use a basket to test whether
+        the same configuration generalizes, then inspect per-symbol results
+        before reading any aggregate.
+      </p>
+      <p class="lab-note" data-lang-content="ar" lang="ar" hidden>
+        ابدأ برمز واحد لعزل السلوك. ثم استخدم مجموعة رموز لاختبار مدى قابلية
+        تعميم الإعداد نفسه، مع مراجعة نتيجة كل رمز قبل قراءة أي نتيجة مجمعة.
+      </p>
+    </section>
+
+    <section class="learn-section variable-lab" id="variables"
+             aria-labelledby="variables-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Decision lab</span>
+            <span data-lang-content="ar" lang="ar" hidden>مختبر القرار</span>
+          </p>
+          <h2 id="variables-title">
+            <span data-lang-content="en">Understand a change before running it</span>
+            <span data-lang-content="ar" lang="ar" hidden>افهم أثر التعديل قبل تشغيله</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          Change one family at a time when you want a clean comparison. More
+          trades or a higher return do not prove that the changed setting caused
+          the difference.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          عدّل مجموعة واحدة من المتغيرات في كل مرة عند الرغبة في مقارنة منضبطة.
+          ولا تثبت زيادة عدد الصفقات أو العائد أن الإعداد المعدل هو سبب الفرق.
+        </p>
+      </header>
+
+      <div class="explorer-layout">
+        <label class="explorer-select">
+          <span data-lang-content="en">Explore a control family</span>
+          <span data-lang-content="ar" lang="ar" hidden>اختر مجموعة متغيرات</span>
+          <select id="learn-variable-select">
+            <option value="macd">MACD</option>
+            <option value="filters">Zero line &amp; RSI</option>
+            <option value="contract">Contract selection</option>
+            <option value="schedule">Schedule</option>
+            <option value="exit">Exit rules</option>
+            <option value="sizing">Sizing &amp; commission</option>
+          </select>
+        </label>
+
+        <div class="variable-panels" id="learn-variable-panels" aria-live="polite">
+          <article class="variable-panel" data-variable-panel="macd">
+            <span class="instrument-type">12 · 26 · 9 baseline</span>
+            <h3 data-lang-content="en">MACD periods and EMA seed</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة تهيئة المتوسط الأسي</h3>
+            <p data-lang-content="en">
+              Fast, slow, and signal periods determine how many completed
+              contract closes feed each line. Shorter periods generally react
+              sooner; longer periods generally smooth more. The page requires
+              the fast period to remain below the slow period.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              تحدد الفترات السريعة والبطيئة وفترة الإشارة عدد إغلاقات العقد
+              المكتملة الداخلة في احتساب كل خط. وتكون الفترات الأقصر عادة أسرع
+              استجابة، بينما توفر الفترات الأطول تنعيماً أكبر. وتشترط الصفحة
+              بقاء الفترة السريعة أقل من الفترة البطيئة.
+            </p>
+            <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
+              <span data-lang-content="en">Does a faster signal improve timing after accounting for extra false crossovers and spread cost?</span>
+              <span data-lang-content="ar" lang="ar" hidden>هل تحسن الإشارة الأسرع توقيت الدخول بعد احتساب التقاطعات الكاذبة الإضافية وتكلفة الفارق السعري؟</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="filters" hidden>
+            <span class="instrument-type">Optional · disabled baseline</span>
+            <h3 data-lang-content="en">Zero-line and RSI filters</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>مرشح خط الصفر ومرشح RSI</h3>
+            <p data-lang-content="en">
+              The zero-line filter accepts the bullish cross only when current
+              MACD is above zero. RSI uses Wilder’s calculation on the same
+              contract closes and accepts only values inside the configured
+              range. RSI is built but disabled in the baseline.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يقبل مرشح خط الصفر التقاطع الإيجابي فقط عندما تكون قيمة MACD
+              الحالية أعلى من الصفر. ويستخدم RSI طريقة وايلدر على إغلاقات العقد
+              نفسه، ولا يقبل إلا القيم الواقعة ضمن النطاق المحدد. وقد بُني RSI
+              تقنياً لكنه معطل في الإعداد الأساسي.
+            </p>
+            <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
+              <span data-lang-content="en">Does the filter remove weak signals, or merely reduce the sample until the result becomes unstable?</span>
+              <span data-lang-content="ar" lang="ar" hidden>هل يستبعد المرشح الإشارات الضعيفة فعلاً، أم يخفض حجم العينة حتى تصبح النتيجة غير مستقرة؟</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="contract" hidden>
+            <span class="instrument-type">Ask &lt; $4 · spread &lt; 50%</span>
+            <h3 data-lang-content="en">Premium, spread, expiration, and strike fallback</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>سعر العقد والفارق والانتهاء والانتقال بين أسعار التنفيذ</h3>
+            <p data-lang-content="en">
+              The premium cap uses the executable ask. The spread cap can use
+              either midpoint or ask as its denominator. Disabling a cap
+              changes eligibility; it does not create a missing quote. The
+              fallback switches decide whether the scan may continue beyond the
+              nearest strike or expiration.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يعتمد حد سعر العقد على سعر الطلب القابل للتنفيذ. ويمكن حساب نسبة
+              الفارق باستخدام السعر المتوسط أو سعر الطلب مقاماً للنسبة. ويؤدي
+              تعطيل الحد إلى تغيير أهلية العقد، لكنه لا يعالج غياب التسعير.
+              وتحدد مفاتيح الانتقال ما إذا كان البحث يستمر بعد أقرب سعر تنفيذ
+              أو تاريخ انتهاء.
+            </p>
+            <aside><strong data-lang-content="en">Formula</strong><strong data-lang-content="ar" lang="ar" hidden>المعادلة</strong>
+              <span dir="ltr">(ask − bid) ÷ denominator × 100</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="schedule" hidden>
+            <span class="instrument-type">America/New_York session · Asia/Riyadh exit</span>
+            <h3 data-lang-content="en">Entry window and forced time exit</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>نافذة الدخول وموعد الخروج الإلزامي</h3>
+            <p data-lang-content="en">
+              The default waits 15 minutes after the recorded US option-session
+              open and stops new entries 60 minutes before its recorded close.
+              The forced exit is an explicit Asia/Riyadh clock time. Exchange
+              holidays and shortened sessions come from the saved session file.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              ينتظر الإعداد الافتراضي 15 دقيقة بعد افتتاح جلسة الخيارات
+              الأمريكية المسجلة، ويوقف الدخول الجديد قبل إغلاقها المسجل بساعة.
+              أما الخروج الإلزامي فيُحدد صراحة وفق توقيت Asia/Riyadh. وتُستمد
+              العطلات والجلسات المختصرة من ملف الجلسات المحفوظ.
+            </p>
+            <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
+              <span data-lang-content="en">Is the result sensitive to opening volatility or late-session option decay?</span>
+              <span data-lang-content="ar" lang="ar" hidden>ما مدى حساسية النتيجة لتذبذب الافتتاح أو لتآكل قيمة الخيار قرب نهاية الجلسة؟</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="exit" hidden>
+            <span class="instrument-type">First chronological condition wins</span>
+            <h3 data-lang-content="en">Profit, opposite MACD, and timed exits</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الخروج بالربح أو التقاطع العكسي أو الوقت</h3>
+            <p data-lang-content="en">
+              Profit is measured from entry ask to a later executable bid. The
+              opposite-MACD exit uses completed bars from the same open
+              contract. The time exit uses the first executable quote at or
+              after the configured Riyadh time. If conditions share one event,
+              priority is profit, opposite MACD, then time.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يُقاس الربح من سعر الطلب عند الدخول إلى أول سعر عرض لاحق قابل
+              للتنفيذ. ويعتمد الخروج بالتقاطع العكسي على شموع مكتملة للعقد
+              المفتوح نفسه. أما الخروج الزمني فيستخدم أول تسعير قابل للتنفيذ
+              عند الموعد المحدد بتوقيت الرياض أو بعده. وعند تزامن الشروط تكون
+              الأولوية للربح ثم التقاطع العكسي ثم الوقت.
+            </p>
+            <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
+              <span data-lang-content="en">Which exit actually controls holding time and loss distribution?</span>
+              <span data-lang-content="ar" lang="ar" hidden>أي شرط خروج يتحكم فعلياً في مدة الاحتفاظ وتوزيع الخسائر؟</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="sizing" hidden>
+            <span class="instrument-type">1 contract · 100 multiplier · $0 commission</span>
+            <h3 data-lang-content="en">Contracts and commission</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>عدد العقود والعمولة</h3>
+            <p data-lang-content="en">
+              Contract count scales gross exposure and dollar P&amp;L; it does
+              not improve the entry signal. Commission is charged per contract
+              and should match the intended validation assumption. The contract
+              multiplier remains fixed at 100.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يؤدي عدد العقود إلى مضاعفة الانكشاف والربح أو الخسارة بالدولار،
+              ولا يحسن جودة إشارة الدخول. وتُحتسب العمولة لكل عقد وينبغي أن
+              تتوافق مع فرضية التحقق المقصودة. ويبقى معامل العقد ثابتاً عند 100.
+            </p>
+            <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
+              <span data-lang-content="en">Does the strategy remain economically meaningful after realistic transaction costs?</span>
+              <span data-lang-content="ar" lang="ar" hidden>هل تبقى الاستراتيجية مجدية اقتصادياً بعد احتساب تكاليف معاملات واقعية؟</span></aside>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="learn-section data-boundary" id="data"
+             aria-labelledby="data-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Data truth</span>
+            <span data-lang-content="ar" lang="ar" hidden>حقيقة البيانات</span>
+          </p>
+          <h2 id="data-title">
+            <span data-lang-content="en">Available is not the same as sufficient</span>
+            <span data-lang-content="ar" lang="ar" hidden>توافر البيانات لا يعني كفايتها إحصائياً</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          A run can be technically valid and still be too small to support a
+          performance conclusion.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          قد يكون الاختبار سليماً من الناحية التقنية، ومع ذلك تكون عينته أصغر
+          من أن تدعم استنتاجاً موثوقاً بشأن الأداء.
+        </p>
+      </header>
+
+      <div class="data-status-grid">
+        <article data-state="available">
+          <span class="preview-status">Available offline</span>
+          <h3>ThetaData · SPY · 19 Aug 2025</h3>
+          <p data-lang-content="en">
+            Real provider data retained without a credential: one symbol, one
+            regular session, and zero-DTE contracts. It validates import,
+            no-lookahead replay, and manual receipts. The strict baseline
+            produced zero qualifying trades.
+          </p>
+          <p data-lang-content="ar" lang="ar" hidden>
+            بيانات فعلية محفوظة من مزود خارجي من دون الحاجة إلى مفتاح: رمز واحد
+            وجلسة نظامية واحدة وعقود تنتهي في اليوم نفسه. وتصلح للتحقق من
+            الاستيراد ومنع استشراف المستقبل وإيصالات المراجعة اليدوية. ولم
+            ينتج الإعداد الأساسي الصارم أي صفقة مؤهلة.
+          </p>
+        </article>
+        <article data-state="pending">
+          <span class="preview-status">Pending local dataset</span>
+          <h3>Databento OPRA · June 2026 · five symbols</h3>
+          <p data-lang-content="en">
+            The profile is reserved for QQQ, SPY, TSLA, AAPL, and NVDA, but it
+            must remain unavailable until the queued licensed files finish,
+            normalize, and pass validation on the local PC.
+          </p>
+          <p data-lang-content="ar" lang="ar" hidden>
+            خُصص هذا الملف لرموز QQQ وSPY وTSLA وAAPL وNVDA، لكنه يظل غير متاح
+            إلى أن يكتمل وصول الملفات المرخصة قيد الانتظار، ثم تُطبَّع وتنجح
+            في اختبارات التحقق على الحاسب المحلي.
+          </p>
+        </article>
+      </div>
+
+      <div class="required-data">
+        <h3 data-lang-content="en">A complete replay requires all five evidence layers</h3>
+        <h3 data-lang-content="ar" lang="ar" hidden>تتطلب المحاكاة الكاملة خمس طبقات من الأدلة</h3>
+        <ol>
+          <li><strong data-lang-content="en">Session calendar</strong><strong data-lang-content="ar" lang="ar" hidden>تقويم الجلسات</strong>
+            <span data-lang-content="en"> — timezone-aware open and close for each symbol and date.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — افتتاح وإغلاق محددان زمنياً لكل رمز وتاريخ.</span></li>
+          <li><strong data-lang-content="en">Underlying prices</strong><strong data-lang-content="ar" lang="ar" hidden>أسعار الأصل الأساسي</strong>
+            <span data-lang-content="en"> — used at the selection timestamp for ATM/ITM ranking.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — تُستخدم عند لحظة الاختيار لترتيب أسعار التنفيذ ATM/ITM.</span></li>
+          <li><strong data-lang-content="en">Contract reference data</strong><strong data-lang-content="ar" lang="ar" hidden>البيانات المرجعية للعقد</strong>
+            <span data-lang-content="en"> — OCC identity, call/put, strike, and expiration.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — هوية OCC ونوع العقد وسعر التنفيذ وتاريخ الانتهاء.</span></li>
+          <li><strong data-lang-content="en">Five-minute option OHLCV</strong><strong data-lang-content="ar" lang="ar" hidden>بيانات OHLCV لعقد الخيار</strong>
+            <span data-lang-content="en"> — completed trade bars for MACD and optional RSI.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — شموع تداول مكتملة لاحتساب MACD وRSI الاختياري.</span></li>
+          <li><strong data-lang-content="en">Timestamped NBBO quotes</strong><strong data-lang-content="ar" lang="ar" hidden>تسعيرات NBBO المؤرخة زمنياً</strong>
+            <span data-lang-content="en"> — bid/ask for eligibility, entry, every exit, and ordering.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — أسعار العرض والطلب للأهلية والدخول والخروج والترتيب الزمني.</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="learn-section operations-map" id="behind-the-scenes"
+             aria-labelledby="operations-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Behind the button</span>
+            <span data-lang-content="ar" lang="ar" hidden>ما يحدث خلف زر التشغيل</span>
+          </p>
+          <h2 id="operations-title">
+            <span data-lang-content="en">Public controls, private execution, offline data</span>
+            <span data-lang-content="ar" lang="ar" hidden>إعدادات عامة وتنفيذ خاص وبيانات محلية</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          The website is a static control surface. The calculation runs only on
+          the trusted Windows runner that holds the allowlisted local files.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          الموقع واجهة تحكم ثابتة، ولا تُجرى الحسابات إلا على مشغّل Windows
+          الموثوق الذي يحتفظ بالملفات المحلية المسموح بها.
+        </p>
+      </header>
+
+      <ol class="operations-rail">
+        <li><span>Browser</span><div>
+          <strong data-lang-content="en">Validate visible inputs</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>التحقق من المدخلات الظاهرة</strong>
+          <small data-lang-content="en">No GitHub or market-data token is placed in the page.</small>
+          <small data-lang-content="ar" lang="ar" hidden>لا يوضع في الصفحة أي رمز وصول إلى GitHub أو إلى بيانات السوق.</small>
+        </div></li>
+        <li><span>Gateway</span><div>
+          <strong data-lang-content="en">Authenticate the shared runner key</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>مصادقة مفتاح المشغّل المشترك</strong>
+          <small data-lang-content="en">Cloudflare compares a one-way digest and validates every field again.</small>
+          <small data-lang-content="ar" lang="ar" hidden>تقارن Cloudflare بصمة أحادية الاتجاه وتعيد التحقق من كل حقل.</small>
+        </div></li>
+        <li><span>GitHub</span><div>
+          <strong data-lang-content="en">Queue a fixed private workflow</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>إدراج مسار عمل خاص وثابت في قائمة الانتظار</strong>
+          <small data-lang-content="en">The public form cannot choose a command, path, provider, or branch.</small>
+          <small data-lang-content="ar" lang="ar" hidden>لا تستطيع الواجهة العامة اختيار أمر أو مسار ملفات أو مزود أو فرع برمجي.</small>
+        </div></li>
+        <li><span>Local PC</span><div>
+          <strong data-lang-content="en">Block provider access and run offline</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>حظر الوصول إلى المزود وتشغيل الاختبار محلياً</strong>
+          <small data-lang-content="en">Provider credentials are removed and project Python network access is blocked.</small>
+          <small data-lang-content="ar" lang="ar" hidden>تُزال بيانات اعتماد المزود ويُحظر اتصال Python الخاص بالمشروع بالشبكة.</small>
+        </div></li>
+        <li><span>Verifier</span><div>
+          <strong data-lang-content="en">Re-run and compare the result</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>إعادة التشغيل ومقارنة النتيجة</strong>
+          <small data-lang-content="en">Changed data, settings, timestamps, or receipt fields fail closed.</small>
+          <small data-lang-content="ar" lang="ar" hidden>يؤدي تغير البيانات أو الإعدادات أو التوقيتات أو حقول الإيصال إلى رفض النتيجة.</small>
+        </div></li>
+        <li><span>Pages</span><div>
+          <strong data-lang-content="en">Publish only a verified research report</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>نشر تقرير بحثي متحقق منه فقط</strong>
+          <small data-lang-content="en">Publication requires the owner’s separate, scoped repository credential.</small>
+          <small data-lang-content="ar" lang="ar" hidden>يتطلب النشر اعتماداً منفصلاً ومحدود الصلاحيات يملكه صاحب المستودع.</small>
+        </div></li>
+      </ol>
+    </section>
+
+    <section class="learn-section fixed-adjustable" aria-labelledby="fixed-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Experiment contract</span>
+            <span data-lang-content="ar" lang="ar" hidden>ضوابط التجربة</span>
+          </p>
+          <h2 id="fixed-title">
+            <span data-lang-content="en">What the page may and may not change</span>
+            <span data-lang-content="ar" lang="ar" hidden>ما يجوز للصفحة تعديله وما يبقى ثابتاً</span>
+          </h2>
+        </div>
+      </header>
+
+      <div class="contract-columns">
+        <article>
+          <h3 data-lang-content="en">Adjustable per experiment</h3>
+          <h3 data-lang-content="ar" lang="ar" hidden>قابل للتعديل في كل تجربة</h3>
+          <ul>
+            <li data-lang-content="en">One symbol or any supported basket</li>
+            <li data-lang-content="ar" lang="ar" hidden>رمز واحد أو أي مجموعة مدعومة</li>
+            <li data-lang-content="en">MACD fast, slow, signal, seed, and optional zero line</li>
+            <li data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة التهيئة ومرشح خط الصفر الاختياري</li>
+            <li data-lang-content="en">Optional RSI period and acceptance range</li>
+            <li data-lang-content="ar" lang="ar" hidden>فترة RSI ونطاق القبول الاختياري</li>
+            <li data-lang-content="en">Premium and spread caps plus strike/expiry fallback</li>
+            <li data-lang-content="ar" lang="ar" hidden>حدا السعر والفارق والانتقال بين أسعار التنفيذ والانتهاء</li>
+            <li data-lang-content="en">Entry window, profit target, reverse MACD, and Riyadh-time exits</li>
+            <li data-lang-content="ar" lang="ar" hidden>نافذة الدخول وهدف الربح والتقاطع العكسي والخروج بتوقيت الرياض</li>
+            <li data-lang-content="en">Contracts per trade, commission, and validation-only mode</li>
+            <li data-lang-content="ar" lang="ar" hidden>عدد العقود والعمولة ووضع التحقق دون تشغيل</li>
+          </ul>
+        </article>
+        <article>
+          <h3 data-lang-content="en">Fixed or owner-controlled</h3>
+          <h3 data-lang-content="ar" lang="ar" hidden>ثابت أو خاضع لصاحب النظام</h3>
+          <ul>
+            <li data-lang-content="en">Five-minute option-contract trade-close signal source</li>
+            <li data-lang-content="ar" lang="ar" hidden>مصدر الإشارة: إغلاق تداول عقد الخيار لفاصل خمس دقائق</li>
+            <li data-lang-content="en">Bullish crossover required for entry; same-bar call/put collision rejected</li>
+            <li data-lang-content="ar" lang="ar" hidden>اشتراط التقاطع الإيجابي للدخول ورفض تعارض الشراء والبيع على الشمعة نفسها</li>
+            <li data-lang-content="en">Entry at ask, exit at bid, 100-share contract multiplier</li>
+            <li data-lang-content="ar" lang="ar" hidden>الدخول بسعر الطلب والخروج بسعر العرض ومعامل عقد قدره 100 سهم</li>
+            <li data-lang-content="en">Local paths, raw files, provider downloads, network policy, and executable commands</li>
+            <li data-lang-content="ar" lang="ar" hidden>المسارات والملفات الخام وتنزيلات المزود وسياسة الشبكة والأوامر التنفيذية</li>
+            <li data-lang-content="en">Dataset activation and private publication credentials</li>
+            <li data-lang-content="ar" lang="ar" hidden>تفعيل مجموعة البيانات واعتمادات النشر الخاصة</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="learn-section readiness-lab" id="learn-readiness"
+             aria-labelledby="readiness-title">
+      <header class="section-heading">
+        <div>
+          <p class="section-label">
+            <span data-lang-content="en">Pre-run check</span>
+            <span data-lang-content="ar" lang="ar" hidden>مراجعة ما قبل التشغيل</span>
+          </p>
+          <h2 id="readiness-title">
+            <span data-lang-content="en">Make the experiment interpretable</span>
+            <span data-lang-content="ar" lang="ar" hidden>اجعل التجربة قابلة للتفسير</span>
+          </h2>
+        </div>
+        <p data-lang-content="en">
+          These checks do not change the strategy. They help preserve the
+          reason for the run before the result is known.
+        </p>
+        <p data-lang-content="ar" lang="ar" hidden>
+          لا تغير هذه المراجعة قواعد الاستراتيجية، وإنما تساعد على توثيق سبب
+          إجراء الاختبار قبل معرفة النتيجة.
+        </p>
+      </header>
+
+      <div class="readiness-grid">
+        <div class="readiness-checks">
+          <label><input type="checkbox" data-readiness-check>
+            <span data-lang-content="en">I selected a dataset that is already available offline.</span>
+            <span data-lang-content="ar" lang="ar" hidden>اخترت مجموعة بيانات متاحة محلياً بالفعل.</span>
+          </label>
+          <label><input type="checkbox" data-readiness-check>
+            <span data-lang-content="en">I understand this experimental signal is separate from the live bot.</span>
+            <span data-lang-content="ar" lang="ar" hidden>أدرك أن هذه الإشارة التجريبية منفصلة عن منطق البوت الحي.</span>
+          </label>
+          <label><input type="checkbox" data-readiness-check>
+            <span data-lang-content="en">I wrote a hypothesis and changed only the variables needed to test it.</span>
+            <span data-lang-content="ar" lang="ar" hidden>صغت فرضية وعدّلت المتغيرات اللازمة لاختبارها فقط.</span>
+          </label>
+          <label><input type="checkbox" data-readiness-check>
+            <span data-lang-content="en">I accept that a valid run may produce zero trades.</span>
+            <span data-lang-content="ar" lang="ar" hidden>أقبل أن الاختبار السليم قد لا ينتج أي صفقة.</span>
+          </label>
+        </div>
+        <aside class="readiness-status">
+          <span class="preview-status">
+            <span data-lang-content="en">Research readiness</span>
+            <span data-lang-content="ar" lang="ar" hidden>جاهزية البحث</span>
+          </span>
+          <strong id="readiness-count">0 / 4</strong>
+          <output id="readiness-message" aria-live="polite">
+            Complete the four checks before interpreting a run.
+          </output>
+          <a class="primary-action" href="index.html#backtest-control">
+            <span data-lang-content="en">Configure an offline backtest</span>
+            <span data-lang-content="ar" lang="ar" hidden>إعداد اختبار تاريخي محلي</span>
+          </a>
+        </aside>
+      </div>
+    </section>
+
+    <aside class="research-disclaimer">
+      <strong data-lang-content="en">Research use only.</strong>
+      <strong data-lang-content="ar" lang="ar" hidden>لأغراض البحث فقط.</strong>
+      <p data-lang-content="en">
+        Backtested or simulated results do not predict future performance.
+        Options can lose their full premium. Review data quality, assumptions,
+        execution conventions, and per-trade receipts before drawing a
+        conclusion.
+      </p>
+      <p data-lang-content="ar" lang="ar" hidden>
+        لا تمثل نتائج الاختبارات التاريخية أو المحاكاة مؤشراً مضموناً على
+        الأداء المستقبلي، وقد تفقد عقود الخيارات كامل قيمتها المدفوعة. وينبغي
+        مراجعة جودة البيانات والافتراضات وآليات التنفيذ وإيصال كل صفقة قبل
+        استخلاص أي استنتاج.
+      </p>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <p data-lang-content="en">
+      Research backtests only. Not financial advice. Past or simulated
+      performance does not predict future results.
+    </p>
+    <p data-lang-content="ar" lang="ar" hidden>
+      اختبارات بحثية فقط، ولا تمثل مشورة مالية. ولا يضمن الأداء السابق أو
+      المحاكى نتائج مستقبلية.
+    </p>
+    <p>
+      <span data-lang-content="en">Site generated</span>
+      <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
+      <time datetime="2026-07-26T23:18:29.188431Z">2026-07-26T23:18:29.188431Z</time>.
+    </p>
+  </footer>
+</body>
+</html>

@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive MBbot backtest archive and experiment reports.">
   <title>MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css">
-  <script src="assets/site-config.js" defer></script>
-  <script src="assets/backtest-control-model.js" defer></script>
-  <script src="assets/site.js" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=9a48f94e47a1">
+  <script src="assets/site-config.js?v=9a48f94e47a1" defer></script>
+  <script src="assets/backtest-control-model.js?v=9a48f94e47a1" defer></script>
+  <script src="assets/site.js?v=9a48f94e47a1" defer></script>
 </head>
 <body data-page="home">
   <a class="skip-link" href="#main-content">Skip to reports</a>
@@ -24,6 +24,7 @@
       <a href="#backtest-control">Run</a>
       <a href="#archive" aria-current="page">Archive</a>
       <a href="compare.html">Compare</a>
+      <a href="learn.html">Learn</a>
       <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
         <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
       </button>
@@ -84,14 +85,17 @@
             <label class="control-field">
               <span>Local dataset</span>
               <select name="dataset_profile" required>
-                <option value="databento-opra-2026-06" selected>
-                  Databento OPRA · June 2026 · five symbols
+                <option value="databento-opra-2026-06" disabled>
+                  Databento OPRA · June 2026 · pending local download
                 </option>
-                <option value="thetadata-spy-2025-08-19">
+                <option value="thetadata-spy-2025-08-19" selected>
                   ThetaData official sample · SPY · 19 Aug 2025
                 </option>
               </select>
-              <small>No provider request can be made from this control.</small>
+              <small>
+                No provider request can be made from this control. Databento
+                remains disabled until its local files pass validation.
+              </small>
             </label>
           </div>
 
@@ -513,9 +517,9 @@
 
   <footer class="site-footer">
     <p>Research backtests only. Not financial advice. Past or simulated performance does not predict future results.</p>
-    <p>Site generated <time datetime="2026-07-26T21:12:01.572987Z">2026-07-26T21:12:01.572987Z</time>.</p>
+    <p>Site generated <time datetime="2026-07-26T23:18:29.188431Z">2026-07-26T23:18:29.188431Z</time>.</p>
   </footer>
 
-  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T21:12:01.572987Z","reports":[]}</script>
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T23:18:29.188431Z","reports":[]}</script>
 </body>
 </html>
