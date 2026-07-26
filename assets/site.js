@@ -375,6 +375,11 @@
       return field instanceof HTMLInputElement ? field.value : "";
     }
 
+    function clearAccessKey() {
+      const field = form.elements.namedItem("runner_access_key");
+      if (field instanceof HTMLInputElement) field.value = "";
+    }
+
     async function gatewayRequest(path, key, options = {}) {
       const response = await fetch(`${gatewayUrl}${path}`, {
         ...options,
@@ -422,8 +427,7 @@
           if (response.ok) {
             resultLink.href = reportPath;
             resultActions.hidden = false;
-            const keyField = form.elements.namedItem("runner_access_key");
-            if (keyField instanceof HTMLInputElement) keyField.value = "";
+            clearAccessKey();
             setRunnerState(
               "success",
               "Report published",
@@ -469,7 +473,7 @@
             );
           }
           if (payload.validation_only) {
-            if (keyField instanceof HTMLInputElement) keyField.value = "";
+            clearAccessKey();
             setRunnerState(
               "success",
               "Validation complete",
