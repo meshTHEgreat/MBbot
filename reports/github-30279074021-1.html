@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive MBbot backtest experiment report.">
+  <title>Baseline replay / Workflow #31 · MBbot Research Desk</title>
+  <link rel="stylesheet" href="../assets/styles.css?v=f22faf51fe5d">
+  <script src="../assets/report-model.js?v=f22faf51fe5d" defer></script>
+  <script src="../assets/site.js?v=f22faf51fe5d" defer></script>
+</head>
+<body data-page="report">
+  <a class="skip-link" href="#main-content">Skip to report</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Backtest intelligence</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="../index.html">Archive</a>
+      <a href="../compare.html">Compare</a>
+      <a href="../learn.html">Learn</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Research desk</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Experiment report</span>
+    </nav>
+
+    <article class="report-shell">
+      <header class="report-hero">
+        <div class="report-heading">
+          <div class="report-meta" id="report-meta"></div>
+          <h1 id="report-title">Baseline replay / Workflow #31</h1>
+          <p id="report-dataset-range">Loading dataset context…</p>
+        </div>
+        <div class="report-outcome" id="report-outcome"></div>
+      </header>
+
+      <section class="quality-banner" id="quality-banner" aria-labelledby="quality-title">
+        <div>
+          <p class="section-label">Evidence quality</p>
+          <h2 id="quality-title">Read the limits before the result</h2>
+        </div>
+        <ul id="quality-notes"></ul>
+      </section>
+
+      <section class="metric-ribbon" id="metric-ribbon" aria-label="Key performance metrics"></section>
+
+      <section class="decision-section" aria-labelledby="decision-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Decision trace</p>
+            <h2 id="decision-title">Change → outcome → next test</h2>
+          </div>
+          <p id="baseline-note">The first report has no baseline.</p>
+        </div>
+        <div class="decision-trace" id="decision-trace"></div>
+      </section>
+
+      <section class="chart-grid" aria-labelledby="performance-title">
+        <div class="section-heading chart-grid-heading">
+          <div>
+            <p class="section-label">Performance trace</p>
+            <h2 id="performance-title">Sequence matters</h2>
+          </div>
+          <p>Cumulative net P&amp;L and drawdown are ordered by exit time.</p>
+        </div>
+        <figure class="chart-panel chart-panel-wide">
+          <figcaption>
+            <strong>Cumulative net P&amp;L</strong>
+            <span id="equity-summary">No chart data.</span>
+          </figcaption>
+          <div class="canvas-wrap">
+            <canvas id="equity-chart" role="img" aria-label="Cumulative net profit and loss by closed trade"></canvas>
+          </div>
+          <details>
+            <summary>View chart data</summary>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Trade</th><th scope="col">Exit</th><th scope="col">Net P&amp;L</th><th scope="col">Cumulative</th><th scope="col">Drawdown</th></tr></thead>
+                <tbody id="equity-data"></tbody>
+              </table>
+            </div>
+          </details>
+        </figure>
+        <figure class="chart-panel">
+          <figcaption>
+            <strong>Trade returns</strong>
+            <span>Each bar is one closed trade.</span>
+          </figcaption>
+          <div class="canvas-wrap canvas-wrap-short">
+            <canvas id="returns-chart" role="img" aria-label="Return percentage for each closed trade"></canvas>
+          </div>
+        </figure>
+        <section class="chart-panel breakdown-panel" aria-labelledby="breakdown-title">
+          <div>
+            <strong id="breakdown-title">Outcome breakdown</strong>
+            <span>Net P&amp;L by symbol, direction, and exit reason.</span>
+          </div>
+          <div id="breakdowns"></div>
+        </section>
+      </section>
+
+      <section class="settings-section" aria-labelledby="settings-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Reproducibility</p>
+            <h2 id="settings-title">What was set</h2>
+          </div>
+          <p>Secret-like values are redacted before this public artifact is written.</p>
+        </div>
+        <div class="settings-layout">
+          <section aria-labelledby="delta-title">
+            <h3 id="delta-title">Changed from baseline</h3>
+            <div id="settings-delta"></div>
+          </section>
+          <section aria-labelledby="snapshot-title">
+            <h3 id="snapshot-title">Exact configuration snapshot</h3>
+            <div class="settings-groups" id="settings-groups"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="trades-section" aria-labelledby="trades-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Trade ledger</p>
+            <h2 id="trades-title">Every closed position</h2>
+          </div>
+          <p>New columns in a supported result are preserved automatically.</p>
+        </div>
+        <div class="trade-tools">
+          <label class="search-field">
+            <span>Search trades</span>
+            <input id="trade-search" type="search" autocomplete="off"
+                   placeholder="Symbol, contract, exit reason…">
+          </label>
+          <label>
+            <span>Order trades</span>
+            <select id="trade-order">
+              <option value="exit-desc">Latest exit first</option>
+              <option value="exit-asc">Earliest exit first</option>
+              <option value="pnl-desc">Highest net P&amp;L</option>
+              <option value="pnl-asc">Lowest net P&amp;L</option>
+              <option value="return-desc">Highest return</option>
+              <option value="return-asc">Lowest return</option>
+            </select>
+          </label>
+          <label>
+            <span>Time display</span>
+            <select id="trade-time-display">
+              <option value="local">Local chart time</option>
+              <option value="source">Exact source timestamp</option>
+            </select>
+          </label>
+          <output id="trade-status" aria-live="polite"></output>
+        </div>
+        <p class="trade-validation-note" id="trade-timezone-note">
+          Each expanded trade includes an execution receipt with source
+          timestamps and fill prices for manual chart validation.
+        </p>
+        <div class="mobile-trade-list" id="trade-cards" aria-label="Trade details"></div>
+        <div class="table-scroll desktop-trade-ledger" tabindex="0" aria-label="Scrollable trade ledger">
+          <table class="trade-table">
+            <thead><tr id="trade-head"></tr></thead>
+            <tbody id="trade-body"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="trade-empty" hidden>
+          <span class="empty-glyph" aria-hidden="true">∅</span>
+          <h3>No closed trades in this view</h3>
+          <p>The run may have produced no fills, or the search may exclude them.</p>
+        </div>
+      </section>
+
+      <section class="provenance-section" aria-labelledby="provenance-title">
+        <div>
+          <p class="section-label">Run receipt</p>
+          <h2 id="provenance-title">Data and provenance</h2>
+        </div>
+        <dl id="provenance-list"></dl>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>Research backtests only. Not financial advice. A result and a settings change occurring together do not prove causation.</p>
+    <p><a href="../index.html">Return to the experiment archive</a></p>
+  </footer>
+
+  <script type="application/json" id="report-data">{"authoring":{"baseline_id":null,"hypothesis":"","next_test":"","observation":""},"automation":{"actor":"meshTHEgreat","application_version":"mbbot 0.1.0","backtest_entry_point":"mbbot.backtest_cli","backtest_script_sha256":"76ebd7418453c379f30d4b4349caba52c2be7783f9259baa29ecb8fd2b985db5","backtest_source_branch":null,"backtest_source_commit_sha":null,"data_access_mode":"offline-only","dataset_identifier":"hybrid:alpha-vantage-5min+databento-OPRA.PILLAR:QQQ+SPY+TSLA+AAPL+NVDA:2026-06","dataset_profile":"databento-opra-2026-06","dependency_versions":{"mbbot":"0.1.0","tzdata":"2026.3"},"duration_seconds":314.863,"ended_at_utc":"2026-07-27T15:23:36.526193Z","project_python_network_access":false,"provider_api_access":false,"provider_credentials_removed":0,"public_repository":"meshTHEgreat/MBbot","python_version":"3.12.10","report_path":"reports/github-30279074021-1.html","report_url":"https://meshthegreat.github.io/MBbot/reports/github-30279074021-1.html","request_timestamp_source":"github_actions_api","requested_at_project_time":"2026-07-27T18:15:02+03:00","requested_at_utc":"2026-07-27T15:15:02Z","run_url":"https://github.com/meshTHEgreat/mbbot-backtest-control/actions/runs/30279074021","schema_version":"mbbot.backtest.automation.v1","selected_parameters":{"allow_zero_dte":true,"commission_per_contract":"0","contracts_per_trade":"1","dataset_profile":"databento-opra-2026-06","entry_cutoff_minutes":"60","entry_delay_minutes":"15","entry_window_enabled":true,"experiment_label":"Baseline replay","fallback_to_next_expiration":true,"force_exit_time_riyadh":"22:20","macd_ema_seed_method":"sma","macd_fast_period":"12","macd_signal_period":"9","macd_slow_period":"26","max_premium":"4","max_premium_enabled":true,"max_spread_enabled":true,"max_spread_percent":"50","opposite_macd_enabled":true,"opposite_smi_enabled":false,"profit_target_enabled":true,"profit_target_percent":"30","rsi_enabled":true,"rsi_maximum":"20","rsi_minimum":"0","rsi_period":"14","scan_next_strike_if_nearest_fails":true,"signal_source":"alpha_vantage_underlying_directional","smi_d_length":"3","smi_ema_seed_method":"first","smi_enabled":true,"smi_entry_mode":"replace_macd","smi_k_length":"14","smi_overbought":"40","smi_oversold":"-40","smi_signal_length":"3","smi_zone_filter_enabled":false,"spread_denominator":"midpoint","symbols":["QQQ","SPY","TSLA","AAPL","NVDA"],"time_exit_enabled":true,"validate_only":false,"zero_line_filter_enabled":false},"source_branch":"main","source_commit_sha":"37e9ff9fb9d3705035353c536bb2644f718008ed","started_at_utc":"2026-07-27T15:18:21.663162Z","status":"success","workflow_name":"Run Local Backtest","workflow_run_attempt":"1","workflow_run_id":"30279074021","workflow_run_number":"31"},"breakdowns":{"exit_reason":[{"average_return_percent":-45.0546811647109,"label":"opposite_macd","net_pnl":-341.0,"trades":4,"win_rate":0.0,"wins":0}],"option_type":[{"average_return_percent":-80.58823529411765,"label":"call","net_pnl":-137.0,"trades":1,"win_rate":0.0,"wins":0},{"average_return_percent":-33.21016312157531,"label":"put","net_pnl":-204.0,"trades":3,"win_rate":0.0,"wins":0}],"symbol":[{"average_return_percent":0.0,"label":"AAPL","net_pnl":0.0,"trades":1,"win_rate":0.0,"wins":0},{"average_return_percent":-80.58823529411765,"label":"NVDA","net_pnl":-137.0,"trades":1,"win_rate":0.0,"wins":0},{"average_return_percent":-49.81524468236297,"label":"SPY","net_pnl":-204.0,"trades":2,"win_rate":0.0,"wins":0}]},"charts":{"cumulative_pnl":[{"cumulative_pnl":-122.0,"drawdown":122.0,"index":1,"label":"SPY","net_pnl":-122.0,"time":"2026-06-04T10:25:00-04:00"},{"cumulative_pnl":-204.0,"drawdown":204.0,"index":2,"label":"SPY","net_pnl":-82.0,"time":"2026-06-05T12:55:00-04:00"},{"cumulative_pnl":-341.0,"drawdown":341.0,"index":3,"label":"NVDA","net_pnl":-137.0,"time":"2026-06-05T14:20:00-04:00"},{"cumulative_pnl":-341.0,"drawdown":341.0,"index":4,"label":"AAPL","net_pnl":0.0,"time":"2026-06-09T10:50:00-04:00"}],"returns":[{"index":1,"label":"SPY","value":-60.39604},{"index":2,"label":"SPY","value":-39.23445},{"index":3,"label":"NVDA","value":-80.588235},{"index":4,"label":"AAPL","value":0.0}]},"created_at":"2026-07-27T15:21:34.806427Z","dataset":{"contracts":1732,"dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","first_timestamp":"2026-05-01T09:35:00-04:00","last_timestamp":"2026-06-30T16:00:00-04:00","option_bars":1086868,"option_quotes":5938760,"sessions":105,"signal_bar_providers":["alpha_vantage"],"signal_bars":15990,"source_files":[{"bytes":7137,"filename":"sessions.csv","rows":105,"sha256":"b61455fcf0963ceed0b548ee21856eeaa1e55bf4a88a4d8abc1970d2aecf8f9d"},{"bytes":1541679,"filename":"underlying.csv","rows":40950,"sha256":"680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a"},{"bytes":1404045,"filename":"signal_bars.csv","rows":15990,"sha256":"87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730"},{"bytes":100194789,"filename":"option_bars.csv","rows":1086868,"sha256":"9dae33e4b2122d3cd78c4f0606f771b52b22eeecd4b6b4fa0a6e8fb52f127295"},{"bytes":514405250,"filename":"option_quotes.csv","rows":5938760,"sha256":"d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c"}],"underlying_points":40950},"extensions":{"audit":{"dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","entry_execution":"first eligible option quote after the completed signal bar; filled at ask","exit_execution":"first eligible option quote after the earliest exit trigger; filled at bid","source_reference_format":"filename:line=\u003cphysical CSV line>;sha256=\u003csource file hash>","timestamps":"ISO-8601 market-local timestamps with explicit UTC offsets; parallel UTC timestamps are recorded per trade"},"schema_version":"mbbot.backtest.result.v3","signal_source":"alpha_vantage_underlying_close"},"id":"github-30279074021-1","kind":"historical_backtest","metrics":{"average_holding_minutes":61.25,"average_loss":-113.66666666666667,"average_return_percent":-45.0546811647109,"average_win":null,"closed_trades":4,"collisions_rejected":0,"entries_skipped_missing_data":63,"expectancy":-85.25,"flat":1,"gross_loss":341.0,"gross_profit":0,"losses":3,"max_drawdown":341.0,"median_return_percent":-49.81524468236297,"net_pnl":-341.0,"open_positions":0,"profit_factor":0.0,"win_rate":0.0,"wins":0},"provenance":{"config_name":null,"config_sha256":null,"generated_at":"2026-07-27T15:23:36.732713Z","generator":"mbbot-report","source_name":"github-30279074021-1.json","source_sha256":"0d537762a3a0f9c2c02193e0ff189ed24522091e9c15cbfe2e267c7b16806d9f"},"quality":{"label":"research","notes":["Small sample: fewer than 30 closed trades; treat apparent patterns as unstable.","63 entries were skipped because required data was unavailable."]},"schema_version":"1.0","status":"research","strategy":{"fingerprint":"9f917fee6c850cf27245ba34d978a727f31286d74bd9668e13e667d7842b2ee7","settings":{"backtest":{"bar_minutes":5,"commission_per_contract":0.0,"contract_multiplier":100,"contracts_per_trade":1,"dataset_dir":"data/backtest","entry_fill":"first_ask_after_completed_signal_bar","market_timezone":"America/New_York","missing_contract_bar_policy":"reject_signal","monitor_sides":["call","put"],"same_bar_collision":"reject_both","selection_quote_delay_seconds":15,"symbols":["QQQ","SPY","TSLA","AAPL","NVDA"],"underlying_max_age_seconds":15,"user_timezone":"Asia/Riyadh"},"contract":{"allow_zero_dte":true,"fallback_to_next_expiration":true,"max_premium":4.0,"max_premium_enabled":true,"max_spread_enabled":true,"max_spread_percent":50.0,"premium_field":"ask","scan_next_strike_if_nearest_fails":true,"spread_denominator":"midpoint","strike_policy":"nearest_itm_atm"},"exit":{"entry_price_field":"ask","opposite_macd_enabled":true,"profit_price_field":"bid","profit_target_enabled":true,"profit_target_percent":30.0,"simultaneous_priority":["profit_target","opposite_macd","opposite_smi","time_exit"]},"macd":{"ema_seed_method":"sma","fast_period":12,"price_source":"close","signal_period":9,"slow_period":26,"source":"underlying","zero_line_filter_enabled":false},"rsi":{"enabled":true,"maximum":20.0,"minimum":0.0,"period":14},"schedule":{"entry_cutoff_minutes_before_close":60,"entry_delay_minutes_after_open":15,"entry_window_enabled":true,"force_exit_time_riyadh":"22:20","time_exit_enabled":true},"smi":{"d_length":3,"ema_seed_method":"first","enabled":true,"entry_mode":"replace_macd","k_length":14,"opposite_crossover_exit_enabled":false,"overbought":40.0,"oversold":-40.0,"signal_length":3,"zone_filter_enabled":false}},"settings_flat":[{"path":"backtest.bar_minutes","value":"5"},{"path":"backtest.commission_per_contract","value":"0.0"},{"path":"backtest.contract_multiplier","value":"100"},{"path":"backtest.contracts_per_trade","value":"1"},{"path":"backtest.dataset_dir","value":"data/backtest"},{"path":"backtest.entry_fill","value":"first_ask_after_completed_signal_bar"},{"path":"backtest.market_timezone","value":"America/New_York"},{"path":"backtest.missing_contract_bar_policy","value":"reject_signal"},{"path":"backtest.monitor_sides","value":"call, put"},{"path":"backtest.same_bar_collision","value":"reject_both"},{"path":"backtest.selection_quote_delay_seconds","value":"15"},{"path":"backtest.symbols","value":"QQQ, SPY, TSLA, AAPL, NVDA"},{"path":"backtest.underlying_max_age_seconds","value":"15"},{"path":"backtest.user_timezone","value":"Asia/Riyadh"},{"path":"contract.allow_zero_dte","value":"enabled"},{"path":"contract.fallback_to_next_expiration","value":"enabled"},{"path":"contract.max_premium","value":"4.0"},{"path":"contract.max_premium_enabled","value":"enabled"},{"path":"contract.max_spread_enabled","value":"enabled"},{"path":"contract.max_spread_percent","value":"50.0"},{"path":"contract.premium_field","value":"ask"},{"path":"contract.scan_next_strike_if_nearest_fails","value":"enabled"},{"path":"contract.spread_denominator","value":"midpoint"},{"path":"contract.strike_policy","value":"nearest_itm_atm"},{"path":"exit.entry_price_field","value":"ask"},{"path":"exit.opposite_macd_enabled","value":"enabled"},{"path":"exit.profit_price_field","value":"bid"},{"path":"exit.profit_target_enabled","value":"enabled"},{"path":"exit.profit_target_percent","value":"30.0"},{"path":"exit.simultaneous_priority","value":"profit_target, opposite_macd, opposite_smi, time_exit"},{"path":"macd.ema_seed_method","value":"sma"},{"path":"macd.fast_period","value":"12"},{"path":"macd.price_source","value":"close"},{"path":"macd.signal_period","value":"9"},{"path":"macd.slow_period","value":"26"},{"path":"macd.source","value":"underlying"},{"path":"macd.zero_line_filter_enabled","value":"disabled"},{"path":"rsi.enabled","value":"enabled"},{"path":"rsi.maximum","value":"20.0"},{"path":"rsi.minimum","value":"0.0"},{"path":"rsi.period","value":"14"},{"path":"schedule.entry_cutoff_minutes_before_close","value":"60"},{"path":"schedule.entry_delay_minutes_after_open","value":"15"},{"path":"schedule.entry_window_enabled","value":"enabled"},{"path":"schedule.force_exit_time_riyadh","value":"22:20"},{"path":"schedule.time_exit_enabled","value":"enabled"},{"path":"smi.d_length","value":"3"},{"path":"smi.ema_seed_method","value":"first"},{"path":"smi.enabled","value":"enabled"},{"path":"smi.entry_mode","value":"replace_macd"},{"path":"smi.k_length","value":"14"},{"path":"smi.opposite_crossover_exit_enabled","value":"disabled"},{"path":"smi.overbought","value":"40.0"},{"path":"smi.oversold","value":"-40.0"},{"path":"smi.signal_length","value":"3"},{"path":"smi.zone_filter_enabled","value":"disabled"}]},"tags":["automated","databento-opra-2026-06","qqq","spy","tsla","aapl","nvda"],"title":"Baseline replay / Workflow #31","trade_columns":["trade_id","symbol","option_type","contract_id","expiration","strike","session_date","signal_time","signal_time_utc","signal_time_user","signal_underlying_time","signal_underlying_price","signal_source","signal_instrument","signal_trigger","signal_bar_open","signal_bar_high","signal_bar_low","signal_bar_close","signal_bar_price","signal_bar_volume","signal_option_open","signal_option_high","signal_option_low","signal_option_close","signal_option_price","signal_option_volume","signal_previous_time","signal_previous_time_utc","signal_previous_time_user","signal_previous_macd","signal_previous_macd_signal","signal_previous_macd_histogram","signal_macd","signal_macd_signal","signal_macd_histogram","signal_previous_smi","signal_previous_smi_signal","signal_previous_smi_histogram","signal_smi","signal_smi_signal","signal_smi_histogram","entry_time","entry_time_utc","entry_time_user","entry_quote_sequence","entry_bid","entry_ask","entry_price","entry_fill_source","entry_spread_percent","entry_delay_seconds","exit_trigger_time","exit_trigger_time_utc","exit_trigger_time_user","exit_time","exit_time_utc","exit_time_user","exit_quote_sequence","exit_bid","exit_ask","exit_price","exit_fill_source","exit_spread_percent","exit_delay_seconds","exit_reason","exit_reasons","exit_macd","exit_macd_signal","exit_macd_histogram","exit_smi","exit_smi_signal","exit_smi_histogram","return_percent","gross_pnl","net_pnl","dataset_fingerprint","underlying_source","signal_bar_source","entry_quote_source","exit_quote_source","market_timezone","user_timezone"],"trades":[{"contract_id":"SPY260604P00753000","dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","entry_ask":"2.02","entry_bid":"2.01","entry_delay_seconds":"0.0","entry_fill_source":"ask","entry_price":"2.02","entry_quote_sequence":0,"entry_quote_source":"option_quotes.csv:line=1298356;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","entry_spread_percent":"0.4962779156327543424317617866","entry_time":"2026-06-04T09:45:00-04:00","entry_time_user":"2026-06-04T16:45:00+03:00","entry_time_utc":"2026-06-04T13:45:00Z","exit_ask":"0.81","exit_bid":"0.8","exit_delay_seconds":"0.0","exit_fill_source":"bid","exit_macd":"-0.4906246029573083625665119","exit_macd_histogram":"0.0641066812427236090895661359","exit_macd_signal":"-0.5547312842000319716560780359","exit_price":"0.8","exit_quote_sequence":0,"exit_quote_source":"option_quotes.csv:line=1341276;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","exit_reason":"opposite_macd","exit_reasons":"opposite_macd","exit_smi":null,"exit_smi_histogram":null,"exit_smi_signal":null,"exit_spread_percent":"1.242236024844720496894409938","exit_time":"2026-06-04T10:25:00-04:00","exit_time_user":"2026-06-04T17:25:00+03:00","exit_time_utc":"2026-06-04T14:25:00Z","exit_trigger_time":"2026-06-04T10:25:00-04:00","exit_trigger_time_user":"2026-06-04T17:25:00+03:00","exit_trigger_time_utc":"2026-06-04T14:25:00Z","expiration":"2026-06-04","gross_pnl":"-122.00","market_timezone":"America/New_York","net_pnl":"-122.00","option_type":"put","return_percent":"-60.39603960396039603960396040","session_date":"2026-06-04","signal_bar_close":"752.0250","signal_bar_high":"753.1083","signal_bar_low":"751.9600","signal_bar_open":"752.9200","signal_bar_price":"752.0250","signal_bar_source":"signal_bars.csv:line=8985;sha256=87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730","signal_bar_volume":700687,"signal_instrument":"SPY","signal_macd":"-0.5760982961164808394438443","signal_macd_histogram":"-0.3225852196913527968959275538","signal_macd_signal":"-0.2535130764251280425479167462","signal_option_close":null,"signal_option_high":null,"signal_option_low":null,"signal_option_open":null,"signal_option_price":null,"signal_option_volume":null,"signal_previous_macd":"-0.4193940551015403480483874","signal_previous_macd_histogram":"-0.2465272835992505047244525422","signal_previous_macd_signal":"-0.1728667715022898433239348578","signal_previous_smi":"-37.37157679397071620402388177","signal_previous_smi_histogram":"1.91783521848057416213405651","signal_previous_smi_signal":"-39.28941201245129036615793828","signal_previous_time":"2026-06-04T09:40:00-04:00","signal_previous_time_user":"2026-06-04T16:40:00+03:00","signal_previous_time_utc":"2026-06-04T13:40:00Z","signal_smi":"-47.08571920136156516090962323","signal_smi_histogram":"-3.89815359445513739737584247","signal_smi_signal":"-43.18756560690642776353378076","signal_source":"alpha_vantage_underlying_close","signal_time":"2026-06-04T09:45:00-04:00","signal_time_user":"2026-06-04T16:45:00+03:00","signal_time_utc":"2026-06-04T13:45:00Z","signal_trigger":"smi_cross","signal_underlying_price":"752.065","signal_underlying_time":"2026-06-04T09:45:00-04:00","strike":"753","symbol":"SPY","trade_id":"5ba355337197447ca45e","underlying_source":"underlying.csv:line=5925;sha256=680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a","user_timezone":"Asia/Riyadh"},{"contract_id":"SPY260605P00744000","dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","entry_ask":"2.09","entry_bid":"2.07","entry_delay_seconds":"0.0","entry_fill_source":"ask","entry_price":"2.09","entry_quote_sequence":0,"entry_quote_source":"option_quotes.csv:line=1899283;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","entry_spread_percent":"0.9615384615384615384615384615","entry_time":"2026-06-05T12:45:00-04:00","entry_time_user":"2026-06-05T19:45:00+03:00","entry_time_utc":"2026-06-05T16:45:00Z","exit_ask":"1.28","exit_bid":"1.27","exit_delay_seconds":"0.0","exit_fill_source":"bid","exit_macd":"-1.6417234338331834781471599","exit_macd_histogram":"0.036589834936960730016717246","exit_macd_signal":"-1.678313268770144208163877146","exit_price":"1.27","exit_quote_sequence":0,"exit_quote_source":"option_quotes.csv:line=1909445;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","exit_reason":"opposite_macd","exit_reasons":"opposite_macd","exit_smi":null,"exit_smi_histogram":null,"exit_smi_signal":null,"exit_spread_percent":"0.7843137254901960784313725490","exit_time":"2026-06-05T12:55:00-04:00","exit_time_user":"2026-06-05T19:55:00+03:00","exit_time_utc":"2026-06-05T16:55:00Z","exit_trigger_time":"2026-06-05T12:55:00-04:00","exit_trigger_time_user":"2026-06-05T19:55:00+03:00","exit_trigger_time_utc":"2026-06-05T16:55:00Z","expiration":"2026-06-05","gross_pnl":"-82.00","market_timezone":"America/New_York","net_pnl":"-82.00","option_type":"put","return_percent":"-39.23444976076555023923444976","session_date":"2026-06-05","signal_bar_close":"743.2400","signal_bar_high":"744.3850","signal_bar_low":"742.9200","signal_bar_open":"744.2200","signal_bar_price":"743.2400","signal_bar_source":"signal_bars.csv:line=9555;sha256=87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730","signal_bar_volume":730796,"signal_instrument":"SPY","signal_macd":"-1.7415083630005799317954764","signal_macd_histogram":"-0.067536040879185810853255154","signal_macd_signal":"-1.673972322121394120942221246","signal_option_close":null,"signal_option_high":null,"signal_option_low":null,"signal_option_open":null,"signal_option_price":null,"signal_option_volume":null,"signal_previous_macd":"-1.6837155100894671191171849","signal_previous_macd_histogram":"-0.026627198187869450888277442","signal_previous_macd_signal":"-1.657088311901597668228907458","signal_previous_smi":"-87.12636896905407922388658715","signal_previous_smi_histogram":"0.44391571920560522086288797","signal_previous_smi_signal":"-87.57028468825968444474947512","signal_previous_time":"2026-06-05T12:40:00-04:00","signal_previous_time_user":"2026-06-05T19:40:00+03:00","signal_previous_time_utc":"2026-06-05T16:40:00Z","signal_smi":"-87.83633240289418575729750719","signal_smi_histogram":"-0.13302385731725065627401603","signal_smi_signal":"-87.70330854557693510102349116","signal_source":"alpha_vantage_underlying_close","signal_time":"2026-06-05T12:45:00-04:00","signal_time_user":"2026-06-05T19:45:00+03:00","signal_time_utc":"2026-06-05T16:45:00Z","signal_trigger":"smi_cross","signal_underlying_price":"743.26","signal_underlying_time":"2026-06-05T12:45:00-04:00","strike":"744","symbol":"SPY","trade_id":"83391c1c4a26f4bdd5f7","underlying_source":"underlying.csv:line=8775;sha256=680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a","user_timezone":"Asia/Riyadh"},{"contract_id":"AAPL260610P00295000","dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","entry_ask":"3.9","entry_bid":"3.75","entry_delay_seconds":"0.0","entry_fill_source":"ask","entry_price":"3.9","entry_quote_sequence":0,"entry_quote_source":"option_quotes.csv:line=2488744;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","entry_spread_percent":"3.921568627450980392156862745","entry_time":"2026-06-09T10:20:00-04:00","entry_time_user":"2026-06-09T17:20:00+03:00","entry_time_utc":"2026-06-09T14:20:00Z","exit_ask":"4","exit_bid":"3.9","exit_delay_seconds":"0.0","exit_fill_source":"bid","exit_macd":"-2.9675212625140485279710296","exit_macd_histogram":"0.022253168469282116560540036","exit_macd_signal":"-2.989774430983330644531569636","exit_price":"3.9","exit_quote_sequence":0,"exit_quote_source":"option_quotes.csv:line=2515174;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","exit_reason":"opposite_macd","exit_reasons":"opposite_macd","exit_smi":null,"exit_smi_histogram":null,"exit_smi_signal":null,"exit_spread_percent":"2.531645569620253164556962025","exit_time":"2026-06-09T10:50:00-04:00","exit_time_user":"2026-06-09T17:50:00+03:00","exit_time_utc":"2026-06-09T14:50:00Z","exit_trigger_time":"2026-06-09T10:50:00-04:00","exit_trigger_time_user":"2026-06-09T17:50:00+03:00","exit_trigger_time_utc":"2026-06-09T14:50:00Z","expiration":"2026-06-10","gross_pnl":"0.0","market_timezone":"America/New_York","net_pnl":"0.0","option_type":"put","return_percent":"0","session_date":"2026-06-09","signal_bar_close":"292.7950","signal_bar_high":"294.0300","signal_bar_low":"292.6553","signal_bar_open":"294.0100","signal_bar_price":"292.7950","signal_bar_source":"signal_bars.csv:line=10187;sha256=87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730","signal_bar_volume":1179199,"signal_instrument":"AAPL","signal_macd":"-3.1322373728177161781418975","signal_macd_histogram":"-0.438878858372877085452146390","signal_macd_signal":"-2.693358514444839092689751110","signal_option_close":null,"signal_option_high":null,"signal_option_low":null,"signal_option_open":null,"signal_option_price":null,"signal_option_volume":null,"signal_previous_macd":"-2.9867265363393982919421639","signal_previous_macd_histogram":"-0.403087736487778470615449387","signal_previous_macd_signal":"-2.583638799851619821326714513","signal_previous_smi":"-92.44680164505776132232578215","signal_previous_smi_histogram":"0.56958605636392997434400405","signal_previous_smi_signal":"-93.01638770142169129666978620","signal_previous_time":"2026-06-09T10:15:00-04:00","signal_previous_time_user":"2026-06-09T17:15:00+03:00","signal_previous_time_utc":"2026-06-09T14:15:00Z","signal_smi":"-93.37750237048096381355832579","signal_smi_histogram":"-0.18055733452963625844426979","signal_smi_signal":"-93.19694503595132755511405600","signal_source":"alpha_vantage_underlying_close","signal_time":"2026-06-09T10:20:00-04:00","signal_time_user":"2026-06-09T17:20:00+03:00","signal_time_utc":"2026-06-09T14:20:00Z","signal_trigger":"smi_cross","signal_underlying_price":"292.8","signal_underlying_time":"2026-06-09T10:20:00-04:00","strike":"295","symbol":"AAPL","trade_id":"690ecd2f1a3f0c111cb2","underlying_source":"underlying.csv:line=11947;sha256=680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a","user_timezone":"Asia/Riyadh"},{"contract_id":"NVDA260605C00207500","dataset_fingerprint":"a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2","entry_ask":"1.7","entry_bid":"1.67","entry_delay_seconds":"0.0","entry_fill_source":"ask","entry_price":"1.7","entry_quote_sequence":0,"entry_quote_source":"option_quotes.csv:line=1827517;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","entry_spread_percent":"1.780415430267062314540059347","entry_time":"2026-06-05T11:35:00-04:00","entry_time_user":"2026-06-05T18:35:00+03:00","entry_time_utc":"2026-06-05T15:35:00Z","exit_ask":"0.34","exit_bid":"0.33","exit_delay_seconds":"0.0","exit_fill_source":"bid","exit_macd":"-0.6345820262113491735856854","exit_macd_histogram":"-0.0293158928868019223697414273","exit_macd_signal":"-0.6052661333245472512159439727","exit_price":"0.33","exit_quote_sequence":0,"exit_quote_source":"option_quotes.csv:line=1995007;sha256=d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c","exit_reason":"opposite_macd","exit_reasons":"opposite_macd","exit_smi":null,"exit_smi_histogram":null,"exit_smi_signal":null,"exit_spread_percent":"2.985074626865671641791044776","exit_time":"2026-06-05T14:20:00-04:00","exit_time_user":"2026-06-05T21:20:00+03:00","exit_time_utc":"2026-06-05T18:20:00Z","exit_trigger_time":"2026-06-05T14:20:00-04:00","exit_trigger_time_user":"2026-06-05T21:20:00+03:00","exit_trigger_time_utc":"2026-06-05T18:20:00Z","expiration":"2026-06-05","gross_pnl":"-137.00","market_timezone":"America/New_York","net_pnl":"-137.00","option_type":"call","return_percent":"-80.58823529411764705882352941","session_date":"2026-06-05","signal_bar_close":"208.4300","signal_bar_high":"208.8500","signal_bar_low":"208.0800","signal_bar_open":"208.7000","signal_bar_price":"208.4300","signal_bar_source":"signal_bars.csv:line=9483;sha256=87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730","signal_bar_volume":2937366,"signal_instrument":"NVDA","signal_macd":"-1.9351539260176074547159610","signal_macd_histogram":"-0.015511548798550850274415526","signal_macd_signal":"-1.919642377219056604441545474","signal_option_close":null,"signal_option_high":null,"signal_option_low":null,"signal_option_open":null,"signal_option_price":null,"signal_option_volume":null,"signal_previous_macd":"-1.9309252077587112725127226","signal_previous_macd_histogram":"-0.015160717739292380639781007","signal_previous_macd_signal":"-1.915764490019418891872941593","signal_previous_smi":"-86.90860150435046434449533508","signal_previous_smi_histogram":"-0.63745814365372560152129217","signal_previous_smi_signal":"-86.27114336069673874297404291","signal_previous_time":"2026-06-05T11:30:00-04:00","signal_previous_time_user":"2026-06-05T18:30:00+03:00","signal_previous_time_utc":"2026-06-05T15:30:00Z","signal_smi":"-86.15790718389611201214035676","signal_smi_histogram":"0.05661808840031336541684308","signal_smi_signal":"-86.21452527229642537755719984","signal_source":"alpha_vantage_underlying_close","signal_time":"2026-06-05T11:35:00-04:00","signal_time_user":"2026-06-05T18:35:00+03:00","signal_time_utc":"2026-06-05T15:35:00Z","signal_trigger":"smi_cross","signal_underlying_price":"208.44","signal_underlying_time":"2026-06-05T11:35:00-04:00","strike":"207.5","symbol":"NVDA","trade_id":"f9718fee9db503715f34","underlying_source":"underlying.csv:line=8423;sha256=680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a","user_timezone":"Asia/Riyadh"}],"comparison":{"baseline":{"id":"github-30278849041-1","title":"Baseline replay / Workflow #30","created_at":"2026-07-27T15:15:35.079252Z","metrics":{"average_holding_minutes":58.87818696883853,"average_loss":-113.4969696969697,"average_return_percent":-4.91967097035029,"average_win":74.0909090909091,"closed_trades":353,"collisions_rejected":0,"entries_skipped_missing_data":63,"expectancy":-13.80169971671388,"flat":1,"gross_loss":18727.0,"gross_profit":13855.0,"losses":165,"max_drawdown":5771.0,"median_return_percent":26.829268292682926,"net_pnl":-4872.0,"open_positions":0,"profit_factor":0.739840871469002,"win_rate":52.97450424929179,"wins":187}},"settings_delta":[{"path":"rsi.maximum","baseline":"100.0","current":"20.0"}]}}</script>
+</body>
+</html>
