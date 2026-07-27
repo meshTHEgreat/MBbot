@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=881630d4be36">
-  <script src="assets/site.js?v=881630d4be36" defer></script>
-  <script src="assets/learn.js?v=881630d4be36" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=5c03bc41cfbd">
+  <script src="assets/site.js?v=5c03bc41cfbd" defer></script>
+  <script src="assets/learn.js?v=5c03bc41cfbd" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -477,6 +477,7 @@
           <span data-lang-content="ar" lang="ar" hidden>اختر مجموعة متغيرات</span>
           <select id="learn-variable-select">
             <option value="macd">MACD</option>
+            <option value="smi">Stochastic Momentum Index (SMI)</option>
             <option value="filters">Zero line &amp; RSI</option>
             <option value="contract">Contract selection</option>
             <option value="schedule">Schedule</option>
@@ -507,6 +508,35 @@
             <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
               <span data-lang-content="en">Does a faster signal improve timing after accounting for extra false crossovers and spread cost?</span>
               <span data-lang-content="ar" lang="ar" hidden>هل تحسن الإشارة الأسرع توقيت الدخول بعد احتساب التقاطعات الكاذبة الإضافية وتكلفة الفارق السعري؟</span></aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="smi" hidden>
+            <span class="instrument-type">TradingView standard · 10 · 3 · 3 baseline</span>
+            <h3 data-lang-content="en">SMI entry logic, smoothing, zones, and exit</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>منطق الدخول بمؤشر SMI وفترات التنعيم والنطاقات والخروج</h3>
+            <p data-lang-content="en">
+              Standard SMI is calculated locally from completed five-minute
+              high, low, and close values. Per run, it can confirm the current
+              MACD direction, require an SMI and MACD crossover on the same bar,
+              or replace MACD as the entry trigger. You can also change %K,
+              double-smoothing %D, the SMI signal EMA, the EMA seed, optional
+              oversold/overbought zones, and the opposite-SMI exit.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يُحتسب مؤشر الزخم العشوائي القياسي SMI محلياً من أعلى سعر وأدنى
+              سعر وسعر الإغلاق لشموع الخمس دقائق المكتملة. ويمكن في كل تشغيل
+              استخدامه لتأكيد اتجاه MACD الحالي، أو اشتراط تقاطع SMI وMACD في
+              الشمعة نفسها، أو جعله بديلاً عن MACD بوصفه محفز الدخول. كما يمكن
+              تعديل فترة %K وفترة التنعيم المزدوج %D ومتوسط خط إشارة SMI وطريقة
+              التهيئة ونطاقي التشبع البيعي والشرائي الاختياريين، وتفعيل الخروج
+              عند التقاطع العكسي للمؤشر.
+            </p>
+            <aside>
+              <strong data-lang-content="en">Coverage</strong>
+              <strong data-lang-content="ar" lang="ar" hidden>نطاق التطبيق</strong>
+              <span data-lang-content="en">The same settings apply to any selected combination of QQQ, SPY, TSLA, AAPL, and NVDA. SMI follows the selected underlying or option-contract signal series.</span>
+              <span data-lang-content="ar" lang="ar" hidden>تُطبق الإعدادات نفسها على أي مجموعة مختارة من QQQ وSPY وTSLA وAAPL وNVDA، ويتبع SMI سلسلة الإشارة المختارة سواء كانت الأصل أو عقد الخيار.</span>
+            </aside>
           </article>
 
           <article class="variable-panel" data-variable-panel="filters" hidden>
@@ -575,14 +605,15 @@
 
           <article class="variable-panel" data-variable-panel="exit" hidden>
             <span class="instrument-type">First chronological condition wins</span>
-            <h3 data-lang-content="en">Profit, opposite MACD, and timed exits</h3>
+            <h3 data-lang-content="en">Profit, opposite indicator, and timed exits</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>الخروج بالربح أو التقاطع العكسي أو الوقت</h3>
             <p data-lang-content="en">
               Profit is measured from entry ask to a later executable bid. The
-              opposite-MACD exit uses completed bars from the same open
-              contract. The time exit uses the first executable quote at or
-              after the configured Riyadh time. If conditions share one event,
-              priority is profit, opposite MACD, then time.
+              opposite-MACD exit uses completed bars from the same signal
+              series. An optional opposite-SMI exit uses that series too. The
+              time exit uses the first executable quote at or after the
+              configured Riyadh time. If conditions share one event, priority
+              is profit, opposite MACD, opposite SMI, then time.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               يُقاس الربح من سعر الطلب عند الدخول إلى أول سعر عرض لاحق قابل
@@ -747,8 +778,8 @@
               <span class="control-reference-summary">
                 <strong data-lang-content="en">Signal and indicators</strong>
                 <strong data-lang-content="ar" lang="ar" hidden>الإشارة والمؤشرات الفنية</strong>
-                <small data-lang-content="en">Signal series, MACD, zero line, and RSI</small>
-                <small data-lang-content="ar" lang="ar" hidden>سلسلة الإشارة وMACD وخط الصفر وRSI</small>
+                <small data-lang-content="en">Signal series, MACD, SMI, zero line, and RSI</small>
+                <small data-lang-content="ar" lang="ar" hidden>سلسلة الإشارة وMACD وSMI وخط الصفر وRSI</small>
               </span>
             </summary>
             <dl class="control-reference-list">
@@ -759,14 +790,15 @@
                   <small><span data-lang-content="en">AV underlying or option contract</span><span data-lang-content="ar" lang="ar" hidden>الأصل عبر AV أو عقد الخيار</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Selects the completed five-minute closes used by MACD and RSI.
+                  Selects the completed five-minute candles used by MACD, SMI,
+                  and RSI.
                   Recommended AV mode maps an underlying bullish cross to a call
                   and a bearish cross to a put. Option-contract mode requires a
                   bullish cross on the eligible contract itself. Both modes use
                   Databento quotes for option selection and fills.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يحدد سلسلة إغلاقات الخمس دقائق المكتملة المستخدمة في MACD
+                  يحدد سلسلة شموع الخمس دقائق المكتملة المستخدمة في MACD وSMI
                   وRSI. ففي وضع Alpha Vantage الموصى به، يوجّه التقاطع الإيجابي
                   للأصل إلى عقد شراء والتقاطع السلبي إلى عقد بيع. أما وضع عقد
                   الخيار فيشترط تقاطعاً إيجابياً على العقد المؤهل نفسه. ويستخدم
@@ -900,6 +932,84 @@
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يحددان نطاق RSI المقبول. ويجب أن يقع كل حد بين 0 و100، وألا
                   يتجاوز الحد الأدنى الحد الأعلى.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">SMI and entry behavior</span>
+                  <span data-lang-content="ar" lang="ar" hidden>مؤشر SMI وسلوك الدخول</span>
+                  <small><span data-lang-content="en">Off by default · three modes</span><span data-lang-content="ar" lang="ar" hidden>معطل افتراضياً · ثلاثة أوضاع</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Enables TradingView’s standard Stochastic Momentum Index.
+                  “Confirm” requires a MACD crossover and an agreeing current
+                  SMI state. “Same bar” requires both indicators to cross in the
+                  same direction on the same completed bar. “Replace” uses the
+                  SMI crossover without requiring a MACD crossover.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يفعّل مؤشر الزخم العشوائي القياسي وفق تعريف TradingView.
+                  ويشترط وضع «التأكيد» تقاطع MACD واتفاق حالة SMI الحالية معه،
+                  بينما يشترط وضع «الشمعة نفسها» تقاطع المؤشرين في الاتجاه نفسه
+                  على الشمعة المكتملة ذاتها، ويستخدم وضع «الاستبدال» تقاطع SMI
+                  من دون اشتراط تقاطع MACD.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">SMI %K, %D, signal, and seed</span>
+                  <span data-lang-content="ar" lang="ar" hidden>فترات %K و%D وخط الإشارة وطريقة التهيئة في SMI</span>
+                  <small><span data-lang-content="en">Defaults 10 / 3 / 3 · range 1–1000</span><span data-lang-content="ar" lang="ar" hidden>الافتراضي 10 / 3 / 3 · النطاق 1–1000</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  %K defines the recent high-low range. %D is applied twice to
+                  smooth the relative close and the range. The signal length
+                  smooths SMI into its comparison line. First-value and SMA
+                  warm-up seeds are both selectable and can change early bars.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  تحدد %K نطاق أعلى وأدنى سعر حديث، وتُطبق %D مرتين لتنعيم موضع
+                  الإغلاق النسبي ونطاق السعر. وتحدد فترة الإشارة تنعيم SMI إلى
+                  خط المقارنة. ويمكن اختيار التهيئة بأول قيمة أو بتمهيد المتوسط
+                  البسيط، وقد يختلف أثرهما في الشموع المبكرة.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">SMI extreme-zone filter</span>
+                  <span data-lang-content="ar" lang="ar" hidden>مرشح النطاقات المتطرفة في SMI</span>
+                  <small><span data-lang-content="en">Off by default · defaults −40 / +40</span><span data-lang-content="ar" lang="ar" hidden>معطل افتراضياً · الافتراضي −40 / +40</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  When enabled, a bullish signal must touch the configured
+                  oversold threshold on the previous or current bar, and a
+                  bearish signal must touch the overbought threshold. Both
+                  thresholds are configurable from −100 to +100, with oversold
+                  strictly below overbought.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  عند تفعيله، يجب أن تلامس الإشارة الإيجابية حد التشبع البيعي
+                  المحدد في الشمعة السابقة أو الحالية، وأن تلامس الإشارة السلبية
+                  حد التشبع الشرائي. ويمكن ضبط الحدين من −100 إلى +100، على أن
+                  يبقى حد التشبع البيعي أدنى من حد التشبع الشرائي.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Opposite SMI exit</span>
+                  <span data-lang-content="ar" lang="ar" hidden>الخروج بتقاطع SMI العكسي</span>
+                  <small><span data-lang-content="en">Off by default · requires SMI</span><span data-lang-content="ar" lang="ar" hidden>معطل افتراضياً · يتطلب تفعيل SMI</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Adds the first opposite completed-bar SMI crossover as an exit
+                  condition. If exit conditions share a timestamp, the recorded
+                  priority is profit target, opposite MACD, opposite SMI, then
+                  timed exit.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يضيف أول تقاطع عكسي لمؤشر SMI على شمعة مكتملة بوصفه شرط خروج.
+                  وإذا تزامنت شروط الخروج، تكون الأولوية المسجلة لهدف الربح، ثم
+                  تقاطع MACD العكسي، ثم تقاطع SMI العكسي، ثم الخروج الزمني.
                 </dd>
               </div>
             </dl>
@@ -1579,7 +1689,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-27T12:47:22.488818Z">2026-07-27T12:47:22.488818Z</time>.
+      <time datetime="2026-07-27T13:32:36.634360Z">2026-07-27T13:32:36.634360Z</time>.
     </p>
   </footer>
 </body>

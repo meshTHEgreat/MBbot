@@ -362,6 +362,16 @@
         rsi_period: value("rsi_period"),
         rsi_minimum: value("rsi_minimum"),
         rsi_maximum: value("rsi_maximum"),
+        smi_enabled: checked("smi_enabled"),
+        smi_entry_mode: value("smi_entry_mode"),
+        smi_k_length: value("smi_k_length"),
+        smi_d_length: value("smi_d_length"),
+        smi_signal_length: value("smi_signal_length"),
+        smi_ema_seed_method: value("smi_ema_seed_method"),
+        smi_zone_filter_enabled: checked("smi_zone_filter_enabled"),
+        smi_oversold: value("smi_oversold"),
+        smi_overbought: value("smi_overbought"),
+        opposite_smi_enabled: checked("opposite_smi_enabled"),
         max_premium: value("max_premium"),
         max_spread_percent: value("max_spread_percent"),
         spread_denominator: value("spread_denominator"),
@@ -510,10 +520,14 @@
     }
 
     profile.addEventListener("change", applyProfileSymbols);
-    form
-      .querySelectorAll("[data-controls]")
-      .forEach((toggle) => {
-        const applyRuleState = () => {
+    const dependencyToggles = [
+      ...form.querySelectorAll("[data-controls]"),
+    ];
+    const smiSummary = document.getElementById("smi-summary-state");
+    function applyRuleStates() {
+      for (let pass = 0; pass < 2; pass += 1) {
+        dependencyToggles.forEach((toggle) => {
+          const active = toggle.checked && !toggle.disabled;
           String(toggle.dataset.controls || "")
             .split(",")
             .map((name) => name.trim())
@@ -521,15 +535,37 @@
             .forEach((name) => {
               const controlled = form.elements.namedItem(name);
               if (!(controlled instanceof HTMLElement)) return;
-              controlled.toggleAttribute("disabled", !toggle.checked);
+              controlled.toggleAttribute("disabled", !active);
               controlled
                 .closest(".control-field")
-                ?.classList.toggle("is-rule-disabled", !toggle.checked);
+                ?.classList.toggle("is-rule-disabled", !active);
             });
+        });
+      }
+      const smiEnabled = form.elements.namedItem("smi_enabled");
+      const smiMode = form.elements.namedItem("smi_entry_mode");
+      if (
+        smiSummary &&
+        smiEnabled instanceof HTMLInputElement &&
+        smiMode instanceof HTMLSelectElement
+      ) {
+        const modeLabels = {
+          confirm_macd_state: "confirms MACD state",
+          require_same_bar_cross: "same-bar MACD + SMI cross",
+          replace_macd: "SMI replaces MACD",
         };
-        toggle.addEventListener("change", applyRuleState);
-        applyRuleState();
-      });
+        smiSummary.textContent = smiEnabled.checked
+          ? `Enabled · ${modeLabels[smiMode.value] || "custom mode"}`
+          : "TradingView standard · disabled by default";
+      }
+    }
+    dependencyToggles.forEach((toggle) => {
+      toggle.addEventListener("change", applyRuleStates);
+    });
+    form.elements
+      .namedItem("smi_entry_mode")
+      ?.addEventListener("change", applyRuleStates);
+    applyRuleStates();
     symbolInputs.forEach((input) => {
       input.addEventListener("change", () => {
         symbolsError.textContent = "";
@@ -1457,11 +1493,14 @@
         `Signal user timestamp: ${trade.signal_time_user ?? "not recorded"}`,
         `Signal source: ${trade.signal_source ?? report.extensions?.signal_source ?? "not recorded"}`,
         `Signal instrument: ${trade.signal_instrument ?? "not recorded"}`,
+        `Signal trigger: ${trade.signal_trigger ?? "not recorded"}`,
         `Signal OHLC: ${trade.signal_bar_open ?? trade.signal_option_open ?? "?"}/${trade.signal_bar_high ?? trade.signal_option_high ?? "?"}/${trade.signal_bar_low ?? trade.signal_option_low ?? "?"}/${trade.signal_bar_close ?? trade.signal_option_close ?? trade.signal_option_price ?? "?"}`,
         `Previous MACD timestamp: ${trade.signal_previous_time ?? "not recorded"}`,
         `Previous MACD user timestamp: ${trade.signal_previous_time_user ?? "not recorded"}`,
         `Previous MACD/signal/histogram: ${trade.signal_previous_macd ?? "?"}/${trade.signal_previous_macd_signal ?? "?"}/${trade.signal_previous_macd_histogram ?? "?"}`,
         `Current MACD/signal/histogram: ${trade.signal_macd ?? "?"}/${trade.signal_macd_signal ?? "?"}/${trade.signal_macd_histogram ?? "?"}`,
+        `Previous SMI/signal/histogram: ${trade.signal_previous_smi ?? "?"}/${trade.signal_previous_smi_signal ?? "?"}/${trade.signal_previous_smi_histogram ?? "?"}`,
+        `Current SMI/signal/histogram: ${trade.signal_smi ?? "?"}/${trade.signal_smi_signal ?? "?"}/${trade.signal_smi_histogram ?? "?"}`,
         `Entry source timestamp: ${trade.entry_time ?? "not recorded"}`,
         `Entry user timestamp: ${trade.entry_time_user ?? "not recorded"}`,
         `Entry fill price: ${trade.entry_price ?? "not recorded"}`,
@@ -1522,6 +1561,9 @@
         trade.signal_source
           ? `Signal ${trade.signal_source} on ${trade.signal_instrument || "unknown instrument"}`
           : null,
+        trade.signal_trigger
+          ? `Trigger ${trade.signal_trigger.replaceAll("_", " ")}`
+          : null,
         trade.signal_bar_open || trade.signal_option_open
           ? `OHLC ${trade.signal_bar_open ?? trade.signal_option_open}/${trade.signal_bar_high ?? trade.signal_option_high}/${trade.signal_bar_low ?? trade.signal_option_low}/${trade.signal_bar_close ?? trade.signal_option_close}`
           : null,
@@ -1530,6 +1572,12 @@
           : null,
         trade.signal_macd
           ? `Current MACD ${trade.signal_macd} / signal ${trade.signal_macd_signal} / histogram ${trade.signal_macd_histogram}`
+          : null,
+        trade.signal_previous_smi
+          ? `Previous (${trade.signal_previous_time}) SMI ${trade.signal_previous_smi} / signal ${trade.signal_previous_smi_signal} / histogram ${trade.signal_previous_smi_histogram}`
+          : null,
+        trade.signal_smi
+          ? `Current SMI ${trade.signal_smi} / signal ${trade.signal_smi_signal} / histogram ${trade.signal_smi_histogram}`
           : null,
         trade.signal_bar_source ? `source ${trade.signal_bar_source}` : null,
         trade.underlying_source
@@ -1576,6 +1624,9 @@
         trade.exit_reasons ? `Observed triggers ${trade.exit_reasons}` : null,
         trade.exit_macd
           ? `MACD ${trade.exit_macd} · signal ${trade.exit_macd_signal} · histogram ${trade.exit_macd_histogram}`
+          : null,
+        trade.exit_smi
+          ? `SMI ${trade.exit_smi} · signal ${trade.exit_smi_signal} · histogram ${trade.exit_smi_histogram}`
           : null,
       ]
         .filter(Boolean)
@@ -2133,6 +2184,19 @@
     "rsi.maximum": ["RSI", "RSI maximum"],
     "rsi.minimum": ["RSI", "RSI minimum"],
     "rsi.period": ["RSI", "RSI period"],
+    "smi.d_length": ["SMI", "%D smoothing"],
+    "smi.ema_seed_method": ["SMI", "EMA seed"],
+    "smi.enabled": ["SMI", "SMI entry logic"],
+    "smi.entry_mode": ["SMI", "Entry behavior"],
+    "smi.k_length": ["SMI", "%K length"],
+    "smi.opposite_crossover_exit_enabled": [
+      "SMI",
+      "Opposite crossover exit",
+    ],
+    "smi.overbought": ["SMI", "Overbought threshold"],
+    "smi.oversold": ["SMI", "Oversold threshold"],
+    "smi.signal_length": ["SMI", "Signal EMA"],
+    "smi.zone_filter_enabled": ["SMI", "Extreme-zone filter"],
     "schedule.entry_cutoff_minutes_before_close": [
       "Schedule",
       "Stop entries before close",
@@ -2216,6 +2280,11 @@
         "rsi.maximum",
         "rsi.minimum",
         "rsi.period",
+        "smi.d_length",
+        "smi.k_length",
+        "smi.overbought",
+        "smi.oversold",
+        "smi.signal_length",
       ].includes(path)
     ) {
       return formatNumber(value);
@@ -2232,6 +2301,9 @@
       bid: "Bid",
       nearest_itm_atm: "Nearest ITM / ATM",
       reject_both: "Reject both",
+      confirm_macd_state: "Confirm MACD with SMI state",
+      require_same_bar_cross: "Require same-bar MACD + SMI cross",
+      replace_macd: "SMI replaces MACD",
     };
     return namedValues[lower] || normalized;
   }

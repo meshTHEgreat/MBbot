@@ -30,12 +30,6 @@
     ]),
   });
   const NUMBER_FIELDS = Object.freeze([
-    "macd_fast_period",
-    "macd_slow_period",
-    "macd_signal_period",
-    "rsi_period",
-    "rsi_minimum",
-    "rsi_maximum",
     "max_premium",
     "max_spread_percent",
     "profit_target_percent",
@@ -51,8 +45,6 @@
     "validate_only",
   ]);
   const RULE_TOGGLE_FIELDS = Object.freeze([
-    "zero_line_filter_enabled",
-    "rsi_enabled",
     "max_premium_enabled",
     "max_spread_enabled",
     "entry_window_enabled",
@@ -65,14 +57,8 @@
     "experiment_label",
     "symbols",
     "signal_source",
-    "macd_fast_period",
-    "macd_slow_period",
-    "macd_signal_period",
-    "macd_ema_seed_method",
+    "indicator_settings",
     "rule_toggles",
-    "rsi_period",
-    "rsi_minimum",
-    "rsi_maximum",
     "max_premium",
     "max_spread_percent",
     "spread_denominator",
@@ -87,6 +73,28 @@
     "force_exit_time_riyadh",
     "validate_only",
   ]);
+  const SMI_ENTRY_MODES = Object.freeze([
+    "confirm_macd_state",
+    "require_same_bar_cross",
+    "replace_macd",
+  ]);
+
+  function finiteNumber(values, name, minimum, maximum, integer = false) {
+    const parsed = Number(values[name]);
+    if (
+      !Number.isFinite(parsed) ||
+      parsed < minimum ||
+      parsed > maximum ||
+      (integer && !Number.isInteger(parsed))
+    ) {
+      const noun = integer ? "whole number" : "number";
+      throw inputError(
+        `${name.replaceAll("_", " ")} must be a ${noun} from ${minimum} to ${maximum}.`,
+        name,
+      );
+    }
+    return parsed;
+  }
 
   function inputError(message, field = null) {
     const error = new Error(message);
@@ -170,21 +178,75 @@
         RULE_TOGGLE_FIELDS.map((name) => [name, Boolean(values[name])]),
       ),
     );
-    normalized.macd_ema_seed_method = String(
-      values.macd_ema_seed_method || "",
+    const macdFast = finiteNumber(values, "macd_fast_period", 1, 1000, true);
+    const macdSlow = finiteNumber(values, "macd_slow_period", 2, 1000, true);
+    const macdSignal = finiteNumber(
+      values,
+      "macd_signal_period",
+      1,
+      1000,
+      true,
     );
+    const rsiPeriod = finiteNumber(values, "rsi_period", 1, 1000, true);
+    const rsiMinimum = finiteNumber(values, "rsi_minimum", 0, 100);
+    const rsiMaximum = finiteNumber(values, "rsi_maximum", 0, 100);
+    const smiK = finiteNumber(values, "smi_k_length", 1, 1000, true);
+    const smiD = finiteNumber(values, "smi_d_length", 1, 1000, true);
+    const smiSignal = finiteNumber(
+      values,
+      "smi_signal_length",
+      1,
+      1000,
+      true,
+    );
+    const smiOversold = finiteNumber(values, "smi_oversold", -100, 100);
+    const smiOverbought = finiteNumber(values, "smi_overbought", -100, 100);
+    const macdSeed = String(values.macd_ema_seed_method || "");
+    const smiSeed = String(values.smi_ema_seed_method || "");
+    const smiEntryMode = String(values.smi_entry_mode || "");
+    normalized.indicator_settings = JSON.stringify({
+      macd: {
+        ema_seed_method: macdSeed,
+        fast_period: macdFast,
+        signal_period: macdSignal,
+        slow_period: macdSlow,
+        zero_line_filter_enabled: Boolean(
+          values.zero_line_filter_enabled,
+        ),
+      },
+      rsi: {
+        enabled: Boolean(values.rsi_enabled),
+        maximum: rsiMaximum,
+        minimum: rsiMinimum,
+        period: rsiPeriod,
+      },
+      smi: {
+        d_length: smiD,
+        ema_seed_method: smiSeed,
+        enabled: Boolean(values.smi_enabled),
+        entry_mode: smiEntryMode,
+        k_length: smiK,
+        opposite_crossover_exit_enabled: Boolean(
+          values.opposite_smi_enabled,
+        ),
+        overbought: smiOverbought,
+        oversold: smiOversold,
+        signal_length: smiSignal,
+        zone_filter_enabled: Boolean(values.smi_zone_filter_enabled),
+      },
+    });
     normalized.spread_denominator = String(values.spread_denominator || "");
     normalized.force_exit_time_riyadh = String(
       values.force_exit_time_riyadh || "",
     );
 
-    if (normalized.macd_fast_period >= normalized.macd_slow_period) {
+    if (macdFast >= macdSlow) {
       throw inputError(
         "MACD fast period must be smaller than the slow period.",
         "macd_fast_period",
       );
     }
-    if (normalized.rsi_minimum > normalized.rsi_maximum) {
+    if (rsiMinimum > rsiMaximum) {
       throw inputError(
         "RSI minimum cannot exceed RSI maximum.",
         "rsi_minimum",
@@ -199,8 +261,26 @@
         "entry_delay_minutes",
       );
     }
-    if (!["sma", "first"].includes(normalized.macd_ema_seed_method)) {
+    if (!["sma", "first"].includes(macdSeed)) {
       throw inputError("Choose a supported MACD seed method.", "macd_ema_seed_method");
+    }
+    if (!["sma", "first"].includes(smiSeed)) {
+      throw inputError("Choose a supported SMI seed method.", "smi_ema_seed_method");
+    }
+    if (!SMI_ENTRY_MODES.includes(smiEntryMode)) {
+      throw inputError("Choose a supported SMI entry mode.", "smi_entry_mode");
+    }
+    if (smiOversold >= smiOverbought) {
+      throw inputError(
+        "SMI oversold must be smaller than SMI overbought.",
+        "smi_oversold",
+      );
+    }
+    if (values.opposite_smi_enabled && !values.smi_enabled) {
+      throw inputError(
+        "Enable SMI before enabling the opposite SMI exit.",
+        "opposite_smi_enabled",
+      );
     }
     if (!["midpoint", "ask"].includes(normalized.spread_denominator)) {
       throw inputError("Choose a supported spread denominator.", "spread_denominator");
@@ -243,6 +323,7 @@
     PROFILE_SYMBOLS,
     PROFILE_SIGNAL_SOURCES,
     RULE_TOGGLE_FIELDS,
+    SMI_ENTRY_MODES,
     WORKFLOW_INPUT_NAMES,
     buildInputs,
   });
