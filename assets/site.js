@@ -202,6 +202,7 @@
     const resultLink = document.getElementById("backtest-result-link");
     const profile = form?.elements.namedItem("dataset_profile");
     const signalSource = form?.elements.namedItem("signal_source");
+    const signalSourceHelp = document.getElementById("signal-source-help");
     const symbolInputs = [
       ...(form?.querySelectorAll('input[name="symbol"]') || []),
     ];
@@ -293,6 +294,14 @@
     ]);
     let previousProfile = profile.value;
 
+    function updateSignalSourceHelp() {
+      if (!signalSourceHelp) return;
+      signalSourceHelp.textContent =
+        signalSource.value === "databento_option_contract"
+          ? "The selected option contract's completed five-minute bars drive MACD, RSI, and SMI. Databento also supplies contract selection and bid/ask fills."
+          : "Saved AV stock bars set the bullish or bearish direction. Databento still supplies option selection and bid/ask fills.";
+    }
+
     function applyProfileSymbols() {
       selectionsByProfile.set(
         previousProfile,
@@ -325,6 +334,7 @@
       if (!availableSignals.has(signalSource.value)) {
         signalSource.value = [...availableSignals][0] || "";
       }
+      updateSignalSourceHelp();
       clearError();
     }
 
@@ -520,6 +530,7 @@
     }
 
     profile.addEventListener("change", applyProfileSymbols);
+    signalSource.addEventListener("change", updateSignalSourceHelp);
     const dependencyToggles = [
       ...form.querySelectorAll("[data-controls]"),
     ];
