@@ -11,14 +11,17 @@
   "use strict";
 
   const PROFILE_SYMBOLS = Object.freeze({
-    "databento-opra-2026-06": Object.freeze([
-      "QQQ",
-      "SPY",
-      "TSLA",
-      "AAPL",
-      "NVDA",
-    ]),
+    "databento-opra-2026-06": Object.freeze(["TSLA"]),
     "thetadata-spy-2025-08-19": Object.freeze(["SPY"]),
+  });
+  const PROFILE_SIGNAL_SOURCES = Object.freeze({
+    "databento-opra-2026-06": Object.freeze([
+      "alpha_vantage_underlying_directional",
+      "databento_option_contract",
+    ]),
+    "thetadata-spy-2025-08-19": Object.freeze([
+      "databento_option_contract",
+    ]),
   });
   const NUMBER_FIELDS = Object.freeze([
     "macd_fast_period",
@@ -55,6 +58,7 @@
     "dataset_profile",
     "experiment_label",
     "symbols",
+    "signal_source",
     "macd_fast_period",
     "macd_slow_period",
     "macd_signal_period",
@@ -135,7 +139,16 @@
       dataset_profile: profile,
       experiment_label: label,
       symbols: symbols.join(","),
+      signal_source: String(values.signal_source || ""),
     };
+    if (
+      !PROFILE_SIGNAL_SOURCES[profile].includes(normalized.signal_source)
+    ) {
+      throw inputError(
+        "Choose a signal source available in this local dataset.",
+        "signal_source",
+      );
+    }
     for (const name of NUMBER_FIELDS) {
       const parsed = Number(values[name]);
       if (!Number.isFinite(parsed)) {
@@ -205,6 +218,7 @@
 
   return Object.freeze({
     PROFILE_SYMBOLS,
+    PROFILE_SIGNAL_SOURCES,
     RULE_TOGGLE_FIELDS,
     WORKFLOW_INPUT_NAMES,
     buildInputs,

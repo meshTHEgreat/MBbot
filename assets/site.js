@@ -201,6 +201,7 @@
     const resultActions = document.getElementById("backtest-result-actions");
     const resultLink = document.getElementById("backtest-result-link");
     const profile = form?.elements.namedItem("dataset_profile");
+    const signalSource = form?.elements.namedItem("signal_source");
     const symbolInputs = [
       ...(form?.querySelectorAll('input[name="symbol"]') || []),
     ];
@@ -217,6 +218,7 @@
       !resultActions ||
       !resultLink ||
       !profile ||
+      !signalSource ||
       !model
     ) {
       return;
@@ -314,6 +316,15 @@
         if (firstAvailable) firstAvailable.checked = true;
       }
       previousProfile = profile.value;
+      const availableSignals = new Set(
+        model.PROFILE_SIGNAL_SOURCES[profile.value] || [],
+      );
+      [...signalSource.options].forEach((option) => {
+        option.disabled = !availableSignals.has(option.value);
+      });
+      if (!availableSignals.has(signalSource.value)) {
+        signalSource.value = [...availableSignals][0] || "";
+      }
       clearError();
     }
 
@@ -332,6 +343,7 @@
       return {
         dataset_profile: value("dataset_profile"),
         experiment_label: value("experiment_label").trim(),
+        signal_source: value("signal_source"),
         symbols: symbolInputs
           .filter((input) => input.checked && !input.disabled)
           .map((input) => input.value),
@@ -1443,7 +1455,9 @@
         `Dataset fingerprint: ${trade.dataset_fingerprint ?? "not recorded"}`,
         `Signal source timestamp: ${trade.signal_time ?? "not recorded"}`,
         `Signal user timestamp: ${trade.signal_time_user ?? "not recorded"}`,
-        `Signal option OHLC: ${trade.signal_option_open ?? "?"}/${trade.signal_option_high ?? "?"}/${trade.signal_option_low ?? "?"}/${trade.signal_option_close ?? trade.signal_option_price ?? "?"}`,
+        `Signal source: ${trade.signal_source ?? report.extensions?.signal_source ?? "not recorded"}`,
+        `Signal instrument: ${trade.signal_instrument ?? "not recorded"}`,
+        `Signal OHLC: ${trade.signal_bar_open ?? trade.signal_option_open ?? "?"}/${trade.signal_bar_high ?? trade.signal_option_high ?? "?"}/${trade.signal_bar_low ?? trade.signal_option_low ?? "?"}/${trade.signal_bar_close ?? trade.signal_option_close ?? trade.signal_option_price ?? "?"}`,
         `Previous MACD timestamp: ${trade.signal_previous_time ?? "not recorded"}`,
         `Previous MACD user timestamp: ${trade.signal_previous_time_user ?? "not recorded"}`,
         `Previous MACD/signal/histogram: ${trade.signal_previous_macd ?? "?"}/${trade.signal_previous_macd_signal ?? "?"}/${trade.signal_previous_macd_histogram ?? "?"}`,
@@ -1492,6 +1506,8 @@
         }
       });
       const signalPrice =
+        trade.signal_bar_close ??
+        trade.signal_bar_price ??
         trade.signal_option_close ??
         trade.signal_option_price ??
         trade.signal_price ??
@@ -1503,8 +1519,11 @@
         trade.signal_underlying_time
           ? `underlying timestamp ${trade.signal_underlying_time}`
           : null,
-        trade.signal_option_open
-          ? `OHLC ${trade.signal_option_open}/${trade.signal_option_high}/${trade.signal_option_low}/${trade.signal_option_close}`
+        trade.signal_source
+          ? `Signal ${trade.signal_source} on ${trade.signal_instrument || "unknown instrument"}`
+          : null,
+        trade.signal_bar_open || trade.signal_option_open
+          ? `OHLC ${trade.signal_bar_open ?? trade.signal_option_open}/${trade.signal_bar_high ?? trade.signal_option_high}/${trade.signal_bar_low ?? trade.signal_option_low}/${trade.signal_bar_close ?? trade.signal_option_close}`
           : null,
         trade.signal_previous_macd
           ? `Previous (${trade.signal_previous_time}) MACD ${trade.signal_previous_macd} / signal ${trade.signal_previous_macd_signal} / histogram ${trade.signal_previous_macd_histogram}`
@@ -1822,6 +1841,12 @@
         automation.backtest_script_sha256,
       );
       appendDefinition(list, "Dataset profile", automation.dataset_profile);
+      appendDefinition(
+        list,
+        "Signal source",
+        automation.selected_parameters?.signal_source ||
+          report.extensions?.signal_source,
+      );
       appendDefinition(
         list,
         "Dataset identifier",

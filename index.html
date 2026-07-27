@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive MBbot backtest archive and experiment reports.">
   <title>MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=9a48f94e47a1">
-  <script src="assets/site-config.js?v=9a48f94e47a1" defer></script>
-  <script src="assets/backtest-control-model.js?v=9a48f94e47a1" defer></script>
-  <script src="assets/site.js?v=9a48f94e47a1" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=73e1b46abbe5">
+  <script src="assets/site-config.js?v=73e1b46abbe5" defer></script>
+  <script src="assets/backtest-control-model.js?v=73e1b46abbe5" defer></script>
+  <script src="assets/site.js?v=73e1b46abbe5" defer></script>
 </head>
 <body data-page="home">
   <a class="skip-link" href="#main-content">Skip to reports</a>
@@ -85,16 +85,15 @@
             <label class="control-field">
               <span>Local dataset</span>
               <select name="dataset_profile" required>
-                <option value="databento-opra-2026-06" disabled>
-                  Databento OPRA · June 2026 · pending local download
+                <option value="databento-opra-2026-06" selected>
+                  TSLA hybrid · June 2026 · local AV + Databento
                 </option>
-                <option value="thetadata-spy-2025-08-19" selected>
+                <option value="thetadata-spy-2025-08-19">
                   ThetaData official sample · SPY · 19 Aug 2025
                 </option>
               </select>
               <small>
-                No provider request can be made from this control. Databento
-                remains disabled until its local files pass validation.
+                Offline only. The runner cannot make a fresh provider request.
               </small>
             </label>
           </div>
@@ -115,11 +114,28 @@
           </fieldset>
 
           <fieldset class="control-fieldset">
-            <legend>Entry signal · option-contract MACD</legend>
-            <p class="fieldset-help">
-              The crossover is calculated from completed five-minute candles
-              of the selected option contract.
-            </p>
+            <legend>Entry signal · selectable MACD source</legend>
+            <div class="control-field-grid control-field-grid--intro">
+              <label class="control-field">
+                <span>Signal series</span>
+                <select name="signal_source" required>
+                  <option value="alpha_vantage_underlying_directional" selected>
+                    Recommended test · AV stock MACD direction
+                  </option>
+                  <option value="databento_option_contract">
+                    Original rule · selected option-contract MACD
+                  </option>
+                </select>
+                <small>
+                  AV stock bullish cross selects a call; bearish selects a put.
+                  The option is still priced and filled from Databento quotes.
+                </small>
+              </label>
+              <p class="fieldset-help signal-source-explainer">
+                Both modes use completed regular-session five-minute bars stored
+                on this PC. Every report records the exact source row.
+              </p>
+            </div>
             <div class="control-field-grid control-field-grid--four">
               <label class="control-field">
                 <span>Fast EMA</span>
@@ -164,7 +180,7 @@
                 <input name="rsi_enabled" type="checkbox">
                 <span>
                   <strong>Enable RSI filter</strong>
-                  <small>Uses Wilder RSI on the same option-contract candles.</small>
+                  <small>Uses Wilder RSI on the selected signal candles.</small>
                 </span>
               </label>
               <div class="control-field-grid control-field-grid--three">
@@ -517,9 +533,9 @@
 
   <footer class="site-footer">
     <p>Research backtests only. Not financial advice. Past or simulated performance does not predict future results.</p>
-    <p>Site generated <time datetime="2026-07-26T23:18:29.188431Z">2026-07-26T23:18:29.188431Z</time>.</p>
+    <p>Site generated <time datetime="2026-07-27T08:54:50.359098Z">2026-07-27T08:54:50.359098Z</time>.</p>
   </footer>
 
-  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-26T23:18:29.188431Z","reports":[]}</script>
+  <script type="application/json" id="report-manifest">{"schema_version":"1.0","site_title":"MBbot Research Desk","generated_at":"2026-07-27T08:54:50.359098Z","reports":[]}</script>
 </body>
 </html>
