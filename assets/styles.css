@@ -409,7 +409,7 @@ td:not(:first-child),
 .tape-pnl {
   margin-bottom: 32px;
   font-family: var(--font-data);
-  font-size: clamp(3.2rem, 6vw, 5.4rem);
+  font-size: clamp(2.5rem, 3.7vw, 3.5rem);
   font-weight: 650;
   letter-spacing: -0.08em;
   line-height: 0.95;
