@@ -11,7 +11,13 @@
   "use strict";
 
   const PROFILE_SYMBOLS = Object.freeze({
-    "databento-opra-2026-06": Object.freeze(["TSLA"]),
+    "databento-opra-2026-06": Object.freeze([
+      "QQQ",
+      "SPY",
+      "TSLA",
+      "AAPL",
+      "NVDA",
+    ]),
     "thetadata-spy-2025-08-19": Object.freeze(["SPY"]),
   });
   const PROFILE_SIGNAL_SOURCES = Object.freeze({
@@ -198,6 +204,23 @@
     }
     if (!["midpoint", "ask"].includes(normalized.spread_denominator)) {
       throw inputError("Choose a supported spread denominator.", "spread_denominator");
+    }
+    const toggles = JSON.parse(normalized.rule_toggles);
+    if (
+      profile === "databento-opra-2026-06" &&
+      (!toggles.max_premium_enabled ||
+        normalized.max_premium > 4 ||
+        !toggles.max_spread_enabled ||
+        normalized.max_spread_percent > 50 ||
+        normalized.spread_denominator !== "midpoint" ||
+        !toggles.entry_window_enabled ||
+        normalized.entry_delay_minutes < 15 ||
+        normalized.entry_cutoff_minutes < 60)
+    ) {
+      throw inputError(
+        "This verified offline dataset supports an enabled ask cap up to $4, an enabled midpoint spread cap up to 50%, and entries from 15 minutes after open until 60 minutes before close.",
+        "dataset_profile",
+      );
     }
     if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(normalized.force_exit_time_riyadh)) {
       throw inputError(
