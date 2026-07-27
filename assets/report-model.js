@@ -58,6 +58,9 @@
       label: "Dataset start",
       group: "Data window",
       kind: "date",
+      flag: "setup",
+      guidance:
+        "Different start dates expose the runs to different market conditions. Treat aggregate and rate deltas as unlike periods.",
       read: (report) => report?.dataset?.first_timestamp,
     },
     {
@@ -65,6 +68,9 @@
       label: "Dataset end",
       group: "Data window",
       kind: "date",
+      flag: "setup",
+      guidance:
+        "Different end dates expose the runs to different market conditions. Align the window before attributing a result to strategy settings.",
       read: (report) => report?.dataset?.last_timestamp,
     },
     {
@@ -72,6 +78,9 @@
       label: "Trading sessions",
       group: "Data coverage",
       kind: "integer",
+      flag: "context",
+      guidance:
+        "Session counts normally change when the selected symbol basket changes. Total P&L and trade counts are not directly comparable until the universe is aligned.",
       read: (report) => report?.dataset?.sessions,
     },
     {
@@ -79,6 +88,9 @@
       label: "Underlying points",
       group: "Data coverage",
       kind: "integer",
+      flag: "context",
+      guidance:
+        "Underlying-point totals describe coverage, not performance. A different symbol basket can explain this difference.",
       read: (report) => report?.dataset?.underlying_points,
     },
     {
@@ -86,6 +98,9 @@
       label: "Option bars",
       group: "Data coverage",
       kind: "integer",
+      flag: "context",
+      guidance:
+        "Option-bar totals depend on symbols, contracts, and eligible sessions. Confirm those scopes before treating the difference as a data-quality problem.",
       read: (report) => report?.dataset?.option_bars,
     },
     {
@@ -93,6 +108,9 @@
       label: "Option quotes",
       group: "Data coverage",
       kind: "integer",
+      flag: "context",
+      guidance:
+        "Quote totals depend on the selected universe and contract coverage. Use this difference to explain sample size, not as a performance signal.",
       read: (report) => report?.dataset?.option_quotes,
     },
     {
@@ -100,6 +118,9 @@
       label: "Symbols",
       group: "Universe",
       kind: "setting",
+      flag: "setup",
+      guidance:
+        "Aggregate totals from different symbol baskets are not like-for-like. Compare per-symbol results or rerun the same universe.",
       setting: "backtest.symbols",
     },
     {
@@ -107,6 +128,9 @@
       label: "Bar interval",
       group: "Replay model",
       kind: "minutes",
+      flag: "setup",
+      guidance:
+        "A different bar interval changes indicator timing and signal count. Do not attribute metric deltas until it matches.",
       setting: "backtest.bar_minutes",
     },
     {
@@ -114,6 +138,9 @@
       label: "Contracts per trade",
       group: "Replay model",
       kind: "setting",
+      flag: "setup",
+      guidance:
+        "Contract count scales dollar exposure and net P&L. Percentage returns and signal quality should be interpreted separately.",
       setting: "backtest.contracts_per_trade",
     },
     {
@@ -121,6 +148,9 @@
       label: "Contract multiplier",
       group: "Replay model",
       kind: "setting",
+      flag: "setup",
+      guidance:
+        "A different multiplier makes dollar P&L incomparable even when entries and percentage returns match.",
       setting: "backtest.contract_multiplier",
     },
     {
@@ -128,6 +158,9 @@
       label: "Commission per contract",
       group: "Costs & fills",
       kind: "money",
+      flag: "setup",
+      guidance:
+        "Different commission assumptions change every trade's net result. Align costs before comparing net P&L or expectancy.",
       setting: "backtest.commission_per_contract",
     },
     {
@@ -135,7 +168,10 @@
       label: "Profit price source",
       group: "Costs & fills",
       kind: "setting",
-      setting: "exit.profit_price_source",
+      flag: "setup",
+      guidance:
+        "The profit source determines which executable side is used to test the target. The verified replay uses the bid.",
+      setting: "exit.profit_price_field",
     },
   ];
 
@@ -179,6 +215,8 @@
         label: dimension.label,
         group: dimension.group,
         kind: dimension.kind,
+        flag: dimension.flag,
+        guidance: dimension.guidance,
         values,
         state: !recorded
           ? "missing"

@@ -1348,6 +1348,10 @@ tbody tr:hover {
   color: var(--danger) !important;
 }
 
+.caution {
+  color: var(--amber) !important;
+}
+
 .neutral {
   color: var(--text-muted) !important;
 }
@@ -2252,6 +2256,10 @@ details .table-scroll {
   max-width: 1100px;
 }
 
+.compare-hero h1 {
+  font-size: clamp(3rem, 13vw, 7.4rem);
+}
+
 .comparison-picker,
 .comparison-results,
 .compare-warning {
@@ -2342,14 +2350,20 @@ details .table-scroll {
 }
 
 .comparison-option-copy strong {
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .comparison-option-copy small,
 .comparison-picker-panel > output {
   color: var(--text-muted);
+}
+
+.comparison-option-copy small {
+  overflow-wrap: anywhere;
 }
 
 .comparison-picker-panel > output {
@@ -2412,7 +2426,8 @@ details .table-scroll {
 }
 
 .comparison-run-copy,
-.comparison-run-heading {
+.comparison-run-heading,
+.comparison-run-title {
   min-width: 0;
 }
 
@@ -2425,18 +2440,33 @@ details .table-scroll {
 
 .comparison-run-heading h3 {
   min-width: 0;
-  margin: 2px 0 0;
+  margin: 0;
   font-size: 0.98rem;
 }
 
 .comparison-run-heading a {
-  display: flex;
-  min-height: 44px;
-  align-items: center;
-  overflow: hidden;
+  display: inline;
   color: var(--text);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.comparison-run-title {
+  display: grid;
+  padding-block: 3px;
+  gap: 7px;
+}
+
+.comparison-workflow-label {
+  width: fit-content;
+  padding: 3px 7px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-faint);
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
 }
 
 .comparison-run-copy p {
@@ -2465,6 +2495,7 @@ details .table-scroll {
 .comparison-compatibility {
   display: grid;
   margin-bottom: 26px;
+  align-items: start;
   gap: 8px;
 }
 
@@ -2475,12 +2506,16 @@ details .table-scroll {
   background: var(--surface-soft);
 }
 
-.compatibility-check[data-state="different"] {
-  border-color: color-mix(in srgb, var(--negative) 58%, var(--border));
+.compatibility-check[data-state="different"][data-flag="setup"] {
+  border-color: color-mix(in srgb, var(--danger) 58%, var(--border));
+}
+
+.compatibility-check[data-state="different"][data-flag="context"] {
+  border-color: color-mix(in srgb, var(--amber) 58%, var(--border));
 }
 
 .compatibility-check[data-state="missing"] {
-  border-color: color-mix(in srgb, var(--warning) 58%, var(--border));
+  border-color: color-mix(in srgb, var(--amber) 58%, var(--border));
 }
 
 .compatibility-check summary {
@@ -2519,12 +2554,16 @@ details .table-scroll {
   color: var(--positive);
 }
 
-.compatibility-check[data-state="different"] .compatibility-state {
-  color: var(--negative);
+.compatibility-check[data-state="different"][data-flag="setup"] .compatibility-state {
+  color: var(--danger);
+}
+
+.compatibility-check[data-state="different"][data-flag="context"] .compatibility-state {
+  color: var(--amber);
 }
 
 .compatibility-check[data-state="missing"] .compatibility-state {
-  color: var(--warning);
+  color: var(--amber);
 }
 
 .compatibility-values,
@@ -2572,9 +2611,11 @@ details .table-scroll {
 
 .compatibility-values dt span:last-child,
 .comparison-value-list dt span:last-child {
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .compatibility-values dd,
@@ -2583,6 +2624,22 @@ details .table-scroll {
   font-size: 0.74rem;
   overflow-wrap: anywhere;
   text-align: right;
+}
+
+.compatibility-guidance {
+  margin: 0;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.compatibility-check[data-flag="setup"] .compatibility-guidance {
+  background: var(--danger-soft);
+}
+
+.compatibility-check[data-flag="context"] .compatibility-guidance {
+  background: var(--amber-soft);
 }
 
 .mobile-comparison-list {
@@ -2643,19 +2700,66 @@ details .table-scroll {
   gap: 12px;
 }
 
-.comparison-setting-card summary code {
-  overflow-wrap: anywhere;
+.comparison-setting-summary {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
 }
 
-.comparison-setting-card summary span {
+.comparison-setting-summary small,
+.comparison-setting-name small {
+  color: var(--text-faint);
+  font-family: var(--font-data);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.comparison-setting-summary strong {
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.comparison-setting-card summary > span:last-child {
   color: var(--text-muted);
   font-size: 0.68rem;
   white-space: nowrap;
 }
 
+.comparison-setting-path {
+  display: flex;
+  margin: 0;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  color: var(--text-faint);
+  font-size: 0.67rem;
+}
+
+.comparison-setting-path code {
+  overflow-wrap: anywhere;
+}
+
 .comparison-setting-card .comparison-value-list {
   padding: 0 14px 12px;
   border-top: 1px solid var(--border);
+}
+
+.comparison-setting-name {
+  display: grid;
+  gap: 4px;
+}
+
+.comparison-setting-name strong {
+  color: var(--text);
+}
+
+.comparison-setting-name code {
+  color: var(--text-faint);
+  font-size: 0.64rem;
+  overflow-wrap: anywhere;
 }
 
 .comparison-table .comparison-run-badge {
@@ -3940,6 +4044,183 @@ h1 {
   color: var(--text);
 }
 
+.control-reference {
+  display: grid;
+  margin-top: clamp(56px, 9vw, 96px);
+  padding-top: clamp(42px, 7vw, 72px);
+  border-top: 1px solid var(--border-strong);
+  gap: 22px;
+}
+
+.control-reference-heading {
+  display: grid;
+  gap: 14px;
+}
+
+.control-reference-heading h3 {
+  max-width: 19ch;
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 3rem);
+}
+
+.control-reference-heading > p {
+  max-width: 68ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.control-reference-guardrail {
+  display: grid;
+  padding: clamp(20px, 5vw, 30px);
+  border: 1px solid color-mix(in srgb, var(--amber) 52%, var(--border));
+  border-radius: var(--radius-md);
+  background: var(--amber-soft);
+  gap: 8px;
+}
+
+.control-reference-guardrail strong {
+  color: var(--amber);
+}
+
+.control-reference-guardrail p {
+  max-width: 84ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.control-reference-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.control-reference-group {
+  overflow: clip;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+}
+
+.control-reference-group[open] {
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.control-reference-group summary {
+  min-height: 72px;
+  padding: 18px 20px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.control-reference-group summary::marker {
+  color: var(--accent);
+}
+
+.control-reference-group summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: -4px;
+}
+
+.control-reference-group[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.control-reference-summary {
+  display: inline-grid;
+  max-width: calc(100% - 28px);
+  margin-inline-start: 6px;
+  vertical-align: middle;
+  gap: 4px;
+}
+
+.control-reference-summary strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.control-reference-summary small {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.control-reference-list {
+  margin: 0;
+}
+
+.control-reference-list > div {
+  display: grid;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 9px;
+}
+
+.control-reference-list > div:last-child {
+  border-bottom: 0;
+}
+
+.control-reference-list dt {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 7px 10px;
+  color: var(--text);
+  font-weight: 750;
+}
+
+.control-reference-list dt > small {
+  display: inline-flex;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--canvas);
+  align-items: center;
+  color: var(--text-faint);
+  font-family: var(--font-data);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.control-reference-list dd {
+  max-width: 76ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.control-reference-footnote {
+  margin: 0;
+  padding: 18px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--text-muted);
+}
+
+.control-reference-footer {
+  display: grid;
+  padding: clamp(22px, 5vw, 34px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 92% 12%, var(--accent-soft), transparent 34%),
+    var(--surface);
+  align-items: center;
+  gap: 18px;
+}
+
+.control-reference-footer p {
+  max-width: 74ch;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.control-reference-footer .primary-action {
+  width: 100%;
+}
+
 .lab-note {
   margin-top: 18px;
   border-color: var(--border);
@@ -4248,6 +4529,26 @@ h1 {
   .symbol-panel dl {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
+  }
+
+  .control-reference-heading {
+    grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
+    align-items: end;
+    gap: clamp(28px, 6vw, 80px);
+  }
+
+  .control-reference-list > div {
+    padding: 22px 24px;
+    grid-template-columns: minmax(210px, 0.4fr) minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .control-reference-footer {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .control-reference-footer .primary-action {
+    width: auto;
   }
 
   .readiness-grid {

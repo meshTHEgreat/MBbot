@@ -2082,6 +2082,160 @@
     },
   ];
 
+  const comparisonSettingPresentations = Object.freeze({
+    "backtest.bar_minutes": ["Replay", "Signal bar interval"],
+    "backtest.commission_per_contract": ["Costs", "Commission per contract"],
+    "backtest.contract_multiplier": ["Sizing", "Contract multiplier"],
+    "backtest.contracts_per_trade": ["Sizing", "Contracts per trade"],
+    "backtest.symbols": ["Universe", "Symbols"],
+    "contract.allow_zero_dte": ["Contract selection", "Allow 0DTE"],
+    "contract.fallback_to_next_expiration": [
+      "Contract selection",
+      "Next expiry fallback",
+    ],
+    "contract.max_premium": ["Contract selection", "Maximum ask"],
+    "contract.max_premium_enabled": [
+      "Contract selection",
+      "Premium cap",
+    ],
+    "contract.max_spread_enabled": ["Contract selection", "Spread cap"],
+    "contract.max_spread_percent": [
+      "Contract selection",
+      "Maximum spread",
+    ],
+    "contract.premium_field": [
+      "Contract selection",
+      "Premium eligibility field",
+    ],
+    "contract.scan_next_strike_if_nearest_fails": [
+      "Contract selection",
+      "Scan next strike",
+    ],
+    "contract.spread_denominator": [
+      "Contract selection",
+      "Spread denominator",
+    ],
+    "contract.strike_policy": ["Contract selection", "Strike policy"],
+    "exit.entry_price_field": ["Fill model", "Entry price field"],
+    "exit.opposite_macd_enabled": ["Exit", "Reverse MACD exit"],
+    "exit.profit_price_field": ["Fill model", "Profit price field"],
+    "exit.profit_target_enabled": ["Exit", "Profit target"],
+    "exit.profit_target_percent": ["Exit", "Profit target percentage"],
+    "exit.simultaneous_priority": ["Exit", "Same-event exit priority"],
+    "macd.ema_seed_method": ["Signal", "EMA seed"],
+    "macd.fast_period": ["Signal", "Fast EMA"],
+    "macd.price_source": ["Signal", "MACD price source"],
+    "macd.signal_period": ["Signal", "Signal EMA"],
+    "macd.slow_period": ["Signal", "Slow EMA"],
+    "macd.source": ["Signal", "MACD signal series"],
+    "macd.zero_line_filter_enabled": ["Signal", "Zero-line filter"],
+    "rsi.enabled": ["RSI", "RSI filter"],
+    "rsi.maximum": ["RSI", "RSI maximum"],
+    "rsi.minimum": ["RSI", "RSI minimum"],
+    "rsi.period": ["RSI", "RSI period"],
+    "schedule.entry_cutoff_minutes_before_close": [
+      "Schedule",
+      "Stop entries before close",
+    ],
+    "schedule.entry_delay_minutes_after_open": [
+      "Schedule",
+      "Entry delay after open",
+    ],
+    "schedule.entry_window_enabled": ["Schedule", "Entry window"],
+    "schedule.force_exit_time_riyadh": [
+      "Schedule",
+      "Forced exit · Asia/Riyadh",
+    ],
+    "schedule.time_exit_enabled": ["Schedule", "Timed exit"],
+  });
+
+  function reportTitleParts(report) {
+    const title = String(report?.title || report?.id || "Untitled experiment");
+    const match = title.match(/^(.*?)\s*\/\s*(Workflow\s+#\d+)\s*$/i);
+    return match
+      ? { name: match[1].trim(), workflow: match[2].trim() }
+      : { name: title, workflow: "" };
+  }
+
+  function compactReportTitle(report) {
+    const parts = reportTitleParts(report);
+    return parts.workflow
+      ? `${parts.name} · ${parts.workflow.replace(/^Workflow\s+/i, "")}`
+      : parts.name;
+  }
+
+  function comparisonSettingPresentation(path) {
+    const known = comparisonSettingPresentations[path];
+    if (known) return { group: known[0], label: known[1] };
+    const segments = String(path).split(".");
+    const label = (segments.pop() || "Setting")
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    const group = (segments.pop() || "Configuration")
+      .replaceAll("_", " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    return { group, label };
+  }
+
+  function formatComparisonSetting(path, value) {
+    const normalized = String(value ?? "not set");
+    const lower = normalized.toLowerCase();
+    if (lower === "enabled" || lower === "disabled") {
+      return lower === "enabled" ? "Enabled" : "Disabled";
+    }
+    if (lower === "not set") return "Not set";
+    if (
+      path === "contract.max_spread_percent" ||
+      path === "exit.profit_target_percent"
+    ) {
+      return `${formatNumber(value)}%`;
+    }
+    if (
+      path === "contract.max_premium" ||
+      path === "backtest.commission_per_contract"
+    ) {
+      return formatMoney(value);
+    }
+    if (
+      path === "backtest.bar_minutes" ||
+      path === "schedule.entry_cutoff_minutes_before_close" ||
+      path === "schedule.entry_delay_minutes_after_open"
+    ) {
+      return `${formatNumber(value)} min`;
+    }
+    if (path === "schedule.force_exit_time_riyadh") {
+      return `${normalized} Asia/Riyadh`;
+    }
+    if (
+      [
+        "backtest.contract_multiplier",
+        "backtest.contracts_per_trade",
+        "macd.fast_period",
+        "macd.signal_period",
+        "macd.slow_period",
+        "rsi.maximum",
+        "rsi.minimum",
+        "rsi.period",
+      ].includes(path)
+    ) {
+      return formatNumber(value);
+    }
+    const namedValues = {
+      first: "First close",
+      sma: "SMA warm-up",
+      underlying: "Stored underlying closes",
+      option_contract: "Option-contract trade closes",
+      close: "Close",
+      trade_close: "Trade close",
+      midpoint: "Midpoint",
+      ask: "Ask",
+      bid: "Bid",
+      nearest_itm_atm: "Nearest ITM / ATM",
+      reject_both: "Reject both",
+    };
+    return namedValues[lower] || normalized;
+  }
+
   function renderComparison() {
     const manifest = readJson("report-manifest");
     const reports = manifest?.reports || [];
@@ -2150,6 +2304,16 @@
         badge.hidden = index < 0;
         badge.textContent = index < 0 ? "" : runLetter(index);
       });
+      [...options.querySelectorAll(".comparison-option")]
+        .sort((left, right) => {
+          const leftIndex = order.indexOf(left.dataset.reportId);
+          const rightIndex = order.indexOf(right.dataset.reportId);
+          if (leftIndex >= 0 && rightIndex >= 0) return leftIndex - rightIndex;
+          if (leftIndex >= 0) return -1;
+          if (rightIndex >= 0) return 1;
+          return 0;
+        })
+        .forEach((option) => options.append(option));
       updateSelectionStatus();
     }
 
@@ -2165,6 +2329,7 @@
     function renderOptions() {
       options.replaceChildren();
       reports.forEach((report) => {
+        const title = reportTitleParts(report);
         const checkbox = element("input", {
           className: "compare-check",
           type: "checkbox",
@@ -2208,9 +2373,15 @@
               hidden: "hidden",
             }),
             element("span", { className: "comparison-option-copy" }, [
-              element("strong", { text: report.title }),
+              element("strong", { text: title.name }),
               element("small", {
-                text: `${formatDate(report.created_at)} · ${report.status}`,
+                text: [
+                  title.workflow,
+                  formatDate(report.created_at),
+                  report.status,
+                ]
+                  .filter(Boolean)
+                  .join(" · "),
               }),
             ]),
           ],
@@ -2236,6 +2407,7 @@
       runKey.replaceChildren();
       runKey.hidden = active.length === 0;
       active.forEach((report, index) => {
+        const title = reportTitleParts(report);
         const controls =
           index === 0
             ? element("span", {
@@ -2262,11 +2434,21 @@
               runBadge(index),
               element("div", { className: "comparison-run-copy" }, [
                 element("div", { className: "comparison-run-heading" }, [
-                  element("h3", {}, [
-                    element("a", {
-                      href: report.url,
-                      text: report.title,
-                    }),
+                  element("div", { className: "comparison-run-title" }, [
+                    element("h3", {}, [
+                      element("a", {
+                        href: report.url,
+                        text: title.name,
+                      }),
+                    ]),
+                    ...(title.workflow
+                      ? [
+                          element("span", {
+                            className: "comparison-workflow-label",
+                            text: title.workflow,
+                          }),
+                        ]
+                      : []),
                   ]),
                   statusNode(report.status),
                 ]),
@@ -2333,7 +2515,10 @@
         metricsHead.append(
           element("th", { scope: "col" }, [
             runBadge(index),
-            element("a", { href: report.url, text: report.title }),
+            element("a", {
+              href: report.url,
+              text: compactReportTitle(report),
+            }),
           ]),
         );
       });
@@ -2366,7 +2551,7 @@
             element("div", {}, [
               element("dt", {}, [
                 runBadge(index),
-                element("span", { text: report.title }),
+                element("span", { text: compactReportTitle(report) }),
               ]),
               element("dd", { className: valueClassName }, [
                 element("strong", { text: row.format(value) }),
@@ -2422,16 +2607,38 @@
       const rows = window.MBbotReportModel.buildCompatibilityRows(active);
       const different = rows.filter((row) => row.state === "different");
       const missing = rows.filter((row) => row.state === "missing");
-      const firstFlagged = [...different, ...missing][0]?.id;
-      rows.forEach((row) => {
-        const stateLabel = {
-          match: "Match",
-          different: "Different",
-          missing: "Missing data",
-        }[row.state];
+      const setupDifferences = different.filter(
+        (row) => row.flag === "setup",
+      );
+      const contextDifferences = different.filter(
+        (row) => row.flag === "context",
+      );
+      const orderedRows = [...rows].sort((left, right) => {
+        const rank = (row) => {
+          if (row.state === "different" && row.flag === "setup") return 0;
+          if (row.state === "different") return 1;
+          if (row.state === "missing") return 2;
+          return 3;
+        };
+        return rank(left) - rank(right);
+      });
+      const firstFlagged = orderedRows.find(
+        (row) => row.state !== "match",
+      )?.id;
+      orderedRows.forEach((row) => {
+        const stateLabel =
+          row.state === "match"
+            ? "Match"
+            : row.state === "missing"
+              ? "Not verifiable"
+              : row.flag === "context"
+                ? "Coverage differs"
+                : row.group === "Universe"
+                  ? "Universe differs"
+                  : "Setup differs";
         const details = element("details", {
           className: "compatibility-check",
-          dataset: { state: row.state },
+          dataset: { state: row.state, flag: row.flag || "setup" },
         });
         details.open = row.id === firstFlagged;
         details.append(
@@ -2454,7 +2661,7 @@
             element("div", {}, [
               element("dt", {}, [
                 runBadge(index),
-                element("span", { text: report.title }),
+                element("span", { text: compactReportTitle(report) }),
               ]),
               element("dd", {}, [
                 formatCompatibilityNode(row, row.values[index]),
@@ -2463,11 +2670,31 @@
           );
         });
         details.append(values);
+        if (row.guidance) {
+          details.append(
+            element("p", {
+              className: "compatibility-guidance",
+              text: row.guidance,
+            }),
+          );
+        }
         compatibilityList.append(details);
       });
-      if (different.length) {
-        compatibility.textContent = `${different.length} of ${rows.length} comparability checks differ. Open the flagged checks before interpreting deltas.`;
+      if (setupDifferences.length) {
+        const contextCopy = contextDifferences.length
+          ? ` and ${contextDifferences.length} coverage ${
+              contextDifferences.length === 1 ? "check differs" : "checks differ"
+            }`
+          : "";
+        compatibility.textContent = `${setupDifferences.length} setup ${
+          setupDifferences.length === 1 ? "check differs" : "checks differ"
+        }${contextCopy}. Align the flagged setup before attributing metric deltas.`;
         compatibility.className = "negative";
+      } else if (contextDifferences.length) {
+        compatibility.textContent = `Recorded replay settings match; ${contextDifferences.length} coverage ${
+          contextDifferences.length === 1 ? "check differs" : "checks differ"
+        }. Compare aggregate totals with caution and inspect per-symbol results.`;
+        compatibility.className = "caution";
       } else if (missing.length) {
         compatibility.textContent = `Recorded checks match; ${missing.length} of ${rows.length} could not be verified.`;
         compatibility.className = "neutral";
@@ -2493,7 +2720,7 @@
         settingsHead.append(
           element("th", { scope: "col" }, [
             runBadge(index),
-            element("span", { text: report.title }),
+            element("span", { text: compactReportTitle(report) }),
           ]),
         );
       });
@@ -2506,11 +2733,22 @@
       settingsCards.hidden = active.length < 2;
       settingsLedger.hidden = active.length < 2;
       differing.forEach((difference, differenceIndex) => {
+        const presentation = comparisonSettingPresentation(difference.path);
         const row = element("tr", {}, [
-          element("td", {}, [element("code", { text: difference.path })]),
+          element("td", {}, [
+            element("span", { className: "comparison-setting-name" }, [
+              element("small", { text: presentation.group }),
+              element("strong", { text: presentation.label }),
+              element("code", { text: difference.path }),
+            ]),
+          ]),
         ]);
         difference.values.forEach((value) => {
-          row.append(element("td", { text: String(value) }));
+          row.append(
+            element("td", {
+              text: formatComparisonSetting(difference.path, value),
+            }),
+          );
         });
         settingsBody.append(row);
 
@@ -2523,10 +2761,19 @@
         ).size;
         details.append(
           element("summary", {}, [
-            element("code", { text: difference.path }),
+            element("span", { className: "comparison-setting-summary" }, [
+              element("small", { text: presentation.group }),
+              element("strong", { text: presentation.label }),
+            ]),
             element("span", {
               text: `${variants} recorded values`,
             }),
+          ]),
+        );
+        details.append(
+          element("p", { className: "comparison-setting-path" }, [
+            element("span", { text: "Recorded field" }),
+            element("code", { text: difference.path }),
           ]),
         );
         const values = element("dl", {
@@ -2537,11 +2784,14 @@
             element("div", {}, [
               element("dt", {}, [
                 runBadge(index),
-                element("span", { text: report.title }),
+                element("span", { text: compactReportTitle(report) }),
               ]),
               element("dd", {}, [
-                element("code", {
-                  text: String(difference.values[index]),
+                element("span", {
+                  text: formatComparisonSetting(
+                    difference.path,
+                    difference.values[index],
+                  ),
                 }),
               ]),
             ]),
