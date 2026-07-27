@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=2ec4703659a2">
-  <script src="assets/site.js?v=2ec4703659a2" defer></script>
-  <script src="assets/learn.js?v=2ec4703659a2" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=a66870fe1464">
+  <script src="assets/site.js?v=a66870fe1464" defer></script>
+  <script src="assets/learn.js?v=a66870fe1464" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -223,17 +223,21 @@
         <li>
           <span class="strategy-number">04</span>
           <div>
-            <h3 data-lang-content="en">Enter at the first qualifying ask</h3>
-            <h3 data-lang-content="ar" lang="ar" hidden>الدخول بأول سعر طلب مؤهل</h3>
+            <h3 data-lang-content="en">Enter from the first qualifying retained ask</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الدخول وفق أول سعر طلب محفوظ ومؤهل</h3>
             <p data-lang-content="en">
-              The quote must occur at or after the completed signal bar and no
-              more than 15 seconds later. If call and put both signal on the
-              same bar, both entries are rejected.
+              The replay uses the first qualifying retained one-minute ask
+              snapshot at or after the completed signal bar, subject to the
+              configured quote-age limit. It does not infer which quote moved
+              first inside that minute. If call and put both signal on the same
+              bar, both entries are rejected.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
-              يجب أن يَرِد التسعير عند اكتمال شمعة الإشارة أو بعده، وبفاصل لا
-              يتجاوز 15 ثانية. وإذا ظهرت إشارة متزامنة لعقد الشراء وعقد البيع
-              على الشمعة نفسها، تُرفض الإشارتان معاً.
+              تستخدم المحاكاة أول لقطة محفوظة ومؤهلة لسعر الطلب بفاصل دقيقة
+              واحدة عند اكتمال شمعة الإشارة أو بعدها، مع تطبيق حد تقادم
+              التسعير المحدد في الإعدادات. ولا تستنتج ترتيب تحركات الأسعار
+              داخل الدقيقة نفسها. وإذا ظهرت إشارة متزامنة لعقد الشراء وعقد
+              البيع على الشمعة نفسها، تُرفض الإشارتان معاً.
             </p>
           </div>
         </li>
@@ -279,13 +283,15 @@
         <strong data-lang-content="ar" lang="ar" hidden>تبقى أدلة الاختبار التاريخي منفصلة عن التنفيذ الحي.</strong>
         <p data-lang-content="en">
           The active workflow replays archived ThetaData option bars, offline
-          contract selection, and exact ask-in/bid-out quote states without
-          placing an order or contacting a data provider.
+          contract selection, and one-minute ask-in/bid-out quote snapshots
+          without placing an order or contacting a data provider. It does not
+          infer the order of quote changes inside a minute.
         </p>
         <p data-lang-content="ar" lang="ar" hidden>
           يعيد مسار التشغيل النشط محاكاة شموع الخيارات المؤرشفة من ThetaData،
-          واختيار العقود محلياً، وحالات التسعير الدقيقة للدخول بسعر الطلب
-          والخروج بسعر العرض، من دون إرسال أمر أو الاتصال بمزود البيانات.
+          واختيار العقود محلياً، ولقطات سعر الطلب للدخول وسعر العرض للخروج
+          بدقة زمنية قدرها دقيقة واحدة، من دون إرسال أمر أو الاتصال بمزود
+          البيانات. ولا يفترض ترتيب تغيرات الأسعار داخل الدقيقة الواحدة.
         </p>
       </aside>
     </section>
@@ -1481,16 +1487,16 @@
           <p data-lang-content="en">
             The primary profile targets QQQ, SPY, TSLA, AAPL, and NVDA with
             one-minute option trades, locally formed five-minute candles,
-            underlying selection prices, contract mappings, and exact
-            strategy-relevant NBBO state changes. A selected date becomes
+            underlying selection prices, contract mappings, and the last
+            retained NBBO snapshot for each minute. A selected date becomes
             runnable only after every symbol for that session is complete and
             hash-verified on the local runner.
           </p>
           <p data-lang-content="ar" lang="ar" hidden>
             يستهدف الملف الأساسي الرموز QQQ وSPY وTSLA وAAPL وNVDA، ويشمل
             تداولات الخيارات لفاصل الدقيقة، وشموع الخمس دقائق المكوّنة محلياً،
-            وأسعار الأصل المستخدمة في اختيار العقد، وتعريفات العقود، وكل
-            تغير جوهري في حالة NBBO يلزم الاستراتيجية. ولا يصبح التاريخ المختار
+            وأسعار الأصل المستخدمة في اختيار العقد، وتعريفات العقود، وآخر لقطة
+            محفوظة لأفضل عرض وطلب في كل دقيقة. ولا يصبح التاريخ المختار
             قابلاً للتشغيل إلا بعد اكتمال بيانات جميع الرموز في الجلسة والتحقق
             من بصماتها على المشغّل المحلي.
           </p>
@@ -1724,7 +1730,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-27T18:34:28.807035Z">2026-07-27T18:34:28.807035Z</time>.
+      <time datetime="2026-07-27T21:34:08.405309Z">2026-07-27T21:34:08.405309Z</time>.
     </p>
   </footer>
 </body>

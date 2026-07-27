@@ -1812,7 +1812,7 @@
       empty.hidden = trades.length > 0;
       output.textContent = `${trades.length} of ${allTrades.length} trades · ${columns.length} fields each · ${
         tradeTimeMode === "source"
-          ? "exact source timestamps"
+          ? "recorded source timestamps"
           : `local time (${localTimeZone})`
       }`;
       if (focusColumn) {
