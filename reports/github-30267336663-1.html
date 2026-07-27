@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive MBbot backtest experiment report.">
+  <title>Baseline replay / Workflow #17 · MBbot Research Desk</title>
+  <link rel="stylesheet" href="../assets/styles.css?v=881630d4be36">
+  <script src="../assets/report-model.js?v=881630d4be36" defer></script>
+  <script src="../assets/site.js?v=881630d4be36" defer></script>
+</head>
+<body data-page="report">
+  <a class="skip-link" href="#main-content">Skip to report</a>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Backtest intelligence</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="../index.html">Archive</a>
+      <a href="../compare.html">Compare</a>
+      <a href="../learn.html">Learn</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Research desk</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">Experiment report</span>
+    </nav>
+
+    <article class="report-shell">
+      <header class="report-hero">
+        <div class="report-heading">
+          <div class="report-meta" id="report-meta"></div>
+          <h1 id="report-title">Baseline replay / Workflow #17</h1>
+          <p id="report-dataset-range">Loading dataset context…</p>
+        </div>
+        <div class="report-outcome" id="report-outcome"></div>
+      </header>
+
+      <section class="quality-banner" id="quality-banner" aria-labelledby="quality-title">
+        <div>
+          <p class="section-label">Evidence quality</p>
+          <h2 id="quality-title">Read the limits before the result</h2>
+        </div>
+        <ul id="quality-notes"></ul>
+      </section>
+
+      <section class="metric-ribbon" id="metric-ribbon" aria-label="Key performance metrics"></section>
+
+      <section class="decision-section" aria-labelledby="decision-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Decision trace</p>
+            <h2 id="decision-title">Change → outcome → next test</h2>
+          </div>
+          <p id="baseline-note">The first report has no baseline.</p>
+        </div>
+        <div class="decision-trace" id="decision-trace"></div>
+      </section>
+
+      <section class="chart-grid" aria-labelledby="performance-title">
+        <div class="section-heading chart-grid-heading">
+          <div>
+            <p class="section-label">Performance trace</p>
+            <h2 id="performance-title">Sequence matters</h2>
+          </div>
+          <p>Cumulative net P&amp;L and drawdown are ordered by exit time.</p>
+        </div>
+        <figure class="chart-panel chart-panel-wide">
+          <figcaption>
+            <strong>Cumulative net P&amp;L</strong>
+            <span id="equity-summary">No chart data.</span>
+          </figcaption>
+          <div class="canvas-wrap">
+            <canvas id="equity-chart" role="img" aria-label="Cumulative net profit and loss by closed trade"></canvas>
+          </div>
+          <details>
+            <summary>View chart data</summary>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">Trade</th><th scope="col">Exit</th><th scope="col">Net P&amp;L</th><th scope="col">Cumulative</th><th scope="col">Drawdown</th></tr></thead>
+                <tbody id="equity-data"></tbody>
+              </table>
+            </div>
+          </details>
+        </figure>
+        <figure class="chart-panel">
+          <figcaption>
+            <strong>Trade returns</strong>
+            <span>Each bar is one closed trade.</span>
+          </figcaption>
+          <div class="canvas-wrap canvas-wrap-short">
+            <canvas id="returns-chart" role="img" aria-label="Return percentage for each closed trade"></canvas>
+          </div>
+        </figure>
+        <section class="chart-panel breakdown-panel" aria-labelledby="breakdown-title">
+          <div>
+            <strong id="breakdown-title">Outcome breakdown</strong>
+            <span>Net P&amp;L by symbol, direction, and exit reason.</span>
+          </div>
+          <div id="breakdowns"></div>
+        </section>
+      </section>
+
+      <section class="settings-section" aria-labelledby="settings-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Reproducibility</p>
+            <h2 id="settings-title">What was set</h2>
+          </div>
+          <p>Secret-like values are redacted before this public artifact is written.</p>
+        </div>
+        <div class="settings-layout">
+          <section aria-labelledby="delta-title">
+            <h3 id="delta-title">Changed from baseline</h3>
+            <div id="settings-delta"></div>
+          </section>
+          <section aria-labelledby="snapshot-title">
+            <h3 id="snapshot-title">Exact configuration snapshot</h3>
+            <div class="settings-groups" id="settings-groups"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="trades-section" aria-labelledby="trades-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Trade ledger</p>
+            <h2 id="trades-title">Every closed position</h2>
+          </div>
+          <p>New columns in a supported result are preserved automatically.</p>
+        </div>
+        <div class="trade-tools">
+          <label class="search-field">
+            <span>Search trades</span>
+            <input id="trade-search" type="search" autocomplete="off"
+                   placeholder="Symbol, contract, exit reason…">
+          </label>
+          <label>
+            <span>Order trades</span>
+            <select id="trade-order">
+              <option value="exit-desc">Latest exit first</option>
+              <option value="exit-asc">Earliest exit first</option>
+              <option value="pnl-desc">Highest net P&amp;L</option>
+              <option value="pnl-asc">Lowest net P&amp;L</option>
+              <option value="return-desc">Highest return</option>
+              <option value="return-asc">Lowest return</option>
+            </select>
+          </label>
+          <label>
+            <span>Time display</span>
+            <select id="trade-time-display">
+              <option value="local">Local chart time</option>
+              <option value="source">Exact source timestamp</option>
+            </select>
+          </label>
+          <output id="trade-status" aria-live="polite"></output>
+        </div>
+        <p class="trade-validation-note" id="trade-timezone-note">
+          Each expanded trade includes an execution receipt with source
+          timestamps and fill prices for manual chart validation.
+        </p>
+        <div class="mobile-trade-list" id="trade-cards" aria-label="Trade details"></div>
+        <div class="table-scroll desktop-trade-ledger" tabindex="0" aria-label="Scrollable trade ledger">
+          <table class="trade-table">
+            <thead><tr id="trade-head"></tr></thead>
+            <tbody id="trade-body"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="trade-empty" hidden>
+          <span class="empty-glyph" aria-hidden="true">∅</span>
+          <h3>No closed trades in this view</h3>
+          <p>The run may have produced no fills, or the search may exclude them.</p>
+        </div>
+      </section>
+
+      <section class="provenance-section" aria-labelledby="provenance-title">
+        <div>
+          <p class="section-label">Run receipt</p>
+          <h2 id="provenance-title">Data and provenance</h2>
+        </div>
+        <dl id="provenance-list"></dl>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>Research backtests only. Not financial advice. A result and a settings change occurring together do not prove causation.</p>
+    <p><a href="../index.html">Return to the experiment archive</a></p>
+  </footer>
+
+  <script type="application/json" id="report-data">{"schema_version":"1.0","id":"github-30267336663-1","created_at":"2026-07-27T12:47:21.909038Z","title":"Baseline replay / Workflow #17","kind":"historical_backtest","status":"research","tags":["automated","thetadata-spy-2025-08-19","spy"],"authoring":{"baseline_id":null,"hypothesis":"","observation":"","next_test":""},"quality":{"label":"research","notes":["Small sample: fewer than 30 closed trades; treat apparent patterns as unstable.","2 entries were skipped because required data was unavailable."]},"dataset":{"contracts":187,"dataset_fingerprint":"7fe879b6f7505a54585dcfb9d02df0e0da311bc4d35be828128ea8dd35bc498d","first_timestamp":"2025-08-19T09:35:00-04:00","last_timestamp":"2025-08-19T16:00:00-04:00","option_bars":3850,"option_quotes":7678,"sessions":1,"signal_bar_providers":[],"signal_bars":0,"source_files":[{"bytes":176,"filename":"sessions.csv","rows":1,"sha256":"b071535ac6fed84c201ab9ac150eadfcee281f7519f6bd8a4f4b509f04cd0404"},{"bytes":9221,"filename":"underlying.csv","rows":63,"sha256":"715b86b630b5d9c672ff32994205112a2cfd94bf82d2fc8b8bf93cb764388b78"},{"bytes":1042720,"filename":"option_bars.csv","rows":3850,"sha256":"411a378c6b21d387c77b6094828774816ddf8b835297b2b41d51afdb2df466be"},{"bytes":2087649,"filename":"option_quotes.csv","rows":7678,"sha256":"fd3aa9c29ea56ba347c43fba5b5fa728e86cf077f6d748970460e63608c56d3a"}],"underlying_points":63},"automation":{"actor":"meshTHEgreat","application_version":"mbbot 0.1.0","backtest_entry_point":"mbbot.backtest_cli","backtest_script_sha256":"de1dc473aec0a45e7e9845aebed287535f87947bf0a44be409c5f141b47eb527","backtest_source_branch":null,"backtest_source_commit_sha":null,"data_access_mode":"offline-only","dataset_identifier":"thetadata:official-sample:SPY:2025-08-19","dataset_profile":"thetadata-spy-2025-08-19","dependency_versions":{"mbbot":"0.1.0","tzdata":"2026.3"},"duration_seconds":2.666,"ended_at_utc":"2026-07-27T12:47:22.373433Z","project_python_network_access":false,"provider_api_access":false,"provider_credentials_removed":0,"public_repository":"meshTHEgreat/MBbot","python_version":"3.12.10","report_path":"reports/github-30267336663-1.html","report_url":"https://meshthegreat.github.io/MBbot/reports/github-30267336663-1.html","request_timestamp_source":"github_actions_api","requested_at_project_time":"2026-07-27T15:46:50+03:00","requested_at_utc":"2026-07-27T12:46:50Z","run_url":"https://github.com/meshTHEgreat/mbbot-backtest-control/actions/runs/30267336663","schema_version":"mbbot.backtest.automation.v1","selected_parameters":{"allow_zero_dte":true,"commission_per_contract":"0","contracts_per_trade":"1","dataset_profile":"thetadata-spy-2025-08-19","entry_cutoff_minutes":"60","entry_delay_minutes":"1","entry_window_enabled":true,"experiment_label":"Baseline replay","fallback_to_next_expiration":true,"force_exit_time_riyadh":"22:20","macd_ema_seed_method":"first","macd_fast_period":"12","macd_signal_period":"9","macd_slow_period":"26","max_premium":"4","max_premium_enabled":true,"max_spread_enabled":true,"max_spread_percent":"50","opposite_macd_enabled":true,"profit_target_enabled":true,"profit_target_percent":"20","rsi_enabled":false,"rsi_maximum":"50","rsi_minimum":"0","rsi_period":"14","scan_next_strike_if_nearest_fails":true,"signal_source":"databento_option_contract","spread_denominator":"midpoint","symbols":["SPY"],"time_exit_enabled":true,"validate_only":false,"zero_line_filter_enabled":false},"source_branch":"main","source_commit_sha":"f464d5ac0962ed922d4348bd960c8b669ac376f1","started_at_utc":"2026-07-27T12:47:19.707403Z","status":"success","workflow_name":"Run Local Backtest","workflow_run_attempt":"1","workflow_run_id":"30267336663","workflow_run_number":"17"},"metrics":{"closed_trades":1,"wins":1,"losses":0,"flat":0,"win_rate":100.0,"net_pnl":34.0,"gross_profit":34.0,"gross_loss":0,"profit_factor":null,"average_return_percent":21.25,"median_return_percent":21.25,"average_win":34.0,"average_loss":null,"expectancy":34.0,"max_drawdown":0.0,"average_holding_minutes":4.999983333333334,"collisions_rejected":0,"entries_skipped_missing_data":2,"open_positions":0},"charts":{"cumulative_pnl":[{"index":1,"time":"2025-08-19T10:45:00.005000-04:00","label":"SPY","cumulative_pnl":34.0,"drawdown":0.0,"net_pnl":34.0}],"returns":[{"index":1,"value":21.25,"label":"SPY"}]},"breakdowns":{"symbol":[{"label":"SPY","trades":1,"wins":1,"win_rate":100.0,"average_return_percent":21.25,"net_pnl":34.0}],"option_type":[{"label":"put","trades":1,"wins":1,"win_rate":100.0,"average_return_percent":21.25,"net_pnl":34.0}],"exit_reason":[{"label":"profit_target","trades":1,"wins":1,"win_rate":100.0,"average_return_percent":21.25,"net_pnl":34.0}]},"strategy":{"settings":{"backtest":{"bar_minutes":5,"commission_per_contract":0.0,"contract_multiplier":100,"contracts_per_trade":1,"dataset_dir":"data/backtest","entry_fill":"first_ask_after_completed_signal_bar","market_timezone":"America/New_York","missing_contract_bar_policy":"reject_signal","monitor_sides":["call","put"],"same_bar_collision":"reject_both","selection_quote_delay_seconds":15,"symbols":["SPY"],"underlying_max_age_seconds":15,"user_timezone":"Asia/Riyadh"},"contract":{"allow_zero_dte":true,"fallback_to_next_expiration":true,"max_premium":4.0,"max_premium_enabled":true,"max_spread_enabled":true,"max_spread_percent":50.0,"premium_field":"ask","scan_next_strike_if_nearest_fails":true,"spread_denominator":"midpoint","strike_policy":"nearest_itm_atm"},"exit":{"entry_price_field":"ask","opposite_macd_enabled":true,"profit_price_field":"bid","profit_target_enabled":true,"profit_target_percent":20.0,"simultaneous_priority":["profit_target","opposite_macd","time_exit"]},"macd":{"ema_seed_method":"first","fast_period":12,"price_source":"trade_close","signal_period":9,"slow_period":26,"source":"option_contract","zero_line_filter_enabled":false},"rsi":{"enabled":false,"maximum":50.0,"minimum":0.0,"period":14},"schedule":{"entry_cutoff_minutes_before_close":60,"entry_delay_minutes_after_open":1,"entry_window_enabled":true,"force_exit_time_riyadh":"22:20","time_exit_enabled":true}},"settings_flat":[{"path":"backtest.bar_minutes","value":"5"},{"path":"backtest.commission_per_contract","value":"0.0"},{"path":"backtest.contract_multiplier","value":"100"},{"path":"backtest.contracts_per_trade","value":"1"},{"path":"backtest.dataset_dir","value":"data/backtest"},{"path":"backtest.entry_fill","value":"first_ask_after_completed_signal_bar"},{"path":"backtest.market_timezone","value":"America/New_York"},{"path":"backtest.missing_contract_bar_policy","value":"reject_signal"},{"path":"backtest.monitor_sides","value":"call, put"},{"path":"backtest.same_bar_collision","value":"reject_both"},{"path":"backtest.selection_quote_delay_seconds","value":"15"},{"path":"backtest.symbols","value":"SPY"},{"path":"backtest.underlying_max_age_seconds","value":"15"},{"path":"backtest.user_timezone","value":"Asia/Riyadh"},{"path":"contract.allow_zero_dte","value":"enabled"},{"path":"contract.fallback_to_next_expiration","value":"enabled"},{"path":"contract.max_premium","value":"4.0"},{"path":"contract.max_premium_enabled","value":"enabled"},{"path":"contract.max_spread_enabled","value":"enabled"},{"path":"contract.max_spread_percent","value":"50.0"},{"path":"contract.premium_field","value":"ask"},{"path":"contract.scan_next_strike_if_nearest_fails","value":"enabled"},{"path":"contract.spread_denominator","value":"midpoint"},{"path":"contract.strike_policy","value":"nearest_itm_atm"},{"path":"exit.entry_price_field","value":"ask"},{"path":"exit.opposite_macd_enabled","value":"enabled"},{"path":"exit.profit_price_field","value":"bid"},{"path":"exit.profit_target_enabled","value":"enabled"},{"path":"exit.profit_target_percent","value":"20.0"},{"path":"exit.simultaneous_priority","value":"profit_target, opposite_macd, time_exit"},{"path":"macd.ema_seed_method","value":"first"},{"path":"macd.fast_period","value":"12"},{"path":"macd.price_source","value":"trade_close"},{"path":"macd.signal_period","value":"9"},{"path":"macd.slow_period","value":"26"},{"path":"macd.source","value":"option_contract"},{"path":"macd.zero_line_filter_enabled","value":"disabled"},{"path":"rsi.enabled","value":"disabled"},{"path":"rsi.maximum","value":"50.0"},{"path":"rsi.minimum","value":"0.0"},{"path":"rsi.period","value":"14"},{"path":"schedule.entry_cutoff_minutes_before_close","value":"60"},{"path":"schedule.entry_delay_minutes_after_open","value":"1"},{"path":"schedule.entry_window_enabled","value":"enabled"},{"path":"schedule.force_exit_time_riyadh","value":"22:20"},{"path":"schedule.time_exit_enabled","value":"enabled"}],"fingerprint":"531b2af9bfdbfd364bf4c8e5ae2ccd0a4761c8fbf2691efa7829e690f7f2217a"},"trades":[{"contract_id":"SPY250819P00644000","dataset_fingerprint":"7fe879b6f7505a54585dcfb9d02df0e0da311bc4d35be828128ea8dd35bc498d","entry_ask":"1.60","entry_bid":"1.59","entry_delay_seconds":"0.006","entry_fill_source":"ask","entry_price":"1.60","entry_quote_sequence":0,"entry_quote_source":"option_quotes.csv:line=1343;sha256=fd3aa9c29ea56ba347c43fba5b5fa728e86cf077f6d748970460e63608c56d3a","entry_spread_percent":"0.6269592476489028213166144201","entry_time":"2025-08-19T10:40:00.006000-04:00","entry_time_user":"2025-08-19T17:40:00.006000+03:00","entry_time_utc":"2025-08-19T14:40:00.006000Z","exit_ask":"1.97","exit_bid":"1.94","exit_delay_seconds":"0.0","exit_fill_source":"bid","exit_macd":null,"exit_macd_histogram":null,"exit_macd_signal":null,"exit_price":"1.94","exit_quote_sequence":0,"exit_quote_source":"option_quotes.csv:line=1462;sha256=fd3aa9c29ea56ba347c43fba5b5fa728e86cf077f6d748970460e63608c56d3a","exit_reason":"profit_target","exit_reasons":"profit_target","exit_spread_percent":"1.534526854219948849104859335","exit_time":"2025-08-19T10:45:00.005000-04:00","exit_time_user":"2025-08-19T17:45:00.005000+03:00","exit_time_utc":"2025-08-19T14:45:00.005000Z","exit_trigger_time":"2025-08-19T10:45:00.005000-04:00","exit_trigger_time_user":"2025-08-19T17:45:00.005000+03:00","exit_trigger_time_utc":"2025-08-19T14:45:00.005000Z","expiration":"2025-08-19","gross_pnl":"34.00","market_timezone":"America/New_York","net_pnl":"34.00","option_type":"put","return_percent":"21.2500","session_date":"2025-08-19","signal_bar_close":"1.59","signal_bar_high":"1.64","signal_bar_low":"1.10","signal_bar_open":"1.10","signal_bar_price":"1.59","signal_bar_source":"option_bars.csv:line=788;sha256=411a378c6b21d387c77b6094828774816ddf8b835297b2b41d51afdb2df466be","signal_bar_volume":3027,"signal_instrument":"SPY250819P00644000","signal_macd":"-0.238065501336633913132970906","signal_macd_histogram":"0.0042062568740134772560962677","signal_macd_signal":"-0.2422717582106473903890671737","signal_option_close":"1.59","signal_option_high":"1.64","signal_option_low":"1.10","signal_option_open":"1.10","signal_option_price":"1.59","signal_option_volume":3027,"signal_previous_macd":"-0.286032960929256540206217313","signal_previous_macd_histogram":"-0.0427096385001057805031260724","signal_previous_macd_signal":"-0.2433233224291507597030912406","signal_previous_time":"2025-08-19T10:35:00-04:00","signal_previous_time_user":"2025-08-19T17:35:00+03:00","signal_previous_time_utc":"2025-08-19T14:35:00Z","signal_source":"option_contract_trade_close","signal_time":"2025-08-19T10:40:00-04:00","signal_time_user":"2025-08-19T17:40:00+03:00","signal_time_utc":"2025-08-19T14:40:00Z","signal_underlying_price":"642.685","signal_underlying_time":"2025-08-19T10:40:00-04:00","strike":"644.000","symbol":"SPY","trade_id":"2f9e199e10e36d15d9f4","underlying_source":"underlying.csv:line=13;sha256=715b86b630b5d9c672ff32994205112a2cfd94bf82d2fc8b8bf93cb764388b78","user_timezone":"Asia/Riyadh"}],"trade_columns":["trade_id","symbol","option_type","contract_id","expiration","strike","session_date","signal_time","signal_time_utc","signal_time_user","signal_underlying_time","signal_underlying_price","signal_source","signal_instrument","signal_bar_open","signal_bar_high","signal_bar_low","signal_bar_close","signal_bar_price","signal_bar_volume","signal_option_open","signal_option_high","signal_option_low","signal_option_close","signal_option_price","signal_option_volume","signal_previous_time","signal_previous_time_utc","signal_previous_time_user","signal_previous_macd","signal_previous_macd_signal","signal_previous_macd_histogram","signal_macd","signal_macd_signal","signal_macd_histogram","entry_time","entry_time_utc","entry_time_user","entry_quote_sequence","entry_bid","entry_ask","entry_price","entry_fill_source","entry_spread_percent","entry_delay_seconds","exit_trigger_time","exit_trigger_time_utc","exit_trigger_time_user","exit_time","exit_time_utc","exit_time_user","exit_quote_sequence","exit_bid","exit_ask","exit_price","exit_fill_source","exit_spread_percent","exit_delay_seconds","exit_reason","exit_reasons","exit_macd","exit_macd_signal","exit_macd_histogram","return_percent","gross_pnl","net_pnl","dataset_fingerprint","underlying_source","signal_bar_source","entry_quote_source","exit_quote_source","market_timezone","user_timezone"],"provenance":{"source_name":"github-30267336663-1.json","source_sha256":"c53cd05d4997bd08186e9992a6d419afa19ff39201a6a1eb9eef6a3c12713f15","config_name":null,"config_sha256":null,"generator":"mbbot-report","generated_at":"2026-07-27T12:47:22.485057Z"},"extensions":{"audit":{"dataset_fingerprint":"7fe879b6f7505a54585dcfb9d02df0e0da311bc4d35be828128ea8dd35bc498d","entry_execution":"first eligible option quote after the completed signal bar; filled at ask","exit_execution":"first eligible option quote after the earliest exit trigger; filled at bid","source_reference_format":"filename:line=\u003cphysical CSV line>;sha256=\u003csource file hash>","timestamps":"ISO-8601 market-local timestamps with explicit UTC offsets; parallel UTC timestamps are recorded per trade"},"schema_version":"mbbot.backtest.result.v2","signal_source":"option_contract_trade_close"},"comparison":{"baseline":{"id":"github-30266509613-1","title":"Baseline replay / Workflow #16","created_at":"2026-07-27T12:38:32.095578Z","metrics":{"average_holding_minutes":30.23076923076923,"average_loss":-40.0,"average_return_percent":-6.540101534440993,"average_win":15.875,"closed_trades":13,"collisions_rejected":0,"entries_skipped_missing_data":0,"expectancy":-5.615384615384615,"flat":0,"gross_loss":200.0,"gross_profit":127.0,"losses":5,"max_drawdown":162.0,"median_return_percent":20.238095238095237,"net_pnl":-73.0,"open_positions":0,"profit_factor":0.635,"win_rate":61.53846153846154,"wins":8}},"settings_delta":[{"path":"backtest.symbols","baseline":"QQQ, SPY, TSLA, AAPL, NVDA","current":"SPY"},{"path":"contract.max_premium","baseline":"1.0","current":"4.0"},{"path":"macd.ema_seed_method","baseline":"sma","current":"first"},{"path":"rsi.enabled","baseline":"enabled","current":"disabled"},{"path":"schedule.entry_delay_minutes_after_open","baseline":"15","current":"1"}]}}</script>
+</body>
+</html>
