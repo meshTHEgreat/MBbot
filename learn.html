@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=1985e7681eb4">
-  <script src="assets/site.js?v=1985e7681eb4" defer></script>
-  <script src="assets/learn.js?v=1985e7681eb4" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=f22faf51fe5d">
+  <script src="assets/site.js?v=f22faf51fe5d" defer></script>
+  <script src="assets/learn.js?v=f22faf51fe5d" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -170,13 +170,15 @@
             <h3 data-lang-content="en">Choose an available dataset and universe</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>اختيار مجموعة بيانات متاحة ونطاق الرموز</h3>
             <p data-lang-content="en">
-              The selected local profile defines its dates and supported
-              symbols. The browser cannot alter a filesystem path or request
-              additional dates.
+              The selected local profile defines its available dates and
+              supported symbols. Choose any inclusive range inside that
+              profile; the browser cannot alter a filesystem path or request
+              additional provider data.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
-              يحدد الملف المحلي المختار التواريخ والرموز المتاحة، ولا يمكن
-              للمتصفح تعديل مسار الملفات أو طلب تواريخ إضافية.
+              يحدد ملف البيانات المحلي التواريخ والرموز المتاحة. ويمكن اختيار
+              أي نطاق زمني شامل ضمن حدوده، بينما لا يستطيع المتصفح تعديل مسار
+              الملفات أو طلب بيانات إضافية من مزود السوق.
             </p>
           </div>
         </li>
@@ -205,16 +207,17 @@
             <h3 data-lang-content="en">Read the crossover from the selected signal series</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>قراءة التقاطع من سلسلة الإشارة المختارة</h3>
             <p data-lang-content="en">
-              Recommended AV mode maps an underlying bullish cross to a call
-              and a bearish cross to a put. Option-contract mode evaluates each
-              eligible contract’s completed trade closes and requires a
-              bullish cross on the contract being entered.
+              The primary ThetaData mode evaluates each eligible option
+              contract’s completed trade closes and requires a bullish cross
+              on the contract being entered. The legacy AV mode instead maps
+              an underlying bullish cross to a call and a bearish cross to a
+              put.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
-              في وضع Alpha Vantage الموصى به، يوجّه التقاطع الإيجابي للأصل إلى
-              عقد شراء والتقاطع السلبي إلى عقد بيع. أما وضع عقد الخيار فيقيّم
-              إغلاقات التداول المكتملة لكل عقد مؤهل، ويشترط تقاطعاً إيجابياً
-              على العقد المراد الدخول فيه.
+              في وضع ThetaData الأساسي، تُقيَّم إغلاقات التداول المكتملة لكل
+              عقد خيار مؤهل، ويُشترط تحقق تقاطع إيجابي على العقد المراد الدخول
+              فيه. أما وضع Alpha Vantage السابق فيحوّل التقاطع الإيجابي للأصل
+              إلى عقد شراء والتقاطع السلبي إلى عقد بيع.
             </p>
           </div>
         </li>
@@ -274,16 +277,16 @@
         <strong data-lang-content="en">Backtest evidence remains separate from live execution.</strong>
         <strong data-lang-content="ar" lang="ar" hidden>تبقى أدلة الاختبار التاريخي منفصلة عن التنفيذ الحي.</strong>
         <p data-lang-content="en">
-          Recommended AV mode follows the live hypothesis’s directional mapping,
-          but it replays archived signal bars, offline contract selection, and
-          ask-in/bid-out fills without placing an order. Option-contract mode is
-          a separate experimental signal source.
+          Primary ThetaData mode replays archived option bars, offline contract
+          selection, and exact ask-in/bid-out quote states without placing an
+          order. The legacy AV mode remains available only in its compatible
+          stored profile.
         </p>
         <p data-lang-content="ar" lang="ar" hidden>
-          يتبع وضع Alpha Vantage الموصى به خريطة الاتجاه في فرضية التشغيل الحي،
-          لكنه يعيد محاكاة شموع إشارة مؤرشفة واختيار عقود محلياً ودخولاً بسعر
-          الطلب وخروجاً بسعر العرض من دون إرسال أي أمر. أما وضع عقد الخيار
-          فيمثل مصدراً تجريبياً منفصلاً للإشارة.
+          يعيد وضع ThetaData الأساسي محاكاة شموع الخيارات المؤرشفة، واختيار
+          العقود محلياً، وحالات التسعير الدقيقة للدخول بسعر الطلب والخروج بسعر
+          العرض، من دون إرسال أي أمر. ويبقى وضع Alpha Vantage السابق متاحاً
+          ضمن ملف البيانات المحفوظ المتوافق معه فقط.
         </p>
       </aside>
     </section>
@@ -359,12 +362,12 @@
               الأسهم الأمريكية كبيرة القيمة ضمن القواعد ذاتها.
             </p>
             <dl>
-              <div><dt data-lang-content="en">Available now</dt><dt data-lang-content="ar" lang="ar" hidden>المتاح حالياً</dt>
-                <dd data-lang-content="en">The retained real-provider ThetaData sample supports SPY only, for one session.</dd>
-                <dd data-lang-content="ar" lang="ar" hidden>تدعم عينة ThetaData المحفوظة من مزود فعلي رمز SPY فقط ولجلسة واحدة.</dd></div>
+              <div><dt data-lang-content="en">Primary profile</dt><dt data-lang-content="ar" lang="ar" hidden>الملف الأساسي</dt>
+                <dd data-lang-content="en">SPY can be tested alone or beside any subset of the five-symbol ThetaData archive.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>يمكن اختبار SPY منفرداً أو ضمن أي مجموعة فرعية من ملف ThetaData ذي الرموز الخمسة.</dd></div>
               <div><dt data-lang-content="en">Interpret carefully</dt><dt data-lang-content="ar" lang="ar" hidden>تنبيه تفسيري</dt>
-                <dd data-lang-content="en">One session validates the pipeline; it cannot establish performance.</dd>
-                <dd data-lang-content="ar" lang="ar" hidden>تتحقق الجلسة الواحدة من سلامة المسار التقني، ولا تكفي لإثبات الأداء.</dd></div>
+                <dd data-lang-content="en">Compare the ETF separately from single-company options before aggregating results.</dd>
+                <dd data-lang-content="ar" lang="ar" hidden>ينبغي مقارنة الصندوق المتداول منفصلاً عن خيارات الشركات قبل تجميع النتائج.</dd></div>
             </dl>
           </article>
 
@@ -674,10 +677,14 @@
         </header>
 
         <aside class="control-reference-guardrail">
-          <strong data-lang-content="en">Five-symbol reliability envelope</strong>
-          <strong data-lang-content="ar" lang="ar" hidden>نطاق الموثوقية لمجموعة الرموز الخمسة</strong>
+          <strong data-lang-content="en">Know the selected profile’s coverage envelope</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>اعرف حدود التغطية لملف البيانات المختار</strong>
           <p data-lang-content="en">
-            For the June 2026 QQQ, SPY, TSLA, AAPL, and NVDA profile, the
+            The primary ThetaData profile removes the legacy $4 premium and 50%
+            spread extraction caps. It retains the two nearest expirations and,
+            at each minute, the five closest eligible ITM/ATM strikes per side;
+            a farther contract is not inferred. For the legacy June 2026 QQQ,
+            SPY, TSLA, AAPL, and NVDA profile, the
             premium cap must remain enabled at $4 or less, the spread cap must
             remain enabled at 50% or less using midpoint, and the entry window
             must start at least 15 minutes after open and stop at least 60
@@ -686,7 +693,11 @@
             reliably.
           </p>
           <p data-lang-content="ar" lang="ar" hidden>
-            عند استخدام ملف يونيو 2026 للرموز QQQ وSPY وTSLA وAAPL وNVDA، يجب
+            يلغي ملف ThetaData الأساسي قيود الاستخراج السابقة البالغة 4 دولارات
+            لسعر العقد و50% للفارق. ويحتفظ بأقرب تاريخي انتهاء، وبأقرب خمسة
+            أسعار تنفيذ مؤهلة من نطاق ITM/ATM لكل جانب عند كل دقيقة؛ ولا
+            تُفترض بيانات لعقد أبعد غير محفوظ. أما عند استخدام ملف يونيو 2026
+            السابق للرموز QQQ وSPY وTSLA وAAPL وNVDA، فيجب
             إبقاء حد سعر الطلب مفعلاً عند 4 دولارات أو أقل، وحد الفارق مفعلاً
             عند 50% أو أقل مع اعتماد السعر المتوسط مقاماً للنسبة، كما يجب ألا
             يبدأ الدخول قبل مرور 15 دقيقة على الافتتاح وأن يتوقف قبل الإغلاق
@@ -741,6 +752,23 @@
               </div>
               <div>
                 <dt>
+                  <span data-lang-content="en">Replay date range</span>
+                  <span data-lang-content="ar" lang="ar" hidden>النطاق الزمني للمحاكاة</span>
+                  <small><span data-lang-content="en">Inclusive New York session dates</span><span data-lang-content="ar" lang="ar" hidden>تواريخ جلسات نيويورك شاملة</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Limits the replay to completed sessions already present in
+                  the selected profile. Missing or partially downloaded dates
+                  fail closed; the page never fills the gap from an API.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يقصر المحاكاة على الجلسات المكتملة والمحفوظة فعلياً ضمن ملف
+                  البيانات المختار. ويُرفض التشغيل عند وجود تاريخ مفقود أو
+                  تنزيل غير مكتمل، ولا تستدعي الصفحة واجهة API لسد النقص.
+                </dd>
+              </div>
+              <div>
+                <dt>
                   <span data-lang-content="en">Universe</span>
                   <span data-lang-content="ar" lang="ar" hidden>نطاق الرموز</span>
                   <small><span data-lang-content="en">One or more supported symbols</span><span data-lang-content="ar" lang="ar" hidden>رمز مدعوم واحد أو أكثر</span></small>
@@ -787,23 +815,23 @@
                 <dt>
                   <span data-lang-content="en">Signal series</span>
                   <span data-lang-content="ar" lang="ar" hidden>سلسلة الإشارة</span>
-                  <small><span data-lang-content="en">AV underlying or option contract</span><span data-lang-content="ar" lang="ar" hidden>الأصل عبر AV أو عقد الخيار</span></small>
+                  <small><span data-lang-content="en">ThetaData option contract or legacy AV underlying</span><span data-lang-content="ar" lang="ar" hidden>عقد الخيار عبر ThetaData أو الأصل عبر AV السابق</span></small>
                 </dt>
                 <dd data-lang-content="en">
                   Selects the completed five-minute candles used by MACD, SMI,
-                  and RSI.
-                  Recommended AV mode maps an underlying bullish cross to a call
-                  and a bearish cross to a put. Option-contract mode requires a
-                  bullish cross on the eligible contract itself. Both modes use
-                  Databento quotes for option selection and fills.
+                  and RSI. Primary ThetaData mode requires a bullish cross on
+                  the eligible option itself and uses retained exact NBBO states
+                  for selection and fills. Legacy AV mode maps an underlying
+                  bullish cross to a call and a bearish cross to a put, with
+                  stored Databento option evidence.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يحدد سلسلة شموع الخمس دقائق المكتملة المستخدمة في MACD وSMI
-                  وRSI. ففي وضع Alpha Vantage الموصى به، يوجّه التقاطع الإيجابي
-                  للأصل إلى عقد شراء والتقاطع السلبي إلى عقد بيع. أما وضع عقد
-                  الخيار فيشترط تقاطعاً إيجابياً على العقد المؤهل نفسه. ويستخدم
-                  الوضعان تسعيرات Databento لاختيار العقد وتنفيذ أسعار الدخول
-                  والخروج.
+                  وRSI. ويشترط وضع ThetaData الأساسي تقاطعاً إيجابياً على عقد
+                  الخيار المؤهل نفسه، ويستخدم حالات NBBO الدقيقة المحفوظة
+                  للاختيار والتنفيذ. أما وضع Alpha Vantage السابق فيحوّل
+                  التقاطع الإيجابي للأصل إلى عقد شراء والتقاطع السلبي إلى عقد
+                  بيع، مع أدلة خيارات Databento المحفوظة.
                 </dd>
               </div>
               <div>
@@ -1426,6 +1454,29 @@
 
       <div class="data-status-grid">
         <article data-state="available">
+          <span class="preview-status">
+            <span data-lang-content="en">Primary profile · local-only</span>
+            <span data-lang-content="ar" lang="ar" hidden>الملف الأساسي · محلي فقط</span>
+          </span>
+          <h3>ThetaData Options Standard · 27 Apr–24 Jul 2026 · five symbols</h3>
+          <p data-lang-content="en">
+            The primary profile targets QQQ, SPY, TSLA, AAPL, and NVDA with
+            one-minute option trades, locally formed five-minute candles,
+            underlying selection prices, contract mappings, and exact
+            strategy-relevant NBBO state changes. A selected date becomes
+            runnable only after every symbol for that session is complete and
+            hash-verified on the local runner.
+          </p>
+          <p data-lang-content="ar" lang="ar" hidden>
+            يستهدف الملف الأساسي الرموز QQQ وSPY وTSLA وAAPL وNVDA، ويشمل
+            تداولات الخيارات لفاصل الدقيقة، وشموع الخمس دقائق المكوّنة محلياً،
+            وأسعار الأصل المستخدمة في اختيار العقد، وتعريفات العقود، وكل
+            تغير جوهري في حالة NBBO يلزم الاستراتيجية. ولا يصبح التاريخ المختار
+            قابلاً للتشغيل إلا بعد اكتمال بيانات جميع الرموز في الجلسة والتحقق
+            من بصماتها على المشغّل المحلي.
+          </p>
+        </article>
+        <article data-state="available">
           <span class="preview-status">Available offline</span>
           <h3>ThetaData · SPY · 19 Aug 2025</h3>
           <p data-lang-content="en">
@@ -1476,8 +1527,8 @@
             <span data-lang-content="en"> — OCC identity, call/put, strike, and expiration.</span>
             <span data-lang-content="ar" lang="ar" hidden> — هوية OCC ونوع العقد وسعر التنفيذ وتاريخ الانتهاء.</span></li>
           <li><strong data-lang-content="en">Five-minute signal candles</strong><strong data-lang-content="ar" lang="ar" hidden>شموع الإشارة لفاصل خمس دقائق</strong>
-            <span data-lang-content="en"> — stored AV underlying closes or completed option trade bars for MACD and optional RSI.</span>
-            <span data-lang-content="ar" lang="ar" hidden> — إغلاقات الأصل المحفوظة من AV أو شموع تداول الخيار المكتملة لاحتساب MACD وRSI الاختياري.</span></li>
+            <span data-lang-content="en"> — completed ThetaData option trade bars in the primary profile, or stored AV underlying closes in the legacy profile, for MACD, SMI, and optional RSI.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — شموع تداول الخيار المكتملة من ThetaData في الملف الأساسي، أو إغلاقات الأصل المحفوظة من AV في الملف السابق، لاحتساب MACD وSMI وRSI الاختياري.</span></li>
           <li><strong data-lang-content="en">Timestamped NBBO quotes</strong><strong data-lang-content="ar" lang="ar" hidden>تسعيرات NBBO المؤرخة زمنياً</strong>
             <span data-lang-content="en"> — bid/ask for eligibility, entry, every exit, and ordering.</span>
             <span data-lang-content="ar" lang="ar" hidden> — أسعار العرض والطلب للأهلية والدخول والخروج والترتيب الزمني.</span></li>
@@ -1689,7 +1740,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-27T13:57:17.768683Z">2026-07-27T13:57:17.768683Z</time>.
+      <time datetime="2026-07-27T16:59:25.074120Z">2026-07-27T16:59:25.074120Z</time>.
     </p>
   </footer>
 </body>

@@ -3228,6 +3228,10 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .control-field-grid--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .control-field-grid--three {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }

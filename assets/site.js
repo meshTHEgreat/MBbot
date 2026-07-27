@@ -203,6 +203,11 @@
     const profile = form?.elements.namedItem("dataset_profile");
     const signalSource = form?.elements.namedItem("signal_source");
     const signalSourceHelp = document.getElementById("signal-source-help");
+    const datasetProfileHelp = document.getElementById(
+      "dataset-profile-help",
+    );
+    const startDate = form?.elements.namedItem("start_date");
+    const endDate = form?.elements.namedItem("end_date");
     const symbolInputs = [
       ...(form?.querySelectorAll('input[name="symbol"]') || []),
     ];
@@ -220,6 +225,8 @@
       !resultLink ||
       !profile ||
       !signalSource ||
+      !(startDate instanceof HTMLInputElement) ||
+      !(endDate instanceof HTMLInputElement) ||
       !model
     ) {
       return;
@@ -287,19 +294,70 @@
 
     const selectionsByProfile = new Map([
       [
+        "thetadata-options-2026-04-27-to-2026-07-24",
+        new Set(
+          symbolInputs
+            .filter((input) => input.checked)
+            .map((input) => input.value),
+        ),
+      ],
+      [
         "databento-opra-2026-06",
         new Set(symbolInputs.filter((input) => input.checked).map((input) => input.value)),
       ],
       ["thetadata-spy-2025-08-19", new Set(["SPY"])],
     ]);
+    const rangesByProfile = new Map();
     let previousProfile = profile.value;
 
     function updateSignalSourceHelp() {
       if (!signalSourceHelp) return;
-      signalSourceHelp.textContent =
-        signalSource.value === "databento_option_contract"
-          ? "The selected option contract's completed five-minute bars drive MACD, RSI, and SMI. Databento also supplies contract selection and bid/ask fills."
-          : "Saved AV stock bars set the bullish or bearish direction. Databento still supplies option selection and bid/ask fills.";
+      if (signalSource.value === "thetadata_option_contract") {
+        signalSourceHelp.textContent =
+          "ThetaData's retained option trade bars drive MACD, RSI, and SMI. Exact material NBBO states supply contract selection, ask entries, and bid exits.";
+      } else if (signalSource.value === "databento_option_contract") {
+        signalSourceHelp.textContent =
+          "The selected option contract's completed five-minute bars drive MACD, RSI, and SMI. Databento also supplies contract selection and bid/ask fills.";
+      } else {
+        signalSourceHelp.textContent =
+          "Saved AV stock bars set the bullish or bearish direction. Databento still supplies option selection and bid/ask fills.";
+      }
+    }
+
+    function applyProfileRange() {
+      const previousRange = model.PROFILE_DATE_RANGES[previousProfile];
+      if (previousRange) {
+        rangesByProfile.set(previousProfile, {
+          start: startDate.value,
+          end: endDate.value,
+        });
+      }
+      const available = model.PROFILE_DATE_RANGES[profile.value];
+      if (!available) return;
+      const remembered = rangesByProfile.get(profile.value) || available;
+      startDate.min = available.start;
+      startDate.max = available.end;
+      endDate.min = available.start;
+      endDate.max = available.end;
+      startDate.value =
+        remembered.start >= available.start &&
+        remembered.start <= available.end
+          ? remembered.start
+          : available.start;
+      endDate.value =
+        remembered.end >= available.start &&
+        remembered.end <= available.end
+          ? remembered.end
+          : available.end;
+      if (datasetProfileHelp) {
+        datasetProfileHelp.textContent =
+          profile.value ===
+          "thetadata-options-2026-04-27-to-2026-07-24"
+            ? "Exact strategy-relevant ThetaData NBBO states and one-minute option trade bars are retained once on this PC. Every page run is offline and never calls ThetaData."
+            : profile.value === "databento-opra-2026-06"
+              ? "Legacy June cache: ask cap must stay enabled at or below $4, midpoint spread cap at or below 50%, with entries from 09:45 to 15:00 New York."
+              : "One retained real-provider SPY session for workflow validation. The page and runner never call ThetaData.";
+      }
     }
 
     function applyProfileSymbols() {
@@ -324,7 +382,6 @@
         const firstAvailable = symbolInputs.find((input) => !input.disabled);
         if (firstAvailable) firstAvailable.checked = true;
       }
-      previousProfile = profile.value;
       const availableSignals = new Set(
         model.PROFILE_SIGNAL_SOURCES[profile.value] || [],
       );
@@ -334,6 +391,8 @@
       if (!availableSignals.has(signalSource.value)) {
         signalSource.value = [...availableSignals][0] || "";
       }
+      applyProfileRange();
+      previousProfile = profile.value;
       updateSignalSourceHelp();
       clearError();
     }
@@ -357,6 +416,8 @@
         symbols: symbolInputs
           .filter((input) => input.checked && !input.disabled)
           .map((input) => input.value),
+        start_date: value("start_date"),
+        end_date: value("end_date"),
         macd_fast_period: value("macd_fast_period"),
         macd_slow_period: value("macd_slow_period"),
         macd_signal_period: value("macd_signal_period"),

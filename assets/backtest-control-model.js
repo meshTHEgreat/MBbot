@@ -11,6 +11,13 @@
   "use strict";
 
   const PROFILE_SYMBOLS = Object.freeze({
+    "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze([
+      "QQQ",
+      "SPY",
+      "TSLA",
+      "AAPL",
+      "NVDA",
+    ]),
     "databento-opra-2026-06": Object.freeze([
       "QQQ",
       "SPY",
@@ -21,6 +28,9 @@
     "thetadata-spy-2025-08-19": Object.freeze(["SPY"]),
   });
   const PROFILE_SIGNAL_SOURCES = Object.freeze({
+    "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze([
+      "thetadata_option_contract",
+    ]),
     "databento-opra-2026-06": Object.freeze([
       "alpha_vantage_underlying_directional",
       "databento_option_contract",
@@ -28,6 +38,20 @@
     "thetadata-spy-2025-08-19": Object.freeze([
       "databento_option_contract",
     ]),
+  });
+  const PROFILE_DATE_RANGES = Object.freeze({
+    "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze({
+      start: "2026-04-27",
+      end: "2026-07-24",
+    }),
+    "databento-opra-2026-06": Object.freeze({
+      start: "2026-06-01",
+      end: "2026-06-30",
+    }),
+    "thetadata-spy-2025-08-19": Object.freeze({
+      start: "2025-08-19",
+      end: "2025-08-19",
+    }),
   });
   const NUMBER_FIELDS = Object.freeze([
     "max_premium",
@@ -56,6 +80,8 @@
     "dataset_profile",
     "experiment_label",
     "symbols",
+    "start_date",
+    "end_date",
     "signal_source",
     "indicator_settings",
     "rule_toggles",
@@ -124,6 +150,27 @@
     return values;
   }
 
+  function isoDate(values, name) {
+    const value = String(values[name] || "");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      throw inputError(
+        `${name.replaceAll("_", " ")} must be a valid date.`,
+        name,
+      );
+    }
+    const parsed = new Date(`${value}T00:00:00Z`);
+    if (
+      Number.isNaN(parsed.valueOf()) ||
+      parsed.toISOString().slice(0, 10) !== value
+    ) {
+      throw inputError(
+        `${name.replaceAll("_", " ")} must be a valid date.`,
+        name,
+      );
+    }
+    return value;
+  }
+
   function buildInputs(values) {
     if (!values || typeof values !== "object") {
       throw inputError("Backtest settings are missing.");
@@ -155,6 +202,24 @@
       symbols: symbols.join(","),
       signal_source: String(values.signal_source || ""),
     };
+    const range = PROFILE_DATE_RANGES[profile];
+    normalized.start_date = isoDate(values, "start_date");
+    normalized.end_date = isoDate(values, "end_date");
+    if (normalized.start_date > normalized.end_date) {
+      throw inputError(
+        "Start date cannot be later than end date.",
+        "start_date",
+      );
+    }
+    if (
+      normalized.start_date < range.start ||
+      normalized.end_date > range.end
+    ) {
+      throw inputError(
+        `Choose dates from ${range.start} through ${range.end} for this local dataset.`,
+        "start_date",
+      );
+    }
     if (
       !PROFILE_SIGNAL_SOURCES[profile].includes(normalized.signal_source)
     ) {
@@ -322,6 +387,7 @@
   return Object.freeze({
     PROFILE_SYMBOLS,
     PROFILE_SIGNAL_SOURCES,
+    PROFILE_DATE_RANGES,
     RULE_TOGGLE_FIELDS,
     SMI_ENTRY_MODES,
     WORKFLOW_INPUT_NAMES,
