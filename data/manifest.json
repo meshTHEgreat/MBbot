@@ -1,6 +1,419 @@
 {
-  "generated_at": "2026-07-27T14:59:44.367758Z",
+  "generated_at": "2026-07-27T15:09:55.558157Z",
   "reports": [
+    {
+      "authoring": {
+        "baseline_id": null,
+        "hypothesis": "",
+        "next_test": "",
+        "observation": ""
+      },
+      "automation": {
+        "actor": "meshTHEgreat",
+        "application_version": "mbbot 0.1.0",
+        "backtest_entry_point": "mbbot.backtest_cli",
+        "backtest_script_sha256": "76ebd7418453c379f30d4b4349caba52c2be7783f9259baa29ecb8fd2b985db5",
+        "backtest_source_branch": null,
+        "backtest_source_commit_sha": null,
+        "data_access_mode": "offline-only",
+        "dataset_identifier": "hybrid:alpha-vantage-5min+databento-OPRA.PILLAR:QQQ+SPY+TSLA+AAPL+NVDA:2026-06",
+        "dataset_profile": "databento-opra-2026-06",
+        "dependency_versions": {
+          "mbbot": "0.1.0",
+          "tzdata": "2026.3"
+        },
+        "duration_seconds": 288.379,
+        "ended_at_utc": "2026-07-27T15:09:55.367594Z",
+        "project_python_network_access": false,
+        "provider_api_access": false,
+        "provider_credentials_removed": 0,
+        "public_repository": "meshTHEgreat/MBbot",
+        "python_version": "3.12.10",
+        "report_path": "reports/github-30278215929-1.html",
+        "report_url": "https://meshthegreat.github.io/MBbot/reports/github-30278215929-1.html",
+        "request_timestamp_source": "github_actions_api",
+        "requested_at_project_time": "2026-07-27T18:04:36+03:00",
+        "requested_at_utc": "2026-07-27T15:04:36Z",
+        "run_url": "https://github.com/meshTHEgreat/mbbot-backtest-control/actions/runs/30278215929",
+        "schema_version": "mbbot.backtest.automation.v1",
+        "selected_parameters": {
+          "allow_zero_dte": true,
+          "commission_per_contract": "0",
+          "contracts_per_trade": "1",
+          "dataset_profile": "databento-opra-2026-06",
+          "entry_cutoff_minutes": "60",
+          "entry_delay_minutes": "15",
+          "entry_window_enabled": true,
+          "experiment_label": "Baseline replay",
+          "fallback_to_next_expiration": true,
+          "force_exit_time_riyadh": "22:20",
+          "macd_ema_seed_method": "sma",
+          "macd_fast_period": "12",
+          "macd_signal_period": "9",
+          "macd_slow_period": "26",
+          "max_premium": "4",
+          "max_premium_enabled": true,
+          "max_spread_enabled": true,
+          "max_spread_percent": "50",
+          "opposite_macd_enabled": true,
+          "opposite_smi_enabled": false,
+          "profit_target_enabled": true,
+          "profit_target_percent": "10",
+          "rsi_enabled": true,
+          "rsi_maximum": "30",
+          "rsi_minimum": "0",
+          "rsi_period": "14",
+          "scan_next_strike_if_nearest_fails": true,
+          "signal_source": "alpha_vantage_underlying_directional",
+          "smi_d_length": "3",
+          "smi_ema_seed_method": "first",
+          "smi_enabled": true,
+          "smi_entry_mode": "confirm_macd_state",
+          "smi_k_length": "14",
+          "smi_overbought": "40",
+          "smi_oversold": "-40",
+          "smi_signal_length": "3",
+          "smi_zone_filter_enabled": false,
+          "spread_denominator": "midpoint",
+          "symbols": [
+            "QQQ",
+            "SPY",
+            "TSLA",
+            "AAPL",
+            "NVDA"
+          ],
+          "time_exit_enabled": true,
+          "validate_only": false,
+          "zero_line_filter_enabled": false
+        },
+        "source_branch": "main",
+        "source_commit_sha": "37e9ff9fb9d3705035353c536bb2644f718008ed",
+        "started_at_utc": "2026-07-27T15:05:06.988603Z",
+        "status": "success",
+        "workflow_name": "Run Local Backtest",
+        "workflow_run_attempt": "1",
+        "workflow_run_id": "30278215929",
+        "workflow_run_number": "29"
+      },
+      "created_at": "2026-07-27T15:08:00.712232Z",
+      "dataset": {
+        "contracts": 1732,
+        "dataset_fingerprint": "a8eb4d939c48a3f067dddca6922c31f282b257233295574a116c080bb7f4f9d2",
+        "first_timestamp": "2026-05-01T09:35:00-04:00",
+        "last_timestamp": "2026-06-30T16:00:00-04:00",
+        "option_bars": 1086868,
+        "option_quotes": 5938760,
+        "sessions": 105,
+        "signal_bar_providers": [
+          "alpha_vantage"
+        ],
+        "signal_bars": 15990,
+        "source_files": [
+          {
+            "bytes": 7137,
+            "filename": "sessions.csv",
+            "rows": 105,
+            "sha256": "b61455fcf0963ceed0b548ee21856eeaa1e55bf4a88a4d8abc1970d2aecf8f9d"
+          },
+          {
+            "bytes": 1541679,
+            "filename": "underlying.csv",
+            "rows": 40950,
+            "sha256": "680a5b5e8bee26b28c52087f1955ae1e9c9602c4f434ee168944736a5e31381a"
+          },
+          {
+            "bytes": 1404045,
+            "filename": "signal_bars.csv",
+            "rows": 15990,
+            "sha256": "87037deb1281b0f5a0359ecb890175400430262db810dfe044e2d4721ee12730"
+          },
+          {
+            "bytes": 100194789,
+            "filename": "option_bars.csv",
+            "rows": 1086868,
+            "sha256": "9dae33e4b2122d3cd78c4f0606f771b52b22eeecd4b6b4fa0a6e8fb52f127295"
+          },
+          {
+            "bytes": 514405250,
+            "filename": "option_quotes.csv",
+            "rows": 5938760,
+            "sha256": "d9e73886bc70bd090ef41fa50cba391f1d91d4de39647344993cc5b4a5a6d72c"
+          }
+        ],
+        "underlying_points": 40950
+      },
+      "id": "github-30278215929-1",
+      "kind": "historical_backtest",
+      "metrics": {
+        "average_holding_minutes": 19.782608695652176,
+        "average_loss": -106.875,
+        "average_return_percent": -0.9714289593085855,
+        "average_win": 47.8,
+        "closed_trades": 23,
+        "collisions_rejected": 0,
+        "entries_skipped_missing_data": 63,
+        "expectancy": -6.0,
+        "flat": 0,
+        "gross_loss": 855.0,
+        "gross_profit": 717.0,
+        "losses": 8,
+        "max_drawdown": 484.0,
+        "median_return_percent": 13.368983957219251,
+        "net_pnl": -138.0,
+        "open_positions": 0,
+        "profit_factor": 0.8385964912280702,
+        "win_rate": 65.21739130434783,
+        "wins": 15
+      },
+      "quality": {
+        "label": "research",
+        "notes": [
+          "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable.",
+          "63 entries were skipped because required data was unavailable."
+        ]
+      },
+      "status": "research",
+      "strategy": {
+        "fingerprint": "74256e7d08b995038fd5edec8b76f5f0cfd6b5c5b56963ab823f83f42c0b3b3c",
+        "settings_flat": [
+          {
+            "path": "backtest.bar_minutes",
+            "value": "5"
+          },
+          {
+            "path": "backtest.commission_per_contract",
+            "value": "0.0"
+          },
+          {
+            "path": "backtest.contract_multiplier",
+            "value": "100"
+          },
+          {
+            "path": "backtest.contracts_per_trade",
+            "value": "1"
+          },
+          {
+            "path": "backtest.dataset_dir",
+            "value": "data/backtest"
+          },
+          {
+            "path": "backtest.entry_fill",
+            "value": "first_ask_after_completed_signal_bar"
+          },
+          {
+            "path": "backtest.market_timezone",
+            "value": "America/New_York"
+          },
+          {
+            "path": "backtest.missing_contract_bar_policy",
+            "value": "reject_signal"
+          },
+          {
+            "path": "backtest.monitor_sides",
+            "value": "call, put"
+          },
+          {
+            "path": "backtest.same_bar_collision",
+            "value": "reject_both"
+          },
+          {
+            "path": "backtest.selection_quote_delay_seconds",
+            "value": "15"
+          },
+          {
+            "path": "backtest.symbols",
+            "value": "QQQ, SPY, TSLA, AAPL, NVDA"
+          },
+          {
+            "path": "backtest.underlying_max_age_seconds",
+            "value": "15"
+          },
+          {
+            "path": "backtest.user_timezone",
+            "value": "Asia/Riyadh"
+          },
+          {
+            "path": "contract.allow_zero_dte",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.fallback_to_next_expiration",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_premium",
+            "value": "4.0"
+          },
+          {
+            "path": "contract.max_premium_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_spread_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_spread_percent",
+            "value": "50.0"
+          },
+          {
+            "path": "contract.premium_field",
+            "value": "ask"
+          },
+          {
+            "path": "contract.scan_next_strike_if_nearest_fails",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.spread_denominator",
+            "value": "midpoint"
+          },
+          {
+            "path": "contract.strike_policy",
+            "value": "nearest_itm_atm"
+          },
+          {
+            "path": "exit.entry_price_field",
+            "value": "ask"
+          },
+          {
+            "path": "exit.opposite_macd_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "exit.profit_price_field",
+            "value": "bid"
+          },
+          {
+            "path": "exit.profit_target_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "exit.profit_target_percent",
+            "value": "10.0"
+          },
+          {
+            "path": "exit.simultaneous_priority",
+            "value": "profit_target, opposite_macd, opposite_smi, time_exit"
+          },
+          {
+            "path": "macd.ema_seed_method",
+            "value": "sma"
+          },
+          {
+            "path": "macd.fast_period",
+            "value": "12"
+          },
+          {
+            "path": "macd.price_source",
+            "value": "close"
+          },
+          {
+            "path": "macd.signal_period",
+            "value": "9"
+          },
+          {
+            "path": "macd.slow_period",
+            "value": "26"
+          },
+          {
+            "path": "macd.source",
+            "value": "underlying"
+          },
+          {
+            "path": "macd.zero_line_filter_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "rsi.enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "rsi.maximum",
+            "value": "30.0"
+          },
+          {
+            "path": "rsi.minimum",
+            "value": "0.0"
+          },
+          {
+            "path": "rsi.period",
+            "value": "14"
+          },
+          {
+            "path": "schedule.entry_cutoff_minutes_before_close",
+            "value": "60"
+          },
+          {
+            "path": "schedule.entry_delay_minutes_after_open",
+            "value": "15"
+          },
+          {
+            "path": "schedule.entry_window_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "schedule.force_exit_time_riyadh",
+            "value": "22:20"
+          },
+          {
+            "path": "schedule.time_exit_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "smi.d_length",
+            "value": "3"
+          },
+          {
+            "path": "smi.ema_seed_method",
+            "value": "first"
+          },
+          {
+            "path": "smi.enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "smi.entry_mode",
+            "value": "confirm_macd_state"
+          },
+          {
+            "path": "smi.k_length",
+            "value": "14"
+          },
+          {
+            "path": "smi.opposite_crossover_exit_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "smi.overbought",
+            "value": "40.0"
+          },
+          {
+            "path": "smi.oversold",
+            "value": "-40.0"
+          },
+          {
+            "path": "smi.signal_length",
+            "value": "3"
+          },
+          {
+            "path": "smi.zone_filter_enabled",
+            "value": "disabled"
+          }
+        ]
+      },
+      "tags": [
+        "automated",
+        "databento-opra-2026-06",
+        "qqq",
+        "spy",
+        "tsla",
+        "aapl",
+        "nvda"
+      ],
+      "title": "Baseline replay / Workflow #29",
+      "url": "reports/github-30278215929-1.html"
+    },
     {
       "authoring": {
         "baseline_id": null,
