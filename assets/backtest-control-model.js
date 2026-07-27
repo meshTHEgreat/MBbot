@@ -18,25 +18,10 @@
       "AAPL",
       "NVDA",
     ]),
-    "databento-opra-2026-06": Object.freeze([
-      "QQQ",
-      "SPY",
-      "TSLA",
-      "AAPL",
-      "NVDA",
-    ]),
-    "thetadata-spy-2025-08-19": Object.freeze(["SPY"]),
   });
   const PROFILE_SIGNAL_SOURCES = Object.freeze({
     "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze([
       "thetadata_option_contract",
-    ]),
-    "databento-opra-2026-06": Object.freeze([
-      "alpha_vantage_underlying_directional",
-      "databento_option_contract",
-    ]),
-    "thetadata-spy-2025-08-19": Object.freeze([
-      "databento_option_contract",
     ]),
   });
   const PROFILE_DATE_RANGES = Object.freeze({
@@ -44,19 +29,12 @@
       start: "2026-04-27",
       end: "2026-07-24",
     }),
-    "databento-opra-2026-06": Object.freeze({
-      start: "2026-06-01",
-      end: "2026-06-30",
-    }),
-    "thetadata-spy-2025-08-19": Object.freeze({
-      start: "2025-08-19",
-      end: "2025-08-19",
-    }),
   });
   const NUMBER_FIELDS = Object.freeze([
     "max_premium",
     "max_spread_percent",
     "profit_target_percent",
+    "stop_loss_percent",
     "commission_per_contract",
     "contracts_per_trade",
     "entry_delay_minutes",
@@ -73,6 +51,7 @@
     "max_spread_enabled",
     "entry_window_enabled",
     "profit_target_enabled",
+    "stop_loss_enabled",
     "opposite_macd_enabled",
     "time_exit_enabled",
   ]);
@@ -92,6 +71,7 @@
     "scan_next_strike_if_nearest_fails",
     "fallback_to_next_expiration",
     "profit_target_percent",
+    "stop_loss_percent",
     "commission_per_contract",
     "contracts_per_trade",
     "entry_delay_minutes",
@@ -350,23 +330,14 @@
     if (!["midpoint", "ask"].includes(normalized.spread_denominator)) {
       throw inputError("Choose a supported spread denominator.", "spread_denominator");
     }
-    const toggles = JSON.parse(normalized.rule_toggles);
-    if (
-      profile === "databento-opra-2026-06" &&
-      (!toggles.max_premium_enabled ||
-        normalized.max_premium > 4 ||
-        !toggles.max_spread_enabled ||
-        normalized.max_spread_percent > 50 ||
-        normalized.spread_denominator !== "midpoint" ||
-        !toggles.entry_window_enabled ||
-        normalized.entry_delay_minutes < 15 ||
-        normalized.entry_cutoff_minutes < 60)
-    ) {
-      throw inputError(
-        "This verified offline dataset supports an enabled ask cap up to $4, an enabled midpoint spread cap up to 50%, and entries from 15 minutes after open until 60 minutes before close.",
-        "dataset_profile",
-      );
-    }
+    finiteNumber(values, "max_premium", 0.01, 100);
+    finiteNumber(values, "max_spread_percent", 0.01, 200);
+    finiteNumber(values, "profit_target_percent", 0.1, 500);
+    finiteNumber(values, "stop_loss_percent", 0.1, 100);
+    finiteNumber(values, "commission_per_contract", 0, 100);
+    finiteNumber(values, "contracts_per_trade", 1, 100, true);
+    finiteNumber(values, "entry_delay_minutes", 0, 240, true);
+    finiteNumber(values, "entry_cutoff_minutes", 0, 240, true);
     if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(normalized.force_exit_time_riyadh)) {
       throw inputError(
         "Forced exit must use 24-hour HH:MM Riyadh time.",

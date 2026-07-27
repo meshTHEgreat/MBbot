@@ -466,7 +466,7 @@ td:not(:first-child),
   position: relative;
   width: var(--page);
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 56px);
+  padding: clamp(20px, 5vw, 56px);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   background:
@@ -519,6 +519,56 @@ td:not(:first-child),
   gap: 16px;
 }
 
+.control-source-card {
+  display: grid;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--accent) 36%, var(--border));
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--accent-soft) 52%, var(--canvas-raised));
+  gap: 7px;
+}
+
+.control-source-card strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.control-source-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.source-lock-label,
+.source-lock-status {
+  font-family: var(--font-data);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.source-lock-label {
+  color: var(--accent);
+}
+
+.source-lock-status {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  color: var(--text-muted);
+  gap: 7px;
+}
+
+.source-lock-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
 .control-field {
   display: grid;
   min-width: 0;
@@ -567,6 +617,11 @@ td:not(:first-child),
 
 .fieldset-help {
   margin: 0 0 16px;
+}
+
+.range-reset {
+  min-height: 44px;
+  margin-top: 12px;
 }
 
 .symbol-picker {
@@ -623,6 +678,24 @@ td:not(:first-child),
   display: grid;
   margin-top: 16px;
   gap: 10px;
+}
+
+.control-check-grid .control-check {
+  min-height: 64px;
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--canvas-raised) 72%, transparent);
+}
+
+.control-check-grid .control-check:has(input:checked) {
+  border-color: color-mix(in srgb, var(--accent) 44%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 38%, var(--canvas-raised));
+}
+
+.control-check-grid .control-check:has(input:disabled) {
+  opacity: 0.5;
 }
 
 .control-check {
@@ -746,6 +819,34 @@ td:not(:first-child),
   border-radius: var(--radius-md);
   background: var(--surface-soft);
   gap: 14px;
+}
+
+.experiment-summary {
+  display: grid;
+  padding: 14px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--canvas-raised);
+  gap: 3px;
+}
+
+.experiment-summary span {
+  color: var(--accent);
+  font-family: var(--font-data);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.experiment-summary strong {
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.experiment-summary small {
+  color: var(--text-muted);
+  font-size: 0.72rem;
 }
 
 .control-check--compact {
@@ -3251,6 +3352,10 @@ h1 {
   .control-submit-panel {
     grid-template-columns: minmax(240px, 1fr) minmax(150px, 0.55fr);
     align-items: end;
+  }
+
+  .experiment-summary {
+    grid-column: 1 / -1;
   }
 
   .control-submit {

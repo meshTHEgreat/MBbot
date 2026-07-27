@@ -202,12 +202,15 @@
     const resultLink = document.getElementById("backtest-result-link");
     const profile = form?.elements.namedItem("dataset_profile");
     const signalSource = form?.elements.namedItem("signal_source");
-    const signalSourceHelp = document.getElementById("signal-source-help");
-    const datasetProfileHelp = document.getElementById(
-      "dataset-profile-help",
-    );
     const startDate = form?.elements.namedItem("start_date");
     const endDate = form?.elements.namedItem("end_date");
+    const resetDateRange = document.getElementById("reset-date-range");
+    const experimentSummaryTitle = document.getElementById(
+      "experiment-summary-title",
+    );
+    const experimentSummaryCopy = document.getElementById(
+      "experiment-summary-copy",
+    );
     const symbolInputs = [
       ...(form?.querySelectorAll('input[name="symbol"]') || []),
     ];
@@ -292,109 +295,39 @@
       }
     }
 
-    const selectionsByProfile = new Map([
-      [
-        "thetadata-options-2026-04-27-to-2026-07-24",
-        new Set(
-          symbolInputs
-            .filter((input) => input.checked)
-            .map((input) => input.value),
-        ),
-      ],
-      [
-        "databento-opra-2026-06",
-        new Set(symbolInputs.filter((input) => input.checked).map((input) => input.value)),
-      ],
-      ["thetadata-spy-2025-08-19", new Set(["SPY"])],
-    ]);
-    const rangesByProfile = new Map();
-    let previousProfile = profile.value;
+    const fullRange =
+      model.PROFILE_DATE_RANGES[
+        "thetadata-options-2026-04-27-to-2026-07-24"
+      ];
 
-    function updateSignalSourceHelp() {
-      if (!signalSourceHelp) return;
-      if (signalSource.value === "thetadata_option_contract") {
-        signalSourceHelp.textContent =
-          "ThetaData's retained option trade bars drive MACD, RSI, and SMI. Exact material NBBO states supply contract selection, ask entries, and bid exits.";
-      } else if (signalSource.value === "databento_option_contract") {
-        signalSourceHelp.textContent =
-          "The selected option contract's completed five-minute bars drive MACD, RSI, and SMI. Databento also supplies contract selection and bid/ask fills.";
-      } else {
-        signalSourceHelp.textContent =
-          "Saved AV stock bars set the bullish or bearish direction. Databento still supplies option selection and bid/ask fills.";
-      }
-    }
-
-    function applyProfileRange() {
-      const previousRange = model.PROFILE_DATE_RANGES[previousProfile];
-      if (previousRange) {
-        rangesByProfile.set(previousProfile, {
-          start: startDate.value,
-          end: endDate.value,
-        });
-      }
-      const available = model.PROFILE_DATE_RANGES[profile.value];
-      if (!available) return;
-      const remembered = rangesByProfile.get(profile.value) || available;
-      startDate.min = available.start;
-      startDate.max = available.end;
-      endDate.min = available.start;
-      endDate.max = available.end;
-      startDate.value =
-        remembered.start >= available.start &&
-        remembered.start <= available.end
-          ? remembered.start
-          : available.start;
-      endDate.value =
-        remembered.end >= available.start &&
-        remembered.end <= available.end
-          ? remembered.end
-          : available.end;
-      if (datasetProfileHelp) {
-        datasetProfileHelp.textContent =
-          profile.value ===
-          "thetadata-options-2026-04-27-to-2026-07-24"
-            ? "Exact strategy-relevant ThetaData NBBO states and one-minute option trade bars are retained once on this PC. Every page run is offline and never calls ThetaData."
-            : profile.value === "databento-opra-2026-06"
-              ? "Legacy June cache: ask cap must stay enabled at or below $4, midpoint spread cap at or below 50%, with entries from 09:45 to 15:00 New York."
-              : "One retained real-provider SPY session for workflow validation. The page and runner never call ThetaData.";
-      }
-    }
-
-    function applyProfileSymbols() {
-      selectionsByProfile.set(
-        previousProfile,
-        new Set(
-          symbolInputs
-            .filter((input) => input.checked && !input.disabled)
-            .map((input) => input.value),
-        ),
+    function updateExperimentSummary() {
+      if (!experimentSummaryTitle || !experimentSummaryCopy) return;
+      const selected = symbolInputs.filter(
+        (input) => input.checked && !input.disabled,
       );
-      const available = new Set(model.PROFILE_SYMBOLS[profile.value] || []);
-      const remembered =
-        selectionsByProfile.get(profile.value) || new Set(available);
-      symbolInputs.forEach((input) => {
-        const supported = available.has(input.value);
-        input.disabled = !supported;
-        input.closest("label")?.classList.toggle("is-disabled", !supported);
-        input.checked = supported && remembered.has(input.value);
-      });
-      if (!symbolInputs.some((input) => input.checked && !input.disabled)) {
-        const firstAvailable = symbolInputs.find((input) => !input.disabled);
-        if (firstAvailable) firstAvailable.checked = true;
-      }
-      const availableSignals = new Set(
-        model.PROFILE_SIGNAL_SOURCES[profile.value] || [],
-      );
-      [...signalSource.options].forEach((option) => {
-        option.disabled = !availableSignals.has(option.value);
-      });
-      if (!availableSignals.has(signalSource.value)) {
-        signalSource.value = [...availableSignals][0] || "";
-      }
-      applyProfileRange();
-      previousProfile = profile.value;
-      updateSignalSourceHelp();
-      clearError();
+      const usesFullRange =
+        startDate.value === fullRange.start && endDate.value === fullRange.end;
+      const exitNames = [
+        "profit_target_enabled",
+        "stop_loss_enabled",
+        "opposite_macd_enabled",
+        "opposite_smi_enabled",
+        "time_exit_enabled",
+      ];
+      const enabledExits = exitNames.filter((name) => {
+        const field = form.elements.namedItem(name);
+        return field instanceof HTMLInputElement && field.checked;
+      }).length;
+      const value = (name) => form.elements.namedItem(name)?.value || "—";
+      experimentSummaryTitle.textContent =
+        `${selected.length} ${selected.length === 1 ? "symbol" : "symbols"} · ` +
+        (usesFullRange
+          ? "full dataset"
+          : `${startDate.value || "?"} to ${endDate.value || "?"}`);
+      experimentSummaryCopy.textContent =
+        `MACD ${value("macd_fast_period")}/${value("macd_slow_period")}/` +
+        `${value("macd_signal_period")} · ${enabledExits} exit ` +
+        `${enabledExits === 1 ? "gate" : "gates"} enabled`;
     }
 
     function readValues() {
@@ -428,6 +361,7 @@
         max_spread_enabled: checked("max_spread_enabled"),
         entry_window_enabled: checked("entry_window_enabled"),
         profit_target_enabled: checked("profit_target_enabled"),
+        stop_loss_enabled: checked("stop_loss_enabled"),
         opposite_macd_enabled: checked("opposite_macd_enabled"),
         time_exit_enabled: checked("time_exit_enabled"),
         rsi_period: value("rsi_period"),
@@ -454,6 +388,7 @@
           "fallback_to_next_expiration",
         ),
         profit_target_percent: value("profit_target_percent"),
+        stop_loss_percent: value("stop_loss_percent"),
         commission_per_contract: value("commission_per_contract"),
         contracts_per_trade: value("contracts_per_trade"),
         entry_delay_minutes: value("entry_delay_minutes"),
@@ -590,8 +525,12 @@
       );
     }
 
-    profile.addEventListener("change", applyProfileSymbols);
-    signalSource.addEventListener("change", updateSignalSourceHelp);
+    resetDateRange?.addEventListener("click", () => {
+      startDate.value = fullRange.start;
+      endDate.value = fullRange.end;
+      clearError();
+      updateExperimentSummary();
+    });
     const dependencyToggles = [
       ...form.querySelectorAll("[data-controls]"),
     ];
@@ -641,8 +580,12 @@
     symbolInputs.forEach((input) => {
       input.addEventListener("change", () => {
         symbolsError.textContent = "";
+        updateExperimentSummary();
       });
     });
+    form.addEventListener("input", updateExperimentSummary);
+    form.addEventListener("change", updateExperimentSummary);
+    updateExperimentSummary();
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -706,7 +649,6 @@
       }
     });
 
-    applyProfileSymbols();
     if (gatewayUrl) {
       setRunnerState(
         "ready",
@@ -2244,6 +2186,8 @@
     "exit.profit_price_field": ["Fill model", "Profit price field"],
     "exit.profit_target_enabled": ["Exit", "Profit target"],
     "exit.profit_target_percent": ["Exit", "Profit target percentage"],
+    "exit.stop_loss_enabled": ["Exit", "Accepted-loss stop"],
+    "exit.stop_loss_percent": ["Exit", "Maximum accepted loss"],
     "exit.simultaneous_priority": ["Exit", "Same-event exit priority"],
     "macd.ema_seed_method": ["Signal", "EMA seed"],
     "macd.fast_period": ["Signal", "Fast EMA"],
@@ -2322,7 +2266,8 @@
     if (lower === "not set") return "Not set";
     if (
       path === "contract.max_spread_percent" ||
-      path === "exit.profit_target_percent"
+      path === "exit.profit_target_percent" ||
+      path === "exit.stop_loss_percent"
     ) {
       return `${formatNumber(value)}%`;
     }

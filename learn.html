@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=f22faf51fe5d">
-  <script src="assets/site.js?v=f22faf51fe5d" defer></script>
-  <script src="assets/learn.js?v=f22faf51fe5d" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=2dcf9e63afc3">
+  <script src="assets/site.js?v=2dcf9e63afc3" defer></script>
+  <script src="assets/learn.js?v=2dcf9e63afc3" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -128,8 +128,8 @@
         <span>03</span>
         <strong data-lang-content="en">Five-minute completed candles</strong>
         <strong data-lang-content="ar" lang="ar" hidden>شموع مكتملة لفاصل خمس دقائق</strong>
-        <small data-lang-content="en">Signals use the selected saved underlying or option-contract series.</small>
-        <small data-lang-content="ar" lang="ar" hidden>تُحتسب الإشارة من السلسلة المحفوظة المختارة للأصل أو لعقد الخيار.</small>
+        <small data-lang-content="en">Signals use retained ThetaData option-contract trade bars.</small>
+        <small data-lang-content="ar" lang="ar" hidden>تُحتسب الإشارة من شموع تداول عقود الخيارات المحفوظة من ThetaData.</small>
       </article>
       <article>
         <span>04</span>
@@ -167,18 +167,19 @@
         <li>
           <span class="strategy-number">01</span>
           <div>
-            <h3 data-lang-content="en">Choose an available dataset and universe</h3>
-            <h3 data-lang-content="ar" lang="ar" hidden>اختيار مجموعة بيانات متاحة ونطاق الرموز</h3>
+            <h3 data-lang-content="en">Choose the universe and replay dates</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>اختيار نطاق الرموز وتواريخ المحاكاة</h3>
             <p data-lang-content="en">
-              The selected local profile defines its available dates and
-              supported symbols. Choose any inclusive range inside that
-              profile; the browser cannot alter a filesystem path or request
-              additional provider data.
+              ThetaData is the sole active source. The full retained date range
+              is selected by default; choose any supported symbol subset and
+              narrow the dates only for a deliberate experiment. The browser
+              cannot alter local paths or request additional provider data.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
-              يحدد ملف البيانات المحلي التواريخ والرموز المتاحة. ويمكن اختيار
-              أي نطاق زمني شامل ضمن حدوده، بينما لا يستطيع المتصفح تعديل مسار
-              الملفات أو طلب بيانات إضافية من مزود السوق.
+              تُعد ThetaData مصدر البيانات النشط الوحيد. ويُحدد كامل النطاق
+              الزمني المحفوظ افتراضياً، مع إمكان اختيار أي مجموعة فرعية من
+              الرموز المدعومة وتضييق التواريخ لأغراض تجربة مقصودة. ولا يستطيع
+              المتصفح تعديل المسارات المحلية أو طلب بيانات إضافية من المزود.
             </p>
           </div>
         </li>
@@ -204,20 +205,18 @@
         <li>
           <span class="strategy-number">03</span>
           <div>
-            <h3 data-lang-content="en">Read the crossover from the selected signal series</h3>
-            <h3 data-lang-content="ar" lang="ar" hidden>قراءة التقاطع من سلسلة الإشارة المختارة</h3>
+            <h3 data-lang-content="en">Read the crossover from the option contract</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>قراءة التقاطع من عقد الخيار</h3>
             <p data-lang-content="en">
-              The primary ThetaData mode evaluates each eligible option
-              contract’s completed trade closes and requires a bullish cross
-              on the contract being entered. The legacy AV mode instead maps
-              an underlying bullish cross to a call and a bearish cross to a
-              put.
+              Each eligible option contract is evaluated from its completed
+              ThetaData trade closes. A bullish crossover qualifies that call
+              or put contract for entry; no underlying-derived or secondary
+              signal source is selectable.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
-              في وضع ThetaData الأساسي، تُقيَّم إغلاقات التداول المكتملة لكل
-              عقد خيار مؤهل، ويُشترط تحقق تقاطع إيجابي على العقد المراد الدخول
-              فيه. أما وضع Alpha Vantage السابق فيحوّل التقاطع الإيجابي للأصل
-              إلى عقد شراء والتقاطع السلبي إلى عقد بيع.
+              تُقيَّم إغلاقات التداول المكتملة من ThetaData لكل عقد خيار مؤهل.
+              ويؤهل التقاطع الإيجابي عقد الشراء أو البيع ذاته للدخول، ولا يمكن
+              اختيار إشارة مشتقة من الأصل أو مصدر إشارة ثانوي.
             </p>
           </div>
         </li>
@@ -245,13 +244,15 @@
             <h3 data-lang-content="ar" lang="ar" hidden>الخروج عند أول شرط متحقق زمنياً</h3>
             <p data-lang-content="en">
               A later executable bid closes the position when the profit
-              target, an opposite completed-bar MACD crossover, or the
-              configured Riyadh-time exit occurs first.
+              target, accepted-loss stop, opposite completed-bar MACD or SMI
+              crossover, or configured Riyadh-time exit occurs first. Every
+              gate can be enabled or disabled independently.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               يُغلق المركز بأول سعر عرض قابل للتنفيذ بعد تحقق أول شرط زمنياً:
-              هدف الربح، أو تقاطع MACD عكسي على شمعة مكتملة، أو موعد الخروج
-              المحدد بتوقيت الرياض.
+              هدف الربح، أو حد الخسارة المقبولة، أو تقاطع MACD أو SMI عكسي على
+              شمعة مكتملة، أو موعد الخروج المحدد بتوقيت الرياض. ويمكن تفعيل كل
+              بوابة خروج أو تعطيلها بصورة مستقلة.
             </p>
           </div>
         </li>
@@ -277,16 +278,14 @@
         <strong data-lang-content="en">Backtest evidence remains separate from live execution.</strong>
         <strong data-lang-content="ar" lang="ar" hidden>تبقى أدلة الاختبار التاريخي منفصلة عن التنفيذ الحي.</strong>
         <p data-lang-content="en">
-          Primary ThetaData mode replays archived option bars, offline contract
-          selection, and exact ask-in/bid-out quote states without placing an
-          order. The legacy AV mode remains available only in its compatible
-          stored profile.
+          The active workflow replays archived ThetaData option bars, offline
+          contract selection, and exact ask-in/bid-out quote states without
+          placing an order or contacting a data provider.
         </p>
         <p data-lang-content="ar" lang="ar" hidden>
-          يعيد وضع ThetaData الأساسي محاكاة شموع الخيارات المؤرشفة، واختيار
-          العقود محلياً، وحالات التسعير الدقيقة للدخول بسعر الطلب والخروج بسعر
-          العرض، من دون إرسال أي أمر. ويبقى وضع Alpha Vantage السابق متاحاً
-          ضمن ملف البيانات المحفوظ المتوافق معه فقط.
+          يعيد مسار التشغيل النشط محاكاة شموع الخيارات المؤرشفة من ThetaData،
+          واختيار العقود محلياً، وحالات التسعير الدقيقة للدخول بسعر الطلب
+          والخروج بسعر العرض، من دون إرسال أمر أو الاتصال بمزود البيانات.
         </p>
       </aside>
     </section>
@@ -496,14 +495,14 @@
             <h3 data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة تهيئة المتوسط الأسي</h3>
             <p data-lang-content="en">
               Fast, slow, and signal periods determine how many completed
-              closes from the selected signal series feed each line. Shorter
+              option-contract closes from ThetaData feed each line. Shorter
               periods generally react sooner; longer periods generally smooth
               more. The page requires the fast period to remain below the slow
               period.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               تحدد الفترات السريعة والبطيئة وفترة الإشارة عدد الإغلاقات
-              المكتملة من سلسلة الإشارة المختارة والداخلة في احتساب كل خط.
+              المكتملة لعقد الخيار من ThetaData والداخلة في احتساب كل خط.
               وتكون الفترات الأقصر عادة أسرع استجابة، بينما توفر الفترات
               الأطول تنعيماً أكبر. وتشترط الصفحة بقاء الفترة السريعة أقل من
               الفترة البطيئة.
@@ -537,8 +536,8 @@
             <aside>
               <strong data-lang-content="en">Coverage</strong>
               <strong data-lang-content="ar" lang="ar" hidden>نطاق التطبيق</strong>
-              <span data-lang-content="en">The same settings apply to any selected combination of QQQ, SPY, TSLA, AAPL, and NVDA. SMI follows the selected underlying or option-contract signal series.</span>
-              <span data-lang-content="ar" lang="ar" hidden>تُطبق الإعدادات نفسها على أي مجموعة مختارة من QQQ وSPY وTSLA وAAPL وNVDA، ويتبع SMI سلسلة الإشارة المختارة سواء كانت الأصل أو عقد الخيار.</span>
+              <span data-lang-content="en">The same settings apply to any selected combination of QQQ, SPY, TSLA, AAPL, and NVDA. SMI uses each eligible option contract’s retained ThetaData bars.</span>
+              <span data-lang-content="ar" lang="ar" hidden>تُطبق الإعدادات نفسها على أي مجموعة مختارة من QQQ وSPY وTSLA وAAPL وNVDA، ويستخدم SMI شموع ThetaData المحفوظة لكل عقد خيار مؤهل.</span>
             </aside>
           </article>
 
@@ -549,13 +548,13 @@
             <p data-lang-content="en">
               The zero-line filter accepts bullish crosses only above zero and
               bearish crosses only below zero. RSI uses Wilder’s calculation on
-              the same selected signal series and accepts only values inside
+              the same ThetaData option-contract series and accepts only values inside
               the configured range. RSI is built but disabled in the baseline.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               يقبل مرشح خط الصفر التقاطع الإيجابي فقط فوق الصفر، والتقاطع
-              السلبي فقط تحته. ويستخدم RSI طريقة وايلدر على سلسلة الإشارة
-              المختارة نفسها، ولا يقبل إلا القيم الواقعة ضمن النطاق المحدد.
+              السلبي فقط تحته. ويستخدم RSI طريقة وايلدر على سلسلة عقد الخيار
+              من ThetaData، ولا يقبل إلا القيم الواقعة ضمن النطاق المحدد.
               وقد بُني RSI تقنياً لكنه معطل في الإعداد الأساسي.
             </p>
             <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
@@ -677,33 +676,22 @@
         </header>
 
         <aside class="control-reference-guardrail">
-          <strong data-lang-content="en">Know the selected profile’s coverage envelope</strong>
-          <strong data-lang-content="ar" lang="ar" hidden>اعرف حدود التغطية لملف البيانات المختار</strong>
+          <strong data-lang-content="en">Know the retained ThetaData coverage envelope</strong>
+          <strong data-lang-content="ar" lang="ar" hidden>اعرف حدود تغطية بيانات ThetaData المحفوظة</strong>
           <p data-lang-content="en">
-            The primary ThetaData profile removes the legacy $4 premium and 50%
-            spread extraction caps. It retains the two nearest expirations and,
-            at each minute, the five closest eligible ITM/ATM strikes per side;
-            a farther contract is not inferred. For the legacy June 2026 QQQ,
-            SPY, TSLA, AAPL, and NVDA profile, the
-            premium cap must remain enabled at $4 or less, the spread cap must
-            remain enabled at 50% or less using midpoint, and the entry window
-            must start at least 15 minutes after open and stop at least 60
-            minutes before close. You may tighten these limits, but the page
-            rejects a wider test because the saved data cannot support it
-            reliably.
+            The active archive retains the two nearest expirations and, at each
+            minute, the five closest eligible ITM/ATM strikes per side. Premium
+            and spread filters may be changed or disabled, but a farther
+            expiration or strike that was never retained is never inferred.
+            Any requested session must also be complete and hash-verified for
+            every selected symbol; incomplete coverage fails closed.
           </p>
           <p data-lang-content="ar" lang="ar" hidden>
-            يلغي ملف ThetaData الأساسي قيود الاستخراج السابقة البالغة 4 دولارات
-            لسعر العقد و50% للفارق. ويحتفظ بأقرب تاريخي انتهاء، وبأقرب خمسة
-            أسعار تنفيذ مؤهلة من نطاق ITM/ATM لكل جانب عند كل دقيقة؛ ولا
-            تُفترض بيانات لعقد أبعد غير محفوظ. أما عند استخدام ملف يونيو 2026
-            السابق للرموز QQQ وSPY وTSLA وAAPL وNVDA، فيجب
-            إبقاء حد سعر الطلب مفعلاً عند 4 دولارات أو أقل، وحد الفارق مفعلاً
-            عند 50% أو أقل مع اعتماد السعر المتوسط مقاماً للنسبة، كما يجب ألا
-            يبدأ الدخول قبل مرور 15 دقيقة على الافتتاح وأن يتوقف قبل الإغلاق
-            بما لا يقل عن 60 دقيقة. ويمكن تشديد هذه الحدود، إلا أن توسيعها
-            يُرفض لأن البيانات المحفوظة لا تدعم اختباراً أوسع بدرجة موثوقية
-            كافية.
+            يحتفظ الأرشيف النشط بأقرب تاريخي انتهاء، وبأقرب خمسة أسعار تنفيذ
+            مؤهلة من نطاق ITM/ATM لكل جانب عند كل دقيقة. ويمكن تعديل مرشحي سعر
+            العقد والفارق أو تعطيلهما، لكن لا تُفترض بيانات لتاريخ انتهاء أو
+            سعر تنفيذ أبعد لم يُحفظ أصلاً. كما يجب اكتمال كل جلسة مطلوبة
+            والتحقق من بصمتها لجميع الرموز المختارة، وإلا يُرفض التشغيل.
           </p>
         </aside>
 
@@ -735,19 +723,19 @@
               </div>
               <div>
                 <dt>
-                  <span data-lang-content="en">Local dataset</span>
-                  <span data-lang-content="ar" lang="ar" hidden>مجموعة البيانات المحلية</span>
-                  <small><span data-lang-content="en">Allowlisted profiles only</span><span data-lang-content="ar" lang="ar" hidden>الملفات المعتمدة فقط</span></small>
+                  <span data-lang-content="en">ThetaData local archive</span>
+                  <span data-lang-content="ar" lang="ar" hidden>أرشيف ThetaData المحلي</span>
+                  <small><span data-lang-content="en">Fixed source · offline only</span><span data-lang-content="ar" lang="ar" hidden>مصدر ثابت · تشغيل محلي فقط</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Chooses an offline profile already stored on the runner. The
-                  profile fixes available dates, symbols, sources, and evidence;
-                  selecting it never starts a provider download.
+                  New runs always use the retained ThetaData Options Standard
+                  archive. There is no source selector, filesystem path, or
+                  provider download control on the public page.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يحدد ملف بيانات محفوظاً مسبقاً على المشغّل المحلي. ويثبت
-                  الملف التواريخ والرموز والمصادر وطبقات الإثبات المتاحة، ولا
-                  يؤدي اختياره إلى تنزيل جديد من مزود البيانات.
+                  تستخدم جميع التشغيلات الجديدة أرشيف ThetaData Options Standard
+                  المحفوظ. ولا تعرض الصفحة العامة اختياراً للمصدر أو مسار
+                  الملفات أو أمراً لتنزيل بيانات من المزود.
                 </dd>
               </div>
               <div>
@@ -757,14 +745,14 @@
                   <small><span data-lang-content="en">Inclusive New York session dates</span><span data-lang-content="ar" lang="ar" hidden>تواريخ جلسات نيويورك شاملة</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Limits the replay to completed sessions already present in
-                  the selected profile. Missing or partially downloaded dates
-                  fail closed; the page never fills the gap from an API.
+                  Defaults to the full retained range and may be narrowed to
+                  completed sessions. Missing or partially downloaded dates
+                  fail closed; the page never fills a gap from an API.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يقصر المحاكاة على الجلسات المكتملة والمحفوظة فعلياً ضمن ملف
-                  البيانات المختار. ويُرفض التشغيل عند وجود تاريخ مفقود أو
-                  تنزيل غير مكتمل، ولا تستدعي الصفحة واجهة API لسد النقص.
+                  يعتمد كامل النطاق الزمني المحفوظ افتراضياً، ويمكن تضييقه إلى
+                  جلسات مكتملة. ويُرفض التشغيل عند وجود تاريخ مفقود أو تنزيل
+                  غير مكتمل، ولا تستدعي الصفحة واجهة API لسد النقص.
                 </dd>
               </div>
               <div>
@@ -790,11 +778,11 @@
                   <small><span data-lang-content="en">Off by default</span><span data-lang-content="ar" lang="ar" hidden>معطل افتراضياً</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Checks the selected profile, files, and settings without
+                  Checks the retained ThetaData archive, files, and settings without
                   replaying trades or publishing a new report.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يتحقق من ملف البيانات والملفات والإعدادات المحددة دون إعادة
+                  يتحقق من أرشيف ThetaData والملفات والإعدادات المحددة دون إعادة
                   محاكاة الصفقات أو نشر تقرير جديد.
                 </dd>
               </div>
@@ -815,23 +803,19 @@
                 <dt>
                   <span data-lang-content="en">Signal series</span>
                   <span data-lang-content="ar" lang="ar" hidden>سلسلة الإشارة</span>
-                  <small><span data-lang-content="en">ThetaData option contract or legacy AV underlying</span><span data-lang-content="ar" lang="ar" hidden>عقد الخيار عبر ThetaData أو الأصل عبر AV السابق</span></small>
+                  <small><span data-lang-content="en">ThetaData option-contract bars only</span><span data-lang-content="ar" lang="ar" hidden>شموع عقد الخيار من ThetaData فقط</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Selects the completed five-minute candles used by MACD, SMI,
-                  and RSI. Primary ThetaData mode requires a bullish cross on
-                  the eligible option itself and uses retained exact NBBO states
-                  for selection and fills. Legacy AV mode maps an underlying
-                  bullish cross to a call and a bearish cross to a put, with
-                  stored Databento option evidence.
+                  Completed five-minute ThetaData trade candles for the
+                  eligible option feed MACD, SMI, and RSI. A bullish crossover
+                  on the option itself qualifies entry, while retained NBBO
+                  states supply selection and executable fills.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يحدد سلسلة شموع الخمس دقائق المكتملة المستخدمة في MACD وSMI
-                  وRSI. ويشترط وضع ThetaData الأساسي تقاطعاً إيجابياً على عقد
-                  الخيار المؤهل نفسه، ويستخدم حالات NBBO الدقيقة المحفوظة
-                  للاختيار والتنفيذ. أما وضع Alpha Vantage السابق فيحوّل
-                  التقاطع الإيجابي للأصل إلى عقد شراء والتقاطع السلبي إلى عقد
-                  بيع، مع أدلة خيارات Databento المحفوظة.
+                  تغذي شموع تداول عقد الخيار المكتملة لفاصل خمس دقائق من
+                  ThetaData مؤشرات MACD وSMI وRSI. ويؤهل التقاطع الإيجابي على
+                  العقد نفسه الدخول، بينما توفر حالات NBBO المحفوظة أدلة
+                  الاختيار والتنفيذ القابل للتنفيذ.
                 </dd>
               </div>
               <div>
@@ -1075,7 +1059,7 @@
                 <dt>
                   <span data-lang-content="en">Premium cap enabled</span>
                   <span data-lang-content="ar" lang="ar" hidden>تفعيل حد سعر العقد</span>
-                  <small><span data-lang-content="en">Required for five-symbol data</span><span data-lang-content="ar" lang="ar" hidden>مطلوب لبيانات الرموز الخمسة</span></small>
+                  <small><span data-lang-content="en">On by default</span><span data-lang-content="ar" lang="ar" hidden>مفعّل افتراضياً</span></small>
                 </dt>
                 <dd data-lang-content="en">
                   Turns the maximum-ask eligibility rule on or off. Turning it
@@ -1204,14 +1188,14 @@
                   <small><span data-lang-content="en">Required for five-symbol data</span><span data-lang-content="ar" lang="ar" hidden>مطلوب لبيانات الرموز الخمسة</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Applies both the post-open delay and pre-close cutoff. The
-                  current five-symbol profile requires this protection to stay
-                  enabled.
+                  Applies both the post-open delay and pre-close cutoff.
+                  Disable it only when the hypothesis intentionally allows
+                  entries throughout the recorded regular session.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يطبق كلاً من مهلة ما بعد الافتتاح وحد إيقاف الدخول قبل
-                  الإغلاق. ويشترط ملف الرموز الخمسة الحالي بقاء هذه الحماية
-                  مفعلة.
+                  الإغلاق. ولا يُعطل إلا إذا كانت الفرضية تسمح عمداً بالدخول
+                  طوال الجلسة النظامية المسجلة.
                 </dd>
               </div>
               <div>
@@ -1222,13 +1206,13 @@
                 </dt>
                 <dd data-lang-content="en">
                   Blocks new entries until this many minutes have passed after
-                  the recorded US option-session open. The five-symbol profile
-                  allows 15 minutes or more.
+                  the recorded US option-session open. The accepted range is
+                  0–240 minutes.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يمنع الدخول الجديد حتى انقضاء هذا العدد من الدقائق بعد
-                  افتتاح جلسة الخيارات الأمريكية المسجل. ويسمح ملف الرموز
-                  الخمسة بقيمة 15 دقيقة أو أكثر.
+                  افتتاح جلسة الخيارات الأمريكية المسجل. ويتراوح نطاق القيم
+                  المقبولة بين 0 و240 دقيقة.
                 </dd>
               </div>
               <div>
@@ -1239,13 +1223,13 @@
                 </dt>
                 <dd data-lang-content="en">
                   Prevents new positions during the final configured minutes of
-                  the recorded session. The five-symbol profile allows 60
-                  minutes or more.
+                  the recorded session. The accepted range is 0–240 minutes;
+                  delay plus cutoff must leave part of the session open.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يمنع فتح مراكز جديدة خلال العدد المحدد من الدقائق الأخيرة
-                  للجلسة المسجلة. ويسمح ملف الرموز الخمسة بقيمة 60 دقيقة أو
-                  أكثر.
+                  للجلسة المسجلة. ويتراوح النطاق بين 0 و240 دقيقة، على أن تترك
+                  المهلة وحد الإيقاف جزءاً من الجلسة متاحاً.
                 </dd>
               </div>
               <div>
@@ -1282,17 +1266,50 @@
               </div>
               <div>
                 <dt>
+                  <span data-lang-content="en">Accepted-loss stop enabled</span>
+                  <span data-lang-content="ar" lang="ar" hidden>تفعيل حد الخسارة المقبولة</span>
+                  <small><span data-lang-content="en">On by default</span><span data-lang-content="ar" lang="ar" hidden>مفعّل افتراضياً</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Enables or disables the loss-percentage exit independently
+                  from every other gate. The stored percentage remains visible
+                  when the gate is disabled.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يفعّل أو يعطل الخروج وفق نسبة الخسارة بصورة مستقلة عن جميع
+                  البوابات الأخرى. وتبقى النسبة المحفوظة ظاهرة عند تعطيل البوابة.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Maximum accepted loss</span>
+                  <span data-lang-content="ar" lang="ar" hidden>الحد الأقصى للخسارة المقبولة</span>
+                  <small><span data-lang-content="en">Default 10% · range 0.1–100%</span><span data-lang-content="ar" lang="ar" hidden>الافتراضي 10% · النطاق 0.1–100%</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Triggers when a later executable bid reaches the configured
+                  negative return relative to the entry ask. This is a
+                  quote-observed stop, not an assumed candle fill.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يتحقق عندما يبلغ سعر عرض لاحق قابل للتنفيذ نسبة العائد السلبية
+                  المحددة مقارنة بسعر الطلب عند الدخول. وهو حد مرصود من التسعير
+                  الفعلي المحفوظ، وليس سعراً مفترضاً من الشمعة.
+                </dd>
+              </div>
+              <div>
+                <dt>
                   <span data-lang-content="en">Reverse MACD exit</span>
                   <span data-lang-content="ar" lang="ar" hidden>الخروج بتقاطع MACD العكسي</span>
                   <small><span data-lang-content="en">On by default</span><span data-lang-content="ar" lang="ar" hidden>مفعّل افتراضياً</span></small>
                 </dt>
                 <dd data-lang-content="en">
                   Closes at the first valid bid after an opposite completed-bar
-                  crossover on the same selected signal series.
+                  crossover on the same option-contract signal series.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يغلق المركز عند أول سعر عرض صالح بعد ظهور تقاطع عكسي على
-                  شمعة مكتملة من سلسلة الإشارة المختارة نفسها.
+                  شمعة مكتملة من سلسلة إشارة عقد الخيار نفسها.
                 </dd>
               </div>
               <div>
@@ -1303,12 +1320,12 @@
                 </dt>
                 <dd data-lang-content="en">
                   Enables or disables the explicit Riyadh-time exit. Disabling
-                  it leaves profit and reverse-MACD exits as the remaining
-                  configured exit paths.
+                  it does not change the state of the profit, stop-loss, MACD,
+                  or optional SMI gates.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  يفعّل أو يعطل الخروج المحدد بتوقيت الرياض. وعند تعطيله تبقى
-                  قواعد هدف الربح والتقاطع العكسي مسارات الخروج المفعلة الأخرى.
+                  يفعّل أو يعطل الخروج المحدد بتوقيت الرياض. ولا يغير تعطيله
+                  حالة بوابات هدف الربح أو حد الخسارة أو MACD أو SMI الاختياري.
                 </dd>
               </div>
               <div>
@@ -1334,12 +1351,14 @@
               <span data-lang-content="en">
                 When more than one exit qualifies, the first chronological
                 condition wins. A same-event tie is resolved in this order:
-                profit target, reverse MACD, then timed exit.
+                 profit target, stop loss, reverse MACD, reverse SMI, then
+                 timed exit.
               </span>
               <span data-lang-content="ar" lang="ar" hidden>
                 عند تحقق أكثر من شرط خروج، يُعتمد الشرط الأسبق زمنياً. وإذا
-                تزامنت الشروط في الحدث نفسه فتكون الأولوية لهدف الربح ثم تقاطع
-                MACD العكسي ثم الخروج الزمني.
+                 تزامنت الشروط في الحدث نفسه فتكون الأولوية لهدف الربح ثم حد
+                 الخسارة ثم تقاطع MACD العكسي ثم تقاطع SMI العكسي ثم الخروج
+                 الزمني.
               </span>
             </p>
           </details>
@@ -1476,41 +1495,6 @@
             من بصماتها على المشغّل المحلي.
           </p>
         </article>
-        <article data-state="available">
-          <span class="preview-status">Available offline</span>
-          <h3>ThetaData · SPY · 19 Aug 2025</h3>
-          <p data-lang-content="en">
-            Real provider data retained without a credential: one symbol, one
-            regular session, and zero-DTE contracts. It validates import,
-            no-lookahead replay, and manual receipts. The strict baseline
-            produced zero qualifying trades.
-          </p>
-          <p data-lang-content="ar" lang="ar" hidden>
-            بيانات فعلية محفوظة من مزود خارجي من دون الحاجة إلى مفتاح: رمز واحد
-            وجلسة نظامية واحدة وعقود تنتهي في اليوم نفسه. وتصلح للتحقق من
-            الاستيراد ومنع استشراف المستقبل وإيصالات المراجعة اليدوية. ولم
-            ينتج الإعداد الأساسي الصارم أي صفقة مؤهلة.
-          </p>
-        </article>
-        <article data-state="available">
-          <span class="preview-status">
-            <span data-lang-content="en">Available offline · verified</span>
-            <span data-lang-content="ar" lang="ar" hidden>متاح محلياً · متحقق منه</span>
-          </span>
-          <h3>Databento OPRA · June 2026 · five symbols</h3>
-          <p data-lang-content="en">
-            The QQQ, SPY, TSLA, AAPL, and NVDA profile passed offline
-            validation. It combines stored AV five-minute underlying signals
-            with Databento contract definitions, option bars, and bid/ask
-            quotes; option-contract MACD remains selectable as an alternative.
-          </p>
-          <p data-lang-content="ar" lang="ar" hidden>
-            اجتاز ملف QQQ وSPY وTSLA وAAPL وNVDA اختبارات التحقق المحلية. وهو
-            يجمع إشارات الأصل لفاصل خمس دقائق المحفوظة من Alpha Vantage مع
-            تعريفات العقود وشموع الخيارات وتسعيرات العرض والطلب من Databento،
-            مع بقاء MACD على عقد الخيار بديلاً قابلاً للاختيار.
-          </p>
-        </article>
       </div>
 
       <div class="required-data">
@@ -1527,8 +1511,8 @@
             <span data-lang-content="en"> — OCC identity, call/put, strike, and expiration.</span>
             <span data-lang-content="ar" lang="ar" hidden> — هوية OCC ونوع العقد وسعر التنفيذ وتاريخ الانتهاء.</span></li>
           <li><strong data-lang-content="en">Five-minute signal candles</strong><strong data-lang-content="ar" lang="ar" hidden>شموع الإشارة لفاصل خمس دقائق</strong>
-            <span data-lang-content="en"> — completed ThetaData option trade bars in the primary profile, or stored AV underlying closes in the legacy profile, for MACD, SMI, and optional RSI.</span>
-            <span data-lang-content="ar" lang="ar" hidden> — شموع تداول الخيار المكتملة من ThetaData في الملف الأساسي، أو إغلاقات الأصل المحفوظة من AV في الملف السابق، لاحتساب MACD وSMI وRSI الاختياري.</span></li>
+            <span data-lang-content="en"> — completed ThetaData option-contract trade bars for MACD, SMI, and optional RSI.</span>
+            <span data-lang-content="ar" lang="ar" hidden> — شموع تداول عقد الخيار المكتملة من ThetaData لاحتساب MACD وSMI وRSI الاختياري.</span></li>
           <li><strong data-lang-content="en">Timestamped NBBO quotes</strong><strong data-lang-content="ar" lang="ar" hidden>تسعيرات NBBO المؤرخة زمنياً</strong>
             <span data-lang-content="en"> — bid/ask for eligibility, entry, every exit, and ordering.</span>
             <span data-lang-content="ar" lang="ar" hidden> — أسعار العرض والطلب للأهلية والدخول والخروج والترتيب الزمني.</span></li>
@@ -1620,14 +1604,14 @@
           <ul>
             <li data-lang-content="en">One symbol or any supported basket</li>
             <li data-lang-content="ar" lang="ar" hidden>رمز واحد أو أي مجموعة مدعومة</li>
-            <li data-lang-content="en">MACD signal series, fast, slow, signal, seed, and optional zero line</li>
-            <li data-lang-content="ar" lang="ar" hidden>سلسلة إشارة MACD وفتراته وطريقة التهيئة ومرشح خط الصفر الاختياري</li>
+            <li data-lang-content="en">MACD fast, slow, signal, seed, and optional zero line</li>
+            <li data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة التهيئة ومرشح خط الصفر الاختياري</li>
             <li data-lang-content="en">Optional RSI period and acceptance range</li>
             <li data-lang-content="ar" lang="ar" hidden>فترة RSI ونطاق القبول الاختياري</li>
             <li data-lang-content="en">Premium and spread caps plus strike/expiry fallback</li>
             <li data-lang-content="ar" lang="ar" hidden>حدا السعر والفارق والانتقال بين أسعار التنفيذ والانتهاء</li>
-            <li data-lang-content="en">Entry window, profit target, reverse MACD, and Riyadh-time exits</li>
-            <li data-lang-content="ar" lang="ar" hidden>نافذة الدخول وهدف الربح والتقاطع العكسي والخروج بتوقيت الرياض</li>
+            <li data-lang-content="en">Entry window plus independently enabled profit, stop-loss, reverse MACD, reverse SMI, and Riyadh-time exits</li>
+            <li data-lang-content="ar" lang="ar" hidden>نافذة الدخول وبوابات مستقلة لهدف الربح وحد الخسارة وMACD العكسي وSMI العكسي والخروج بتوقيت الرياض</li>
             <li data-lang-content="en">Contracts per trade, commission, and validation-only mode</li>
             <li data-lang-content="ar" lang="ar" hidden>عدد العقود والعمولة ووضع التحقق دون تشغيل</li>
           </ul>
@@ -1636,10 +1620,10 @@
           <h3 data-lang-content="en">Fixed or owner-controlled</h3>
           <h3 data-lang-content="ar" lang="ar" hidden>ثابت أو خاضع لصاحب النظام</h3>
           <ul>
-            <li data-lang-content="en">Completed five-minute bars from an allowlisted saved signal source</li>
-            <li data-lang-content="ar" lang="ar" hidden>شموع مكتملة لفاصل خمس دقائق من مصدر إشارة محفوظ ومعتمد</li>
-            <li data-lang-content="en">AV mode maps bullish to call and bearish to put; contract mode requires a bullish contract crossover</li>
-            <li data-lang-content="ar" lang="ar" hidden>يربط وضع AV التقاطع الإيجابي بعقد شراء والسلبي بعقد بيع، بينما يشترط وضع العقد تقاطعاً إيجابياً على العقد</li>
+            <li data-lang-content="en">ThetaData option-contract bars are the sole active signal and market-data source</li>
+            <li data-lang-content="ar" lang="ar" hidden>شموع عقود الخيارات من ThetaData هي المصدر النشط الوحيد للإشارة وبيانات السوق</li>
+            <li data-lang-content="en">Entry indicators and opposite-indicator exits share completed five-minute option bars</li>
+            <li data-lang-content="ar" lang="ar" hidden>تستخدم مؤشرات الدخول والخروج العكسي شموع عقود الخيارات المكتملة لفاصل خمس دقائق</li>
             <li data-lang-content="en">Entry at ask, exit at bid, 100-share contract multiplier</li>
             <li data-lang-content="ar" lang="ar" hidden>الدخول بسعر الطلب والخروج بسعر العرض ومعامل عقد قدره 100 سهم</li>
             <li data-lang-content="en">Local paths, raw files, provider downloads, network policy, and executable commands</li>
@@ -1677,8 +1661,8 @@
       <div class="readiness-grid">
         <div class="readiness-checks">
           <label><input type="checkbox" data-readiness-check>
-            <span data-lang-content="en">I selected a dataset that is already available offline.</span>
-            <span data-lang-content="ar" lang="ar" hidden>اخترت مجموعة بيانات متاحة محلياً بالفعل.</span>
+            <span data-lang-content="en">My requested ThetaData dates are complete on the offline runner.</span>
+            <span data-lang-content="ar" lang="ar" hidden>تواريخ ThetaData المطلوبة مكتملة على المشغّل المحلي.</span>
           </label>
           <label><input type="checkbox" data-readiness-check>
             <span data-lang-content="en">I understand this experimental signal is separate from the live bot.</span>
@@ -1740,7 +1724,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-27T17:35:09.257233Z">2026-07-27T17:35:09.257233Z</time>.
+      <time datetime="2026-07-27T18:18:52.767583Z">2026-07-27T18:18:52.767583Z</time>.
     </p>
   </footer>
 </body>
