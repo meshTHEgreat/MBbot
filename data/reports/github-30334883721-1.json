@@ -1,0 +1,933 @@
+{
+  "authoring": {
+    "baseline_id": null,
+    "hypothesis": "",
+    "next_test": "",
+    "observation": ""
+  },
+  "automation": {
+    "actor": "meshTHEgreat",
+    "application_version": "mbbot 0.1.0",
+    "backtest_entry_point": "mbbot.backtest_cli",
+    "backtest_script_sha256": "4c4b2a0765e439a5708182b963c7a34764e01f887d02a771e2e6abc7ca91f417",
+    "backtest_source_branch": null,
+    "backtest_source_commit_sha": null,
+    "data_access_mode": "offline-only",
+    "dataset_identifier": "thetadata:options-standard-minute:QQQ+SPY+TSLA+AAPL+NVDA:2026-04-27+2026-07-24",
+    "dataset_profile": "thetadata-options-2026-04-27-to-2026-07-24",
+    "dependency_versions": {
+      "mbbot": "0.1.0",
+      "tzdata": "2026.3"
+    },
+    "duration_seconds": 130.481,
+    "ended_at_utc": "2026-07-28T06:30:39.193941Z",
+    "project_python_network_access": false,
+    "provider_api_access": false,
+    "provider_credentials_removed": 0,
+    "public_repository": "meshTHEgreat/MBbot",
+    "python_version": "3.12.10",
+    "report_path": "reports/github-30334883721-1.html",
+    "report_url": "https://meshthegreat.github.io/MBbot/reports/github-30334883721-1.html",
+    "request_timestamp_source": "github_actions_api",
+    "requested_at_project_time": "2026-07-28T09:27:46+03:00",
+    "requested_at_utc": "2026-07-28T06:27:46Z",
+    "run_url": "https://github.com/meshTHEgreat/mbbot-backtest-control/actions/runs/30334883721",
+    "schema_version": "mbbot.backtest.automation.v1",
+    "selected_parameters": {
+      "allow_zero_dte": true,
+      "commission_per_contract": "0",
+      "contracts_per_trade": "1",
+      "dataset_profile": "thetadata-options-2026-04-27-to-2026-07-24",
+      "end_date": "2026-07-24",
+      "entry_cutoff_minutes": "60",
+      "entry_delay_minutes": "15",
+      "entry_window_enabled": true,
+      "experiment_label": "Baseline replay",
+      "fallback_to_next_expiration": true,
+      "force_exit_time_riyadh": "22:20",
+      "macd_ema_seed_method": "sma",
+      "macd_fast_period": "12",
+      "macd_signal_period": "9",
+      "macd_slow_period": "26",
+      "max_premium": "4",
+      "max_premium_enabled": true,
+      "max_spread_enabled": true,
+      "max_spread_percent": "50",
+      "opposite_macd_enabled": true,
+      "opposite_smi_enabled": false,
+      "profit_target_enabled": true,
+      "profit_target_percent": "20",
+      "rsi_enabled": true,
+      "rsi_maximum": "30",
+      "rsi_minimum": "0",
+      "rsi_period": "14",
+      "scan_next_strike_if_nearest_fails": true,
+      "signal_source": "thetadata_option_contract",
+      "smi_d_length": "3",
+      "smi_ema_seed_method": "first",
+      "smi_enabled": true,
+      "smi_entry_mode": "confirm_macd_state",
+      "smi_k_length": "14",
+      "smi_overbought": "40",
+      "smi_oversold": "-40",
+      "smi_signal_length": "3",
+      "smi_zone_filter_enabled": false,
+      "spread_denominator": "midpoint",
+      "start_date": "2026-04-27",
+      "stop_loss_enabled": true,
+      "stop_loss_percent": "100",
+      "symbols": [
+        "QQQ"
+      ],
+      "time_exit_enabled": true,
+      "validate_only": false,
+      "zero_line_filter_enabled": false
+    },
+    "source_branch": "main",
+    "source_commit_sha": "fd752a1c317229780c006f733f1705d2568f46e0",
+    "started_at_utc": "2026-07-28T06:28:28.713034Z",
+    "status": "success",
+    "workflow_name": "Run Local Backtest",
+    "workflow_run_attempt": "1",
+    "workflow_run_id": "30334883721",
+    "workflow_run_number": "56"
+  },
+  "breakdowns": {
+    "exit_reason": [
+      {
+        "average_return_percent": 26.878711967582294,
+        "label": "profit_target",
+        "net_pnl": 103.99999999999999,
+        "trades": 3,
+        "win_rate": 100.0,
+        "wins": 3
+      }
+    ],
+    "option_type": [
+      {
+        "average_return_percent": 26.878711967582294,
+        "label": "put",
+        "net_pnl": 103.99999999999999,
+        "trades": 3,
+        "win_rate": 100.0,
+        "wins": 3
+      }
+    ],
+    "symbol": [
+      {
+        "average_return_percent": 26.878711967582294,
+        "label": "QQQ",
+        "net_pnl": 103.99999999999999,
+        "trades": 3,
+        "win_rate": 100.0,
+        "wins": 3
+      }
+    ]
+  },
+  "charts": {
+    "cumulative_pnl": [
+      {
+        "cumulative_pnl": 23.0,
+        "drawdown": 0.0,
+        "index": 1,
+        "label": "QQQ",
+        "net_pnl": 23.0,
+        "time": "2026-06-04T14:41:00-04:00"
+      },
+      {
+        "cumulative_pnl": 84.0,
+        "drawdown": 0.0,
+        "index": 2,
+        "label": "QQQ",
+        "net_pnl": 61.0,
+        "time": "2026-07-06T11:14:00-04:00"
+      },
+      {
+        "cumulative_pnl": 104.0,
+        "drawdown": 0.0,
+        "index": 3,
+        "label": "QQQ",
+        "net_pnl": 20.0,
+        "time": "2026-07-09T13:59:00-04:00"
+      }
+    ],
+    "returns": [
+      {
+        "index": 1,
+        "label": "QQQ",
+        "value": 27.710843
+      },
+      {
+        "index": 2,
+        "label": "QQQ",
+        "value": 30.19802
+      },
+      {
+        "index": 3,
+        "label": "QQQ",
+        "value": 22.727273
+      }
+    ]
+  },
+  "created_at": "2026-07-28T06:29:48.533732Z",
+  "dataset": {
+    "contracts": 3357,
+    "dataset_fingerprint": "46e9723849e7212b9c7111c592ec0ea6c024b3c2b6300a017582c1aae22db4cb",
+    "execution_fidelity": "last OPRA NBBO quote per one-minute interval; intraminute ordering unavailable",
+    "first_timestamp": "2026-04-27T09:30:00-04:00",
+    "last_timestamp": "2026-07-24T16:00:00-04:00",
+    "market_data_provider": "thetadata",
+    "option_bars": 334917,
+    "option_quotes": 254731,
+    "quote_resolution": "1m",
+    "sessions": 62,
+    "signal_bar_providers": [],
+    "signal_bars": 0,
+    "source_files": [
+      {
+        "bytes": 46798775,
+        "filename": "thetadata-options-standard-minute-parquet-set",
+        "rows": 3986165,
+        "sha256": "7690047755fdb954d450d0389b77bcd48e749aaf1eac8b96de32f78f3c7fc9f1"
+      }
+    ],
+    "underlying_points": 24242
+  },
+  "extensions": {
+    "audit": {
+      "dataset_fingerprint": "46e9723849e7212b9c7111c592ec0ea6c024b3c2b6300a017582c1aae22db4cb",
+      "entry_execution": "first eligible option quote after the completed signal bar; filled at ask",
+      "execution_fidelity": "last OPRA NBBO quote per one-minute interval; intraminute ordering unavailable",
+      "exit_execution": "first eligible option quote after the earliest exit trigger; filled at bid; detection is limited to the dataset quote resolution (1m)",
+      "quote_resolution": "1m",
+      "source_reference_format": "filename:line=\u003cphysical CSV line>;sha256=\u003csource file hash>",
+      "timestamps": "ISO-8601 market-local timestamps with explicit UTC offsets; parallel UTC timestamps are recorded per trade"
+    },
+    "schema_version": "mbbot.backtest.result.v3",
+    "signal_source": "option_contract_trade_close"
+  },
+  "id": "github-30334883721-1",
+  "kind": "historical_backtest",
+  "metrics": {
+    "average_holding_minutes": 11.333333333333334,
+    "average_loss": null,
+    "average_return_percent": 26.878711967582294,
+    "average_win": 34.666666666666664,
+    "closed_trades": 3,
+    "collisions_rejected": 0,
+    "entries_skipped_missing_data": 0,
+    "expectancy": 34.666666666666664,
+    "flat": 0,
+    "gross_loss": 0,
+    "gross_profit": 103.99999999999999,
+    "losses": 0,
+    "max_drawdown": 0.0,
+    "median_return_percent": 27.71084337349396,
+    "net_pnl": 103.99999999999999,
+    "open_positions": 0,
+    "profit_factor": null,
+    "win_rate": 100.0,
+    "wins": 3
+  },
+  "provenance": {
+    "config_name": null,
+    "config_sha256": null,
+    "generated_at": "2026-07-28T06:30:39.463864Z",
+    "generator": "mbbot-report",
+    "source_name": "github-30334883721-1.json",
+    "source_sha256": "e46409ad9ca3fbdc9c05dd3b8bf874be8401583e6457bf802ce4f2018fee6768"
+  },
+  "quality": {
+    "label": "research",
+    "notes": [
+      "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
+    ]
+  },
+  "schema_version": "1.0",
+  "status": "research",
+  "strategy": {
+    "fingerprint": "2ecde02bc885303fbaaa8ca1279bbec8db14a222c61162861ccbb1d3b116c02d",
+    "settings": {
+      "backtest": {
+        "bar_minutes": 5,
+        "commission_per_contract": 0.0,
+        "contract_multiplier": 100,
+        "contracts_per_trade": 1,
+        "dataset_dir": "data/backtest",
+        "end_date": "2026-07-24",
+        "entry_fill": "first_ask_after_completed_signal_bar",
+        "market_timezone": "America/New_York",
+        "missing_contract_bar_policy": "reject_signal",
+        "monitor_sides": [
+          "call",
+          "put"
+        ],
+        "same_bar_collision": "reject_both",
+        "selection_quote_delay_seconds": 15,
+        "start_date": "2026-04-27",
+        "symbols": [
+          "QQQ"
+        ],
+        "underlying_max_age_seconds": 15,
+        "user_timezone": "Asia/Riyadh"
+      },
+      "contract": {
+        "allow_zero_dte": true,
+        "fallback_to_next_expiration": true,
+        "max_premium": 4.0,
+        "max_premium_enabled": true,
+        "max_spread_enabled": true,
+        "max_spread_percent": 50.0,
+        "premium_field": "ask",
+        "scan_next_strike_if_nearest_fails": true,
+        "spread_denominator": "midpoint",
+        "strike_policy": "nearest_itm_atm"
+      },
+      "exit": {
+        "entry_price_field": "ask",
+        "opposite_macd_enabled": true,
+        "profit_price_field": "bid",
+        "profit_target_enabled": true,
+        "profit_target_percent": 20.0,
+        "simultaneous_priority": [
+          "profit_target",
+          "stop_loss",
+          "opposite_macd",
+          "opposite_smi",
+          "time_exit"
+        ],
+        "stop_loss_enabled": true,
+        "stop_loss_percent": 100.0
+      },
+      "macd": {
+        "control_signal_source": "thetadata_option_contract",
+        "ema_seed_method": "sma",
+        "fast_period": 12,
+        "price_source": "trade_close",
+        "signal_period": 9,
+        "slow_period": 26,
+        "source": "option_contract",
+        "zero_line_filter_enabled": false
+      },
+      "rsi": {
+        "enabled": true,
+        "maximum": 30.0,
+        "minimum": 0.0,
+        "period": 14
+      },
+      "schedule": {
+        "entry_cutoff_minutes_before_close": 60,
+        "entry_delay_minutes_after_open": 15,
+        "entry_window_enabled": true,
+        "force_exit_time_riyadh": "22:20",
+        "time_exit_enabled": true
+      },
+      "smi": {
+        "d_length": 3,
+        "ema_seed_method": "first",
+        "enabled": true,
+        "entry_mode": "confirm_macd_state",
+        "k_length": 14,
+        "opposite_crossover_exit_enabled": false,
+        "overbought": 40.0,
+        "oversold": -40.0,
+        "signal_length": 3,
+        "zone_filter_enabled": false
+      }
+    },
+    "settings_flat": [
+      {
+        "path": "backtest.bar_minutes",
+        "value": "5"
+      },
+      {
+        "path": "backtest.commission_per_contract",
+        "value": "0.0"
+      },
+      {
+        "path": "backtest.contract_multiplier",
+        "value": "100"
+      },
+      {
+        "path": "backtest.contracts_per_trade",
+        "value": "1"
+      },
+      {
+        "path": "backtest.dataset_dir",
+        "value": "data/backtest"
+      },
+      {
+        "path": "backtest.end_date",
+        "value": "2026-07-24"
+      },
+      {
+        "path": "backtest.entry_fill",
+        "value": "first_ask_after_completed_signal_bar"
+      },
+      {
+        "path": "backtest.market_timezone",
+        "value": "America/New_York"
+      },
+      {
+        "path": "backtest.missing_contract_bar_policy",
+        "value": "reject_signal"
+      },
+      {
+        "path": "backtest.monitor_sides",
+        "value": "call, put"
+      },
+      {
+        "path": "backtest.same_bar_collision",
+        "value": "reject_both"
+      },
+      {
+        "path": "backtest.selection_quote_delay_seconds",
+        "value": "15"
+      },
+      {
+        "path": "backtest.start_date",
+        "value": "2026-04-27"
+      },
+      {
+        "path": "backtest.symbols",
+        "value": "QQQ"
+      },
+      {
+        "path": "backtest.underlying_max_age_seconds",
+        "value": "15"
+      },
+      {
+        "path": "backtest.user_timezone",
+        "value": "Asia/Riyadh"
+      },
+      {
+        "path": "contract.allow_zero_dte",
+        "value": "enabled"
+      },
+      {
+        "path": "contract.fallback_to_next_expiration",
+        "value": "enabled"
+      },
+      {
+        "path": "contract.max_premium",
+        "value": "4.0"
+      },
+      {
+        "path": "contract.max_premium_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "contract.max_spread_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "contract.max_spread_percent",
+        "value": "50.0"
+      },
+      {
+        "path": "contract.premium_field",
+        "value": "ask"
+      },
+      {
+        "path": "contract.scan_next_strike_if_nearest_fails",
+        "value": "enabled"
+      },
+      {
+        "path": "contract.spread_denominator",
+        "value": "midpoint"
+      },
+      {
+        "path": "contract.strike_policy",
+        "value": "nearest_itm_atm"
+      },
+      {
+        "path": "exit.entry_price_field",
+        "value": "ask"
+      },
+      {
+        "path": "exit.opposite_macd_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "exit.profit_price_field",
+        "value": "bid"
+      },
+      {
+        "path": "exit.profit_target_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "exit.profit_target_percent",
+        "value": "20.0"
+      },
+      {
+        "path": "exit.simultaneous_priority",
+        "value": "profit_target, stop_loss, opposite_macd, opposite_smi, time_exit"
+      },
+      {
+        "path": "exit.stop_loss_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "exit.stop_loss_percent",
+        "value": "100.0"
+      },
+      {
+        "path": "macd.control_signal_source",
+        "value": "thetadata_option_contract"
+      },
+      {
+        "path": "macd.ema_seed_method",
+        "value": "sma"
+      },
+      {
+        "path": "macd.fast_period",
+        "value": "12"
+      },
+      {
+        "path": "macd.price_source",
+        "value": "trade_close"
+      },
+      {
+        "path": "macd.signal_period",
+        "value": "9"
+      },
+      {
+        "path": "macd.slow_period",
+        "value": "26"
+      },
+      {
+        "path": "macd.source",
+        "value": "option_contract"
+      },
+      {
+        "path": "macd.zero_line_filter_enabled",
+        "value": "disabled"
+      },
+      {
+        "path": "rsi.enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "rsi.maximum",
+        "value": "30.0"
+      },
+      {
+        "path": "rsi.minimum",
+        "value": "0.0"
+      },
+      {
+        "path": "rsi.period",
+        "value": "14"
+      },
+      {
+        "path": "schedule.entry_cutoff_minutes_before_close",
+        "value": "60"
+      },
+      {
+        "path": "schedule.entry_delay_minutes_after_open",
+        "value": "15"
+      },
+      {
+        "path": "schedule.entry_window_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "schedule.force_exit_time_riyadh",
+        "value": "22:20"
+      },
+      {
+        "path": "schedule.time_exit_enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "smi.d_length",
+        "value": "3"
+      },
+      {
+        "path": "smi.ema_seed_method",
+        "value": "first"
+      },
+      {
+        "path": "smi.enabled",
+        "value": "enabled"
+      },
+      {
+        "path": "smi.entry_mode",
+        "value": "confirm_macd_state"
+      },
+      {
+        "path": "smi.k_length",
+        "value": "14"
+      },
+      {
+        "path": "smi.opposite_crossover_exit_enabled",
+        "value": "disabled"
+      },
+      {
+        "path": "smi.overbought",
+        "value": "40.0"
+      },
+      {
+        "path": "smi.oversold",
+        "value": "-40.0"
+      },
+      {
+        "path": "smi.signal_length",
+        "value": "3"
+      },
+      {
+        "path": "smi.zone_filter_enabled",
+        "value": "disabled"
+      }
+    ]
+  },
+  "tags": [
+    "automated",
+    "thetadata-options-2026-04-27-to-2026-07-24",
+    "qqq"
+  ],
+  "title": "Baseline replay / Workflow #56",
+  "trade_columns": [
+    "trade_id",
+    "symbol",
+    "option_type",
+    "contract_id",
+    "expiration",
+    "strike",
+    "session_date",
+    "signal_time",
+    "signal_time_utc",
+    "signal_time_user",
+    "signal_underlying_time",
+    "signal_underlying_price",
+    "signal_source",
+    "signal_instrument",
+    "signal_trigger",
+    "signal_bar_open",
+    "signal_bar_high",
+    "signal_bar_low",
+    "signal_bar_close",
+    "signal_bar_price",
+    "signal_bar_volume",
+    "signal_option_open",
+    "signal_option_high",
+    "signal_option_low",
+    "signal_option_close",
+    "signal_option_price",
+    "signal_option_volume",
+    "signal_previous_time",
+    "signal_previous_time_utc",
+    "signal_previous_time_user",
+    "signal_previous_macd",
+    "signal_previous_macd_signal",
+    "signal_previous_macd_histogram",
+    "signal_macd",
+    "signal_macd_signal",
+    "signal_macd_histogram",
+    "signal_previous_smi",
+    "signal_previous_smi_signal",
+    "signal_previous_smi_histogram",
+    "signal_smi",
+    "signal_smi_signal",
+    "signal_smi_histogram",
+    "entry_time",
+    "entry_time_utc",
+    "entry_time_user",
+    "entry_quote_sequence",
+    "entry_bid",
+    "entry_ask",
+    "entry_price",
+    "entry_fill_source",
+    "entry_spread_percent",
+    "entry_delay_seconds",
+    "exit_trigger_time",
+    "exit_trigger_time_utc",
+    "exit_trigger_time_user",
+    "exit_time",
+    "exit_time_utc",
+    "exit_time_user",
+    "exit_quote_sequence",
+    "exit_bid",
+    "exit_ask",
+    "exit_price",
+    "exit_fill_source",
+    "exit_spread_percent",
+    "exit_delay_seconds",
+    "exit_reason",
+    "exit_reasons",
+    "exit_macd",
+    "exit_macd_signal",
+    "exit_macd_histogram",
+    "exit_smi",
+    "exit_smi_signal",
+    "exit_smi_histogram",
+    "return_percent",
+    "gross_pnl",
+    "net_pnl",
+    "dataset_fingerprint",
+    "underlying_source",
+    "signal_bar_source",
+    "entry_quote_source",
+    "exit_quote_source",
+    "market_timezone",
+    "user_timezone"
+  ],
+  "trades": [
+    {
+      "contract_id": "QQQ260604P00743000",
+      "dataset_fingerprint": "46e9723849e7212b9c7111c592ec0ea6c024b3c2b6300a017582c1aae22db4cb",
+      "entry_ask": "0.8300000000000001",
+      "entry_bid": "0.8200000000000001",
+      "entry_delay_seconds": "0.0",
+      "entry_fill_source": "ask",
+      "entry_price": "0.8300000000000001",
+      "entry_quote_sequence": 0,
+      "entry_quote_source": "partitions/2026-06-04/QQQ/2026-06-04/option_quotes_1m.parquet:line=12236;sha256=e2f252c02f3793fdfc2e120bd9b2a7784b033e9ba926ccabecd064c6ec4d8f32",
+      "entry_spread_percent": "1.212121212121211974288337925",
+      "entry_time": "2026-06-04T14:35:00-04:00",
+      "entry_time_user": "2026-06-04T21:35:00+03:00",
+      "entry_time_utc": "2026-06-04T18:35:00Z",
+      "exit_ask": "1.07",
+      "exit_bid": "1.06",
+      "exit_delay_seconds": "0.0",
+      "exit_fill_source": "bid",
+      "exit_macd": null,
+      "exit_macd_histogram": null,
+      "exit_macd_signal": null,
+      "exit_price": "1.06",
+      "exit_quote_sequence": 0,
+      "exit_quote_source": "partitions/2026-06-04/QQQ/2026-06-04/option_quotes_1m.parquet:line=12476;sha256=e2f252c02f3793fdfc2e120bd9b2a7784b033e9ba926ccabecd064c6ec4d8f32",
+      "exit_reason": "profit_target",
+      "exit_reasons": "profit_target",
+      "exit_smi": null,
+      "exit_smi_histogram": null,
+      "exit_smi_signal": null,
+      "exit_spread_percent": "0.9389671361502347417840375587",
+      "exit_time": "2026-06-04T14:41:00-04:00",
+      "exit_time_user": "2026-06-04T21:41:00+03:00",
+      "exit_time_utc": "2026-06-04T18:41:00Z",
+      "exit_trigger_time": "2026-06-04T14:41:00-04:00",
+      "exit_trigger_time_user": "2026-06-04T21:41:00+03:00",
+      "exit_trigger_time_utc": "2026-06-04T18:41:00Z",
+      "expiration": "2026-06-04",
+      "gross_pnl": "22.9999999999999900",
+      "market_timezone": "America/New_York",
+      "net_pnl": "22.9999999999999900",
+      "option_type": "put",
+      "return_percent": "27.71084337349396051676585860",
+      "session_date": "2026-06-04",
+      "signal_bar_close": "0.8300000000000001",
+      "signal_bar_high": "1.04",
+      "signal_bar_low": "0.71",
+      "signal_bar_open": "0.77",
+      "signal_bar_price": "0.8300000000000001",
+      "signal_bar_source": "partitions/2026-06-04/QQQ/2026-06-04/option_ohlc_1m.parquet:bar_end=2026-06-04T14:35:00-04:00;contract_id=QQQ260604P00743000;sha256=a397014704237eb5e1addc9bc4dffba3181d3f1fa5d56bd5a87d341dd70173fe",
+      "signal_bar_volume": 8535,
+      "signal_instrument": "QQQ260604P00743000",
+      "signal_macd": "-0.704161440118562744181903541",
+      "signal_macd_histogram": "0.0091309494157236150294839466",
+      "signal_macd_signal": "-0.7132923895342863592113874876",
+      "signal_option_close": "0.8300000000000001",
+      "signal_option_high": "1.04",
+      "signal_option_low": "0.71",
+      "signal_option_open": "0.77",
+      "signal_option_price": "0.8300000000000001",
+      "signal_option_volume": 8535,
+      "signal_previous_macd": "-0.729474537836325449908566486",
+      "signal_previous_macd_histogram": "-0.0138994109481081869398080118",
+      "signal_previous_macd_signal": "-0.7155751268882172629687584742",
+      "signal_previous_smi": "-91.80819124917215391707601471",
+      "signal_previous_smi_histogram": "0.97413675355101574451103443",
+      "signal_previous_smi_signal": "-92.78232800272316966158704914",
+      "signal_previous_time": "2026-06-04T14:30:00-04:00",
+      "signal_previous_time_user": "2026-06-04T21:30:00+03:00",
+      "signal_previous_time_utc": "2026-06-04T18:30:00Z",
+      "signal_smi": "-89.25727827288634391392334738",
+      "signal_smi_histogram": "1.76252486491841287383185088",
+      "signal_smi_signal": "-91.01980313780475678775519826",
+      "signal_source": "thetadata_option_contract_trade_close",
+      "signal_time": "2026-06-04T14:35:00-04:00",
+      "signal_time_user": "2026-06-04T21:35:00+03:00",
+      "signal_time_utc": "2026-06-04T18:35:00Z",
+      "signal_trigger": "macd_cross_smi_state",
+      "signal_underlying_price": "742.94",
+      "signal_underlying_time": "2026-06-04T14:35:00-04:00",
+      "strike": "743.0",
+      "symbol": "QQQ",
+      "trade_id": "308ba0753ac6fc963482",
+      "underlying_source": "partitions/2026-06-04/QQQ/underlying_1m.parquet:line=10863;sha256=162acf213fdfafab647f7461d48433533d52df49c30dc4a6f2fe58da268b31b3",
+      "user_timezone": "Asia/Riyadh"
+    },
+    {
+      "contract_id": "QQQ260706P00725000",
+      "dataset_fingerprint": "46e9723849e7212b9c7111c592ec0ea6c024b3c2b6300a017582c1aae22db4cb",
+      "entry_ask": "2.02",
+      "entry_bid": "2.0",
+      "entry_delay_seconds": "0.0",
+      "entry_fill_source": "ask",
+      "entry_price": "2.02",
+      "entry_quote_sequence": 0,
+      "entry_quote_source": "partitions/2026-07-06/QQQ/2026-07-06/option_quotes_1m.parquet:line=3432;sha256=555a94514e3e3baf4191656d0c3489645262bd376fbfd4c62d3e4e2e34755cbe",
+      "entry_spread_percent": "0.9950248756218905472636815920",
+      "entry_time": "2026-07-06T10:55:00-04:00",
+      "entry_time_user": "2026-07-06T17:55:00+03:00",
+      "entry_time_utc": "2026-07-06T14:55:00Z",
+      "exit_ask": "2.66",
+      "exit_bid": "2.63",
+      "exit_delay_seconds": "0.0",
+      "exit_fill_source": "bid",
+      "exit_macd": null,
+      "exit_macd_histogram": null,
+      "exit_macd_signal": null,
+      "exit_price": "2.63",
+      "exit_quote_sequence": 0,
+      "exit_quote_source": "partitions/2026-07-06/QQQ/2026-07-06/option_quotes_1m.parquet:line=4192;sha256=555a94514e3e3baf4191656d0c3489645262bd376fbfd4c62d3e4e2e34755cbe",
+      "exit_reason": "profit_target",
+      "exit_reasons": "profit_target",
+      "exit_smi": null,
+      "exit_smi_histogram": null,
+      "exit_smi_signal": null,
+      "exit_spread_percent": "1.134215500945179584120982987",
+      "exit_time": "2026-07-06T11:14:00-04:00",
+      "exit_time_user": "2026-07-06T18:14:00+03:00",
+      "exit_time_utc": "2026-07-06T15:14:00Z",
+      "exit_trigger_time": "2026-07-06T11:14:00-04:00",
+      "exit_trigger_time_user": "2026-07-06T18:14:00+03:00",
+      "exit_trigger_time_utc": "2026-07-06T15:14:00Z",
+      "expiration": "2026-07-06",
+      "gross_pnl": "61.00",
+      "market_timezone": "America/New_York",
+      "net_pnl": "61.00",
+      "option_type": "put",
+      "return_percent": "30.19801980198019801980198020",
+      "session_date": "2026-07-06",
+      "signal_bar_close": "2.0100000000000002",
+      "signal_bar_high": "2.09",
+      "signal_bar_low": "1.5",
+      "signal_bar_open": "1.78",
+      "signal_bar_price": "2.0100000000000002",
+      "signal_bar_source": "partitions/2026-07-06/QQQ/2026-07-06/option_ohlc_1m.parquet:bar_end=2026-07-06T10:55:00-04:00;contract_id=QQQ260706P00725000;sha256=165a01977935853b8d184a2fdda078849c0a3b5b09b9e98e3869af65aba28ac1",
+      "signal_bar_volume": 6898,
+      "signal_instrument": "QQQ260706P00725000",
+      "signal_macd": "-2.684639424365671026649661652",
+      "signal_macd_histogram": "0.004005689327324036449829999",
+      "signal_macd_signal": "-2.688645113692995063099491651",
+      "signal_option_close": "2.0100000000000002",
+      "signal_option_high": "2.09",
+      "signal_option_low": "1.5",
+      "signal_option_open": "1.78",
+      "signal_option_price": "2.0100000000000002",
+      "signal_option_volume": 6898,
+      "signal_previous_macd": "-2.788896186721236289388713901",
+      "signal_previous_macd_histogram": "-0.099249650696410217176764750",
+      "signal_previous_macd_signal": "-2.689646536024826072211949151",
+      "signal_previous_smi": "-94.54770124353357164558370353",
+      "signal_previous_smi_histogram": "0.04655285213091781432847661",
+      "signal_previous_smi_signal": "-94.59425409566448945991218014",
+      "signal_previous_time": "2026-07-06T10:50:00-04:00",
+      "signal_previous_time_user": "2026-07-06T17:50:00+03:00",
+      "signal_previous_time_utc": "2026-07-06T14:50:00Z",
+      "signal_smi": "-90.78117490182149572214205263",
+      "signal_smi_histogram": "1.90653959692149686888506375",
+      "signal_smi_signal": "-92.68771449874299259102711638",
+      "signal_source": "thetadata_option_contract_trade_close",
+      "signal_time": "2026-07-06T10:55:00-04:00",
+      "signal_time_user": "2026-07-06T17:55:00+03:00",
+      "signal_time_utc": "2026-07-06T14:55:00Z",
+      "signal_trigger": "macd_cross_smi_state",
+      "signal_underlying_price": "724.35",
+      "signal_underlying_time": "2026-07-06T10:55:00-04:00",
+      "strike": "725.0",
+      "symbol": "QQQ",
+      "trade_id": "4ff712f4e29530ae17d9",
+      "underlying_source": "partitions/2026-07-06/QQQ/underlying_1m.parquet:line=18463;sha256=14334b9dbea4f494970d8ba54faf9bcabe379ffcb27f1c8ee37ae1bfc0a7713b",
+      "user_timezone": "Asia/Riyadh"
+    },
+    {
+      "contract_id": "QQQ260709P00724000",
+      "dataset_fingerprint": "46e9723849e7212b9c7111c592ec0ea6c024b3c2b6300a017582c1aae22db4cb",
+      "entry_ask": "0.88",
+      "entry_bid": "0.87",
+      "entry_delay_seconds": "0.0",
+      "entry_fill_source": "ask",
+      "entry_price": "0.88",
+      "entry_quote_sequence": 0,
+      "entry_quote_source": "partitions/2026-07-09/QQQ/2026-07-09/option_quotes_1m.parquet:line=10432;sha256=8922f7afcf015b81744bed6bfac2153b88b249e54c32212cb12cef95353cb541",
+      "entry_spread_percent": "1.142857142857142857142857143",
+      "entry_time": "2026-07-09T13:50:00-04:00",
+      "entry_time_user": "2026-07-09T20:50:00+03:00",
+      "entry_time_utc": "2026-07-09T17:50:00Z",
+      "exit_ask": "1.09",
+      "exit_bid": "1.08",
+      "exit_delay_seconds": "0.0",
+      "exit_fill_source": "bid",
+      "exit_macd": null,
+      "exit_macd_histogram": null,
+      "exit_macd_signal": null,
+      "exit_price": "1.08",
+      "exit_quote_sequence": 0,
+      "exit_quote_source": "partitions/2026-07-09/QQQ/2026-07-09/option_quotes_1m.parquet:line=10792;sha256=8922f7afcf015b81744bed6bfac2153b88b249e54c32212cb12cef95353cb541",
+      "exit_reason": "profit_target",
+      "exit_reasons": "profit_target",
+      "exit_smi": null,
+      "exit_smi_histogram": null,
+      "exit_smi_signal": null,
+      "exit_spread_percent": "0.9216589861751152073732718894",
+      "exit_time": "2026-07-09T13:59:00-04:00",
+      "exit_time_user": "2026-07-09T20:59:00+03:00",
+      "exit_time_utc": "2026-07-09T17:59:00Z",
+      "exit_trigger_time": "2026-07-09T13:59:00-04:00",
+      "exit_trigger_time_user": "2026-07-09T20:59:00+03:00",
+      "exit_trigger_time_utc": "2026-07-09T17:59:00Z",
+      "expiration": "2026-07-09",
+      "gross_pnl": "20.00",
+      "market_timezone": "America/New_York",
+      "net_pnl": "20.00",
+      "option_type": "put",
+      "return_percent": "22.72727272727272727272727270",
+      "session_date": "2026-07-09",
+      "signal_bar_close": "0.88",
+      "signal_bar_high": "0.98",
+      "signal_bar_low": "0.76",
+      "signal_bar_open": "0.97",
+      "signal_bar_price": "0.88",
+      "signal_bar_source": "partitions/2026-07-09/QQQ/2026-07-09/option_ohlc_1m.parquet:bar_end=2026-07-09T13:50:00-04:00;contract_id=QQQ260709P00724000;sha256=1ac7d6276b60252d84dfaf9fa58a1d1f2b30be5020f82f115aebd09450b09148",
+      "signal_bar_volume": 5509,
+      "signal_instrument": "QQQ260709P00724000",
+      "signal_macd": "-0.709742889074237274605165421",
+      "signal_macd_histogram": "0.0011058178568968340988223431",
+      "signal_macd_signal": "-0.7108487069311341087039877641",
+      "signal_option_close": "0.88",
+      "signal_option_high": "0.98",
+      "signal_option_low": "0.76",
+      "signal_option_open": "0.97",
+      "signal_option_price": "0.88",
+      "signal_option_volume": 5509,
+      "signal_previous_macd": "-0.719723676442573438626034091",
+      "signal_previous_macd_histogram": "-0.0085985150472151213973407411",
+      "signal_previous_macd_signal": "-0.7111251613953583172286933499",
+      "signal_previous_smi": "-85.95497673685622119891286880",
+      "signal_previous_smi_histogram": "0.99832878634096100506815368",
+      "signal_previous_smi_signal": "-86.95330552319718220398102248",
+      "signal_previous_time": "2026-07-09T13:45:00-04:00",
+      "signal_previous_time_user": "2026-07-09T20:45:00+03:00",
+      "signal_previous_time_utc": "2026-07-09T17:45:00Z",
+      "signal_smi": "-85.96357440060387353042995366",
+      "signal_smi_histogram": "0.49486556129665433677553441",
+      "signal_smi_signal": "-86.45843996190052786720548807",
+      "signal_source": "thetadata_option_contract_trade_close",
+      "signal_time": "2026-07-09T13:50:00-04:00",
+      "signal_time_user": "2026-07-09T20:50:00+03:00",
+      "signal_time_utc": "2026-07-09T17:50:00Z",
+      "signal_trigger": "macd_cross_smi_state",
+      "signal_underlying_price": "723.97",
+      "signal_underlying_time": "2026-07-09T13:50:00-04:00",
+      "strike": "724.0",
+      "symbol": "QQQ",
+      "trade_id": "4cff1d009bcee937597b",
+      "underlying_source": "partitions/2026-07-09/QQQ/underlying_1m.parquet:line=19811;sha256=fdf36d51376ef3d5338027e4f03cce80ab2d39519e78a4af20b17175001f3535",
+      "user_timezone": "Asia/Riyadh"
+    }
+  ]
+}
