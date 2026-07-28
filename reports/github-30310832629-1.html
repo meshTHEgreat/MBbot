@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive MBbot backtest experiment report.">
   <title>Baseline replay / Workflow #50 · MBbot Research Desk</title>
-  <link rel="stylesheet" href="../assets/styles.css?v=932b3c9dc62a">
-  <script src="../assets/report-model.js?v=932b3c9dc62a" defer></script>
-  <script src="../assets/site.js?v=932b3c9dc62a" defer></script>
+  <link rel="stylesheet" href="../assets/styles.css?v=392474664d01">
+  <script src="../assets/report-model.js?v=392474664d01" defer></script>
+  <script src="../assets/site.js?v=392474664d01" defer></script>
 </head>
 <body data-page="report">
   <a class="skip-link" href="#main-content">Skip to report</a>
@@ -115,11 +115,11 @@
         <div class="section-heading">
           <div>
             <p class="section-label">Stop-loss lab</p>
-            <h2 id="excursion-title">Choose the next loss threshold to test</h2>
+            <h2 id="excursion-title">Compare loss thresholds before the next run</h2>
           </div>
           <p>
-            Explore what the recorded price paths touched, then rerun the
-            strategy to measure how a different stop changes results.
+            Separate the original trades that reached each loss from the exact
+            strategy outcome after entries, exits, and re-entries are replayed.
           </p>
         </div>
 
@@ -129,8 +129,8 @@
           <section class="threshold-explorer" aria-labelledby="threshold-explorer-title">
             <div class="threshold-control">
               <div>
-                <p class="eyebrow">Observed path check</p>
-                <h3 id="threshold-explorer-title">If the stop were set at</h3>
+                <p class="eyebrow">Threshold review</p>
+                <h3 id="threshold-explorer-title">Inspect one loss threshold</h3>
               </div>
               <label for="stop-loss-threshold">
                 Loss threshold
@@ -138,24 +138,66 @@
               </label>
             </div>
 
-            <div class="threshold-readout" id="threshold-readout" aria-live="polite">
-              <p class="threshold-value" id="threshold-value">—</p>
-              <dl class="threshold-outcomes">
-                <div>
-                  <dt>All trades touched it</dt>
-                  <dd id="threshold-all">—</dd>
+            <div class="threshold-readout" id="threshold-readout">
+              <section class="threshold-result-card threshold-path-card" aria-labelledby="path-result-title">
+                <div class="threshold-result-heading">
+                  <div>
+                    <p class="eyebrow">Original path evidence</p>
+                    <h4 id="path-result-title">What the recorded trades reached</h4>
+                  </div>
+                  <p class="threshold-value" id="threshold-value">—</p>
                 </div>
-                <div>
-                  <dt>Winning trades touched it</dt>
-                  <dd id="threshold-winners">—</dd>
+                <dl class="threshold-outcomes">
+                  <div>
+                    <dt>Original trades reaching this loss</dt>
+                    <dd id="threshold-all">—</dd>
+                  </div>
+                  <div>
+                    <dt>Recorded winners stopped before recovery</dt>
+                    <dd id="threshold-winners">—</dd>
+                  </div>
+                  <div>
+                    <dt>Original losing trades reaching this loss</dt>
+                    <dd id="threshold-losers">—</dd>
+                  </div>
+                </dl>
+                <p class="threshold-interpretation" id="threshold-interpretation"></p>
+              </section>
+
+              <section class="threshold-result-card threshold-replay-card" aria-labelledby="replay-result-title">
+                <div class="threshold-result-heading">
+                  <div>
+                    <p class="eyebrow">Full strategy replay</p>
+                    <h4 id="replay-result-title">Outcome with this stop active</h4>
+                  </div>
+                  <span class="replay-status" id="replay-status">—</span>
                 </div>
-                <div>
-                  <dt>Losers touched it</dt>
-                  <dd id="threshold-losers">—</dd>
-                </div>
-              </dl>
-              <p class="threshold-interpretation" id="threshold-interpretation"></p>
+                <dl class="replay-outcomes">
+                  <div>
+                    <dt>Closed trades</dt>
+                    <dd id="replay-trades">—</dd>
+                  </div>
+                  <div>
+                    <dt>Win rate</dt>
+                    <dd id="replay-win-rate">—</dd>
+                  </div>
+                  <div>
+                    <dt>Net P&amp;L</dt>
+                    <dd id="replay-net-pnl">—</dd>
+                  </div>
+                  <div>
+                    <dt>Change vs configured run</dt>
+                    <dd id="replay-pnl-delta">—</dd>
+                  </div>
+                  <div>
+                    <dt>Maximum drawdown</dt>
+                    <dd id="replay-drawdown">—</dd>
+                  </div>
+                </dl>
+                <p class="threshold-interpretation" id="replay-interpretation"></p>
+              </section>
             </div>
+            <p class="sr-only" id="threshold-status" aria-live="polite"></p>
           </section>
 
           <aside class="recovery-benchmark" aria-labelledby="recovery-benchmark-title">
@@ -180,41 +222,58 @@
 
         <ol class="threshold-checklist" aria-label="Stop-loss testing checklist">
           <li>
-            <span><strong>Choose</strong> a threshold worth testing.</span>
+            <span><strong>Choose</strong> a loss threshold.</span>
           </li>
           <li>
-            <span><strong>Rerun</strong> with the same settings except the stop.</span>
+            <span><strong>Compare</strong> the original paths with the full replay.</span>
           </li>
           <li>
-            <span><strong>Compare</strong> P&amp;L, drawdown, win rate, and trade exits.</span>
+            <span><strong>Validate</strong> P&amp;L, drawdown, win rate, and changed exits.</span>
           </li>
         </ol>
 
-        <details class="excursion-method">
-          <summary>See all thresholds and measurement details</summary>
-          <div class="excursion-method-body">
-            <p>
-              MAE is the worst executable-bid loss observed from entry through
-              the recorded exit. Observation ends at that exit, so an active
-              stop can censor the path. These counts do not simulate slippage,
-              later recovery, or counterfactual P&amp;L.
+        <details class="excursion-comparison">
+          <summary>
+            <span>Compare every pre-calculated stop</span>
+            <span class="summary-meta" id="threshold-count"></span>
+          </summary>
+          <div class="excursion-comparison-body">
+            <p class="comparison-intro" id="comparison-intro">
+              Each row pairs original path evidence with an independent replay
+              that changes only the maximum-loss stop.
             </p>
-            <div class="excursion-summary" id="excursion-summary"></div>
-            <div class="table-scroll">
-              <table>
-                <caption>Recorded threshold touches by final trade outcome.</caption>
+            <div class="threshold-table-wrap">
+              <table class="threshold-comparison-table">
+                <caption>Original path evidence and full strategy outcomes by loss threshold.</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Loss threshold</th>
-                    <th scope="col">All reached · share</th>
-                    <th scope="col">Winners reached · winner share</th>
-                    <th scope="col">Losers reached · loser share</th>
-                    <th scope="col">Flat reached · flat share</th>
+                    <th scope="col">Stop</th>
+                    <th scope="col">Original paths reached</th>
+                    <th scope="col">Winners stopped before recovery</th>
+                    <th scope="col">Replay trades</th>
+                    <th scope="col">Replay win rate</th>
+                    <th scope="col">Replay net P&amp;L</th>
+                    <th scope="col">P&amp;L change</th>
                   </tr>
                 </thead>
                 <tbody id="stop-loss-reach-data"></tbody>
               </table>
             </div>
+            <ul class="threshold-card-list" id="stop-loss-card-data" aria-label="Stop threshold comparisons"></ul>
+          </div>
+        </details>
+
+        <details class="excursion-method">
+          <summary>How path evidence and replay outcomes are measured</summary>
+          <div class="excursion-method-body">
+            <p>
+              MAE is the worst executable-bid loss observed from entry through
+              the recorded exit. An active stop can censor that original path.
+              Replay outcomes are different: every threshold independently
+              recomputes positions, exits, and later re-entries using the first
+              eligible bid at the dataset's quote resolution.
+            </p>
+            <div class="excursion-summary" id="excursion-summary"></div>
           </div>
         </details>
         <p class="empty-state" id="excursion-empty" hidden>

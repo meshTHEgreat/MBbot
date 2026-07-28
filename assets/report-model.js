@@ -270,8 +270,33 @@
     const metrics = report?.metrics || {};
     const exit = report?.strategy?.settings?.exit || {};
     const finiteNumber = (value) => {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
       const parsed = Number(value);
       return Number.isFinite(parsed) ? parsed : null;
+    };
+    const scenarioMetrics = (value) => {
+      if (!value || typeof value !== "object") return null;
+      return {
+        closedTrades: finiteNumber(value.closed_trades),
+        wins: finiteNumber(value.wins),
+        losses: finiteNumber(value.losses),
+        flat: finiteNumber(value.flat),
+        winRate: finiteNumber(value.win_rate),
+        netPnl: finiteNumber(value.net_pnl),
+        grossProfit: finiteNumber(value.gross_profit),
+        grossLoss: finiteNumber(value.gross_loss),
+        profitFactor: finiteNumber(value.profit_factor),
+        averageReturnPercent: finiteNumber(value.average_return_percent),
+        expectancy: finiteNumber(value.expectancy),
+        maxDrawdown: finiteNumber(value.max_drawdown),
+        exitReasonCounts:
+          value.exit_reason_counts &&
+          typeof value.exit_reason_counts === "object"
+            ? { ...value.exit_reason_counts }
+            : {},
+      };
     };
     const total = finiteNumber(
       metrics.excursion_trades ?? metrics.closed_trades,
@@ -282,7 +307,7 @@
       losers: finiteNumber(metrics.losses),
       flat: finiteNumber(metrics.flat),
     };
-    const rows = (report?.charts?.stop_loss_reach || [])
+    const pathRows = (report?.charts?.stop_loss_reach || [])
       .map((row) => {
         const threshold = finiteNumber(row.threshold_percent);
         if (threshold === null) return null;
@@ -312,6 +337,51 @@
       })
       .filter(Boolean)
       .sort((a, b) => a.threshold - b.threshold);
+    const sweep =
+      report?.analysis?.stop_loss_sweep ||
+      report?.extensions?.analysis?.stop_loss_sweep ||
+      null;
+    const reportFingerprint =
+      report?.dataset?.dataset_fingerprint ||
+      report?.extensions?.audit?.dataset_fingerprint ||
+      null;
+    const sweepFingerprint = sweep?.dataset_fingerprint || null;
+    const replayFingerprintMatches =
+      !reportFingerprint ||
+      !sweepFingerprint ||
+      reportFingerprint === sweepFingerprint;
+    const replayRows =
+      sweep?.method === "full_strategy_replay" &&
+      Array.isArray(sweep?.thresholds) &&
+      replayFingerprintMatches
+        ? sweep.thresholds
+            .map((row) => {
+              const threshold = finiteNumber(row?.threshold_percent);
+              const normalizedMetrics = scenarioMetrics(row?.metrics);
+              if (threshold === null || !normalizedMetrics) return null;
+              return {
+                threshold,
+                metrics: normalizedMetrics,
+                matchesConfiguredRun:
+                  row.matches_configured_run === true,
+                scenarioFingerprint:
+                  row.scenario_fingerprint || null,
+              };
+            })
+            .filter(Boolean)
+        : [];
+    const pathByThreshold = new Map(
+      pathRows.map((row) => [row.threshold, row]),
+    );
+    const replayByThreshold = new Map(
+      replayRows.map((row) => [row.threshold, row]),
+    );
+    const thresholds = [
+      ...new Set([
+        ...pathByThreshold.keys(),
+        ...replayByThreshold.keys(),
+      ]),
+    ].sort((a, b) => a - b);
     const currentStopEnabled = exit.stop_loss_enabled === true;
     const currentStopPercent = finiteNumber(exit.stop_loss_percent);
     const medianMae = finiteNumber(metrics.median_mae_percent);
@@ -320,26 +390,79 @@
         ? currentStopPercent
         : medianMae;
     const defaultRow =
-      target === null || !rows.length
-        ? rows[0] || null
-        : rows.reduce((closest, row) =>
-            Math.abs(row.threshold - target) <
-            Math.abs(closest.threshold - target)
-              ? row
+      target === null || !thresholds.length
+        ? thresholds[0] ?? null
+        : thresholds.reduce((closest, threshold) =>
+            Math.abs(threshold - target) < Math.abs(closest - target)
+              ? threshold
               : closest,
           );
-    return {
-      currentStopEnabled,
-      currentStopPercent,
-      defaultThreshold: defaultRow?.threshold ?? null,
-      groupTotals,
-      rows: rows.map((row) => ({
-        ...row,
+    const configured =
+      scenarioMetrics(sweep?.configured_metrics) ||
+      scenarioMetrics(metrics);
+    const rows = thresholds.map((threshold) => {
+      const path = pathByThreshold.get(threshold) || {
+        threshold,
+        all: { count: null, percent: null, total: groupTotals.all },
+        winners: {
+          count: null,
+          percent: null,
+          total: groupTotals.winners,
+        },
+        losers: {
+          count: null,
+          percent: null,
+          total: groupTotals.losers,
+        },
+        flat: { count: null, percent: null, total: groupTotals.flat },
+      };
+      const replay = replayByThreshold.get(threshold) || null;
+      return {
+        ...path,
+        replay,
+        replayDelta:
+          replay && configured
+            ? {
+                closedTrades:
+                  replay.metrics.closedTrades === null ||
+                  configured.closedTrades === null
+                    ? null
+                    : replay.metrics.closedTrades -
+                      configured.closedTrades,
+                winRate:
+                  replay.metrics.winRate === null ||
+                  configured.winRate === null
+                    ? null
+                    : replay.metrics.winRate - configured.winRate,
+                netPnl:
+                  replay.metrics.netPnl === null ||
+                  configured.netPnl === null
+                    ? null
+                    : replay.metrics.netPnl - configured.netPnl,
+                maxDrawdown:
+                  replay.metrics.maxDrawdown === null ||
+                  configured.maxDrawdown === null
+                    ? null
+                    : replay.metrics.maxDrawdown -
+                      configured.maxDrawdown,
+              }
+            : null,
         censoredByCurrentStop:
           currentStopEnabled &&
           currentStopPercent !== null &&
-          row.threshold >= currentStopPercent,
-      })),
+          threshold >= currentStopPercent,
+      };
+    });
+    return {
+      currentStopEnabled,
+      currentStopPercent,
+      defaultThreshold: defaultRow,
+      groupTotals,
+      configured,
+      replayAvailable: replayRows.length > 0,
+      replayFingerprintMatches,
+      replayMethod: sweep?.method || null,
+      rows,
     };
   }
 

@@ -9,6 +9,13 @@
     maximumFractionDigits: 2,
     signDisplay: "exceptZero",
   });
+  const magnitudeMoney = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    signDisplay: "never",
+  });
   const number = new Intl.NumberFormat(undefined, {
     maximumFractionDigits: 2,
   });
@@ -94,6 +101,11 @@
   function formatMoney(value) {
     const parsed = numeric(value);
     return parsed === null ? "—" : money.format(parsed);
+  }
+
+  function formatMagnitudeMoney(value) {
+    const parsed = numeric(value);
+    return parsed === null ? "—" : magnitudeMoney.format(Math.abs(parsed));
   }
 
   function formatPercent(value, sign = false) {
@@ -2339,7 +2351,7 @@
     );
   }
 
-  function renderExcursionEvidence(report) {
+  function renderExcursionEvidenceLegacy(report) {
     const summary = document.getElementById("excursion-summary");
     const body = document.getElementById("stop-loss-reach-data");
     const empty = document.getElementById("excursion-empty");
@@ -2541,6 +2553,438 @@
         ]),
       );
     });
+  }
+
+  function renderExcursionEvidence(report) {
+    const summary = document.getElementById("excursion-summary");
+    const body = document.getElementById("stop-loss-reach-data");
+    const cards = document.getElementById("stop-loss-card-data");
+    const empty = document.getElementById("excursion-empty");
+    const context = document.getElementById("excursion-context");
+    const explorer = document.querySelector(".excursion-decision-grid");
+    const checklist = document.querySelector(".threshold-checklist");
+    const comparison = document.querySelector(".excursion-comparison");
+    const method = document.querySelector(".excursion-method");
+    const selector = document.getElementById("stop-loss-threshold");
+    const thresholdValue = document.getElementById("threshold-value");
+    const allValue = document.getElementById("threshold-all");
+    const winnerValue = document.getElementById("threshold-winners");
+    const loserValue = document.getElementById("threshold-losers");
+    const interpretation = document.getElementById("threshold-interpretation");
+    const replayStatus = document.getElementById("replay-status");
+    const replayTrades = document.getElementById("replay-trades");
+    const replayWinRate = document.getElementById("replay-win-rate");
+    const replayNetPnl = document.getElementById("replay-net-pnl");
+    const replayPnlDelta = document.getElementById("replay-pnl-delta");
+    const replayDrawdown = document.getElementById("replay-drawdown");
+    const replayInterpretation = document.getElementById(
+      "replay-interpretation",
+    );
+    const status = document.getElementById("threshold-status");
+    const count = document.getElementById("threshold-count");
+    const comparisonIntro = document.getElementById("comparison-intro");
+    const winnerMae = document.getElementById("winner-mae-value");
+    const loserMae = document.getElementById("loser-mae-value");
+    if (
+      !summary ||
+      !body ||
+      !cards ||
+      !empty ||
+      !context ||
+      !explorer ||
+      !checklist ||
+      !comparison ||
+      !method ||
+      !selector ||
+      !thresholdValue ||
+      !allValue ||
+      !winnerValue ||
+      !loserValue ||
+      !interpretation ||
+      !replayStatus ||
+      !replayTrades ||
+      !replayWinRate ||
+      !replayNetPnl ||
+      !replayPnlDelta ||
+      !replayDrawdown ||
+      !replayInterpretation ||
+      !status ||
+      !count ||
+      !comparisonIntro ||
+      !winnerMae ||
+      !loserMae ||
+      !window.MBbotReportModel
+    ) {
+      renderExcursionEvidenceLegacy(report);
+      return;
+    }
+
+    const evidence = window.MBbotReportModel.buildStopLossEvidence(report);
+    const rows = evidence.rows;
+    const recorded = Number(report.metrics?.excursion_trades || 0);
+    summary.replaceChildren();
+    body.replaceChildren();
+    cards.replaceChildren();
+    selector.replaceChildren();
+    if (!rows.length) {
+      empty.hidden = false;
+      context.hidden = true;
+      explorer.hidden = true;
+      checklist.hidden = true;
+      comparison.hidden = true;
+      method.hidden = true;
+      return;
+    }
+    empty.hidden = true;
+    context.hidden = false;
+    explorer.hidden = false;
+    checklist.hidden = false;
+    comparison.hidden = false;
+    method.hidden = false;
+
+    const stopLabel =
+      evidence.currentStopPercent === null
+        ? "the configured stop"
+        : `−${formatPercent(evidence.currentStopPercent)}`;
+    if (evidence.currentStopEnabled) {
+      context.className = "excursion-context is-censored";
+      context.replaceChildren(
+        element("strong", { text: `This run used an active ${stopLabel} stop.` }),
+        document.createTextNode(
+          evidence.replayAvailable
+            ? " Original paths at or beyond it can be censored; each full-replay outcome remains independently computed."
+            : evidence.replayFingerprintMatches
+              ? " Original paths at or beyond it can be censored. This legacy report has no independent stop replays."
+              : " Original paths at or beyond it can be censored. Mismatched replay data is hidden.",
+        ),
+      );
+    } else {
+      context.className = "excursion-context";
+      context.replaceChildren(
+        element("strong", { text: "No maximum-loss stop was active." }),
+        document.createTextNode(
+          evidence.replayAvailable
+            ? " Original paths continue to another exit, and each candidate stop is independently replayed."
+            : evidence.replayFingerprintMatches
+              ? " Original paths continue to another exit. This legacy report has no independent stop replays."
+              : " Original paths continue to another exit. Mismatched replay data is hidden.",
+        ),
+      );
+    }
+
+    winnerMae.textContent = formatPercent(
+      report.metrics.winning_trade_median_mae_percent,
+    );
+    loserMae.textContent = formatPercent(
+      report.metrics.losing_trade_median_mae_percent,
+    );
+    count.textContent = `${formatInteger(rows.length)} thresholds`;
+    comparisonIntro.textContent = evidence.replayAvailable
+      ? "Every row pairs the original recorded paths with an independent strategy replay that changes only the maximum-loss stop."
+      : evidence.replayFingerprintMatches
+        ? "This legacy report contains original path evidence only. Exact replay outcomes will appear on reports generated with the current runner."
+        : "Saved replay outcomes were hidden because their dataset fingerprint does not match this report.";
+
+    const outcomeText = (outcome) => {
+      if (outcome.count === null) return "Not bucketed";
+      const total =
+        outcome.total === null ? null : formatNumber(outcome.total, 0);
+      const share =
+        outcome.percent === null ? "no group" : formatPercent(outcome.percent);
+      return `${formatNumber(outcome.count, 0)}${
+        total === null ? "" : ` of ${total}`
+      } · ${share}`;
+    };
+    const countAndRate = (outcome) => {
+      if (outcome.count === null) return "Not bucketed";
+      return outcome.percent === null
+        ? `${formatNumber(outcome.count, 0)} · no group`
+        : `${formatNumber(outcome.count, 0)} · ${formatPercent(
+            outcome.percent,
+          )}`;
+    };
+    const replayText = (row, key, formatter) =>
+      row.replay ? formatter(row.replay.metrics[key]) : "Not available";
+    const setValueState = (node, value) => {
+      node.className = valueClass(value);
+    };
+
+    const tableRows = new Map();
+    const cardRows = new Map();
+    rows.forEach((row) => {
+      selector.append(
+        element("option", {
+          value: String(row.threshold),
+          text: `−${formatPercent(row.threshold)}`,
+        }),
+      );
+
+      const thresholdButton = element("button", {
+        type: "button",
+        className: "threshold-link",
+        text: `−${formatPercent(row.threshold)}`,
+        dataset: { threshold: String(row.threshold) },
+      });
+      const tableRow = element(
+        "tr",
+        { dataset: { threshold: String(row.threshold) } },
+        [
+          element("th", { scope: "row" }, [thresholdButton]),
+          element("td", { text: countAndRate(row.all) }),
+          element("td", { text: countAndRate(row.winners) }),
+          element("td", {
+            text: replayText(
+              row,
+              "closedTrades",
+              (value) => formatNumber(value, 0),
+            ),
+          }),
+          element("td", {
+            text: replayText(row, "winRate", formatPercent),
+          }),
+          element("td", {
+            className: row.replay
+              ? valueClass(row.replay.metrics.netPnl)
+              : "neutral",
+            text: replayText(row, "netPnl", formatMoney),
+          }),
+          element("td", {
+            className: row.replayDelta
+              ? valueClass(row.replayDelta.netPnl)
+              : "neutral",
+            text: row.replayDelta
+              ? formatMoney(row.replayDelta.netPnl)
+              : "Not available",
+          }),
+        ],
+      );
+      body.append(tableRow);
+      tableRows.set(row.threshold, tableRow);
+
+      const inspect = element("button", {
+        type: "button",
+        className: "threshold-card-select",
+        text: "Inspect",
+        dataset: { threshold: String(row.threshold) },
+        "aria-label": `Inspect the −${formatPercent(
+          row.threshold,
+        )} stop threshold`,
+      });
+      const card = element(
+        "li",
+        {
+          className: "threshold-card",
+          dataset: { threshold: String(row.threshold) },
+        },
+        [
+          element("div", { className: "threshold-card-heading" }, [
+            element("strong", {
+              text: `−${formatPercent(row.threshold)}`,
+            }),
+            inspect,
+          ]),
+          element("dl", { className: "threshold-card-metrics" }, [
+            element("div", {}, [
+              element("dt", { text: "Original paths reached" }),
+              element("dd", { text: countAndRate(row.all) }),
+            ]),
+            element("div", {}, [
+              element("dt", { text: "Winners stopped before recovery" }),
+              element("dd", { text: countAndRate(row.winners) }),
+            ]),
+            element("div", {}, [
+              element("dt", { text: "Replay trades" }),
+              element("dd", {
+                text: replayText(
+                  row,
+                  "closedTrades",
+                  (value) => formatNumber(value, 0),
+                ),
+              }),
+            ]),
+            element("div", {}, [
+              element("dt", { text: "Replay win rate" }),
+              element("dd", {
+                text: replayText(row, "winRate", formatPercent),
+              }),
+            ]),
+            element("div", {}, [
+              element("dt", { text: "Replay net P&L" }),
+              element("dd", {
+                className: row.replay
+                  ? valueClass(row.replay.metrics.netPnl)
+                  : "neutral",
+                text: replayText(row, "netPnl", formatMoney),
+              }),
+            ]),
+            element("div", {}, [
+              element("dt", { text: "P&L change" }),
+              element("dd", {
+                className: row.replayDelta
+                  ? valueClass(row.replayDelta.netPnl)
+                  : "neutral",
+                text: row.replayDelta
+                  ? formatMoney(row.replayDelta.netPnl)
+                  : "Not available",
+              }),
+            ]),
+          ]),
+        ],
+      );
+      cards.append(card);
+      cardRows.set(row.threshold, card);
+    });
+
+    const renderThreshold = (row, announce = false) => {
+      if (!row) return;
+      thresholdValue.textContent = `−${formatPercent(row.threshold)}`;
+      allValue.textContent = outcomeText(row.all);
+      winnerValue.textContent = outcomeText(row.winners);
+      loserValue.textContent = outcomeText(row.losers);
+
+      const winnersReached = Number(row.winners.count || 0);
+      if (row.all.count === null) {
+        interpretation.textContent =
+          "This replay threshold was not one of the original MAE buckets, so no recorded-path count is shown for it.";
+      } else if (row.censoredByCurrentStop) {
+        interpretation.textContent =
+          `The active ${stopLabel} stop can censor original paths at this level. ` +
+          "Use the independently replayed outcome for the strategy result.";
+      } else if (winnersReached > 0) {
+        interpretation.textContent =
+          `${formatNumber(winnersReached, 0)} recorded winner${
+            winnersReached === 1 ? "" : "s"
+          } reached this loss before the recorded profitable exit. ` +
+          "This stop would have closed those original positions before that recovery; the full replay also accounts for what could be entered later.";
+      } else {
+        interpretation.textContent =
+          "No recorded winner reached this loss before its recorded exit. The replay remains necessary because exits can change later entries.";
+      }
+      interpretation.classList.toggle(
+        "is-censored",
+        row.censoredByCurrentStop,
+      );
+
+      if (row.replay) {
+        const replay = row.replay.metrics;
+        replayStatus.textContent = row.replay.matchesConfiguredRun
+          ? "Configured run"
+          : "Pre-calculated";
+        replayStatus.className = "replay-status is-ready";
+        replayTrades.textContent = formatInteger(replay.closedTrades);
+        replayWinRate.textContent = formatPercent(replay.winRate);
+        replayNetPnl.textContent = formatMoney(replay.netPnl);
+        replayPnlDelta.textContent = row.replayDelta
+          ? formatMoney(row.replayDelta.netPnl)
+          : "—";
+        replayDrawdown.textContent = formatMagnitudeMoney(
+          replay.maxDrawdown,
+        );
+        setValueState(replayNetPnl, replay.netPnl);
+        setValueState(
+          replayPnlDelta,
+          row.replayDelta?.netPnl ?? null,
+        );
+        const stopExits = Number(
+          replay.exitReasonCounts?.stop_loss || 0,
+        );
+        replayInterpretation.textContent =
+          `Independent full replay · ${formatInteger(stopExits)} stop exit${
+            stopExits === 1 ? "" : "s"
+          }. P&L change includes every changed exit and any later re-entry.`;
+      } else {
+        replayStatus.textContent = evidence.replayFingerprintMatches
+          ? "Legacy report"
+          : "Data mismatch";
+        replayStatus.className = "replay-status is-legacy";
+        replayTrades.textContent = "Not available";
+        replayWinRate.textContent = "Not available";
+        replayNetPnl.textContent = "Not available";
+        replayPnlDelta.textContent = "Not available";
+        replayDrawdown.textContent = "Not available";
+        replayNetPnl.className = "neutral";
+        replayPnlDelta.className = "neutral";
+        replayInterpretation.textContent = evidence.replayFingerprintMatches
+          ? "This report predates exact stop replays. Path counts remain valid within their recorded-exit boundary, but they do not provide counterfactual P&L."
+          : "Replay outcomes are unavailable because their dataset fingerprint failed the report match. No result is shown in place of uncertain data.";
+      }
+
+      tableRows.forEach((node, threshold) => {
+        const selected = threshold === row.threshold;
+        node.classList.toggle("is-selected", selected);
+        node.querySelector("button")?.setAttribute(
+          "aria-current",
+          selected ? "true" : "false",
+        );
+      });
+      cardRows.forEach((node, threshold) => {
+        const selected = threshold === row.threshold;
+        node.classList.toggle("is-selected", selected);
+        node.querySelector("button")?.setAttribute(
+          "aria-current",
+          selected ? "true" : "false",
+        );
+      });
+      if (announce) {
+        status.textContent = `Showing the −${formatPercent(
+          row.threshold,
+        )} stop: ${row.replay ? formatMoney(row.replay.metrics.netPnl) : "exact replay unavailable"}.`;
+      }
+    };
+
+    const selectThreshold = (threshold, announce = true) => {
+      const row = rows.find((item) => item.threshold === threshold);
+      if (!row) return;
+      selector.value = String(row.threshold);
+      renderThreshold(row, announce);
+    };
+    selector.value = String(evidence.defaultThreshold);
+    renderThreshold(
+      rows.find(
+        (row) => row.threshold === evidence.defaultThreshold,
+      ) || rows[0],
+    );
+    selector.addEventListener("change", () => {
+      selectThreshold(Number(selector.value));
+    });
+    [...body.querySelectorAll(".threshold-link")].forEach((button) => {
+      button.addEventListener("click", () => {
+        selectThreshold(Number(button.dataset.threshold));
+        document
+          .getElementById("threshold-explorer-title")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+    [...cards.querySelectorAll(".threshold-card-select")].forEach(
+      (button) => {
+        button.addEventListener("click", () => {
+          selectThreshold(Number(button.dataset.threshold));
+          document
+            .getElementById("threshold-explorer-title")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      },
+    );
+
+    summary.replaceChildren(
+      metricNode("Trades measured", formatNumber(recorded, 0)),
+      metricNode(
+        "Median MAE",
+        formatPercent(report.metrics.median_mae_percent),
+      ),
+      metricNode(
+        "Median winner MAE",
+        formatPercent(
+          report.metrics.winning_trade_median_mae_percent,
+        ),
+      ),
+      metricNode(
+        "Median loser MAE",
+        formatPercent(
+          report.metrics.losing_trade_median_mae_percent,
+        ),
+      ),
+    );
   }
 
   function renderReport() {

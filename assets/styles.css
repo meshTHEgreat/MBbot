@@ -5288,6 +5288,351 @@ h1 {
   }
 }
 
+/* Stop-loss comparison: original paths and exact replays stay distinct. */
+.threshold-readout {
+  display: grid;
+  gap: 16px;
+}
+
+.threshold-result-card {
+  min-width: 0;
+  padding: 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.threshold-replay-card {
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 45%, var(--surface));
+}
+
+.threshold-result-heading {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.threshold-result-heading h4 {
+  margin: 3px 0 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.threshold-result-heading .threshold-value {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: clamp(2rem, 12vw, 3.4rem);
+}
+
+.replay-status {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.replay-status.is-ready {
+  border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent);
+}
+
+.replay-status.is-legacy {
+  border-color: color-mix(in srgb, var(--amber) 48%, var(--border));
+  color: var(--text);
+}
+
+.replay-outcomes {
+  display: grid;
+  margin: 16px 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.replay-outcomes > div {
+  min-width: 0;
+  min-height: 80px;
+  padding: 12px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.replay-outcomes > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.replay-outcomes dt {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.replay-outcomes dd {
+  margin: 8px 0 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-data);
+  font-size: 1rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.excursion-comparison,
+.excursion-method {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.excursion-comparison > summary,
+.excursion-method > summary {
+  display: grid;
+  width: 100%;
+  min-height: 58px;
+  padding: 14px 40px 14px 2px;
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+.excursion-comparison > summary::-webkit-details-marker,
+.excursion-method > summary::-webkit-details-marker {
+  display: none;
+}
+
+.excursion-comparison > summary::after,
+.excursion-method > summary::after {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  right: 2px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--accent);
+  content: "+";
+  font-family: var(--font-data);
+  font-size: 1rem;
+  line-height: 1;
+  place-items: center;
+}
+
+.excursion-comparison[open] > summary::after,
+.excursion-method[open] > summary::after {
+  content: "−";
+}
+
+.excursion-comparison > summary:focus-visible,
+.excursion-method > summary:focus-visible,
+.threshold-link:focus-visible,
+.threshold-card-select:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.summary-meta {
+  color: var(--text-muted);
+  font-family: var(--font-data);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.excursion-comparison-body {
+  padding: 6px 0 24px;
+}
+
+.comparison-intro {
+  max-width: 76ch;
+  margin: 0 0 18px;
+  color: var(--text-muted);
+}
+
+.threshold-table-wrap {
+  display: none;
+}
+
+.threshold-card-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 12px;
+}
+
+.threshold-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.threshold-card.is-selected {
+  border-color: var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.threshold-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.threshold-card-heading > strong {
+  color: var(--danger);
+  font-family: var(--font-data);
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.threshold-card-select,
+.threshold-link {
+  min-height: 44px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+}
+
+.threshold-card-select {
+  min-width: 76px;
+  padding: 8px 14px;
+}
+
+.threshold-card-select[aria-current="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--canvas-raised);
+}
+
+.threshold-card-metrics {
+  display: grid;
+  margin: 14px 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.threshold-card-metrics > div {
+  min-width: 0;
+  min-height: 82px;
+  padding: 11px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.threshold-card-metrics dt {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.threshold-card-metrics dd {
+  margin: 7px 0 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-data);
+  font-size: 0.86rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.excursion-method .excursion-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 900px) {
+  .threshold-table-wrap {
+    display: block;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .threshold-card-list {
+    display: none;
+  }
+
+  .threshold-comparison-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+  }
+
+  .threshold-comparison-table caption {
+    padding: 12px 14px;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    text-align: left;
+  }
+
+  .threshold-comparison-table th,
+  .threshold-comparison-table td {
+    padding: 12px 10px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-data);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .threshold-comparison-table thead th {
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .threshold-comparison-table tbody tr.is-selected {
+    background: var(--accent-soft);
+    box-shadow: inset 4px 0 0 var(--accent);
+  }
+
+  .threshold-link {
+    min-width: 68px;
+    padding: 7px 10px;
+    color: var(--danger);
+    font-family: var(--font-data);
+  }
+
+  .threshold-link[aria-current="true"] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--canvas-raised);
+  }
+
+  .excursion-method .excursion-summary {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1180px) {
+  .threshold-readout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

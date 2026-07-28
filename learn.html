@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=932b3c9dc62a">
-  <script src="assets/site.js?v=932b3c9dc62a" defer></script>
-  <script src="assets/learn.js?v=932b3c9dc62a" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=392474664d01">
+  <script src="assets/site.js?v=392474664d01" defer></script>
+  <script src="assets/learn.js?v=392474664d01" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -1533,23 +1533,30 @@
                   quote-observed stop, not an assumed candle fill. The report’s
                   MAE table shows how many trades reached common loss
                   thresholds and how many of those trades later finished as
-                  winners or losers. It is decision support, not a
-                  counterfactual P&amp;L claim. Because MAE/MFE observation
-                  ends at the recorded exit, evaluate a candidate stop with an
-                  otherwise identical run where the stop is disabled or set
-                  looser; otherwise the active stop censors the evidence used
-                  to assess itself.
+                  winners or losers. That original-path evidence ends at each
+                  recorded exit and can be censored by an active stop. Current
+                  reports also pre-calculate independent full-strategy replays
+                  for the common thresholds and any configured custom
+                  threshold. Each replay changes only this stop, then
+                  recomputes exits, later re-entries, win rate, net P&amp;L,
+                  and drawdown. No second page-triggered run is required.
+                  Results remain limited to the stored quote resolution and do
+                  not model unrecorded intraminute movement or added slippage.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يتحقق عندما يبلغ سعر عرض لاحق قابل للتنفيذ نسبة العائد السلبية
                   المحددة مقارنة بسعر الطلب عند الدخول. وهو حد مرصود من التسعير
                   الفعلي المحفوظ، وليس سعراً مفترضاً من الشمعة. ويعرض جدول MAE
                   في التقرير عدد الصفقات التي بلغت حدود خسارة شائعة، وعدد
-                  الصفقات الرابحة والخاسرة لاحقاً ضمنها. وهذه أداة لدعم القرار
-                  وليست ادعاءً بنتيجة ربح أو خسارة افتراضية. ولأن رصد MAE وMFE
-                  ينتهي عند الخروج المسجل، فينبغي تقييم حد الخسارة المقترح عبر
-                  تشغيل اختبار مماثل مع تعطيل ذلك الحد أو توسيعه؛ وإلا فإن حد
-                  الخسارة المفعّل يقتطع الأدلة المستخدمة في تقييمه.
+                  الصفقات التي أغلقت لاحقاً على ربح أو خسارة ضمنها. وتنتهي أدلة
+                  المسار الأصلي عند خروج كل صفقة، وقد يقتطعها حد خسارة مفعّل.
+                  كما تحسب التقارير الحالية مسبقاً إعادات تشغيل مستقلة
+                  للاستراتيجية كاملة عند الحدود الشائعة وأي حد مخصص في
+                  الإعدادات. ولا يتغير في كل إعادة إلا حد الخسارة، ثم تُعاد
+                  محاكاة المخارج وفرص الدخول اللاحقة ونسبة الفوز وصافي الربح
+                  والخسارة والتراجع الأقصى. ولا يلزم تشغيل إضافي من الصفحة.
+                  وتظل النتائج مقيدة بدقة التسعير المحفوظ، ولا تمثل حركة غير
+                  مسجلة داخل الدقيقة أو انزلاقاً سعرياً إضافياً.
                 </dd>
               </div>
               <div>
@@ -1985,7 +1992,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-28T21:55:09.124972Z">2026-07-28T21:55:09.124972Z</time>.
+      <time datetime="2026-07-28T22:26:33.950064Z">2026-07-28T22:26:33.950064Z</time>.
     </p>
   </footer>
 </body>
