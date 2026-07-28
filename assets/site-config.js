@@ -3,4 +3,8 @@
 window.MBbotSiteConfig = Object.freeze({
   backtestDispatchUrl:
     "https://mbbot-backtest-dispatch.alhazmimeshari.workers.dev",
+  localDataCapabilities: Object.freeze({
+    greeks: true,
+    tradeSide: false,
+  }),
 });

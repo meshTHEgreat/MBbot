@@ -6,9 +6,9 @@
   <meta name="description"
         content="Bilingual guide to the MBbot offline options backtest, its controls, data boundaries, and validation workflow.">
   <title>Learn the backtest · MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=a66870fe1464">
-  <script src="assets/site.js?v=a66870fe1464" defer></script>
-  <script src="assets/learn.js?v=a66870fe1464" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=0abe1051a565">
+  <script src="assets/site.js?v=0abe1051a565" defer></script>
+  <script src="assets/learn.js?v=0abe1051a565" defer></script>
 </head>
 <body data-page="learn">
   <a class="skip-link" href="#main-content">
@@ -126,10 +126,10 @@
       </article>
       <article>
         <span>03</span>
-        <strong data-lang-content="en">Five-minute completed candles</strong>
-        <strong data-lang-content="ar" lang="ar" hidden>شموع مكتملة لفاصل خمس دقائق</strong>
-        <small data-lang-content="en">Signals use retained ThetaData option-contract trade bars.</small>
-        <small data-lang-content="ar" lang="ar" hidden>تُحتسب الإشارة من شموع تداول عقود الخيارات المحفوظة من ThetaData.</small>
+        <strong data-lang-content="en">Configurable completed candles</strong>
+        <strong data-lang-content="ar" lang="ar" hidden>شموع مكتملة بفاصل زمني قابل للضبط</strong>
+        <small data-lang-content="en">The default is 5m; any whole 1–60m interval is formed from retained one-minute evidence.</small>
+        <small data-lang-content="ar" lang="ar" hidden>الفاصل الافتراضي خمس دقائق، ويمكن تكوين أي فاصل صحيح من دقيقة إلى ستين دقيقة من أدلة الدقيقة المحفوظة.</small>
       </article>
       <article>
         <span>04</span>
@@ -334,7 +334,7 @@
 
         <div class="symbol-panels" id="learn-symbol-panels" aria-live="polite">
           <article class="symbol-panel" data-symbol-panel="QQQ">
-            <span class="instrument-type">ETF · Nasdaq-100</span>
+            <span class="instrument-type"><span data-lang-content="en">ETF · Nasdaq-100</span><span data-lang-content="ar" lang="ar" hidden>صندوق متداول · ناسداك 100</span></span>
             <h3>QQQ</h3>
             <p data-lang-content="en">
               A broad Nasdaq-100 exchange-traded fund. It gives the test a
@@ -356,7 +356,7 @@
           </article>
 
           <article class="symbol-panel" data-symbol-panel="SPY" hidden>
-            <span class="instrument-type">ETF · S&amp;P 500</span>
+            <span class="instrument-type"><span data-lang-content="en">ETF · S&amp;P 500</span><span data-lang-content="ar" lang="ar" hidden>صندوق متداول · S&amp;P 500</span></span>
             <h3>SPY</h3>
             <p data-lang-content="en">
               A broad S&amp;P 500 exchange-traded fund. It is useful as a
@@ -377,7 +377,7 @@
           </article>
 
           <article class="symbol-panel" data-symbol-panel="TSLA" hidden>
-            <span class="instrument-type">Single company · Consumer discretionary</span>
+            <span class="instrument-type"><span data-lang-content="en">Single company · Consumer discretionary</span><span data-lang-content="ar" lang="ar" hidden>شركة منفردة · السلع الاستهلاكية الكمالية</span></span>
             <h3>TSLA</h3>
             <p data-lang-content="en">
               Tesla is a single-company equity. It lets the experiment examine
@@ -399,7 +399,7 @@
           </article>
 
           <article class="symbol-panel" data-symbol-panel="AAPL" hidden>
-            <span class="instrument-type">Single company · Technology</span>
+            <span class="instrument-type"><span data-lang-content="en">Single company · Technology</span><span data-lang-content="ar" lang="ar" hidden>شركة منفردة · التقنية</span></span>
             <h3>AAPL</h3>
             <p data-lang-content="en">
               Apple is a single-company equity. Including it tests the same
@@ -421,7 +421,7 @@
           </article>
 
           <article class="symbol-panel" data-symbol-panel="NVDA" hidden>
-            <span class="instrument-type">Single company · Technology</span>
+            <span class="instrument-type"><span data-lang-content="en">Single company · Technology</span><span data-lang-content="ar" lang="ar" hidden>شركة منفردة · التقنية</span></span>
             <h3>NVDA</h3>
             <p data-lang-content="en">
               NVIDIA is a single-company equity. It adds another distinct
@@ -484,19 +484,51 @@
           <span data-lang-content="en">Explore a control family</span>
           <span data-lang-content="ar" lang="ar" hidden>اختر مجموعة متغيرات</span>
           <select id="learn-variable-select">
-            <option value="macd">MACD</option>
-            <option value="smi">Stochastic Momentum Index (SMI)</option>
-            <option value="filters">Zero line &amp; RSI</option>
-            <option value="contract">Contract selection</option>
-            <option value="schedule">Schedule</option>
-            <option value="exit">Exit rules</option>
-            <option value="sizing">Sizing &amp; commission</option>
+            <option value="timeframe" data-label-en="Strategy timeframe" data-label-ar="الفاصل الزمني للاستراتيجية">Strategy timeframe</option>
+            <option value="macd" data-label-en="MACD" data-label-ar="مؤشر MACD">MACD</option>
+            <option value="smi" data-label-en="Stochastic Momentum Index (SMI)" data-label-ar="مؤشر الزخم العشوائي (SMI)">Stochastic Momentum Index (SMI)</option>
+            <option value="filters" data-label-en="Zero line &amp; RSI" data-label-ar="خط الصفر ومؤشر RSI">Zero line &amp; RSI</option>
+            <option value="advanced" data-label-en="Momentum, Greeks &amp; trade evidence" data-label-ar="الزخم والحساسيات وأدلة التداول">Momentum, Greeks &amp; trade evidence</option>
+            <option value="contract" data-label-en="Contract selection" data-label-ar="اختيار عقد الخيار">Contract selection</option>
+            <option value="schedule" data-label-en="Schedule" data-label-ar="الجدول الزمني">Schedule</option>
+            <option value="exit" data-label-en="Exit rules" data-label-ar="قواعد الخروج">Exit rules</option>
+            <option value="sizing" data-label-en="Sizing &amp; commission" data-label-ar="حجم الصفقة والعمولة">Sizing &amp; commission</option>
           </select>
         </label>
 
         <div class="variable-panels" id="learn-variable-panels" aria-live="polite">
-          <article class="variable-panel" data-variable-panel="macd">
-            <span class="instrument-type">12 · 26 · 9 baseline</span>
+          <article class="variable-panel" data-variable-panel="timeframe">
+            <span class="instrument-type"><span data-lang-content="en">5m default · 1–60m supported</span><span data-lang-content="ar" lang="ar" hidden>الافتراضي 5 دقائق · مدعوم من 1 إلى 60 دقيقة</span></span>
+            <h3 data-lang-content="en">Strategy timeframe / completed-bar interval</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الفاصل الزمني للاستراتيجية / مدة الشمعة المكتملة</h3>
+            <p data-lang-content="en">
+              This setting controls how the retained one-minute option evidence
+              is grouped before MACD, RSI, SMI, momentum, premium velocity,
+              activity, Greeks, and completed-bar exits are evaluated. Bars are
+              anchored to the 09:30 New York open: a 3m run closes its first
+              bars at 09:33, 09:36, and 09:39. Entry and exit fills still use
+              retained NBBO quotes, so changing the timeframe does not invent
+              finer execution data.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يحدد هذا الإعداد كيفية تجميع أدلة عقود الخيارات المحفوظة لفاصل
+              الدقيقة قبل احتساب MACD وRSI وSMI والزخم وسرعة تغير سعر العقد
+              ونشاط التداول والحساسيات وبوابات الخروج المرتبطة بالشموع
+              المكتملة. ويبدأ تثبيت الفواصل من افتتاح نيويورك الساعة 09:30؛
+              فعند اختيار ثلاث دقائق تنتهي الشموع الأولى عند 09:33 و09:36
+              و09:39. أما أسعار تنفيذ الدخول والخروج فتبقى مستمدة من تسعيرات
+              NBBO المحفوظة، ولا يؤدي تغيير الفاصل إلى اختلاق دقة تنفيذ أدق.
+            </p>
+            <aside>
+              <strong data-lang-content="en">Interpretation rule</strong>
+              <strong data-lang-content="ar" lang="ar" hidden>قاعدة التفسير</strong>
+              <span data-lang-content="en">Changing 5m to 3m changes indicator timing, warm-up length in clock minutes, signal count, and exit timing. Treat it as a different strategy configuration.</span>
+              <span data-lang-content="ar" lang="ar" hidden>يغير الانتقال من خمس دقائق إلى ثلاث دقائق توقيت المؤشرات ومدة التهيئة بالدقائق وعدد الإشارات وتوقيت الخروج، ولذلك يُعامل كتكوين مختلف للاستراتيجية.</span>
+            </aside>
+          </article>
+
+          <article class="variable-panel" data-variable-panel="macd" hidden>
+            <span class="instrument-type"><span data-lang-content="en">12 · 26 · 9 baseline</span><span data-lang-content="ar" lang="ar" hidden>الإعداد الأساسي 12 · 26 · 9</span></span>
             <h3 data-lang-content="en">MACD periods and EMA seed</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة تهيئة المتوسط الأسي</h3>
             <p data-lang-content="en">
@@ -519,12 +551,12 @@
           </article>
 
           <article class="variable-panel" data-variable-panel="smi" hidden>
-            <span class="instrument-type">TradingView standard · 10 · 3 · 3 baseline</span>
+            <span class="instrument-type"><span data-lang-content="en">TradingView standard · 10 · 3 · 3 baseline</span><span data-lang-content="ar" lang="ar" hidden>معيار TradingView · الإعداد الأساسي 10 · 3 · 3</span></span>
             <h3 data-lang-content="en">SMI entry logic, smoothing, zones, and exit</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>منطق الدخول بمؤشر SMI وفترات التنعيم والنطاقات والخروج</h3>
             <p data-lang-content="en">
-              Standard SMI is calculated locally from completed five-minute
-              high, low, and close values. Per run, it can confirm the current
+              Standard SMI is calculated locally from completed high, low, and
+              close values at the selected strategy timeframe. Per run, it can confirm the current
               MACD direction, require an SMI and MACD crossover on the same bar,
               or replace MACD as the entry trigger. You can also change %K,
               double-smoothing %D, the SMI signal EMA, the EMA seed, optional
@@ -532,7 +564,7 @@
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               يُحتسب مؤشر الزخم العشوائي القياسي SMI محلياً من أعلى سعر وأدنى
-              سعر وسعر الإغلاق لشموع الخمس دقائق المكتملة. ويمكن في كل تشغيل
+              سعر وسعر الإغلاق للشموع المكتملة وفق الفاصل الزمني المختار للاستراتيجية. ويمكن في كل تشغيل
               استخدامه لتأكيد اتجاه MACD الحالي، أو اشتراط تقاطع SMI وMACD في
               الشمعة نفسها، أو جعله بديلاً عن MACD بوصفه محفز الدخول. كما يمكن
               تعديل فترة %K وفترة التنعيم المزدوج %D ومتوسط خط إشارة SMI وطريقة
@@ -548,7 +580,7 @@
           </article>
 
           <article class="variable-panel" data-variable-panel="filters" hidden>
-            <span class="instrument-type">Optional · disabled baseline</span>
+            <span class="instrument-type"><span data-lang-content="en">Optional · disabled baseline</span><span data-lang-content="ar" lang="ar" hidden>اختياري · معطل في الإعداد الأساسي</span></span>
             <h3 data-lang-content="en">Zero-line and RSI filters</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>مرشح خط الصفر ومرشح RSI</h3>
             <p data-lang-content="en">
@@ -568,8 +600,41 @@
               <span data-lang-content="ar" lang="ar" hidden>هل يستبعد المرشح الإشارات الضعيفة فعلاً، أم يخفض حجم العينة حتى تصبح النتيجة غير مستقرة؟</span></aside>
           </article>
 
+          <article class="variable-panel" data-variable-panel="advanced" hidden>
+            <span class="instrument-type"><span data-lang-content="en">Timestamped · disabled until selected</span><span data-lang-content="ar" lang="ar" hidden>مؤرخ زمنياً · معطل حتى اختياره</span></span>
+            <h3 data-lang-content="en">Momentum, premium velocity, activity, Greeks, and observed side</h3>
+            <h3 data-lang-content="ar" lang="ar" hidden>الزخم وسرعة تغير سعر العقد ونشاط التداول والحساسيات والجانب المرصود</h3>
+            <p data-lang-content="en">
+              Every advanced rule can be used for entry, exit, or both, with
+              explicit minimum and maximum bounds. Premium velocity is the
+              regression slope of log premium against elapsed minutes across
+              the completed-bar window; the receipt saves the window start and
+              evaluation timestamp. Volume and trade count are ThetaData
+              SIP-qualified bar activity. Delta and raw theta come from the
+              saved first-order Greek response. Gamma is calculated locally
+              and is always labelled as a model value rather than provider
+              gamma.
+            </p>
+            <p data-lang-content="ar" lang="ar" hidden>
+              يمكن تطبيق كل قاعدة متقدمة عند الدخول أو الخروج أو كليهما، مع
+              تحديد حد أدنى وحد أقصى صريحين. وتُقاس سرعة تغير سعر العقد بميل
+              انحدار اللوغاريتم الطبيعي للسعر مقابل الزمن المنقضي بالدقائق
+              ضمن نافذة شموع مكتملة، ويحفظ إيصال الصفقة بداية النافذة ووقت
+              التقييم. أما الحجم وعدد الصفقات فيعتمدان على نشاط الشمعة المؤهل
+              وفق قواعد SIP لدى ThetaData. وتُستمد دلتا وثيتا الخام من بيانات
+              الحساسيات من الرتبة الأولى المحفوظة، بينما تُحتسب جاما محلياً
+              وتُوسم دائماً بأنها قيمة نموذجية وليست جاما مقدمة من المزود.
+            </p>
+            <aside>
+              <strong data-lang-content="en">Observed buy side</strong>
+              <strong data-lang-content="ar" lang="ar" hidden>جانب الشراء المرصود</strong>
+              <span data-lang-content="en">“Buy” means only ThetaData’s documented OPRA condition 145. Condition 146 is sell; every other positive, non-cancel trade remains unclassified. No candle direction or bid/ask position is used to guess side.</span>
+              <span data-lang-content="ar" lang="ar" hidden>يعني «الشراء» حصراً رمز حالة OPRA رقم 145 وفق توثيق ThetaData، ويعني الرمز 146 البيع، بينما يبقى كل تداول موجب الحجم وغير ملغى خارج هذين الرمزين غير مصنف. ولا يُستدل على الجانب من لون الشمعة أو موضع السعر بين العرض والطلب.</span>
+            </aside>
+          </article>
+
           <article class="variable-panel" data-variable-panel="contract" hidden>
-            <span class="instrument-type">Ask &lt; $4 · spread &lt; 50%</span>
+            <span class="instrument-type"><span data-lang-content="en">Ask &lt; $4 · spread &lt; 50%</span><span data-lang-content="ar" lang="ar" hidden>سعر الطلب أقل من 4 دولارات · الفارق أقل من 50%</span></span>
             <h3 data-lang-content="en">Premium, spread, expiration, and strike fallback</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>سعر العقد والفارق والانتهاء والانتقال بين أسعار التنفيذ</h3>
             <p data-lang-content="en">
@@ -591,7 +656,7 @@
           </article>
 
           <article class="variable-panel" data-variable-panel="schedule" hidden>
-            <span class="instrument-type">America/New_York session · Asia/Riyadh exit</span>
+            <span class="instrument-type"><span data-lang-content="en">America/New_York session · Asia/Riyadh exit</span><span data-lang-content="ar" lang="ar" hidden>جلسة نيويورك · خروج بتوقيت الرياض</span></span>
             <h3 data-lang-content="en">Entry window and forced time exit</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>نافذة الدخول وموعد الخروج الإلزامي</h3>
             <p data-lang-content="en">
@@ -612,23 +677,39 @@
           </article>
 
           <article class="variable-panel" data-variable-panel="exit" hidden>
-            <span class="instrument-type">First chronological condition wins</span>
+            <span class="instrument-type"><span data-lang-content="en">First chronological condition wins</span><span data-lang-content="ar" lang="ar" hidden>الأولوية لأول شرط متحقق زمنياً</span></span>
             <h3 data-lang-content="en">Profit, opposite indicator, and timed exits</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>الخروج بالربح أو التقاطع العكسي أو الوقت</h3>
             <p data-lang-content="en">
               Profit is measured from entry ask to a later executable bid. The
               opposite-MACD exit uses completed bars from the same signal
               series. An optional opposite-SMI exit uses that series too. The
-              time exit uses the first executable quote at or after the
+              advanced rules can also trigger from their timestamped,
+              completed-bar evidence. The time exit uses the first executable
+              quote at or after the
               configured Riyadh time. If conditions share one event, priority
-              is profit, opposite MACD, opposite SMI, then time.
+              is profit, stop loss, opposite MACD, opposite SMI, advanced
+              evidence, then time. Every closed trade also records maximum
+              adverse excursion (MAE)—the largest observed loss from entry ask
+              to an executable bid—and maximum favorable excursion (MFE), with
+              exact market, UTC, and Riyadh timestamps and source receipts.
+              Observation ends at the trade's actual exit, so an enabled stop
+              loss may truncate the later price path.
             </p>
             <p data-lang-content="ar" lang="ar" hidden>
               يُقاس الربح من سعر الطلب عند الدخول إلى أول سعر عرض لاحق قابل
               للتنفيذ. ويعتمد الخروج بالتقاطع العكسي على شموع مكتملة للعقد
-              المفتوح نفسه. أما الخروج الزمني فيستخدم أول تسعير قابل للتنفيذ
-              عند الموعد المحدد بتوقيت الرياض أو بعده. وعند تزامن الشروط تكون
-              الأولوية للربح ثم التقاطع العكسي ثم الوقت.
+              المفتوح نفسه. ويمكن كذلك لقواعد الأدلة المتقدمة أن تطلق الخروج
+              عند وقت شمعتها المكتملة المسجل. أما الخروج الزمني فيستخدم أول
+              تسعير قابل للتنفيذ عند الموعد المحدد بتوقيت الرياض أو بعده.
+              وعند تزامن الشروط تكون
+              الأولوية للربح ثم حد الخسارة ثم تقاطع MACD العكسي ثم تقاطع SMI
+              العكسي ثم الأدلة المتقدمة ثم الوقت. كما يسجل كل مركز مغلق أقصى
+              انحراف سلبي MAE، أي أكبر خسارة مرصودة من سعر الطلب عند الدخول
+              إلى سعر عرض قابل للتنفيذ، وأقصى انحراف إيجابي MFE، مع التوقيت
+              الدقيق بتوقيت السوق وUTC والرياض وإيصال مصدر التسعير. وتنتهي
+              فترة الرصد عند الخروج الفعلي للصفقة، ولذلك قد يؤدي حد الخسارة
+              المفعّل إلى اقتطاع المسار السعري اللاحق.
             </p>
             <aside><strong data-lang-content="en">Research question</strong><strong data-lang-content="ar" lang="ar" hidden>سؤال بحثي</strong>
               <span data-lang-content="en">Which exit actually controls holding time and loss distribution?</span>
@@ -636,7 +717,7 @@
           </article>
 
           <article class="variable-panel" data-variable-panel="sizing" hidden>
-            <span class="instrument-type">1 contract · 100 multiplier · $0 commission</span>
+            <span class="instrument-type"><span data-lang-content="en">1 contract · 100 multiplier · $0 commission</span><span data-lang-content="ar" lang="ar" hidden>عقد واحد · معامل 100 · عمولة صفر</span></span>
             <h3 data-lang-content="en">Contracts and commission</h3>
             <h3 data-lang-content="ar" lang="ar" hidden>عدد العقود والعمولة</h3>
             <p data-lang-content="en">
@@ -712,6 +793,27 @@
               </span>
             </summary>
             <dl class="control-reference-list">
+              <div>
+                <dt>
+                  <span data-lang-content="en">Strategy timeframe</span>
+                  <span data-lang-content="ar" lang="ar" hidden>الفاصل الزمني للاستراتيجية</span>
+                  <small><span data-lang-content="en">Default 5m · whole minutes 1–60</span><span data-lang-content="ar" lang="ar" hidden>الافتراضي 5 دقائق · أعداد صحيحة من 1 إلى 60</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Groups retained one-minute option evidence into completed
+                  candles anchored to the 09:30 New York open. The setting
+                  applies consistently to indicator signals and completed-bar
+                  advanced rules. A shorter interval reacts sooner but also
+                  changes warm-up time, noise, and sample size.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يجمع أدلة عقود الخيارات المحفوظة لفاصل الدقيقة في شموع
+                  مكتملة تبدأ مرجعيتها من افتتاح نيويورك الساعة 09:30. ويطبق
+                  الفاصل نفسه على إشارات المؤشرات والقواعد المتقدمة المرتبطة
+                  بالشموع المكتملة. ويزيد الفاصل الأقصر سرعة الاستجابة، لكنه
+                  يغير أيضاً مدة التهيئة والضوضاء الإحصائية وحجم العينة.
+                </dd>
+              </div>
               <div>
                 <dt>
                   <span data-lang-content="en">Experiment label</span>
@@ -798,6 +900,138 @@
           <details class="control-reference-group">
             <summary>
               <span class="control-reference-summary">
+                <strong data-lang-content="en">Advanced contract evidence</strong>
+                <strong data-lang-content="ar" lang="ar" hidden>أدلة العقد المتقدمة</strong>
+                <small data-lang-content="en">Timestamp, velocity, volume, Delta, Theta, Gamma, and observed side</small>
+                <small data-lang-content="ar" lang="ar" hidden>التوقيت وسرعة السعر والحجم ودلتا وثيتا وجاما والجانب المرصود</small>
+              </span>
+            </summary>
+            <dl class="control-reference-list">
+              <div>
+                <dt>
+                  <span data-lang-content="en">Use for</span>
+                  <span data-lang-content="ar" lang="ar" hidden>مرحلة التطبيق</span>
+                  <small><span data-lang-content="en">Entry, exit, or both</span><span data-lang-content="ar" lang="ar" hidden>الدخول أو الخروج أو كلاهما</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Each advanced rule has its own phase. At entry, a failing
+                  contract is skipped and normal strike/expiry fallback may
+                  continue. At exit, a value outside its configured range is
+                  timestamped on the completed bar and the first later
+                  executable bid closes the position.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  لكل قاعدة متقدمة مرحلة تطبيق مستقلة. فعند الدخول يُستبعد
+                  العقد غير المستوفي ويمكن أن يستمر الانتقال المعتاد إلى سعر
+                  التنفيذ أو تاريخ الانتهاء التالي. وعند الخروج يُسجل تجاوز
+                  النطاق في وقت الشمعة المكتملة ويُغلق المركز بأول سعر عرض
+                  لاحق قابل للتنفيذ.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Momentum and premium velocity</span>
+                  <span data-lang-content="ar" lang="ar" hidden>الزخم وسرعة تغير سعر العقد</span>
+                  <small><span data-lang-content="en">Configurable lookback, source, and range</span><span data-lang-content="ar" lang="ar" hidden>نافذة ومصدر ونطاق قابلة للتعديل</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Momentum is the percentage change from the first to the last
+                  valid premium in the completed-bar window. Velocity uses all
+                  observations in a log-premium regression and is reported as
+                  approximate percent per minute. Midpoint, bid, ask, trade
+                  close, or VWAP can be selected; missing points are never
+                  interpolated.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  الزخم هو نسبة تغير سعر العقد من أول قيمة صالحة إلى آخر قيمة
+                  في نافذة الشموع المكتملة. أما السرعة فتستخدم جميع المشاهدات
+                  في انحدار لوغاريتمي وتُعرض كنسبة مئوية تقريبية لكل دقيقة.
+                  ويمكن اختيار السعر المتوسط أو العرض أو الطلب أو إغلاق
+                  التداول أو VWAP، ولا تُستكمل القيم المفقودة افتراضياً.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Trading activity</span>
+                  <span data-lang-content="ar" lang="ar" hidden>نشاط التداول</span>
+                  <small><span data-lang-content="en">Independent volume, count, turnover, and relative-volume gates</span><span data-lang-content="ar" lang="ar" hidden>بوابات مستقلة للحجم والعدد والقيمة النسبية</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Volume and count come from ThetaData’s SIP-qualified OHLC
+                  bar. Premium turnover equals VWAP × volume × 100. Relative
+                  volume compares the current completed bar with the prior-bar
+                  average. These are separate gates, not an opaque activity
+                  score.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يُستمد الحجم وعدد الصفقات من شمعة OHLC المؤهلة وفق قواعد SIP
+                  لدى ThetaData. وتساوي قيمة تداول العقود VWAP مضروباً في
+                  الحجم ثم في 100، بينما يقارن الحجم النسبي الشمعة المكتملة
+                  الحالية بمتوسط الشموع السابقة. وهذه بوابات مستقلة وليست
+                  درجة نشاط مركبة غير معلنة.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Delta, raw Theta, and calculated Gamma</span>
+                  <span data-lang-content="ar" lang="ar" hidden>دلتا وثيتا الخام وجاما المحتسبة</span>
+                  <small><span data-lang-content="en">Validated local Greek cache required</span><span data-lang-content="ar" lang="ar" hidden>تتطلب مخزون حساسيات محلياً متحققاً منه</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Delta and theta are retained from ThetaData’s first-order
+              response using latest methodology, SOFR, and an explicit zero
+              annual-dividend input. Gamma is derived from saved delta,
+              implied volatility, underlying price, a 365-day clock, New
+              York 16:00 expiry, and a one-hour time floor. The model and
+              source hash are stored with the trade. Both the Greek timestamp
+              and ThetaData’s underlying-price timestamp are retained and
+              checked so a future underlying value cannot enter the replay.
+              The UI never presents calculated Gamma as provider Gamma.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  تُحفظ دلتا وثيتا من استجابة ThetaData للحساسيات من الرتبة
+                  الأولى وفق أحدث منهجية وبمعدل SOFR مع افتراض صريح لتوزيعات
+                  سنوية مقدارها صفر. وتُشتق جاما من دلتا والتذبذب الضمني وسعر
+                  الأصل المحفوظة، وباعتماد سنة من 365 يوماً وانتهاء الساعة
+                  16:00 بتوقيت نيويورك وحد أدنى قدره ساعة للمدة المتبقية.
+                  ويُحفظ النموذج وبصمة المصدر مع الصفقة، كما يُحفظ كل من وقت
+                  الحساسية ووقت سعر الأصل لدى ThetaData ويُتحقق منهما لمنع
+                  دخول سعر أصل مستقبلي في إعادة الاختبار. ولا تعرض الواجهة
+                  جاما المحتسبة على أنها قيمة مقدمة من المزود.
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  <span data-lang-content="en">Observed trade side</span>
+                  <span data-lang-content="ar" lang="ar" hidden>جانب التداول المرصود</span>
+                  <small><span data-lang-content="en">Buy, sell, or either; minimum volume and share</span><span data-lang-content="ar" lang="ar" hidden>شراء أو بيع أو أي جانب؛ حد للحجم والنسبة</span></small>
+                </dt>
+                <dd data-lang-content="en">
+                  Side uses only ThetaData’s documented OPRA condition 145 for
+                  buy and 146 for sell. You can require a minimum classified
+                  volume and selected-side share. Positive non-cancel trades
+                  with other conditions remain visible as unclassified and
+                  are never reassigned from candle direction or NBBO position.
+                  If any cancellation condition appears for a contract-day,
+                  all side evidence for that contract-day is withheld and the
+                  enabled rule fails closed.
+                </dd>
+                <dd data-lang-content="ar" lang="ar" hidden>
+                  يعتمد الجانب حصراً على رمز OPRA رقم 145 للشراء ورقم 146
+                  للبيع وفق توثيق ThetaData. ويمكن اشتراط حد أدنى للحجم المصنف
+                  ولنسبة الجانب المحدد. وتبقى التداولات موجبة الحجم وغير
+                  الملغاة ذات الرموز الأخرى ظاهرة بوصفها غير مصنفة، ولا يُعاد
+                  تصنيفها استناداً إلى اتجاه الشمعة أو موضع السعر ضمن NBBO.
+                  وإذا ظهر أي رمز إلغاء لعقد خلال جلسة معينة، تُحجب أدلة الجانب
+                  لذلك العقد في الجلسة كلها ويفشل الشرط المفعّل بصورة تحفظية.
+                </dd>
+              </div>
+            </dl>
+          </details>
+
+          <details class="control-reference-group">
+            <summary>
+              <span class="control-reference-summary">
                 <strong data-lang-content="en">Signal and indicators</strong>
                 <strong data-lang-content="ar" lang="ar" hidden>الإشارة والمؤشرات الفنية</strong>
                 <small data-lang-content="en">Signal series, MACD, SMI, zero line, and RSI</small>
@@ -812,14 +1046,14 @@
                   <small><span data-lang-content="en">ThetaData option-contract bars only</span><span data-lang-content="ar" lang="ar" hidden>شموع عقد الخيار من ThetaData فقط</span></small>
                 </dt>
                 <dd data-lang-content="en">
-                  Completed five-minute ThetaData trade candles for the
-                  eligible option feed MACD, SMI, and RSI. A bullish crossover
+                  Completed ThetaData trade candles at the selected strategy
+                  timeframe feed MACD, SMI, and RSI. A bullish crossover
                   on the option itself qualifies entry, while retained NBBO
                   states supply selection and executable fills.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
-                  تغذي شموع تداول عقد الخيار المكتملة لفاصل خمس دقائق من
-                  ThetaData مؤشرات MACD وSMI وRSI. ويؤهل التقاطع الإيجابي على
+                  تغذي شموع تداول عقد الخيار المكتملة وفق الفاصل الزمني
+                  المختار من ThetaData مؤشرات MACD وSMI وRSI. ويؤهل التقاطع الإيجابي على
                   العقد نفسه الدخول، بينما توفر حالات NBBO المحفوظة أدلة
                   الاختيار والتنفيذ القابل للتنفيذ.
                 </dd>
@@ -1021,13 +1255,14 @@
                 <dd data-lang-content="en">
                   Adds the first opposite completed-bar SMI crossover as an exit
                   condition. If exit conditions share a timestamp, the recorded
-                  priority is profit target, opposite MACD, opposite SMI, then
-                  timed exit.
+                  priority is profit target, stop loss, opposite MACD, opposite
+                  SMI, advanced evidence, then timed exit.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يضيف أول تقاطع عكسي لمؤشر SMI على شمعة مكتملة بوصفه شرط خروج.
                   وإذا تزامنت شروط الخروج، تكون الأولوية المسجلة لهدف الربح، ثم
-                  تقاطع MACD العكسي، ثم تقاطع SMI العكسي، ثم الخروج الزمني.
+                  حد الخسارة، ثم تقاطع MACD العكسي، ثم تقاطع SMI العكسي، ثم
+                  الأدلة المتقدمة، ثم الخروج الزمني.
                 </dd>
               </div>
             </dl>
@@ -1295,12 +1530,26 @@
                 <dd data-lang-content="en">
                   Triggers when a later executable bid reaches the configured
                   negative return relative to the entry ask. This is a
-                  quote-observed stop, not an assumed candle fill.
+                  quote-observed stop, not an assumed candle fill. The report’s
+                  MAE table shows how many trades reached common loss
+                  thresholds and how many of those trades later finished as
+                  winners or losers. It is decision support, not a
+                  counterfactual P&amp;L claim. Because MAE/MFE observation
+                  ends at the recorded exit, evaluate a candidate stop with an
+                  otherwise identical run where the stop is disabled or set
+                  looser; otherwise the active stop censors the evidence used
+                  to assess itself.
                 </dd>
                 <dd data-lang-content="ar" lang="ar" hidden>
                   يتحقق عندما يبلغ سعر عرض لاحق قابل للتنفيذ نسبة العائد السلبية
                   المحددة مقارنة بسعر الطلب عند الدخول. وهو حد مرصود من التسعير
-                  الفعلي المحفوظ، وليس سعراً مفترضاً من الشمعة.
+                  الفعلي المحفوظ، وليس سعراً مفترضاً من الشمعة. ويعرض جدول MAE
+                  في التقرير عدد الصفقات التي بلغت حدود خسارة شائعة، وعدد
+                  الصفقات الرابحة والخاسرة لاحقاً ضمنها. وهذه أداة لدعم القرار
+                  وليست ادعاءً بنتيجة ربح أو خسارة افتراضية. ولأن رصد MAE وMFE
+                  ينتهي عند الخروج المسجل، فينبغي تقييم حد الخسارة المقترح عبر
+                  تشغيل اختبار مماثل مع تعطيل ذلك الحد أو توسيعه؛ وإلا فإن حد
+                  الخسارة المفعّل يقتطع الأدلة المستخدمة في تقييمه.
                 </dd>
               </div>
               <div>
@@ -1357,14 +1606,14 @@
               <span data-lang-content="en">
                 When more than one exit qualifies, the first chronological
                 condition wins. A same-event tie is resolved in this order:
-                 profit target, stop loss, reverse MACD, reverse SMI, then
-                 timed exit.
+                 profit target, stop loss, reverse MACD, reverse SMI, advanced
+                 evidence, then timed exit.
               </span>
               <span data-lang-content="ar" lang="ar" hidden>
                 عند تحقق أكثر من شرط خروج، يُعتمد الشرط الأسبق زمنياً. وإذا
                  تزامنت الشروط في الحدث نفسه فتكون الأولوية لهدف الربح ثم حد
-                 الخسارة ثم تقاطع MACD العكسي ثم تقاطع SMI العكسي ثم الخروج
-                 الزمني.
+                 الخسارة ثم تقاطع MACD العكسي ثم تقاطع SMI العكسي ثم الأدلة
+                 المتقدمة ثم الخروج الزمني.
               </span>
             </p>
           </details>
@@ -1486,7 +1735,7 @@
           <h3>ThetaData Options Standard · 27 Apr–24 Jul 2026 · five symbols</h3>
           <p data-lang-content="en">
             The primary profile targets QQQ, SPY, TSLA, AAPL, and NVDA with
-            one-minute option trades, locally formed five-minute candles,
+            one-minute option evidence, locally formed strategy-timeframe candles,
             underlying selection prices, contract mappings, and the last
             retained NBBO snapshot for each minute. A selected date becomes
             runnable only after every symbol for that session is complete and
@@ -1494,7 +1743,7 @@
           </p>
           <p data-lang-content="ar" lang="ar" hidden>
             يستهدف الملف الأساسي الرموز QQQ وSPY وTSLA وAAPL وNVDA، ويشمل
-            تداولات الخيارات لفاصل الدقيقة، وشموع الخمس دقائق المكوّنة محلياً،
+            أدلة الخيارات لفاصل الدقيقة، وشموع الفاصل المختار المكوّنة محلياً،
             وأسعار الأصل المستخدمة في اختيار العقد، وتعريفات العقود، وآخر لقطة
             محفوظة لأفضل عرض وطلب في كل دقيقة. ولا يصبح التاريخ المختار
             قابلاً للتشغيل إلا بعد اكتمال بيانات جميع الرموز في الجلسة والتحقق
@@ -1516,7 +1765,7 @@
           <li><strong data-lang-content="en">Contract reference data</strong><strong data-lang-content="ar" lang="ar" hidden>البيانات المرجعية للعقد</strong>
             <span data-lang-content="en"> — OCC identity, call/put, strike, and expiration.</span>
             <span data-lang-content="ar" lang="ar" hidden> — هوية OCC ونوع العقد وسعر التنفيذ وتاريخ الانتهاء.</span></li>
-          <li><strong data-lang-content="en">Five-minute signal candles</strong><strong data-lang-content="ar" lang="ar" hidden>شموع الإشارة لفاصل خمس دقائق</strong>
+          <li><strong data-lang-content="en">Configurable signal candles</strong><strong data-lang-content="ar" lang="ar" hidden>شموع إشارة بفاصل قابل للضبط</strong>
             <span data-lang-content="en"> — completed ThetaData option-contract trade bars for MACD, SMI, and optional RSI.</span>
             <span data-lang-content="ar" lang="ar" hidden> — شموع تداول عقد الخيار المكتملة من ThetaData لاحتساب MACD وSMI وRSI الاختياري.</span></li>
           <li><strong data-lang-content="en">Timestamped NBBO quotes</strong><strong data-lang-content="ar" lang="ar" hidden>تسعيرات NBBO المؤرخة زمنياً</strong>
@@ -1610,10 +1859,14 @@
           <ul>
             <li data-lang-content="en">One symbol or any supported basket</li>
             <li data-lang-content="ar" lang="ar" hidden>رمز واحد أو أي مجموعة مدعومة</li>
+            <li data-lang-content="en">Strategy timeframe from 1 to 60 whole minutes, with 5m as the default</li>
+            <li data-lang-content="ar" lang="ar" hidden>الفاصل الزمني للاستراتيجية من دقيقة إلى ستين دقيقة صحيحة، مع اعتماد خمس دقائق افتراضياً</li>
             <li data-lang-content="en">MACD fast, slow, signal, seed, and optional zero line</li>
             <li data-lang-content="ar" lang="ar" hidden>فترات MACD وطريقة التهيئة ومرشح خط الصفر الاختياري</li>
             <li data-lang-content="en">Optional RSI period and acceptance range</li>
             <li data-lang-content="ar" lang="ar" hidden>فترة RSI ونطاق القبول الاختياري</li>
+            <li data-lang-content="en">Momentum, timestamped premium velocity, volume and trade activity, premium range, Delta, raw Theta, calculated Gamma, and observed buy/sell-side thresholds—each scoped to entry, exit, or both</li>
+            <li data-lang-content="ar" lang="ar" hidden>حدود الزخم، وسرعة تغير سعر العقد المؤرخة زمنياً، والحجم ونشاط التداول، ونطاق سعر العقد، ودلتا، وثيتا الخام، وجاما المحتسبة، وجانب الشراء أو البيع المرصود، مع تحديد تطبيق كل قاعدة عند الدخول أو الخروج أو كليهما</li>
             <li data-lang-content="en">Premium and spread caps plus strike/expiry fallback</li>
             <li data-lang-content="ar" lang="ar" hidden>حدا السعر والفارق والانتقال بين أسعار التنفيذ والانتهاء</li>
             <li data-lang-content="en">Entry window plus independently enabled profit, stop-loss, reverse MACD, reverse SMI, and Riyadh-time exits</li>
@@ -1628,14 +1881,16 @@
           <ul>
             <li data-lang-content="en">ThetaData option-contract bars are the sole active signal and market-data source</li>
             <li data-lang-content="ar" lang="ar" hidden>شموع عقود الخيارات من ThetaData هي المصدر النشط الوحيد للإشارة وبيانات السوق</li>
-            <li data-lang-content="en">Entry indicators and opposite-indicator exits share completed five-minute option bars</li>
-            <li data-lang-content="ar" lang="ar" hidden>تستخدم مؤشرات الدخول والخروج العكسي شموع عقود الخيارات المكتملة لفاصل خمس دقائق</li>
+            <li data-lang-content="en">Entry indicators and opposite-indicator exits share the same selected completed-bar timeframe</li>
+            <li data-lang-content="ar" lang="ar" hidden>تستخدم مؤشرات الدخول والخروج العكسي الفاصل الزمني المختار نفسه للشموع المكتملة</li>
             <li data-lang-content="en">Entry at ask, exit at bid, 100-share contract multiplier</li>
             <li data-lang-content="ar" lang="ar" hidden>الدخول بسعر الطلب والخروج بسعر العرض ومعامل عقد قدره 100 سهم</li>
             <li data-lang-content="en">Local paths, raw files, provider downloads, network policy, and executable commands</li>
             <li data-lang-content="ar" lang="ar" hidden>المسارات والملفات الخام وتنزيلات المزود وسياسة الشبكة والأوامر التنفيذية</li>
             <li data-lang-content="en">Dataset activation and private publication credentials</li>
             <li data-lang-content="ar" lang="ar" hidden>تفعيل مجموعة البيانات واعتمادات النشر الخاصة</li>
+            <li data-lang-content="en">Greek and observed-side controls remain locked until their provider-derived local caches are complete and hash-verified</li>
+            <li data-lang-content="ar" lang="ar" hidden>تبقى ضوابط الحساسيات والجانب المرصود مقفلة حتى تكتمل ملفاتها المحلية المشتقة من المزود ويُتحقق من بصماتها الرقمية</li>
           </ul>
         </article>
       </div>
@@ -1730,7 +1985,7 @@
     <p>
       <span data-lang-content="en">Site generated</span>
       <span data-lang-content="ar" lang="ar" hidden>تاريخ إنشاء الموقع</span>
-      <time datetime="2026-07-28T06:52:29.645147Z">2026-07-28T06:52:29.645147Z</time>.
+      <time datetime="2026-07-28T17:29:11.337412Z">2026-07-28T17:29:11.337412Z</time>.
     </p>
   </footer>
 </body>

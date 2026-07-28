@@ -9,6 +9,9 @@
   const localizedContent = [
     ...document.querySelectorAll("[data-lang-content]"),
   ];
+  const localizedOptions = [
+    ...document.querySelectorAll("[data-label-en][data-label-ar]"),
+  ];
   const languageStatus = document.getElementById("learn-language-status");
   const symbolSelect = document.getElementById("learn-symbol-select");
   const symbolPanels = [
@@ -68,6 +71,10 @@
     document.documentElement.dir = next === "ar" ? "rtl" : "ltr";
     localizedContent.forEach((node) => {
       node.hidden = node.dataset.langContent !== next;
+    });
+    localizedOptions.forEach((option) => {
+      option.textContent =
+        next === "ar" ? option.dataset.labelAr : option.dataset.labelEn;
     });
     languageButtons.forEach((button) => {
       button.setAttribute(

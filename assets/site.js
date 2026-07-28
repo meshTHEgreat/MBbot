@@ -211,6 +211,19 @@
     const experimentSummaryCopy = document.getElementById(
       "experiment-summary-copy",
     );
+    const experimentSummaryRisk = document.getElementById(
+      "experiment-summary-risk",
+    );
+    const lossPathMode = document.getElementById("loss-path-mode");
+    const lossPathModeLabel = document.getElementById("loss-path-mode-label");
+    const lossPathModeTitle = document.getElementById("loss-path-mode-title");
+    const lossPathModeCopy = document.getElementById("loss-path-mode-copy");
+    const lossPathCheckStop = document.getElementById("loss-path-check-stop");
+    const stopLossToggleHelp = document.getElementById("stop-loss-toggle-help");
+    const stopLossPercentHelp = document.getElementById(
+      "stop-loss-percent-help",
+    );
+    const stopLossCard = form?.querySelector(".control-check--loss-path");
     const symbolInputs = [
       ...(form?.querySelectorAll('input[name="symbol"]') || []),
     ];
@@ -300,8 +313,94 @@
         "thetadata-options-2026-04-27-to-2026-07-24"
       ];
 
+    function updateLossPathMode() {
+      const stopEnabled = form.elements.namedItem("stop_loss_enabled");
+      const stopPercent = form.elements.namedItem("stop_loss_percent");
+      if (
+        !(stopEnabled instanceof HTMLInputElement) ||
+        !(stopPercent instanceof HTMLInputElement)
+      ) {
+        return;
+      }
+
+      const parsedPercent = Number(stopPercent.value);
+      const percent = Number.isFinite(parsedPercent)
+        ? String(Number(parsedPercent.toFixed(2)))
+        : "—";
+      const active = stopEnabled.checked && !stopEnabled.disabled;
+      const mode = active ? "active" : "observe";
+
+      lossPathMode?.setAttribute("data-mode", mode);
+      stopLossCard?.setAttribute("data-stop-mode", mode);
+      experimentSummaryRisk
+        ?.closest(".experiment-summary")
+        ?.setAttribute("data-stop-mode", mode);
+
+      if (active) {
+        if (lossPathModeLabel) lossPathModeLabel.textContent = "Stop active";
+        if (lossPathModeTitle) {
+          lossPathModeTitle.textContent = `The replay exits at −${percent}%`;
+        }
+        if (lossPathModeCopy) {
+          lossPathModeCopy.textContent =
+            "MAE/MFE is still logged, but only until this stop or an earlier " +
+            "exit gate. To research a better stop, disable “Accepted-loss " +
+            "stop”—do not enter 0%.";
+        }
+        if (lossPathCheckStop) {
+          lossPathCheckStop.textContent = "Disable the accepted-loss stop.";
+          lossPathCheckStop.classList.remove("is-complete");
+        }
+        if (stopLossToggleHelp) {
+          stopLossToggleHelp.textContent =
+            `Active: exits at −${percent}%. Disable it to study how far ` +
+            "trades fall before another exit closes them.";
+        }
+        if (stopLossPercentHelp) {
+          stopLossPercentHelp.textContent =
+            "Valid range: 0.1–100%. To turn this exit off, disable the " +
+            "accepted-loss stop; 0% is not “off.”";
+        }
+        if (experimentSummaryRisk) {
+          experimentSummaryRisk.textContent =
+            `Stop active at −${percent}% · MAE observed until the first exit`;
+        }
+        return;
+      }
+
+      if (lossPathModeLabel) lossPathModeLabel.textContent = "Observation mode";
+      if (lossPathModeTitle) {
+        lossPathModeTitle.textContent =
+          "Stop disabled · loss path stays observable";
+      }
+      if (lossPathModeCopy) {
+        lossPathModeCopy.textContent =
+          `The saved ${percent}% value is inactive. MAE/MFE continues until ` +
+          "profit, indicator, advanced, or timed exit closes the trade.";
+      }
+      if (lossPathCheckStop) {
+        lossPathCheckStop.textContent =
+          "Stop disabled — ready to observe MAE until another exit.";
+        lossPathCheckStop.classList.add("is-complete");
+      }
+      if (stopLossToggleHelp) {
+        stopLossToggleHelp.textContent =
+          "Disabled: the saved percentage is inactive. MAE/MFE remains " +
+          "available until another enabled exit closes the trade.";
+      }
+      if (stopLossPercentHelp) {
+        stopLossPercentHelp.textContent =
+          `Saved at ${percent}% and inactive. Re-enable the stop to use it.`;
+      }
+      if (experimentSummaryRisk) {
+        experimentSummaryRisk.textContent =
+          "Stop disabled · observing MAE until another exit";
+      }
+    }
+
     function updateExperimentSummary() {
       if (!experimentSummaryTitle || !experimentSummaryCopy) return;
+      updateLossPathMode();
       const selected = symbolInputs.filter(
         (input) => input.checked && !input.disabled,
       );
@@ -318,6 +417,38 @@
         const field = form.elements.namedItem(name);
         return field instanceof HTMLInputElement && field.checked;
       }).length;
+      const advancedRules = [
+        ["momentum_enabled", "momentum_scope"],
+        ["premium_velocity_enabled", "premium_velocity_scope"],
+        ["activity_enabled", "activity_scope"],
+        ["premium_range_enabled", "premium_range_scope"],
+        ["delta_enabled", "delta_scope"],
+        ["theta_enabled", "theta_scope"],
+        ["gamma_enabled", "gamma_scope"],
+        ["trade_side_enabled", "trade_side_scope"],
+      ];
+      const enabledAdvanced = advancedRules.filter(([enabledName]) => {
+        const field = form.elements.namedItem(enabledName);
+        return (
+          field instanceof HTMLInputElement &&
+          field.checked &&
+          !field.disabled
+        );
+      }).length;
+      const advancedExits = advancedRules.filter(
+        ([enabledName, scopeName]) => {
+          const enabled = form.elements.namedItem(enabledName);
+          const scope = form.elements.namedItem(scopeName);
+          return (
+            enabled instanceof HTMLInputElement &&
+            enabled.checked &&
+            !enabled.disabled &&
+            scope instanceof HTMLSelectElement &&
+            ["exit", "both"].includes(scope.value)
+          );
+        },
+      ).length;
+      const totalExits = enabledExits + advancedExits;
       const value = (name) => form.elements.namedItem(name)?.value || "—";
       experimentSummaryTitle.textContent =
         `${selected.length} ${selected.length === 1 ? "symbol" : "symbols"} · ` +
@@ -325,9 +456,11 @@
           ? "full dataset"
           : `${startDate.value || "?"} to ${endDate.value || "?"}`);
       experimentSummaryCopy.textContent =
-        `MACD ${value("macd_fast_period")}/${value("macd_slow_period")}/` +
-        `${value("macd_signal_period")} · ${enabledExits} exit ` +
-        `${enabledExits === 1 ? "gate" : "gates"} enabled`;
+        `${value("bar_minutes")}m bars · MACD ` +
+        `${value("macd_fast_period")}/${value("macd_slow_period")}/` +
+        `${value("macd_signal_period")} · ${totalExits} exit ` +
+        `${totalExits === 1 ? "gate" : "gates"} · ` +
+        `${enabledAdvanced} advanced ${enabledAdvanced === 1 ? "rule" : "rules"}`;
     }
 
     function readValues() {
@@ -351,6 +484,7 @@
           .map((input) => input.value),
         start_date: value("start_date"),
         end_date: value("end_date"),
+        bar_minutes: value("bar_minutes"),
         macd_fast_period: value("macd_fast_period"),
         macd_slow_period: value("macd_slow_period"),
         macd_signal_period: value("macd_signal_period"),
@@ -377,6 +511,88 @@
         smi_oversold: value("smi_oversold"),
         smi_overbought: value("smi_overbought"),
         opposite_smi_enabled: checked("opposite_smi_enabled"),
+        momentum_enabled: checked("momentum_enabled"),
+        momentum_scope: value("momentum_scope"),
+        momentum_lookback_bars: value("momentum_lookback_bars"),
+        momentum_price_source: value("momentum_price_source"),
+        momentum_minimum_percent: value("momentum_minimum_percent"),
+        momentum_maximum_percent: value("momentum_maximum_percent"),
+        premium_velocity_enabled: checked("premium_velocity_enabled"),
+        premium_velocity_scope: value("premium_velocity_scope"),
+        premium_velocity_lookback_bars: value(
+          "premium_velocity_lookback_bars",
+        ),
+        premium_velocity_price_source: value(
+          "premium_velocity_price_source",
+        ),
+        premium_velocity_minimum_percent_per_minute: value(
+          "premium_velocity_minimum_percent_per_minute",
+        ),
+        premium_velocity_maximum_percent_per_minute: value(
+          "premium_velocity_maximum_percent_per_minute",
+        ),
+        activity_enabled: checked("activity_enabled"),
+        activity_scope: value("activity_scope"),
+        activity_relative_lookback_bars: value(
+          "activity_relative_lookback_bars",
+        ),
+        activity_volume_enabled: checked("activity_volume_enabled"),
+        activity_minimum_volume: value("activity_minimum_volume"),
+        activity_maximum_volume: value("activity_maximum_volume"),
+        activity_trade_count_enabled: checked(
+          "activity_trade_count_enabled",
+        ),
+        activity_minimum_trade_count: value(
+          "activity_minimum_trade_count",
+        ),
+        activity_maximum_trade_count: value(
+          "activity_maximum_trade_count",
+        ),
+        activity_premium_turnover_enabled: checked(
+          "activity_premium_turnover_enabled",
+        ),
+        activity_minimum_premium_turnover: value(
+          "activity_minimum_premium_turnover",
+        ),
+        activity_maximum_premium_turnover: value(
+          "activity_maximum_premium_turnover",
+        ),
+        activity_relative_volume_enabled: checked(
+          "activity_relative_volume_enabled",
+        ),
+        activity_minimum_relative_volume: value(
+          "activity_minimum_relative_volume",
+        ),
+        activity_maximum_relative_volume: value(
+          "activity_maximum_relative_volume",
+        ),
+        premium_range_enabled: checked("premium_range_enabled"),
+        premium_range_scope: value("premium_range_scope"),
+        premium_range_price_source: value("premium_range_price_source"),
+        premium_range_minimum: value("premium_range_minimum"),
+        premium_range_maximum: value("premium_range_maximum"),
+        delta_enabled: checked("delta_enabled"),
+        delta_scope: value("delta_scope"),
+        delta_absolute_value: checked("delta_absolute_value"),
+        delta_minimum: value("delta_minimum"),
+        delta_maximum: value("delta_maximum"),
+        theta_enabled: checked("theta_enabled"),
+        theta_scope: value("theta_scope"),
+        theta_minimum: value("theta_minimum"),
+        theta_maximum: value("theta_maximum"),
+        gamma_enabled: checked("gamma_enabled"),
+        gamma_scope: value("gamma_scope"),
+        gamma_minimum: value("gamma_minimum"),
+        gamma_maximum: value("gamma_maximum"),
+        trade_side_enabled: checked("trade_side_enabled"),
+        trade_side_scope: value("trade_side_scope"),
+        trade_side_value: value("trade_side_value"),
+        trade_side_minimum_classified_volume: value(
+          "trade_side_minimum_classified_volume",
+        ),
+        trade_side_minimum_share_percent: value(
+          "trade_side_minimum_share_percent",
+        ),
         max_premium: value("max_premium"),
         max_spread_percent: value("max_spread_percent"),
         spread_denominator: value("spread_denominator"),
@@ -534,6 +750,29 @@
     const dependencyToggles = [
       ...form.querySelectorAll("[data-controls]"),
     ];
+    const capabilities =
+      window.MBbotSiteConfig?.localDataCapabilities || {};
+    form.querySelectorAll("[data-cache-requirement]").forEach((control) => {
+      const requirement = control.dataset.cacheRequirement;
+      const available =
+        requirement === "greeks"
+          ? capabilities.greeks === true
+          : requirement === "trade-side"
+            ? capabilities.tradeSide === true
+            : false;
+      control.disabled = !available;
+      const card = control.closest(".factor-card");
+      const badge = card?.querySelector("[data-cache-state]");
+      if (badge) {
+        badge.textContent = available
+          ? "Validated local cache ready"
+          : requirement === "greeks"
+            ? "Greek cache pending"
+            : "Trade-level cache pending";
+        if (badge.id) control.setAttribute("aria-describedby", badge.id);
+      }
+      card?.classList.toggle("factor-card--locked", !available);
+    });
     const smiSummary = document.getElementById("smi-summary-state");
     function applyRuleStates() {
       for (let pass = 0; pass < 2; pass += 1) {
@@ -1399,7 +1638,115 @@
     const executionFields = groupedFields.execution;
     const outcomeFields = groupedFields.outcome;
     const validationFields = groupedFields.validation;
-    const featureFields = groupedFields.features;
+    const advancedEvidenceFields = new Set([
+      "signal_advanced_metrics",
+      "exit_advanced_metrics",
+      "advanced_exit_rules",
+    ]);
+    const featureFields = groupedFields.features.filter(
+      (column) => !advancedEvidenceFields.has(column),
+    );
+
+    function parseAdvancedMetrics(value) {
+      if (!value) return null;
+      if (typeof value === "object" && !Array.isArray(value)) return value;
+      try {
+        const parsed = JSON.parse(String(value));
+        return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+          ? parsed
+          : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function advancedEvidenceGroup(title, rawValue) {
+      const metrics = parseAdvancedMetrics(rawValue);
+      if (!metrics) return null;
+      const labels = {
+        applied_rules: "Applied advanced rules",
+        timestamp: "Evaluation timestamp",
+        bar_minutes: "Completed-bar interval",
+        premium: "Option premium",
+        momentum_percent: "Momentum",
+        momentum_window_start: "Momentum window start",
+        momentum_price_source: "Momentum premium source",
+        premium_velocity_percent_per_minute: "Premium velocity",
+        premium_velocity_window_start: "Velocity window start",
+        premium_velocity_price_source: "Velocity premium source",
+        premium_price_source: "Premium range source",
+        volume: "Qualifying volume (contracts)",
+        trade_count: "Qualifying trade count",
+        premium_turnover: "Premium turnover",
+        relative_volume: "Relative volume",
+        delta: "ThetaData delta (rule or gamma input)",
+        theta: "ThetaData theta (raw)",
+        calculated_gamma: "Calculated gamma (delta change per $1)",
+        gamma_model: "Gamma model",
+        implied_volatility: "ThetaData implied volatility",
+        iv_error: "ThetaData IV error",
+        greek_underlying_timestamp:
+          "ThetaData underlying source timestamp",
+        greek_underlying_price: "ThetaData underlying price (gamma input)",
+        buy_volume: "Condition 145 buy volume",
+        sell_volume: "Condition 146 sell volume",
+        unclassified_volume: "Unclassified volume",
+        classified_volume: "Classified volume",
+        configured_side: "Configured observed side",
+        configured_side_share_percent: "Configured-side share",
+        trade_side_classification: "Side classification",
+      };
+      const timelineKeys = new Set([
+        "timestamp",
+        "momentum_window_start",
+        "premium_velocity_window_start",
+        "greek_underlying_timestamp",
+      ]);
+      const percentKeys = new Set([
+        "momentum_percent",
+        "premium_velocity_percent_per_minute",
+        "configured_side_share_percent",
+      ]);
+      const moneyKeys = new Set([
+        "premium",
+        "premium_turnover",
+        "greek_underlying_price",
+      ]);
+      const rows = Object.entries(labels)
+        .filter(([key]) => metrics[key] !== null && metrics[key] !== undefined)
+        .map(([key, label]) => {
+          let text = String(metrics[key]);
+          if (timelineKeys.has(key)) {
+            text = `${formatPreciseDate(metrics[key])} · source ${metrics[key]}`;
+          }
+          else if (key === "applied_rules") {
+            text = String(metrics[key])
+              .replaceAll("|", ", ")
+              .replaceAll("_", " ");
+          }
+          else if (key === "bar_minutes") text = `${metrics[key]} minutes`;
+          else if (key === "premium_velocity_percent_per_minute") {
+            text = `${formatNumber(metrics[key], 4)}% per minute`;
+          } else if (percentKeys.has(key)) {
+            text = formatPercent(metrics[key]);
+          } else if (moneyKeys.has(key)) {
+            text = formatMoney(metrics[key]);
+          } else if (key === "relative_volume") {
+            text = `${formatNumber(metrics[key], 3)}x`;
+          }
+          return element("div", { className: "trade-card-field" }, [
+            element("dt", { text: label }),
+            element("dd", { text }),
+          ]);
+        });
+      if (!rows.length) return null;
+      return element("section", {
+        className: "trade-card-group advanced-evidence-group",
+      }, [
+        element("h4", { text: title }),
+        element("dl", { className: "trade-card-fields" }, rows),
+      ]);
+    }
 
     function fieldValueNode(
       column,
@@ -1515,6 +1862,9 @@
         `Current MACD/signal/histogram: ${trade.signal_macd ?? "?"}/${trade.signal_macd_signal ?? "?"}/${trade.signal_macd_histogram ?? "?"}`,
         `Previous SMI/signal/histogram: ${trade.signal_previous_smi ?? "?"}/${trade.signal_previous_smi_signal ?? "?"}/${trade.signal_previous_smi_histogram ?? "?"}`,
         `Current SMI/signal/histogram: ${trade.signal_smi ?? "?"}/${trade.signal_smi_signal ?? "?"}/${trade.signal_smi_histogram ?? "?"}`,
+        `Signal advanced evidence: ${trade.signal_advanced_metrics ?? "not recorded"}`,
+        `Signal Greek source: ${trade.signal_greek_source ?? "not recorded"}`,
+        `Signal trade-side source: ${trade.signal_trade_side_source ?? "not recorded"}`,
         `Entry source timestamp: ${trade.entry_time ?? "not recorded"}`,
         `Entry user timestamp: ${trade.entry_time_user ?? "not recorded"}`,
         `Entry fill price: ${trade.entry_price ?? "not recorded"}`,
@@ -1526,6 +1876,10 @@
         `Exit fill price: ${trade.exit_price ?? "not recorded"}`,
         `Exit source row: ${trade.exit_quote_source ?? "not recorded"}`,
         `Exit reason: ${trade.exit_reason ?? "not recorded"}`,
+        `Advanced exit rules: ${trade.advanced_exit_rules ?? "none recorded"}`,
+        `Exit advanced evidence: ${trade.exit_advanced_metrics ?? "not recorded"}`,
+        `Exit Greek source: ${trade.exit_greek_source ?? "not recorded"}`,
+        `Exit trade-side source: ${trade.exit_trade_side_source ?? "not recorded"}`,
         `Result source SHA-256: ${report.provenance?.source_sha256 ?? "not recorded"}`,
         `Strategy fingerprint: ${report.strategy?.fingerprint ?? "not recorded"}`,
         "",
@@ -1735,6 +2089,14 @@
         }),
       ]);
       const groups = [
+        advancedEvidenceGroup(
+          "Advanced evidence at signal",
+          trade.signal_advanced_metrics,
+        ),
+        advancedEvidenceGroup(
+          "Advanced evidence at exit trigger",
+          trade.exit_advanced_metrics,
+        ),
         tradeFieldGroup("Timeline", timelineFields, trade),
         tradeFieldGroup("Contract & execution", executionFields, trade),
         tradeFieldGroup("Outcome", outcomeFields, trade),
@@ -1977,6 +2339,94 @@
     );
   }
 
+  function renderExcursionEvidence(report) {
+    const summary = document.getElementById("excursion-summary");
+    const body = document.getElementById("stop-loss-reach-data");
+    const empty = document.getElementById("excursion-empty");
+    if (!summary || !body || !empty) return;
+    const rows = report.charts?.stop_loss_reach || [];
+    const recorded = Number(report.metrics?.excursion_trades || 0);
+    summary.replaceChildren();
+    body.replaceChildren();
+    if (!recorded || !rows.length) {
+      empty.hidden = false;
+      body.closest(".table-scroll")?.setAttribute("hidden", "");
+      return;
+    }
+    empty.hidden = true;
+    body.closest(".table-scroll")?.removeAttribute("hidden");
+    summary.replaceChildren(
+      metricNode(
+        "Trades measured",
+        formatNumber(recorded, 0),
+      ),
+      metricNode(
+        "Median MAE",
+        formatPercent(report.metrics.median_mae_percent),
+      ),
+      metricNode(
+        "90th percentile MAE",
+        formatPercent(report.metrics.p90_mae_percent),
+      ),
+      metricNode(
+        "Median winner MAE",
+        formatPercent(
+          report.metrics.winning_trade_median_mae_percent,
+        ),
+      ),
+      metricNode(
+        "Median loser MAE",
+        formatPercent(
+          report.metrics.losing_trade_median_mae_percent,
+        ),
+      ),
+      metricNode(
+        "Median MFE",
+        formatPercent(report.metrics.median_mfe_percent),
+      ),
+    );
+    rows.forEach((row) => {
+      const countAndRate = (count, percent) => {
+        const countText = formatNumber(count, 0);
+        return percent === null || percent === undefined
+          ? `${countText} · no group`
+          : `${countText} · ${formatPercent(percent)}`;
+      };
+      body.append(
+        element("tr", {}, [
+          element("th", {
+            scope: "row",
+            text: formatPercent(row.threshold_percent),
+          }),
+          element("td", {
+            text: countAndRate(
+              row.trades_reached,
+              row.trades_reached_percent,
+            ),
+          }),
+          element("td", {
+            text: countAndRate(
+              row.winning_trades_reached,
+              row.winning_trades_reached_percent,
+            ),
+          }),
+          element("td", {
+            text: countAndRate(
+              row.losing_trades_reached,
+              row.losing_trades_reached_percent,
+            ),
+          }),
+          element("td", {
+            text: countAndRate(
+              row.flat_trades_reached,
+              row.flat_trades_reached_percent,
+            ),
+          }),
+        ]),
+      );
+    });
+  }
+
   function renderReport() {
     const report = readJson("report-data");
     if (!report) {
@@ -2034,6 +2484,14 @@
       metricNode("Profit factor", formatNumber(report.metrics.profit_factor)),
       metricNode("Max drawdown", formatMoney(-Math.abs(report.metrics.max_drawdown || 0)), "negative"),
       metricNode("Avg hold", report.metrics.average_holding_minutes === null ? "—" : `${formatNumber(report.metrics.average_holding_minutes)} min`),
+      metricNode(
+        "Median MAE",
+        formatPercent(report.metrics.median_mae_percent),
+      ),
+      metricNode(
+        "Median MFE",
+        formatPercent(report.metrics.median_mfe_percent),
+      ),
     );
 
     renderDecisionTrace(report);
@@ -2041,6 +2499,7 @@
     renderSettings(report);
     renderTrades(report);
     renderProvenance(report);
+    renderExcursionEvidence(report);
 
     const series = report.charts?.cumulative_pnl || [];
     const returns = report.charts?.returns || [];

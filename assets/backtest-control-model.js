@@ -31,6 +31,7 @@
     }),
   });
   const NUMBER_FIELDS = Object.freeze([
+    "bar_minutes",
     "max_premium",
     "max_spread_percent",
     "profit_target_percent",
@@ -62,7 +63,9 @@
     "start_date",
     "end_date",
     "signal_source",
+    "bar_minutes",
     "indicator_settings",
+    "advanced_settings",
     "rule_toggles",
     "max_premium",
     "max_spread_percent",
@@ -84,6 +87,299 @@
     "require_same_bar_cross",
     "replace_macd",
   ]);
+  const ADVANCED_SCOPES = Object.freeze(["entry", "exit", "both"]);
+  const PREMIUM_PRICE_SOURCES = Object.freeze([
+    "midpoint",
+    "bid",
+    "ask",
+    "trade_close",
+    "vwap",
+  ]);
+
+  function advancedScope(values, name) {
+    const scope = String(values[name] || "");
+    if (!ADVANCED_SCOPES.includes(scope)) {
+      throw inputError("Choose entry, exit, or both.", name);
+    }
+    return scope;
+  }
+
+  function premiumSource(values, name) {
+    const source = String(values[name] || "");
+    if (!PREMIUM_PRICE_SOURCES.includes(source)) {
+      throw inputError("Choose a supported option-premium source.", name);
+    }
+    return source;
+  }
+
+  function orderedRange(minimum, maximum, field) {
+    if (minimum > maximum) {
+      throw inputError("Minimum cannot exceed maximum.", field);
+    }
+  }
+
+  function buildAdvancedSettings(values) {
+    const momentumMinimum = finiteNumber(
+      values,
+      "momentum_minimum_percent",
+      -10000,
+      10000,
+    );
+    const momentumMaximum = finiteNumber(
+      values,
+      "momentum_maximum_percent",
+      -10000,
+      10000,
+    );
+    orderedRange(momentumMinimum, momentumMaximum, "momentum_minimum_percent");
+    const velocityMinimum = finiteNumber(
+      values,
+      "premium_velocity_minimum_percent_per_minute",
+      -1000,
+      1000,
+    );
+    const velocityMaximum = finiteNumber(
+      values,
+      "premium_velocity_maximum_percent_per_minute",
+      -1000,
+      1000,
+    );
+    orderedRange(
+      velocityMinimum,
+      velocityMaximum,
+      "premium_velocity_minimum_percent_per_minute",
+    );
+    const volumeMinimum = finiteNumber(
+      values,
+      "activity_minimum_volume",
+      0,
+      10000000,
+      true,
+    );
+    const volumeMaximum = finiteNumber(
+      values,
+      "activity_maximum_volume",
+      0,
+      10000000,
+      true,
+    );
+    orderedRange(volumeMinimum, volumeMaximum, "activity_minimum_volume");
+    const countMinimum = finiteNumber(
+      values,
+      "activity_minimum_trade_count",
+      0,
+      10000000,
+      true,
+    );
+    const countMaximum = finiteNumber(
+      values,
+      "activity_maximum_trade_count",
+      0,
+      10000000,
+      true,
+    );
+    orderedRange(countMinimum, countMaximum, "activity_minimum_trade_count");
+    const turnoverMinimum = finiteNumber(
+      values,
+      "activity_minimum_premium_turnover",
+      0,
+      1000000000000,
+    );
+    const turnoverMaximum = finiteNumber(
+      values,
+      "activity_maximum_premium_turnover",
+      0,
+      1000000000000,
+    );
+    orderedRange(
+      turnoverMinimum,
+      turnoverMaximum,
+      "activity_minimum_premium_turnover",
+    );
+    const relativeMinimum = finiteNumber(
+      values,
+      "activity_minimum_relative_volume",
+      0,
+      1000000,
+    );
+    const relativeMaximum = finiteNumber(
+      values,
+      "activity_maximum_relative_volume",
+      0,
+      1000000,
+    );
+    orderedRange(
+      relativeMinimum,
+      relativeMaximum,
+      "activity_minimum_relative_volume",
+    );
+    if (
+      values.activity_enabled &&
+      ![
+        "activity_volume_enabled",
+        "activity_trade_count_enabled",
+        "activity_premium_turnover_enabled",
+        "activity_relative_volume_enabled",
+      ].some((name) => Boolean(values[name]))
+    ) {
+      throw inputError(
+        "Enable at least one trading-activity measurement.",
+        "activity_enabled",
+      );
+    }
+    const premiumMinimum = finiteNumber(
+      values,
+      "premium_range_minimum",
+      0,
+      100000,
+    );
+    const premiumMaximum = finiteNumber(
+      values,
+      "premium_range_maximum",
+      0,
+      100000,
+    );
+    orderedRange(premiumMinimum, premiumMaximum, "premium_range_minimum");
+    const deltaMinimum = finiteNumber(values, "delta_minimum", 0, 1);
+    const deltaMaximum = finiteNumber(values, "delta_maximum", 0, 1);
+    orderedRange(deltaMinimum, deltaMaximum, "delta_minimum");
+    const thetaMinimum = finiteNumber(
+      values,
+      "theta_minimum",
+      -100000,
+      100000,
+    );
+    const thetaMaximum = finiteNumber(
+      values,
+      "theta_maximum",
+      -100000,
+      100000,
+    );
+    orderedRange(thetaMinimum, thetaMaximum, "theta_minimum");
+    const gammaMinimum = finiteNumber(
+      values,
+      "gamma_minimum",
+      0,
+      100000,
+    );
+    const gammaMaximum = finiteNumber(
+      values,
+      "gamma_maximum",
+      0,
+      100000,
+    );
+    orderedRange(gammaMinimum, gammaMaximum, "gamma_minimum");
+    const tradeSide = String(values.trade_side_value || "");
+    if (!["buy", "sell", "either"].includes(tradeSide)) {
+      throw inputError("Choose buy, sell, or either.", "trade_side_value");
+    }
+    return {
+      momentum: {
+        enabled: Boolean(values.momentum_enabled),
+        scope: advancedScope(values, "momentum_scope"),
+        lookback_bars: finiteNumber(
+          values,
+          "momentum_lookback_bars",
+          2,
+          78,
+          true,
+        ),
+        price_source: premiumSource(values, "momentum_price_source"),
+        minimum_percent: momentumMinimum,
+        maximum_percent: momentumMaximum,
+      },
+      premium_velocity: {
+        enabled: Boolean(values.premium_velocity_enabled),
+        scope: advancedScope(values, "premium_velocity_scope"),
+        lookback_bars: finiteNumber(
+          values,
+          "premium_velocity_lookback_bars",
+          2,
+          78,
+          true,
+        ),
+        price_source: premiumSource(
+          values,
+          "premium_velocity_price_source",
+        ),
+        minimum_percent_per_minute: velocityMinimum,
+        maximum_percent_per_minute: velocityMaximum,
+      },
+      trading_activity: {
+        enabled: Boolean(values.activity_enabled),
+        scope: advancedScope(values, "activity_scope"),
+        relative_lookback_bars: finiteNumber(
+          values,
+          "activity_relative_lookback_bars",
+          1,
+          78,
+          true,
+        ),
+        volume_enabled: Boolean(values.activity_volume_enabled),
+        minimum_volume: volumeMinimum,
+        maximum_volume: volumeMaximum,
+        trade_count_enabled: Boolean(values.activity_trade_count_enabled),
+        minimum_trade_count: countMinimum,
+        maximum_trade_count: countMaximum,
+        premium_turnover_enabled: Boolean(
+          values.activity_premium_turnover_enabled,
+        ),
+        minimum_premium_turnover: turnoverMinimum,
+        maximum_premium_turnover: turnoverMaximum,
+        relative_volume_enabled: Boolean(
+          values.activity_relative_volume_enabled,
+        ),
+        minimum_relative_volume: relativeMinimum,
+        maximum_relative_volume: relativeMaximum,
+      },
+      premium: {
+        enabled: Boolean(values.premium_range_enabled),
+        scope: advancedScope(values, "premium_range_scope"),
+        price_source: premiumSource(values, "premium_range_price_source"),
+        minimum: premiumMinimum,
+        maximum: premiumMaximum,
+      },
+      delta: {
+        enabled: Boolean(values.delta_enabled),
+        scope: advancedScope(values, "delta_scope"),
+        absolute_value: Boolean(values.delta_absolute_value),
+        minimum: deltaMinimum,
+        maximum: deltaMaximum,
+      },
+      theta: {
+        enabled: Boolean(values.theta_enabled),
+        scope: advancedScope(values, "theta_scope"),
+        minimum: thetaMinimum,
+        maximum: thetaMaximum,
+      },
+      calculated_gamma: {
+        enabled: Boolean(values.gamma_enabled),
+        scope: advancedScope(values, "gamma_scope"),
+        minimum: gammaMinimum,
+        maximum: gammaMaximum,
+        model: "black_scholes_from_thetadata_first_order",
+      },
+      trade_side: {
+        enabled: Boolean(values.trade_side_enabled),
+        scope: advancedScope(values, "trade_side_scope"),
+        side: tradeSide,
+        minimum_classified_volume: finiteNumber(
+          values,
+          "trade_side_minimum_classified_volume",
+          1,
+          10000000,
+          true,
+        ),
+        minimum_side_share_percent: finiteNumber(
+          values,
+          "trade_side_minimum_share_percent",
+          0,
+          100,
+        ),
+        classification: "thetadata_opra_trade_condition_only",
+      },
+    };
+  }
 
   function finiteNumber(values, name, minimum, maximum, integer = false) {
     const parsed = Number(values[name]);
@@ -280,6 +576,9 @@
         zone_filter_enabled: Boolean(values.smi_zone_filter_enabled),
       },
     });
+    normalized.advanced_settings = JSON.stringify(
+      buildAdvancedSettings(values),
+    );
     normalized.spread_denominator = String(values.spread_denominator || "");
     normalized.force_exit_time_riyadh = String(
       values.force_exit_time_riyadh || "",
@@ -331,6 +630,7 @@
       throw inputError("Choose a supported spread denominator.", "spread_denominator");
     }
     finiteNumber(values, "max_premium", 0.01, 100);
+    finiteNumber(values, "bar_minutes", 1, 60, true);
     finiteNumber(values, "max_spread_percent", 0.01, 200);
     finiteNumber(values, "profit_target_percent", 0.1, 500);
     finiteNumber(values, "stop_loss_percent", 0.1, 100);
@@ -361,7 +661,10 @@
     PROFILE_DATE_RANGES,
     RULE_TOGGLE_FIELDS,
     SMI_ENTRY_MODES,
+    ADVANCED_SCOPES,
+    PREMIUM_PRICE_SOURCES,
     WORKFLOW_INPUT_NAMES,
+    buildAdvancedSettings,
     buildInputs,
   });
 });

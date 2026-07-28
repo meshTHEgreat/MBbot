@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive MBbot backtest experiment report.">
   <title>Baseline replay / Workflow #16 · MBbot Research Desk</title>
-  <link rel="stylesheet" href="../assets/styles.css?v=a66870fe1464">
-  <script src="../assets/report-model.js?v=a66870fe1464" defer></script>
-  <script src="../assets/site.js?v=a66870fe1464" defer></script>
+  <link rel="stylesheet" href="../assets/styles.css?v=0abe1051a565">
+  <script src="../assets/report-model.js?v=0abe1051a565" defer></script>
+  <script src="../assets/site.js?v=0abe1051a565" defer></script>
 </head>
 <body data-page="report">
   <a class="skip-link" href="#main-content">Skip to report</a>
@@ -109,6 +109,47 @@
           </div>
           <div id="breakdowns"></div>
         </section>
+      </section>
+
+      <section class="decision-section" aria-labelledby="excursion-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-label">Loss-threshold evidence</p>
+            <h2 id="excursion-title">How far trades moved before exit</h2>
+          </div>
+          <p>
+            MAE is the worst executable-bid loss observed from entry through
+            exit. It is measured evidence, not a simulated replacement exit.
+            Because observation stops at the trade's actual exit, an enabled
+            stop loss can truncate this path. Research a candidate threshold
+            with an otherwise identical run where that stop is disabled or
+            set looser.
+          </p>
+        </div>
+        <div class="excursion-summary" id="excursion-summary"></div>
+        <div class="table-scroll">
+          <table>
+            <caption>
+              Threshold reach counts help assess a maximum-loss setting.
+              Winners reached shows profitable trades that would have touched
+              the threshold before their recorded exit; it does not model
+              slippage, later price movement, or counterfactual P&amp;L.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Loss threshold</th>
+                <th scope="col">All reached · share</th>
+                <th scope="col">Winners reached · winner share</th>
+                <th scope="col">Losers reached · loser share</th>
+                <th scope="col">Flat reached · flat share</th>
+              </tr>
+            </thead>
+            <tbody id="stop-loss-reach-data"></tbody>
+          </table>
+        </div>
+        <p class="empty-state" id="excursion-empty" hidden>
+          This legacy report does not contain quote-path excursion evidence.
+        </p>
       </section>
 
       <section class="settings-section" aria-labelledby="settings-title">
