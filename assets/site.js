@@ -2343,18 +2343,134 @@
     const summary = document.getElementById("excursion-summary");
     const body = document.getElementById("stop-loss-reach-data");
     const empty = document.getElementById("excursion-empty");
-    if (!summary || !body || !empty) return;
-    const rows = report.charts?.stop_loss_reach || [];
+    const context = document.getElementById("excursion-context");
+    const explorer = document.querySelector(".excursion-decision-grid");
+    const checklist = document.querySelector(".threshold-checklist");
+    const method = document.querySelector(".excursion-method");
+    const selector = document.getElementById("stop-loss-threshold");
+    const thresholdValue = document.getElementById("threshold-value");
+    const allValue = document.getElementById("threshold-all");
+    const winnerValue = document.getElementById("threshold-winners");
+    const loserValue = document.getElementById("threshold-losers");
+    const interpretation = document.getElementById("threshold-interpretation");
+    const winnerMae = document.getElementById("winner-mae-value");
+    const loserMae = document.getElementById("loser-mae-value");
+    if (
+      !summary ||
+      !body ||
+      !empty ||
+      !context ||
+      !explorer ||
+      !checklist ||
+      !method ||
+      !selector ||
+      !thresholdValue ||
+      !allValue ||
+      !winnerValue ||
+      !loserValue ||
+      !interpretation ||
+      !winnerMae ||
+      !loserMae ||
+      !window.MBbotReportModel
+    ) {
+      return;
+    }
+    const evidence = window.MBbotReportModel.buildStopLossEvidence(report);
+    const rows = evidence.rows;
     const recorded = Number(report.metrics?.excursion_trades || 0);
     summary.replaceChildren();
     body.replaceChildren();
+    selector.replaceChildren();
     if (!recorded || !rows.length) {
       empty.hidden = false;
-      body.closest(".table-scroll")?.setAttribute("hidden", "");
+      context.hidden = true;
+      explorer.hidden = true;
+      checklist.hidden = true;
+      method.hidden = true;
       return;
     }
     empty.hidden = true;
-    body.closest(".table-scroll")?.removeAttribute("hidden");
+    context.hidden = false;
+    explorer.hidden = false;
+    checklist.hidden = false;
+    method.hidden = false;
+
+    const stopLabel =
+      evidence.currentStopPercent === null
+        ? "the configured stop"
+        : `\u2212${formatPercent(evidence.currentStopPercent)}`;
+    if (evidence.currentStopEnabled) {
+      context.className = "excursion-context is-censored";
+      context.replaceChildren(
+        element("strong", { text: `This run used an active ${stopLabel} stop.` }),
+        document.createTextNode(
+          " Recorded paths end at the actual exit, so thresholds at or beyond that stop are censored.",
+        ),
+      );
+    } else {
+      context.className = "excursion-context";
+      context.replaceChildren(
+        element("strong", { text: "No maximum-loss stop was active." }),
+        document.createTextNode(
+          " Recorded paths continue until another configured exit gate closes the trade.",
+        ),
+      );
+    }
+
+    winnerMae.textContent = formatPercent(
+      report.metrics.winning_trade_median_mae_percent,
+    );
+    loserMae.textContent = formatPercent(
+      report.metrics.losing_trade_median_mae_percent,
+    );
+
+    const outcomeText = (outcome) => {
+      const count = outcome.count === null ? "—" : formatNumber(outcome.count, 0);
+      const total = outcome.total === null ? null : formatNumber(outcome.total, 0);
+      const share =
+        outcome.percent === null ? "no group" : formatPercent(outcome.percent);
+      return `${count}${total === null ? "" : ` of ${total}`} \u00b7 ${share}`;
+    };
+    const renderThreshold = (row) => {
+      if (!row) return;
+      thresholdValue.textContent = `\u2212${formatPercent(row.threshold)}`;
+      allValue.textContent = outcomeText(row.all);
+      winnerValue.textContent = outcomeText(row.winners);
+      loserValue.textContent = outcomeText(row.losers);
+
+      const winnersReached = Number(row.winners.count || 0);
+      if (row.censoredByCurrentStop) {
+        interpretation.textContent =
+          `Winning trades that touched this level: ${outcomeText(row.winners)}. ` +
+          `Because the active stop ended paths at ${stopLabel}, this row cannot show what happened after that exit. Rerun to measure a different stop.`;
+      } else if (winnersReached > 0) {
+        interpretation.textContent =
+          `${formatNumber(winnersReached, 0)} recorded winner${winnersReached === 1 ? "" : "s"} ` +
+          `touched this loss level before closing profitably. A stop here could interrupt recoveries; rerun it before drawing a P&L conclusion.`;
+      } else {
+        interpretation.textContent =
+          "No recorded winner touched this level before its exit. Test it in a separate run; this count does not simulate fills or P&L.";
+      }
+      interpretation.classList.toggle("is-censored", row.censoredByCurrentStop);
+    };
+
+    rows.forEach((row) => {
+      selector.append(
+        element("option", {
+          value: String(row.threshold),
+          text: `\u2212${formatPercent(row.threshold)}`,
+        }),
+      );
+    });
+    selector.value = String(evidence.defaultThreshold);
+    renderThreshold(
+      rows.find((row) => row.threshold === evidence.defaultThreshold) || rows[0],
+    );
+    selector.addEventListener("change", () => {
+      const selected = Number(selector.value);
+      renderThreshold(rows.find((row) => row.threshold === selected));
+    });
+
     summary.replaceChildren(
       metricNode(
         "Trades measured",
@@ -2396,30 +2512,30 @@
         element("tr", {}, [
           element("th", {
             scope: "row",
-            text: formatPercent(row.threshold_percent),
+            text: `\u2212${formatPercent(row.threshold)}`,
           }),
           element("td", {
             text: countAndRate(
-              row.trades_reached,
-              row.trades_reached_percent,
+              row.all.count,
+              row.all.percent,
             ),
           }),
           element("td", {
             text: countAndRate(
-              row.winning_trades_reached,
-              row.winning_trades_reached_percent,
+              row.winners.count,
+              row.winners.percent,
             ),
           }),
           element("td", {
             text: countAndRate(
-              row.losing_trades_reached,
-              row.losing_trades_reached_percent,
+              row.losers.count,
+              row.losers.percent,
             ),
           }),
           element("td", {
             text: countAndRate(
-              row.flat_trades_reached,
-              row.flat_trades_reached_percent,
+              row.flat.count,
+              row.flat.percent,
             ),
           }),
         ]),

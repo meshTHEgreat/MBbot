@@ -266,6 +266,83 @@
       );
   }
 
+  function buildStopLossEvidence(report) {
+    const metrics = report?.metrics || {};
+    const exit = report?.strategy?.settings?.exit || {};
+    const finiteNumber = (value) => {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    };
+    const total = finiteNumber(
+      metrics.excursion_trades ?? metrics.closed_trades,
+    );
+    const groupTotals = {
+      all: total,
+      winners: finiteNumber(metrics.wins),
+      losers: finiteNumber(metrics.losses),
+      flat: finiteNumber(metrics.flat),
+    };
+    const rows = (report?.charts?.stop_loss_reach || [])
+      .map((row) => {
+        const threshold = finiteNumber(row.threshold_percent);
+        if (threshold === null) return null;
+        return {
+          threshold,
+          all: {
+            count: finiteNumber(row.trades_reached),
+            percent: finiteNumber(row.trades_reached_percent),
+            total: groupTotals.all,
+          },
+          winners: {
+            count: finiteNumber(row.winning_trades_reached),
+            percent: finiteNumber(row.winning_trades_reached_percent),
+            total: groupTotals.winners,
+          },
+          losers: {
+            count: finiteNumber(row.losing_trades_reached),
+            percent: finiteNumber(row.losing_trades_reached_percent),
+            total: groupTotals.losers,
+          },
+          flat: {
+            count: finiteNumber(row.flat_trades_reached),
+            percent: finiteNumber(row.flat_trades_reached_percent),
+            total: groupTotals.flat,
+          },
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.threshold - b.threshold);
+    const currentStopEnabled = exit.stop_loss_enabled === true;
+    const currentStopPercent = finiteNumber(exit.stop_loss_percent);
+    const medianMae = finiteNumber(metrics.median_mae_percent);
+    const target =
+      currentStopEnabled && currentStopPercent !== null
+        ? currentStopPercent
+        : medianMae;
+    const defaultRow =
+      target === null || !rows.length
+        ? rows[0] || null
+        : rows.reduce((closest, row) =>
+            Math.abs(row.threshold - target) <
+            Math.abs(closest.threshold - target)
+              ? row
+              : closest,
+          );
+    return {
+      currentStopEnabled,
+      currentStopPercent,
+      defaultThreshold: defaultRow?.threshold ?? null,
+      groupTotals,
+      rows: rows.map((row) => ({
+        ...row,
+        censoredByCurrentStop:
+          currentStopEnabled &&
+          currentStopPercent !== null &&
+          row.threshold >= currentStopPercent,
+      })),
+    };
+  }
+
   function isTimelineField(column) {
     return (
       column === "session_date" ||
@@ -334,6 +411,7 @@
 
   return Object.freeze({
     buildCompatibilityRows,
+    buildStopLossEvidence,
     compareTradeValues,
     differingSettings,
     groupTradeColumns,
