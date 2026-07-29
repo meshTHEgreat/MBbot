@@ -2,11 +2,12 @@
 
 This generated index is rebuilt whenever a report is published. Rows are ordered newest first.
 
-- **Index updated (UTC):** `2026-07-29T18:16:56.239932Z`
+- **Index updated (UTC):** `2026-07-29T19:05:41.414344Z`
 - **Latest pointer:** [reports/latest-summary.md](latest-summary.md)
 
 | Report | Name | File name | Created (UTC) | Raw report | Page |
 |---:|---|---|---|---|---|
+| #92 | Baseline replay / Workflow #92 | `github-30479927047-1.html` | `2026-07-29T19:00:54.777827Z` | [Raw](https://raw.githubusercontent.com/meshTHEgreat/MBbot/main/reports/github-30479927047-1.html) | [Open](https://meshthegreat.github.io/MBbot/reports/github-30479927047-1.html) |
 | #91 | Baseline replay / Workflow #91 | `github-30475996562-1.html` | `2026-07-29T18:12:17.470185Z` | [Raw](https://raw.githubusercontent.com/meshTHEgreat/MBbot/main/reports/github-30475996562-1.html) | [Open](https://meshthegreat.github.io/MBbot/reports/github-30475996562-1.html) |
 | #90 | Baseline replay / Workflow #90 | `github-30471637254-1.html` | `2026-07-29T17:35:39.471795Z` | [Raw](https://raw.githubusercontent.com/meshTHEgreat/MBbot/main/reports/github-30471637254-1.html) | [Open](https://meshthegreat.github.io/MBbot/reports/github-30471637254-1.html) |
 | #89 | Baseline replay / Workflow #89 | `github-30471231956-1.html` | `2026-07-29T17:00:50.724315Z` | [Raw](https://raw.githubusercontent.com/meshTHEgreat/MBbot/main/reports/github-30471231956-1.html) | [Open](https://meshthegreat.github.io/MBbot/reports/github-30471231956-1.html) |
