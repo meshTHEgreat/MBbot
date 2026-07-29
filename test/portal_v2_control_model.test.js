@@ -17,7 +17,7 @@ function values(overrides = {}) {
   };
 }
 
-test("builds the exact 25-field v2 request", () => {
+test("builds the exact 25-field v3 request with v2 provenance", () => {
   const inputs = model.buildInputs(values(), true);
   assert.equal(Object.keys(inputs).length, 25);
   assert.deepEqual(
@@ -28,6 +28,14 @@ test("builds the exact 25-field v2 request", () => {
   assert.equal(inputs.end_date, "2026-05-22");
   assert.equal(inputs.commission_per_contract, 0.65);
   assert.equal(inputs.validate_only, true);
+  assert.deepEqual(JSON.parse(inputs.request_envelope), {
+    schema_version: "mbbot.backtest-control.request.v3",
+    ui: "v2",
+    window_preset: "discovery",
+    holdout_burn_acknowledgement: false,
+    commission_preset: "reference",
+    unrealistic_costs_acknowledged: false,
+  });
 });
 
 test("safe preview requests never default to a validation-only runner run", () => {

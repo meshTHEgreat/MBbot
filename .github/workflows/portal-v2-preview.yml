@@ -5,6 +5,11 @@ on:
     branches: ["portal-v2"]
     paths:
       - ".github/workflows/portal-v2-preview.yml"
+      - "index.html"
+      - "assets/backtest-control-model.js"
+      - "assets/site.js"
+      - "assets/styles.css"
+      - "test/**"
       - "v2/**"
       - "ui/**"
   workflow_dispatch:
@@ -32,22 +37,27 @@ jobs:
           ref: ${{ github.sha }}
           path: preview-source
 
-      - name: Overlay preview-only paths
+      - name: Overlay guarded classic and guided portal candidates
         shell: bash
         run: |
           set -euo pipefail
           test -f live-site/index.html
+          test -f preview-source/index.html
           test -f preview-source/v2/index.html
-          live_index_before="$(sha256sum live-site/index.html)"
 
+          cp preview-source/index.html live-site/index.html
+          cp preview-source/assets/backtest-control-model.js live-site/assets/backtest-control-model.js
+          cp preview-source/assets/site.js live-site/assets/site.js
+          cp preview-source/assets/styles.css live-site/assets/styles.css
           rm -rf live-site/v2 live-site/ui
           cp -R preview-source/v2 live-site/v2
+          cp preview-source/v2/site-config.preview.js live-site/v2/site-config.js
           if [[ -d preview-source/ui ]]; then
             cp -R preview-source/ui live-site/ui
           fi
 
-          live_index_after="$(sha256sum live-site/index.html)"
-          test "$live_index_before" = "$live_index_after"
+          cmp preview-source/index.html live-site/index.html
+          cmp preview-source/v2/index.html live-site/v2/index.html
 
       - name: Enforce static-only Pages artifact
         shell: bash

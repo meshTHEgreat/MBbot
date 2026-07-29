@@ -1,4 +1,4 @@
 window.MBbotPortalV2Config = Object.freeze({
   backtestDispatchUrl:
-    "https://mbbot-backtest-dispatch-preview.alhazmimeshari.workers.dev",
+    "https://mbbot-backtest-dispatch.alhazmimeshari.workers.dev",
 });

@@ -10,7 +10,7 @@
 })(typeof globalThis === "object" ? globalThis : this, function createModel() {
   "use strict";
 
-  const REQUEST_SCHEMA = "mbbot.backtest-control.request.v2";
+  const REQUEST_SCHEMA = "mbbot.backtest-control.request.v3";
   const DATASET_PROFILE =
     "thetadata-options-2026-04-27-to-2026-07-24";
   const WINDOWS = Object.freeze({
@@ -201,7 +201,7 @@
       ({ start, end } = WINDOWS.holdout);
       if (values.holdout_burn_acknowledgement !== true) {
         throw inputError(
-          "Acknowledge the one-time holdout burn before using holdout data.",
+          "Acknowledge the one-time holdout use before using holdout data.",
           "window_preset",
         );
       }
@@ -234,6 +234,7 @@
 
     const envelope = {
       schema_version: REQUEST_SCHEMA,
+      ui: "v2",
       window_preset: preset,
       holdout_burn_acknowledgement:
         values.holdout_burn_acknowledgement === true,

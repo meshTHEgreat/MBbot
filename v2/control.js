@@ -254,7 +254,7 @@
       parsed.search ||
       parsed.hash
     ) {
-      throw new Error("Preview gateway URL is not safe.");
+      throw new Error("Gateway URL is not safe.");
     }
     return parsed.href.replace(/\/+$/, "");
   }
@@ -277,7 +277,7 @@
     }
     if (!response.ok) {
       throw new Error(
-        payload.message || `Preview gateway returned HTTP ${response.status}.`,
+        payload.message || `Gateway returned HTTP ${response.status}.`,
       );
     }
     return payload;
@@ -322,7 +322,7 @@
         setStatus(
           "success",
           "Report generated",
-          "The preview report is publishing under /v2 only.",
+          "The guided-portal report is publishing under /v2.",
         );
         return;
       }

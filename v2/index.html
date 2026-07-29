@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>MBbot Portal v2 — Safety Preview</title>
+  <title>MBbot Guided Portal v2</title>
   <link rel="stylesheet" href="control.css">
   <script src="site-config.js" defer></script>
   <script src="control-model.js" defer></script>
@@ -12,19 +11,20 @@
 </head>
 <body>
   <main class="shell">
-    <nav class="topline" aria-label="Preview navigation">
-      <a class="brand" href="../index.html">MBbot Research Desk</a>
-      <span class="preview-chip">Hidden preview · portal-v2</span>
+    <nav class="topline" aria-label="Portal navigation">
+      <span class="brand">MBbot Research Desk</span>
+      <span class="preview-chip">Guided portal v2</span>
       <span class="engine-chip">Phase-2 parity · 71/71 green</span>
+      <a class="portal-switcher" href="../index.html">Classic portal →</a>
     </nav>
 
     <header class="hero">
-      <p class="eyebrow">Build-order step 3 · safety cutover slice</p>
+      <p class="eyebrow">Guided portal v2 · guarded runner</p>
       <h1>Protect the window. Price the trade honestly.</h1>
       <p class="lede">
-        This preview wires only Data &amp; Window and Execution &amp; Costs to
+        This release wires Data &amp; Window and Execution &amp; Costs to
         the real offline runner. The remaining strategy stages stay fixed
-        until their Phase-2 controls arrive. The live portal is unchanged.
+        until their Phase-2 controls are engine-backed.
       </p>
     </header>
 
@@ -226,7 +226,7 @@
           <div class="field">
             <label for="experiment-label">Experiment label</label>
             <input id="experiment-label" name="experiment_label" type="text"
-              value="Portal v2 safety preview" maxlength="80" required>
+              value="Guided portal v2 run" maxlength="80" required>
           </div>
 
           <div class="field">
@@ -255,7 +255,7 @@
           <p id="form-error" class="form-error" role="alert"
             tabindex="-1" hidden></p>
           <a id="result-link" class="result-link" href="#" hidden>
-            Open preview report
+            Open guided-portal report
           </a>
         </section>
       </div>
@@ -276,7 +276,7 @@
     aria-labelledby="burn-title" aria-describedby="burn-copy" hidden>
     <div class="dialog-body">
       <p class="eyebrow">Irreversible evidence decision</p>
-      <h2 id="burn-title">Burn the holdout?</h2>
+      <h2 id="burn-title">Use the holdout?</h2>
       <p id="burn-copy" class="definition">
         Holdout data proves a finished strategy ONCE. Reading results here
         permanently burns it for this strategy family.
@@ -287,7 +287,7 @@
             aria-describedby="burn-copy">
           <span>
             <strong>I understand and want to use the holdout.</strong>
-            <small>This acknowledgement is recorded in the request and report.</small>
+            <small>This acknowledgement is recorded in the request, report, and run log.</small>
           </span>
         </label>
       </div>

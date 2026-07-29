@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive MBbot backtest archive and experiment reports.">
   <title>MBbot Research Desk</title>
-  <link rel="stylesheet" href="assets/styles.css?v=392474664d01">
-  <script src="assets/site-config.js?v=392474664d01" defer></script>
-  <script src="assets/backtest-control-model.js?v=392474664d01" defer></script>
-  <script src="assets/site.js?v=392474664d01" defer></script>
+  <link rel="stylesheet" href="assets/styles.css?v=427f95cf24a2">
+  <script src="assets/site-config.js?v=427f95cf24a2" defer></script>
+  <script src="assets/backtest-control-model.js?v=427f95cf24a2" defer></script>
+  <script src="assets/site.js?v=427f95cf24a2" defer></script>
 </head>
 <body data-page="home">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -17,10 +17,11 @@
       <span class="brand-mark" aria-hidden="true">M</span>
       <span>
         <strong>MBbot Research Desk</strong>
-        <small>Backtest intelligence</small>
+        <small>Classic portal</small>
       </span>
     </a>
     <nav aria-label="Primary">
+      <a class="portal-version-link" href="v2/index.html">New guided portal (v2) →</a>
       <a href="#backtest-control">Run</a>
       <a href="#archive" aria-current="page">Archive</a>
       <a href="compare.html">Compare</a>
@@ -61,7 +62,7 @@
              aria-labelledby="backtest-control-title">
       <header class="control-heading">
         <div>
-          <p class="section-label">Direct offline execution</p>
+          <p class="section-label">Classic portal · direct offline execution</p>
           <h2 id="backtest-control-title">Build the experiment here.</h2>
         </div>
         <p>
@@ -70,6 +71,8 @@
           the retained local dataset only—never a fresh provider request.
         </p>
       </header>
+      <div id="classic-safety-watermark" class="classic-safety-watermark"
+           role="status" aria-live="polite" hidden></div>
 
       <div class="control-workbench">
         <form class="backtest-form" id="backtest-form" novalidate>
@@ -99,27 +102,48 @@
           </div>
 
           <fieldset class="control-fieldset date-range-fieldset">
-            <legend>Replay window · America/New_York sessions</legend>
+            <legend>Stage 0 guard · replay window</legend>
             <p class="fieldset-help">
-              The full retained dataset is selected by default. Narrow the
-              inclusive range only when the experiment requires it; report
-              timestamps also include Asia/Riyadh. An unfinished session is
-              rejected instead of silently skipped.
+              Discovery is the default strategy-development window. Holdout
+              is a one-time proof and always requires an explicit
+              acknowledgement before its fixed dates can be used.
             </p>
+            <div class="safety-choice-grid" role="radiogroup"
+                 aria-label="Window preset">
+              <label class="control-check">
+                <input name="window_preset" type="radio"
+                       value="discovery" checked>
+                <span><strong>Discovery (recommended)</strong><small>27 Apr–22 May 2026</small></span>
+              </label>
+              <label class="control-check">
+                <input name="window_preset" type="radio"
+                       value="custom_discovery">
+                <span><strong>Custom inside discovery</strong><small>Dates remain clamped to discovery.</small></span>
+              </label>
+              <label class="control-check control-check--warning">
+                <input name="window_preset" type="radio" value="holdout">
+                <span><strong>Holdout ⚠</strong><small>26 May–24 Jul 2026 · acknowledgement required</small></span>
+              </label>
+            </div>
             <div class="control-field-grid control-field-grid--two">
               <label class="control-field">
                 <span>Start date</span>
                 <input name="start_date" type="date" value="2026-04-27"
-                       min="2026-04-27" max="2026-07-24" required>
+                       min="2026-04-27" max="2026-05-22" required disabled
+                       aria-describedby="classic-window-reason">
               </label>
               <label class="control-field">
                 <span>End date</span>
-                <input name="end_date" type="date" value="2026-07-24"
-                       min="2026-04-27" max="2026-07-24" required>
+                <input name="end_date" type="date" value="2026-05-22"
+                       min="2026-04-27" max="2026-05-22" required disabled
+                       aria-describedby="classic-window-reason">
               </label>
             </div>
+            <p class="fieldset-help" id="classic-window-reason">
+              Set by Discovery. Choose Custom inside discovery to edit.
+            </p>
             <button class="quiet-button range-reset" id="reset-date-range"
-                    type="button">Use full dataset · 27 Apr–24 Jul 2026</button>
+                    type="button" disabled>Reset custom discovery dates</button>
           </fieldset>
 
           <fieldset class="control-fieldset symbol-fieldset">
@@ -850,12 +874,21 @@
                   <input name="contracts_per_trade" type="number" value="1"
                          min="1" max="100" step="1" required>
                 </label>
-                <label class="control-field">
-                  <span>Commission per contract</span>
-                  <span class="input-affix"><span>$</span><input
-                        name="commission_per_contract" type="number" value="0"
-                        min="0" max="100" step="0.01" required></span>
-                </label>
+                <div class="control-field">
+                  <span>Commission per contract per side</span>
+                  <div class="commission-choice-grid" role="radiogroup"
+                       aria-label="Commission preset">
+                    <label><input name="commission_preset" type="radio"
+                                  value="reference" checked><span>$0.65 reference</span></label>
+                    <label><input name="commission_preset" type="radio"
+                                  value="stress"><span>$1.30 stress</span></label>
+                    <label><input name="commission_preset" type="radio"
+                                  value="zero"><span>$0 comparison ⚠</span></label>
+                  </div>
+                  <input name="commission_per_contract" type="number"
+                         value="0.65" min="0" max="100" step="0.01" required
+                         readonly aria-label="Selected commission amount">
+                </div>
               </div>
               <div class="control-check-grid">
                 <label class="control-check">
@@ -863,6 +896,14 @@
                          data-controls="entry_delay_minutes,entry_cutoff_minutes"
                          checked>
                   <span><strong>Entry window enabled</strong><small>Use the delay and pre-close cutoff.</small></span>
+                </label>
+                <label class="control-check control-check--warning">
+                  <input id="classic-zero-cost-ack"
+                         name="unrealistic_costs_acknowledged"
+                         type="checkbox" disabled
+                         aria-describedby="classic-zero-cost-reason">
+                  <span><strong>Unrealistic costs acknowledged</strong><small
+                    id="classic-zero-cost-reason">Available only after selecting $0 comparison.</small></span>
                 </label>
               </div>
             </fieldset>
@@ -1070,6 +1111,31 @@
       </div>
     </section>
   </main>
+
+  <dialog id="classic-holdout-dialog" class="classic-alertdialog"
+          role="alertdialog" aria-modal="true"
+          aria-labelledby="classic-holdout-title"
+          aria-describedby="classic-holdout-copy">
+    <div class="classic-dialog-body">
+      <p class="section-label">Irreversible evidence decision</p>
+      <h2 id="classic-holdout-title">Use the holdout?</h2>
+      <p id="classic-holdout-copy">
+        Holdout data proves a finished strategy ONCE. Reading results here
+        permanently burns it for this strategy family.
+      </p>
+      <label class="control-check control-check--warning">
+        <input id="classic-holdout-ack" type="checkbox"
+               aria-describedby="classic-holdout-copy">
+        <span><strong>I understand and want to use the holdout.</strong><small>This acknowledgement is stamped in the request and run log.</small></span>
+      </label>
+      <div class="classic-dialog-actions">
+        <button class="primary-action" id="classic-holdout-confirm"
+                type="button" disabled>Acknowledge and use holdout</button>
+        <button class="secondary-action" id="classic-holdout-cancel"
+                type="button">Keep discovery window</button>
+      </div>
+    </div>
+  </dialog>
 
   <aside class="compare-tray" id="compare-tray" aria-labelledby="compare-tray-title" hidden>
     <div>
