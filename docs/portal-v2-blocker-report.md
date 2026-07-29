@@ -10,10 +10,12 @@ Blocked build-order step: 2 — Engine port + CI parity test
 
 - Created the `portal-v2` branch from clean `main` at `181d030`.
 - Added a hidden `/v2/index.html` holding path.
-- Added a branch-only Pages preview workflow.
+- Added a branch-only preview-artifact workflow. The repository's
+  `github-pages` environment permits only `main`, so a branch Pages deployment
+  is intentionally not used.
 - The preview workflow checks out the latest `main` site, overlays only
-  `/v2` and `/ui`, and verifies the live `index.html` SHA-256 is unchanged
-  before deployment.
+  `/v2` and `/ui`, verifies the live `index.html` SHA-256 is unchanged, and
+  uploads the complete preview as a seven-day Actions artifact.
 - The current live `index.html` has not been modified.
 
 ## Missing transfer package

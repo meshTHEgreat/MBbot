@@ -1,4 +1,4 @@
-name: Deploy portal v2 preview
+name: Build portal v2 preview artifact
 
 on:
   push:
@@ -11,18 +11,13 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: portal-v2-preview
   cancel-in-progress: true
 
 jobs:
-  deploy-preview:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}v2/index.html
+  build-preview:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the current live site
@@ -75,10 +70,9 @@ jobs:
           fi
 
       - name: Upload live site plus portal v2 preview
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
+          name: portal-v2-preview-${{ github.sha }}
           path: live-site
-
-      - name: Deploy preview
-        id: deployment
-        uses: actions/deploy-pages@v5
+          if-no-files-found: error
+          retention-days: 7
