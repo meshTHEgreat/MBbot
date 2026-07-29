@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBbot Guided Portal v2</title>
+  <link rel="stylesheet" href="control.css">
+  <script src="site-config.js" defer></script>
+  <script src="control-model.js" defer></script>
+  <script src="control.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="topline" aria-label="Portal navigation">
+      <span class="brand">MBbot Research Desk</span>
+      <span class="preview-chip">Guided portal v2</span>
+      <span class="engine-chip">Phase-2 parity · 71/71 green</span>
+      <a class="portal-switcher" href="../index.html">Classic portal →</a>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Guided portal v2 · guarded runner</p>
+      <h1>Protect the window. Price the trade honestly.</h1>
+      <p class="lede">
+        This release wires Data &amp; Window and Execution &amp; Costs to
+        the real offline runner. The remaining strategy stages stay fixed
+        until their Phase-2 controls are engine-backed.
+      </p>
+    </header>
+
+    <p class="legacy-banner" role="note">
+      <strong>Legacy MACD baseline — comparison only.</strong>
+      The trigger remains fixed in this early safety slice; it is not the
+      preregistered P1 trend-persistence family.
+    </p>
+    <div id="safety-watermark" class="watermark" role="status" hidden></div>
+
+    <form id="safety-form" novalidate>
+      <div class="grid">
+        <section class="stage" aria-labelledby="stage-data-title">
+          <div class="stage-head">
+            <div>
+              <span class="stage-number">Stage 0</span>
+              <h2 id="stage-data-title">Data &amp; Window</h2>
+              <p class="definition">
+                Choose what evidence the strategy may see. Holdout is a
+                one-time proof, not another tuning surface.
+              </p>
+            </div>
+            <button class="info-button" type="button"
+              aria-label="Explain discovery and holdout windows"
+              aria-expanded="false" aria-controls="window-help">()</button>
+          </div>
+          <p id="window-help" class="disclosure" hidden>
+            Discovery data may be inspected repeatedly while building the
+            strategy. Reading holdout results burns that evidence for this
+            strategy family.
+          </p>
+
+          <div class="field">
+            <label class="label" for="dataset-v1">Dataset</label>
+            <input id="dataset-v1" value="v1 — 3 months (62 sessions, minute)"
+              aria-describedby="dataset-reason" disabled>
+            <span id="dataset-reason" class="reason">
+              v2 — 12 months + Tier-1 Greeks remains visible in the full
+              build, but is not yet transferred.
+            </span>
+          </div>
+
+          <fieldset class="control-group">
+            <legend>Window preset</legend>
+            <div class="choice-list">
+              <label class="choice">
+                <input name="window_preset" type="radio"
+                  value="discovery" checked>
+                <span>
+                  <strong>Discovery (recommended)</strong>
+                  <small>27 Apr–22 May 2026 · safe for strategy development</small>
+                </span>
+              </label>
+              <label class="choice">
+                <input name="window_preset" type="radio"
+                  value="custom_discovery">
+                <span>
+                  <strong>Custom inside discovery</strong>
+                  <small>Date pickers stay clamped to the discovery boundary</small>
+                </span>
+              </label>
+              <label class="choice">
+                <input name="window_preset" type="radio" value="holdout">
+                <span>
+                  <strong>Holdout ⚠</strong>
+                  <small>26 May–24 Jul 2026 · requires acknowledgement</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div id="custom-dates" class="date-shell" data-enabled="false">
+            <div class="date-grid">
+              <div class="field">
+                <label for="start-date">Start date</label>
+                <input id="start-date" name="start_date" type="date"
+                  min="2026-04-27" max="2026-05-22"
+                  value="2026-04-27" aria-describedby="custom-date-reason"
+                  disabled>
+              </div>
+              <div class="field">
+                <label for="end-date">End date</label>
+                <input id="end-date" name="end_date" type="date"
+                  min="2026-04-27" max="2026-05-22"
+                  value="2026-05-22" aria-describedby="custom-date-reason"
+                  disabled>
+              </div>
+            </div>
+            <p id="custom-date-reason" class="reason">
+              Set by Window preset; choose Custom inside discovery to edit.
+            </p>
+          </div>
+          <p id="window-run-count" class="run-count">
+            You have run 14 configs on this window.
+          </p>
+
+          <fieldset class="control-group" aria-describedby="symbols-help">
+            <legend>Symbols</legend>
+            <div class="symbol-grid">
+              <label class="choice">
+                <input name="symbol" type="checkbox" value="SPY" checked>
+                <strong>SPY</strong>
+              </label>
+              <label class="choice">
+                <input name="symbol" type="checkbox" value="QQQ" checked>
+                <strong>QQQ</strong>
+              </label>
+              <label class="choice">
+                <input name="symbol" type="checkbox" value="AAPL">
+                <strong>AAPL</strong>
+              </label>
+              <label class="choice">
+                <input name="symbol" type="checkbox" value="NVDA">
+                <strong>NVDA</strong>
+              </label>
+              <label class="choice">
+                <input name="symbol" type="checkbox" value="TSLA">
+                <strong>TSLA</strong>
+              </label>
+            </div>
+            <p id="symbols-help" class="helper">
+              SPY + QQQ are the discovery default. Single names carry
+              unobservable event risk, so use them for robustness only.
+            </p>
+          </fieldset>
+        </section>
+
+        <section class="stage" aria-labelledby="stage-cost-title">
+          <div class="stage-head">
+            <div>
+              <span class="stage-number">Stage 5</span>
+              <h2 id="stage-cost-title">Execution &amp; Costs</h2>
+              <p class="definition">
+                Convert a signal into a fill and charge the friction a live
+                trade would actually pay.
+              </p>
+            </div>
+            <button class="info-button" type="button"
+              aria-label="Explain the fill model"
+              aria-expanded="false" aria-controls="fill-help">()</button>
+          </div>
+          <p id="fill-help" class="disclosure" hidden>
+            Buy at the first valid ask after the completed trigger bar; sell
+            at the first valid bid. Execution stays at one-minute resolution.
+          </p>
+
+          <fieldset class="control-group">
+            <legend>Commission per contract per side</legend>
+            <div class="choice-list costs">
+              <label class="choice">
+                <input name="commission_preset" type="radio"
+                  value="reference" checked>
+                <span>
+                  <strong>$0.65 reference</strong>
+                  <small>Default honest-cost assumption</small>
+                </span>
+              </label>
+              <label class="choice">
+                <input name="commission_preset" type="radio" value="stress">
+                <span>
+                  <strong>$1.30 stress</strong>
+                  <small>Double-commission sensitivity</small>
+                </span>
+              </label>
+              <label class="choice" aria-describedby="both-reason">
+                <input name="commission_preset" type="radio"
+                  value="both" disabled>
+                <span>
+                  <strong>Both (dual report)</strong>
+                  <small id="both-reason">
+                    Visible but unavailable: dual columns arrive with Stage 8.
+                  </small>
+                </span>
+              </label>
+              <label class="choice">
+                <input name="commission_preset" type="radio" value="zero">
+                <span>
+                  <strong>$0 comparison ⚠</strong>
+                  <small>Requires explicit unrealistic-cost acknowledgement</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="flag">
+            <label class="choice">
+              <input id="zero-cost-ack"
+                name="unrealistic_costs_acknowledged" type="checkbox"
+                aria-describedby="zero-cost-reason" disabled>
+              <span>
+                <strong>Unrealistic costs acknowledged</strong>
+                <small id="zero-cost-reason">
+                  Available only after selecting the $0 comparison preset.
+                </small>
+              </span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label for="experiment-label">Experiment label</label>
+            <input id="experiment-label" name="experiment_label" type="text"
+              value="Guided portal v2 run" maxlength="80" required>
+          </div>
+
+          <div class="field">
+            <label for="runner-access-key">Runner access key</label>
+            <input id="runner-access-key" name="runner_access_key"
+              type="password" autocomplete="off"
+              aria-describedby="runner-key-help">
+            <span id="runner-key-help" class="reason">
+              Kept only in this tab while following the run; never placed in
+              the URL or report.
+            </span>
+          </div>
+
+          <div class="summary" aria-live="polite">
+            <h3>Exact configuration</h3>
+            <p id="config-sentence"></p>
+            <span class="label">SHA-256</span>
+            <code id="config-hash" class="hash"></code>
+          </div>
+
+          <div id="run-status" class="run-status" data-state="ready"
+            role="status" aria-live="polite">
+            <strong>Ready to validate</strong>
+            <span>Queue stays disabled until this exact configuration passes.</span>
+          </div>
+          <p id="form-error" class="form-error" role="alert"
+            tabindex="-1" hidden></p>
+          <a id="result-link" class="result-link" href="#" hidden>
+            Open guided-portal report
+          </a>
+        </section>
+      </div>
+
+      <div class="sticky-actions" aria-label="Backtest actions">
+        <button id="validate-button" class="button" type="button">
+          Validate only
+        </button>
+        <button id="queue-button" class="button secondary" type="button"
+          disabled>
+          Queue backtest
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <dialog id="burn-dialog" role="alertdialog" aria-modal="true"
+    aria-labelledby="burn-title" aria-describedby="burn-copy" hidden>
+    <div class="dialog-body">
+      <p class="eyebrow">Irreversible evidence decision</p>
+      <h2 id="burn-title">Use the holdout?</h2>
+      <p id="burn-copy" class="definition">
+        Holdout data proves a finished strategy ONCE. Reading results here
+        permanently burns it for this strategy family.
+      </p>
+      <div class="flag">
+        <label class="choice">
+          <input id="burn-ack" type="checkbox"
+            aria-describedby="burn-copy">
+          <span>
+            <strong>I understand and want to use the holdout.</strong>
+            <small>This acknowledgement is recorded in the request, report, and run log.</small>
+          </span>
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button id="burn-confirm" class="button" type="button" disabled>
+          Acknowledge and use holdout
+        </button>
+        <button id="burn-cancel" class="button secondary" type="button">
+          Keep discovery window
+        </button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>

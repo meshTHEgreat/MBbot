@@ -1,0 +1,88 @@
+name: Build portal v2 preview artifact
+
+on:
+  push:
+    branches: ["portal-v2"]
+    paths:
+      - ".github/workflows/portal-v2-preview.yml"
+      - "index.html"
+      - "assets/backtest-control-model.js"
+      - "assets/site.js"
+      - "assets/styles.css"
+      - "test/**"
+      - "v2/**"
+      - "ui/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portal-v2-preview
+  cancel-in-progress: true
+
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the current live site
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: live-site
+
+      - name: Check out the portal v2 branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: preview-source
+
+      - name: Overlay guarded classic and guided portal candidates
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f live-site/index.html
+          test -f preview-source/index.html
+          test -f preview-source/v2/index.html
+
+          cp preview-source/index.html live-site/index.html
+          cp preview-source/assets/backtest-control-model.js live-site/assets/backtest-control-model.js
+          cp preview-source/assets/site.js live-site/assets/site.js
+          cp preview-source/assets/styles.css live-site/assets/styles.css
+          rm -rf live-site/v2 live-site/ui
+          cp -R preview-source/v2 live-site/v2
+          cp preview-source/v2/site-config.preview.js live-site/v2/site-config.js
+          if [[ -d preview-source/ui ]]; then
+            cp -R preview-source/ui live-site/ui
+          fi
+
+          cmp preview-source/index.html live-site/index.html
+          cmp preview-source/v2/index.html live-site/v2/index.html
+
+      - name: Enforce static-only Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f live-site/index.html
+          test -f live-site/v2/index.html
+          prohibited="$(find live-site -type f \( \
+            -name '.env' -o \
+            -name '*.dbn' -o \
+            -name '*.dbn.zst' -o \
+            -name '*.csv' -o \
+            -name '*.toml' -o \
+            -name '*.py' -o \
+            -name '*.pem' \
+          \) -print -quit)"
+          if [[ -n "$prohibited" ]]; then
+            echo "Static Pages artifact contains prohibited local/data file: $prohibited" >&2
+            exit 1
+          fi
+
+      - name: Upload live site plus portal v2 preview
+        uses: actions/upload-artifact@v7
+        with:
+          name: portal-v2-preview-${{ github.sha }}
+          path: live-site
+          if-no-files-found: error
+          retention-days: 7
