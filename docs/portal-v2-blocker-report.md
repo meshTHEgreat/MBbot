@@ -4,6 +4,12 @@ Date: 2026-07-29
 
 Branch: `portal-v2`
 
+> Resolved later on 2026-07-29 by the complete frozen-source transfer and
+> relocation erratum 001. The engine now passes byte-identical X00 parity and
+> 71/71 tests locally. This file is retained as the historical Step 2 record;
+> the current stop is documented in
+> `portal-v2-step3-preview-blocker-report.md`.
+
 Blocked build-order step: 2 — Engine port + CI parity test
 
 ## Completed before the blocker
