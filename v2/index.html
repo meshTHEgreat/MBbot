@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>MBbot Portal v2 Preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      background: #07111f;
+      color: #eef6ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      background:
+        radial-gradient(circle at 15% 10%, #16355d 0, transparent 34rem),
+        #07111f;
+    }
+
+    main {
+      width: min(100%, 42rem);
+      padding: clamp(1.25rem, 5vw, 2.5rem);
+      border: 1px solid #2d4a6c;
+      border-radius: 1.25rem;
+      background: #0c1a2ccc;
+      box-shadow: 0 1.5rem 4rem #0008;
+    }
+
+    .status {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      gap: .6rem;
+      padding: .5rem .85rem;
+      border: 1px solid #b78322;
+      border-radius: 999px;
+      color: #ffd995;
+      background: #3b2a0d;
+      font-weight: 700;
+    }
+
+    .status::before {
+      width: .7rem;
+      height: .7rem;
+      border-radius: 50%;
+      background: #ffbd45;
+      content: "";
+    }
+
+    h1 {
+      margin: 1.5rem 0 .75rem;
+      font-size: clamp(2rem, 9vw, 3.6rem);
+      line-height: .98;
+      letter-spacing: -.05em;
+    }
+
+    p {
+      color: #b9c9db;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    strong {
+      color: #fff;
+    }
+
+    a {
+      display: inline-flex;
+      min-height: 2.75rem;
+      align-items: center;
+      margin-top: 1rem;
+      color: #9fd2ff;
+      font-weight: 700;
+      text-underline-offset: .25rem;
+    }
+
+    a:focus-visible {
+      border-radius: .35rem;
+      outline: .2rem solid #72c7ff;
+      outline-offset: .25rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="status">Engine transfer blocked</span>
+    <h1>Portal v2 preview path is ready.</h1>
+    <p>
+      The live portal remains unchanged. The nine-stage control UI will be
+      added here only after the Phase-2 research engine, feature-store builder,
+      71-test suite, and X00 parity fixture are transferred and pass the
+      required CI parity gate.
+    </p>
+    <p>
+      <strong>No backtest controls on this holding page are wired to the
+      legacy engine.</strong>
+    </p>
+    <a href="../index.html#backtest-control">Return to the current portal</a>
+  </main>
+</body>
+</html>

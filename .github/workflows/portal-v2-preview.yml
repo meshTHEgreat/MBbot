@@ -1,0 +1,84 @@
+name: Deploy portal v2 preview
+
+on:
+  push:
+    branches: ["portal-v2"]
+    paths:
+      - ".github/workflows/portal-v2-preview.yml"
+      - "v2/**"
+      - "ui/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy-preview:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}v2/index.html
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the current live site
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: live-site
+
+      - name: Check out the portal v2 branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          path: preview-source
+
+      - name: Overlay preview-only paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f live-site/index.html
+          test -f preview-source/v2/index.html
+          live_index_before="$(sha256sum live-site/index.html)"
+
+          rm -rf live-site/v2 live-site/ui
+          cp -R preview-source/v2 live-site/v2
+          if [[ -d preview-source/ui ]]; then
+            cp -R preview-source/ui live-site/ui
+          fi
+
+          live_index_after="$(sha256sum live-site/index.html)"
+          test "$live_index_before" = "$live_index_after"
+
+      - name: Enforce static-only Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f live-site/index.html
+          test -f live-site/v2/index.html
+          prohibited="$(find live-site -type f \( \
+            -name '.env' -o \
+            -name '*.dbn' -o \
+            -name '*.dbn.zst' -o \
+            -name '*.csv' -o \
+            -name '*.toml' -o \
+            -name '*.py' -o \
+            -name '*.pem' \
+          \) -print -quit)"
+          if [[ -n "$prohibited" ]]; then
+            echo "Static Pages artifact contains prohibited local/data file: $prohibited" >&2
+            exit 1
+          fi
+
+      - name: Upload live site plus portal v2 preview
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: live-site
+
+      - name: Deploy preview
+        id: deployment
+        uses: actions/deploy-pages@v5
