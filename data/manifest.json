@@ -1,6 +1,703 @@
 {
-  "generated_at": "2026-07-29T06:31:15.850579Z",
+  "generated_at": "2026-07-29T06:52:01.169497Z",
   "reports": [
+    {
+      "authoring": {
+        "baseline_id": null,
+        "hypothesis": "",
+        "next_test": "",
+        "observation": ""
+      },
+      "automation": {
+        "actor": "meshTHEgreat",
+        "application_version": "mbbot 0.1.0",
+        "backtest_entry_point": "mbbot.backtest_cli",
+        "backtest_script_sha256": "b80932494343702211c693ce9e79991b63e7f1a173c02f5ef54c54b599c16a98",
+        "backtest_source_branch": null,
+        "backtest_source_commit_sha": null,
+        "data_access_mode": "offline-only",
+        "dataset_identifier": "thetadata:options-standard-minute:QQQ+SPY+TSLA+AAPL+NVDA:2026-04-27+2026-07-24",
+        "dataset_profile": "thetadata-options-2026-04-27-to-2026-07-24",
+        "dependency_versions": {
+          "mbbot": "0.1.0",
+          "tzdata": "2026.3"
+        },
+        "duration_seconds": 512.863,
+        "ended_at_utc": "2026-07-29T06:52:00.664702Z",
+        "project_python_network_access": false,
+        "provider_api_access": false,
+        "provider_credentials_removed": 0,
+        "public_repository": "meshTHEgreat/MBbot",
+        "python_version": "3.12.10",
+        "report_path": "reports/github-30429068090-1.html",
+        "report_url": "https://meshthegreat.github.io/MBbot/reports/github-30429068090-1.html",
+        "request_timestamp_source": "github_actions_api",
+        "requested_at_project_time": "2026-07-29T09:42:49+03:00",
+        "requested_at_utc": "2026-07-29T06:42:49Z",
+        "run_url": "https://github.com/meshTHEgreat/mbbot-backtest-control/actions/runs/30429068090",
+        "schema_version": "mbbot.backtest.automation.v1",
+        "selected_parameters": {
+          "advanced_settings": {
+            "calculated_gamma": {
+              "enabled": false,
+              "maximum": 100.0,
+              "minimum": 0.0,
+              "model": "black_scholes_from_thetadata_first_order",
+              "scope": "entry"
+            },
+            "delta": {
+              "absolute_value": true,
+              "enabled": false,
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "scope": "entry"
+            },
+            "momentum": {
+              "enabled": false,
+              "lookback_bars": 3,
+              "maximum_percent": 500.0,
+              "minimum_percent": -100.0,
+              "price_source": "midpoint",
+              "scope": "entry"
+            },
+            "premium": {
+              "enabled": false,
+              "maximum": 100.0,
+              "minimum": 0.01,
+              "price_source": "midpoint",
+              "scope": "entry"
+            },
+            "premium_velocity": {
+              "enabled": false,
+              "lookback_bars": 3,
+              "maximum_percent_per_minute": 100.0,
+              "minimum_percent_per_minute": -100.0,
+              "price_source": "midpoint",
+              "scope": "entry"
+            },
+            "theta": {
+              "enabled": false,
+              "maximum": 100.0,
+              "minimum": -100.0,
+              "scope": "entry"
+            },
+            "trade_side": {
+              "classification": "thetadata_opra_trade_condition_only",
+              "enabled": false,
+              "minimum_classified_volume": 1,
+              "minimum_side_share_percent": 50.0,
+              "scope": "entry",
+              "side": "buy"
+            },
+            "trading_activity": {
+              "enabled": false,
+              "maximum_premium_turnover": 1000000000000.0,
+              "maximum_relative_volume": 1000.0,
+              "maximum_trade_count": 10000000,
+              "maximum_volume": 10000000,
+              "minimum_premium_turnover": 0.0,
+              "minimum_relative_volume": 0.0,
+              "minimum_trade_count": 0,
+              "minimum_volume": 0,
+              "premium_turnover_enabled": false,
+              "relative_lookback_bars": 6,
+              "relative_volume_enabled": false,
+              "scope": "entry",
+              "trade_count_enabled": true,
+              "volume_enabled": true
+            }
+          },
+          "allow_zero_dte": true,
+          "bar_minutes": "5",
+          "commission_per_contract": "0",
+          "contracts_per_trade": "1",
+          "dataset_profile": "thetadata-options-2026-04-27-to-2026-07-24",
+          "end_date": "2026-07-24",
+          "entry_cutoff_minutes": "60",
+          "entry_delay_minutes": "15",
+          "entry_window_enabled": true,
+          "experiment_label": "Baseline replay",
+          "fallback_to_next_expiration": true,
+          "force_exit_time_riyadh": "22:20",
+          "macd_ema_seed_method": "sma",
+          "macd_fast_period": "12",
+          "macd_signal_period": "9",
+          "macd_slow_period": "26",
+          "max_premium": "4",
+          "max_premium_enabled": true,
+          "max_spread_enabled": true,
+          "max_spread_percent": "50",
+          "opposite_macd_enabled": true,
+          "opposite_smi_enabled": false,
+          "profit_target_enabled": true,
+          "profit_target_percent": "20",
+          "rsi_enabled": true,
+          "rsi_maximum": "50",
+          "rsi_minimum": "0",
+          "rsi_period": "14",
+          "scan_next_strike_if_nearest_fails": true,
+          "signal_source": "thetadata_option_contract",
+          "smi_d_length": "5",
+          "smi_ema_seed_method": "first",
+          "smi_enabled": true,
+          "smi_entry_mode": "replace_macd",
+          "smi_k_length": "14",
+          "smi_overbought": "40",
+          "smi_oversold": "-40",
+          "smi_signal_length": "5",
+          "smi_zone_filter_enabled": false,
+          "spread_denominator": "midpoint",
+          "start_date": "2026-04-27",
+          "stop_loss_enabled": true,
+          "stop_loss_percent": "50",
+          "symbols": [
+            "QQQ"
+          ],
+          "time_exit_enabled": true,
+          "validate_only": false,
+          "zero_line_filter_enabled": false
+        },
+        "source_branch": "main",
+        "source_commit_sha": "da657a93ae985a962134104cee5a12d6bbac81df",
+        "started_at_utc": "2026-07-29T06:43:27.801739Z",
+        "status": "success",
+        "workflow_name": "Run Local Backtest",
+        "workflow_run_attempt": "1",
+        "workflow_run_id": "30429068090",
+        "workflow_run_number": "71"
+      },
+      "created_at": "2026-07-29T06:50:49.445662Z",
+      "dataset": {
+        "contracts": 3357,
+        "dataset_fingerprint": "427d4af1c4b004c0b641796fc6cc2f1c0c2bc83992db42bdfd40ba8fec7c67f5",
+        "execution_fidelity": "last OPRA NBBO quote per one-minute interval; intraminute ordering unavailable",
+        "first_timestamp": "2026-04-27T09:30:00-04:00",
+        "greek_rules_available": false,
+        "last_timestamp": "2026-07-24T16:00:00-04:00",
+        "market_data_provider": "thetadata",
+        "option_bars": 334917,
+        "option_greek_points": 0,
+        "option_quotes": 254731,
+        "quote_resolution": "1m",
+        "sessions": 62,
+        "signal_bar_providers": [],
+        "signal_bars": 0,
+        "source_files": [
+          {
+            "bytes": 811346593,
+            "filename": "thetadata-options-standard-minute-parquet-set",
+            "rows": 40467096,
+            "sha256": "b66849c80a9faeb6fb28a21aa7d57d608fb444430776c701e8072e04e85ea4c0"
+          }
+        ],
+        "trade_side_points": 0,
+        "trade_side_rule_available": false,
+        "underlying_points": 24242
+      },
+      "id": "github-30429068090-1",
+      "kind": "historical_backtest",
+      "metrics": {
+        "average_holding_minutes": 28.638297872340427,
+        "average_loss": -93.52941176470588,
+        "average_mae_percent": 27.502530188640712,
+        "average_mfe_percent": 18.192516671651596,
+        "average_return_percent": -0.6769285325691201,
+        "average_win": 52.71666666666667,
+        "closed_trades": 188,
+        "collisions_rejected": 0,
+        "entries_skipped_missing_data": 0,
+        "excursion_trades": 188,
+        "expectancy": -0.18085106382978716,
+        "flat": 0,
+        "gross_loss": 6360.0,
+        "gross_profit": 6326.0,
+        "losing_trade_median_mae_percent": 50.859654206510186,
+        "losses": 68,
+        "max_drawdown": 916.0,
+        "median_mae_percent": 25.253623188405793,
+        "median_mfe_percent": 21.143790849673202,
+        "median_return_percent": 21.143790849673202,
+        "net_pnl": -33.999999999999986,
+        "open_positions": 0,
+        "p75_mae_percent": 50.031969309462916,
+        "p90_mae_percent": 52.16627634660422,
+        "p95_mae_percent": 54.42233866419228,
+        "profit_factor": 0.9946540880503144,
+        "win_rate": 63.829787234042556,
+        "winning_trade_median_mae_percent": 12.778295536916223,
+        "wins": 120,
+        "worst_mae_percent": 67.40331491712708
+      },
+      "quality": {
+        "label": "research",
+        "notes": []
+      },
+      "status": "research",
+      "strategy": {
+        "fingerprint": "aa2ecfdc466ec03d0b20b1c78ae48ee56b8823d2b7badc59d1ab8c868ea41add",
+        "settings_flat": [
+          {
+            "path": "backtest.bar_minutes",
+            "value": "5"
+          },
+          {
+            "path": "backtest.commission_per_contract",
+            "value": "0.0"
+          },
+          {
+            "path": "backtest.contract_multiplier",
+            "value": "100"
+          },
+          {
+            "path": "backtest.contracts_per_trade",
+            "value": "1"
+          },
+          {
+            "path": "backtest.dataset_dir",
+            "value": "data/backtest"
+          },
+          {
+            "path": "backtest.end_date",
+            "value": "2026-07-24"
+          },
+          {
+            "path": "backtest.entry_fill",
+            "value": "first_ask_after_completed_signal_bar"
+          },
+          {
+            "path": "backtest.market_timezone",
+            "value": "America/New_York"
+          },
+          {
+            "path": "backtest.missing_contract_bar_policy",
+            "value": "reject_signal"
+          },
+          {
+            "path": "backtest.monitor_sides",
+            "value": "call, put"
+          },
+          {
+            "path": "backtest.same_bar_collision",
+            "value": "reject_both"
+          },
+          {
+            "path": "backtest.selection_quote_delay_seconds",
+            "value": "15"
+          },
+          {
+            "path": "backtest.start_date",
+            "value": "2026-04-27"
+          },
+          {
+            "path": "backtest.symbols",
+            "value": "QQQ"
+          },
+          {
+            "path": "backtest.underlying_max_age_seconds",
+            "value": "15"
+          },
+          {
+            "path": "backtest.user_timezone",
+            "value": "Asia/Riyadh"
+          },
+          {
+            "path": "calculated_gamma.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "calculated_gamma.maximum",
+            "value": "100.0"
+          },
+          {
+            "path": "calculated_gamma.minimum",
+            "value": "0.0"
+          },
+          {
+            "path": "calculated_gamma.model",
+            "value": "black_scholes_from_thetadata_first_order"
+          },
+          {
+            "path": "calculated_gamma.scope",
+            "value": "entry"
+          },
+          {
+            "path": "contract.allow_zero_dte",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.fallback_to_next_expiration",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_premium",
+            "value": "4.0"
+          },
+          {
+            "path": "contract.max_premium_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_spread_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.max_spread_percent",
+            "value": "50.0"
+          },
+          {
+            "path": "contract.premium_field",
+            "value": "ask"
+          },
+          {
+            "path": "contract.scan_next_strike_if_nearest_fails",
+            "value": "enabled"
+          },
+          {
+            "path": "contract.spread_denominator",
+            "value": "midpoint"
+          },
+          {
+            "path": "contract.strike_policy",
+            "value": "nearest_itm_atm"
+          },
+          {
+            "path": "delta.absolute_value",
+            "value": "enabled"
+          },
+          {
+            "path": "delta.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "delta.maximum",
+            "value": "1.0"
+          },
+          {
+            "path": "delta.minimum",
+            "value": "0.0"
+          },
+          {
+            "path": "delta.scope",
+            "value": "entry"
+          },
+          {
+            "path": "exit.entry_price_field",
+            "value": "ask"
+          },
+          {
+            "path": "exit.opposite_macd_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "exit.profit_price_field",
+            "value": "bid"
+          },
+          {
+            "path": "exit.profit_target_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "exit.profit_target_percent",
+            "value": "20.0"
+          },
+          {
+            "path": "exit.simultaneous_priority",
+            "value": "profit_target, stop_loss, opposite_macd, opposite_smi, advanced_metric, time_exit"
+          },
+          {
+            "path": "exit.stop_loss_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "exit.stop_loss_percent",
+            "value": "50.0"
+          },
+          {
+            "path": "macd.control_signal_source",
+            "value": "thetadata_option_contract"
+          },
+          {
+            "path": "macd.ema_seed_method",
+            "value": "sma"
+          },
+          {
+            "path": "macd.fast_period",
+            "value": "12"
+          },
+          {
+            "path": "macd.price_source",
+            "value": "trade_close"
+          },
+          {
+            "path": "macd.signal_period",
+            "value": "9"
+          },
+          {
+            "path": "macd.slow_period",
+            "value": "26"
+          },
+          {
+            "path": "macd.source",
+            "value": "option_contract"
+          },
+          {
+            "path": "macd.zero_line_filter_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "momentum.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "momentum.lookback_bars",
+            "value": "3"
+          },
+          {
+            "path": "momentum.maximum_percent",
+            "value": "500.0"
+          },
+          {
+            "path": "momentum.minimum_percent",
+            "value": "-100.0"
+          },
+          {
+            "path": "momentum.price_source",
+            "value": "midpoint"
+          },
+          {
+            "path": "momentum.scope",
+            "value": "entry"
+          },
+          {
+            "path": "premium.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "premium.maximum",
+            "value": "100.0"
+          },
+          {
+            "path": "premium.minimum",
+            "value": "0.01"
+          },
+          {
+            "path": "premium.price_source",
+            "value": "midpoint"
+          },
+          {
+            "path": "premium.scope",
+            "value": "entry"
+          },
+          {
+            "path": "premium_velocity.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "premium_velocity.lookback_bars",
+            "value": "3"
+          },
+          {
+            "path": "premium_velocity.maximum_percent_per_minute",
+            "value": "100.0"
+          },
+          {
+            "path": "premium_velocity.minimum_percent_per_minute",
+            "value": "-100.0"
+          },
+          {
+            "path": "premium_velocity.price_source",
+            "value": "midpoint"
+          },
+          {
+            "path": "premium_velocity.scope",
+            "value": "entry"
+          },
+          {
+            "path": "rsi.enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "rsi.maximum",
+            "value": "50.0"
+          },
+          {
+            "path": "rsi.minimum",
+            "value": "0.0"
+          },
+          {
+            "path": "rsi.period",
+            "value": "14"
+          },
+          {
+            "path": "schedule.entry_cutoff_minutes_before_close",
+            "value": "60"
+          },
+          {
+            "path": "schedule.entry_delay_minutes_after_open",
+            "value": "15"
+          },
+          {
+            "path": "schedule.entry_window_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "schedule.force_exit_time_riyadh",
+            "value": "22:20"
+          },
+          {
+            "path": "schedule.time_exit_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "smi.d_length",
+            "value": "5"
+          },
+          {
+            "path": "smi.ema_seed_method",
+            "value": "first"
+          },
+          {
+            "path": "smi.enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "smi.entry_mode",
+            "value": "replace_macd"
+          },
+          {
+            "path": "smi.k_length",
+            "value": "14"
+          },
+          {
+            "path": "smi.opposite_crossover_exit_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "smi.overbought",
+            "value": "40.0"
+          },
+          {
+            "path": "smi.oversold",
+            "value": "-40.0"
+          },
+          {
+            "path": "smi.signal_length",
+            "value": "5"
+          },
+          {
+            "path": "smi.zone_filter_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "theta.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "theta.maximum",
+            "value": "100.0"
+          },
+          {
+            "path": "theta.minimum",
+            "value": "-100.0"
+          },
+          {
+            "path": "theta.scope",
+            "value": "entry"
+          },
+          {
+            "path": "trade_side.classification",
+            "value": "thetadata_opra_trade_condition_only"
+          },
+          {
+            "path": "trade_side.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "trade_side.minimum_classified_volume",
+            "value": "1"
+          },
+          {
+            "path": "trade_side.minimum_side_share_percent",
+            "value": "50.0"
+          },
+          {
+            "path": "trade_side.scope",
+            "value": "entry"
+          },
+          {
+            "path": "trade_side.side",
+            "value": "buy"
+          },
+          {
+            "path": "trading_activity.enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "trading_activity.maximum_premium_turnover",
+            "value": "1000000000000.0"
+          },
+          {
+            "path": "trading_activity.maximum_relative_volume",
+            "value": "1000.0"
+          },
+          {
+            "path": "trading_activity.maximum_trade_count",
+            "value": "10000000"
+          },
+          {
+            "path": "trading_activity.maximum_volume",
+            "value": "10000000"
+          },
+          {
+            "path": "trading_activity.minimum_premium_turnover",
+            "value": "0.0"
+          },
+          {
+            "path": "trading_activity.minimum_relative_volume",
+            "value": "0.0"
+          },
+          {
+            "path": "trading_activity.minimum_trade_count",
+            "value": "0"
+          },
+          {
+            "path": "trading_activity.minimum_volume",
+            "value": "0"
+          },
+          {
+            "path": "trading_activity.premium_turnover_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "trading_activity.relative_lookback_bars",
+            "value": "6"
+          },
+          {
+            "path": "trading_activity.relative_volume_enabled",
+            "value": "disabled"
+          },
+          {
+            "path": "trading_activity.scope",
+            "value": "entry"
+          },
+          {
+            "path": "trading_activity.trade_count_enabled",
+            "value": "enabled"
+          },
+          {
+            "path": "trading_activity.volume_enabled",
+            "value": "enabled"
+          }
+        ]
+      },
+      "tags": [
+        "automated",
+        "thetadata-options-2026-04-27-to-2026-07-24",
+        "qqq"
+      ],
+      "title": "Baseline replay / Workflow #71",
+      "url": "reports/github-30429068090-1.html"
+    },
     {
       "authoring": {
         "baseline_id": null,
