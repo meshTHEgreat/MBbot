@@ -217,6 +217,24 @@
     const startDate = form?.elements.namedItem("start_date");
     const endDate = form?.elements.namedItem("end_date");
     const resetDateRange = document.getElementById("reset-date-range");
+    const windowReason = document.getElementById("classic-window-reason");
+    const safetyWatermark = document.getElementById(
+      "classic-safety-watermark",
+    );
+    const holdoutDialog = document.getElementById(
+      "classic-holdout-dialog",
+    );
+    const holdoutAck = document.getElementById("classic-holdout-ack");
+    const holdoutConfirm = document.getElementById(
+      "classic-holdout-confirm",
+    );
+    const holdoutCancel = document.getElementById(
+      "classic-holdout-cancel",
+    );
+    const zeroCostAck = document.getElementById("classic-zero-cost-ack");
+    const zeroCostReason = document.getElementById(
+      "classic-zero-cost-reason",
+    );
     const experimentSummaryTitle = document.getElementById(
       "experiment-summary-title",
     );
@@ -241,6 +259,8 @@
     ];
     const symbolsError = document.getElementById("symbols-error");
     const model = window.MBbotBacktestControlModel;
+    let holdoutAcknowledged = false;
+    let holdoutReturnFocus = null;
     if (
       !form ||
       !submit ||
@@ -255,6 +275,11 @@
       !signalSource ||
       !(startDate instanceof HTMLInputElement) ||
       !(endDate instanceof HTMLInputElement) ||
+      !(holdoutDialog instanceof HTMLDialogElement) ||
+      !(holdoutAck instanceof HTMLInputElement) ||
+      !(holdoutConfirm instanceof HTMLButtonElement) ||
+      !(holdoutCancel instanceof HTMLButtonElement) ||
+      !(zeroCostAck instanceof HTMLInputElement) ||
       !model
     ) {
       return;
@@ -320,10 +345,105 @@
       }
     }
 
-    const fullRange =
-      model.PROFILE_DATE_RANGES[
-        "thetadata-options-2026-04-27-to-2026-07-24"
-      ];
+    const safetyWindows = model.WINDOWS;
+    const commissionValues = model.COMMISSIONS;
+
+    function selectedValue(name) {
+      return (
+        form.querySelector(`input[name="${name}"]:checked`)?.value || ""
+      );
+    }
+
+    function updateSafetyWatermark() {
+      const flags = [];
+      if (
+        selectedValue("window_preset") === "holdout" &&
+        holdoutAcknowledged
+      ) {
+        flags.push("HOLDOUT RUN");
+      }
+      if (
+        selectedValue("commission_preset") === "zero" &&
+        zeroCostAck.checked
+      ) {
+        flags.push("ZERO-COST SIMULATION");
+      }
+      if (safetyWatermark) {
+        safetyWatermark.textContent = flags.join(" · ");
+        safetyWatermark.hidden = flags.length === 0;
+      }
+    }
+
+    function openHoldoutDialog() {
+      holdoutReturnFocus = document.activeElement;
+      holdoutAck.checked = false;
+      holdoutConfirm.disabled = true;
+      holdoutDialog.showModal();
+      holdoutAck.focus();
+    }
+
+    function applyWindowState({ openHoldout = true } = {}) {
+      const preset = selectedValue("window_preset");
+      const custom = preset === "custom_discovery";
+      startDate.disabled = !custom;
+      endDate.disabled = !custom;
+      resetDateRange?.toggleAttribute("disabled", !custom);
+      if (custom) {
+        if (
+          startDate.value < safetyWindows.discovery.start ||
+          startDate.value > safetyWindows.discovery.end
+        ) {
+          startDate.value = safetyWindows.discovery.start;
+        }
+        if (
+          endDate.value < safetyWindows.discovery.start ||
+          endDate.value > safetyWindows.discovery.end
+        ) {
+          endDate.value = safetyWindows.discovery.end;
+        }
+        holdoutAcknowledged = false;
+        if (windowReason) {
+          windowReason.textContent =
+            "Custom dates are clamped to the discovery boundary.";
+        }
+      } else if (preset === "holdout") {
+        startDate.value = safetyWindows.holdout.start;
+        endDate.value = safetyWindows.holdout.end;
+        if (windowReason) {
+          windowReason.textContent =
+            "Set by Holdout. The run and report will be watermarked.";
+        }
+        if (!holdoutAcknowledged && openHoldout) openHoldoutDialog();
+      } else {
+        startDate.value = safetyWindows.discovery.start;
+        endDate.value = safetyWindows.discovery.end;
+        holdoutAcknowledged = false;
+        if (windowReason) {
+          windowReason.textContent =
+            "Set by Discovery. Choose Custom inside discovery to edit.";
+        }
+      }
+      updateSafetyWatermark();
+    }
+
+    function applyCostState() {
+      const preset = selectedValue("commission_preset");
+      const commission = form.elements.namedItem(
+        "commission_per_contract",
+      );
+      const zero = preset === "zero";
+      if (commission instanceof HTMLInputElement) {
+        commission.value = String(commissionValues[preset]);
+      }
+      zeroCostAck.disabled = !zero;
+      if (!zero) zeroCostAck.checked = false;
+      if (zeroCostReason) {
+        zeroCostReason.textContent = zero
+          ? "Required: the report will be watermarked ZERO-COST SIMULATION."
+          : "Available only after selecting $0 comparison.";
+      }
+      updateSafetyWatermark();
+    }
 
     function updateLossPathMode() {
       const stopEnabled = form.elements.namedItem("stop_loss_enabled");
@@ -416,8 +536,7 @@
       const selected = symbolInputs.filter(
         (input) => input.checked && !input.disabled,
       );
-      const usesFullRange =
-        startDate.value === fullRange.start && endDate.value === fullRange.end;
+      const windowPreset = selectedValue("window_preset");
       const exitNames = [
         "profit_target_enabled",
         "stop_loss_enabled",
@@ -464,9 +583,11 @@
       const value = (name) => form.elements.namedItem(name)?.value || "—";
       experimentSummaryTitle.textContent =
         `${selected.length} ${selected.length === 1 ? "symbol" : "symbols"} · ` +
-        (usesFullRange
-          ? "full dataset"
-          : `${startDate.value || "?"} to ${endDate.value || "?"}`);
+        (windowPreset === "holdout"
+          ? "HOLDOUT RUN"
+          : windowPreset === "discovery"
+            ? "discovery window"
+            : `${startDate.value || "?"} to ${endDate.value || "?"}`);
       experimentSummaryCopy.textContent =
         `${value("bar_minutes")}m bars · MACD ` +
         `${value("macd_fast_period")}/${value("macd_slow_period")}/` +
@@ -494,8 +615,10 @@
         symbols: symbolInputs
           .filter((input) => input.checked && !input.disabled)
           .map((input) => input.value),
+        window_preset: selectedValue("window_preset"),
         start_date: value("start_date"),
         end_date: value("end_date"),
+        holdout_burn_acknowledgement: holdoutAcknowledged,
         bar_minutes: value("bar_minutes"),
         macd_fast_period: value("macd_fast_period"),
         macd_slow_period: value("macd_slow_period"),
@@ -617,7 +740,9 @@
         ),
         profit_target_percent: value("profit_target_percent"),
         stop_loss_percent: value("stop_loss_percent"),
+        commission_preset: selectedValue("commission_preset"),
         commission_per_contract: value("commission_per_contract"),
+        unrealistic_costs_acknowledged: zeroCostAck.checked,
         contracts_per_trade: value("contracts_per_trade"),
         entry_delay_minutes: value("entry_delay_minutes"),
         entry_cutoff_minutes: value("entry_cutoff_minutes"),
@@ -754,11 +879,56 @@
     }
 
     resetDateRange?.addEventListener("click", () => {
-      startDate.value = fullRange.start;
-      endDate.value = fullRange.end;
+      startDate.value = safetyWindows.discovery.start;
+      endDate.value = safetyWindows.discovery.end;
       clearError();
       updateExperimentSummary();
     });
+    holdoutAck.addEventListener("change", () => {
+      holdoutConfirm.disabled = !holdoutAck.checked;
+    });
+    holdoutConfirm.addEventListener("click", () => {
+      if (!holdoutAck.checked) return;
+      // The alertdialog acknowledgement is recorded in the request and run
+      // log so every irreversible holdout use remains auditable.
+      holdoutAcknowledged = true;
+      holdoutDialog.close();
+      holdoutReturnFocus?.focus();
+      updateSafetyWatermark();
+      updateExperimentSummary();
+    });
+    function cancelHoldout() {
+      holdoutAcknowledged = false;
+      form.querySelector(
+        'input[name="window_preset"][value="discovery"]',
+      ).checked = true;
+      holdoutDialog.close();
+      applyWindowState({ openHoldout: false });
+      holdoutReturnFocus?.focus();
+      updateExperimentSummary();
+    }
+    holdoutCancel.addEventListener("click", cancelHoldout);
+    holdoutDialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      cancelHoldout();
+    });
+    form
+      .querySelectorAll('input[name="window_preset"]')
+      .forEach((input) => {
+        input.addEventListener("change", () => {
+          applyWindowState();
+          updateExperimentSummary();
+        });
+      });
+    form
+      .querySelectorAll('input[name="commission_preset"]')
+      .forEach((input) => {
+        input.addEventListener("change", () => {
+          applyCostState();
+          updateExperimentSummary();
+        });
+      });
+    zeroCostAck.addEventListener("change", updateSafetyWatermark);
     const dependencyToggles = [
       ...form.querySelectorAll("[data-controls]"),
     ];
@@ -836,6 +1006,8 @@
     });
     form.addEventListener("input", updateExperimentSummary);
     form.addEventListener("change", updateExperimentSummary);
+    applyWindowState({ openHoldout: false });
+    applyCostState();
     updateExperimentSummary();
 
     form.addEventListener("submit", async (event) => {

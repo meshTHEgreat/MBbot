@@ -30,6 +30,22 @@
       end: "2026-07-24",
     }),
   });
+  const REQUEST_SCHEMA = "mbbot.backtest-control.request.v3";
+  const WINDOWS = Object.freeze({
+    discovery: Object.freeze({
+      start: "2026-04-27",
+      end: "2026-05-22",
+    }),
+    holdout: Object.freeze({
+      start: "2026-05-26",
+      end: "2026-07-24",
+    }),
+  });
+  const COMMISSIONS = Object.freeze({
+    reference: 0.65,
+    stress: 1.3,
+    zero: 0,
+  });
   const NUMBER_FIELDS = Object.freeze([
     "bar_minutes",
     "max_premium",
@@ -81,6 +97,7 @@
     "entry_cutoff_minutes",
     "force_exit_time_riyadh",
     "validate_only",
+    "request_envelope",
   ]);
   const SMI_ENTRY_MODES = Object.freeze([
     "confirm_macd_state",
@@ -496,6 +513,46 @@
         "start_date",
       );
     }
+    const windowPreset = String(values.window_preset || "");
+    if (windowPreset === "discovery") {
+      if (
+        normalized.start_date !== WINDOWS.discovery.start ||
+        normalized.end_date !== WINDOWS.discovery.end
+      ) {
+        throw inputError(
+          "Discovery preset dates must match the discovery window.",
+          "window_preset",
+        );
+      }
+    } else if (windowPreset === "custom_discovery") {
+      if (
+        normalized.start_date < WINDOWS.discovery.start ||
+        normalized.end_date > WINDOWS.discovery.end
+      ) {
+        throw inputError(
+          "Custom dates must stay inside the discovery window.",
+          "start_date",
+        );
+      }
+    } else if (windowPreset === "holdout") {
+      if (
+        normalized.start_date !== WINDOWS.holdout.start ||
+        normalized.end_date !== WINDOWS.holdout.end
+      ) {
+        throw inputError(
+          "Holdout preset dates must match the holdout window.",
+          "window_preset",
+        );
+      }
+      if (values.holdout_burn_acknowledgement !== true) {
+        throw inputError(
+          "Acknowledge the one-time holdout use before continuing.",
+          "window_preset",
+        );
+      }
+    } else {
+      throw inputError("Choose a window preset.", "window_preset");
+    }
     if (
       !PROFILE_SIGNAL_SOURCES[profile].includes(normalized.signal_source)
     ) {
@@ -644,6 +701,41 @@
         "force_exit_time_riyadh",
       );
     }
+    const commissionPreset = String(values.commission_preset || "");
+    if (!Object.hasOwn(COMMISSIONS, commissionPreset)) {
+      throw inputError(
+        "Choose the reference, stress, or zero-cost preset.",
+        "commission_preset",
+      );
+    }
+    if (
+      normalized.commission_per_contract !==
+      COMMISSIONS[commissionPreset]
+    ) {
+      throw inputError(
+        `${commissionPreset} commission preset does not match its cost.`,
+        "commission_preset",
+      );
+    }
+    if (
+      commissionPreset === "zero" &&
+      values.unrealistic_costs_acknowledged !== true
+    ) {
+      throw inputError(
+        "Acknowledge that zero commission is unrealistic.",
+        "unrealistic_costs_acknowledged",
+      );
+    }
+    normalized.request_envelope = JSON.stringify({
+      schema_version: REQUEST_SCHEMA,
+      ui: "classic",
+      window_preset: windowPreset,
+      holdout_burn_acknowledgement:
+        values.holdout_burn_acknowledgement === true,
+      commission_preset: commissionPreset,
+      unrealistic_costs_acknowledged:
+        values.unrealistic_costs_acknowledged === true,
+    });
     const keys = Object.keys(normalized).sort();
     const expected = [...WORKFLOW_INPUT_NAMES].sort();
     if (
@@ -659,6 +751,9 @@
     PROFILE_SYMBOLS,
     PROFILE_SIGNAL_SOURCES,
     PROFILE_DATE_RANGES,
+    REQUEST_SCHEMA,
+    WINDOWS,
+    COMMISSIONS,
     RULE_TOGGLE_FIELDS,
     SMI_ENTRY_MODES,
     ADVANCED_SCOPES,
