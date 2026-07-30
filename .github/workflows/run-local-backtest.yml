@@ -1,0 +1,302 @@
+name: Run Local Backtest
+
+run-name: >-
+  ${{ (contains(inputs.request_envelope, '"ui":"v2"') || contains(inputs.request_envelope, 'request.v2')) && 'v2' || 'classic' }} /
+  ${{ inputs.validate_only && 'Validation' || 'Backtest' }} /
+  ${{ inputs.experiment_label }} / ${{ inputs.dataset_profile }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset_profile:
+        description: "[Data] Trusted local dataset"
+        type: choice
+        required: true
+        default: thetadata-options-2026-04-27-to-2026-07-24
+        options:
+          - thetadata-options-2026-04-27-to-2026-07-24
+      experiment_label:
+        description: "[Run] Short label shown in the report"
+        type: string
+        required: true
+        default: Baseline replay
+      symbols:
+        description: "[Universe] Comma-separated subset available in the dataset"
+        type: string
+        required: true
+        default: QQQ,SPY,TSLA,AAPL,NVDA
+      start_date:
+        description: "[Data] Inclusive America/New_York start date"
+        type: string
+        required: true
+        default: "2026-04-27"
+      end_date:
+        description: "[Data] Inclusive America/New_York end date"
+        type: string
+        required: true
+        default: "2026-05-22"
+      signal_source:
+        description: "[Signal] Completed local series used for MACD"
+        type: choice
+        required: true
+        default: thetadata_option_contract
+        options:
+          - thetadata_option_contract
+      bar_minutes:
+        description: "[Strategy] Completed-bar interval in minutes (1-60)"
+        default: 5
+        type: number
+        required: true
+      indicator_settings:
+        description: "[Indicators] Validated MACD, RSI, and SMI JSON (normally sent by the portal)"
+        type: string
+        required: true
+        default: '{"macd":{"ema_seed_method":"sma","fast_period":12,"signal_period":9,"slow_period":26,"zero_line_filter_enabled":false},"rsi":{"enabled":false,"maximum":100,"minimum":0,"period":14},"smi":{"d_length":3,"ema_seed_method":"first","enabled":false,"entry_mode":"confirm_macd_state","k_length":10,"opposite_crossover_exit_enabled":false,"overbought":40,"oversold":-40,"signal_length":3,"zone_filter_enabled":false}}'
+      advanced_settings:
+        description: "[Advanced] Validated momentum, premium, activity, Greeks, and observed-side JSON"
+        type: string
+        required: true
+        default: '{"calculated_gamma":{"enabled":false,"maximum":100.0,"minimum":0.0,"model":"black_scholes_from_thetadata_first_order","scope":"entry"},"delta":{"absolute_value":true,"enabled":false,"maximum":1.0,"minimum":0.0,"scope":"entry"},"momentum":{"enabled":false,"lookback_bars":3,"maximum_percent":500.0,"minimum_percent":-100.0,"price_source":"midpoint","scope":"entry"},"premium":{"enabled":false,"maximum":100.0,"minimum":0.01,"price_source":"midpoint","scope":"entry"},"premium_velocity":{"enabled":false,"lookback_bars":3,"maximum_percent_per_minute":100.0,"minimum_percent_per_minute":-100.0,"price_source":"midpoint","scope":"entry"},"theta":{"enabled":false,"maximum":100.0,"minimum":-100.0,"scope":"entry"},"trade_side":{"classification":"thetadata_opra_trade_condition_only","enabled":false,"minimum_classified_volume":1,"minimum_side_share_percent":50.0,"scope":"entry","side":"buy"},"trading_activity":{"enabled":false,"maximum_premium_turnover":1000000000000.0,"maximum_relative_volume":1000.0,"maximum_trade_count":10000000,"maximum_volume":10000000,"minimum_premium_turnover":0.0,"minimum_relative_volume":0.0,"minimum_trade_count":0,"minimum_volume":0,"premium_turnover_enabled":false,"relative_lookback_bars":6,"relative_volume_enabled":false,"scope":"entry","trade_count_enabled":true,"volume_enabled":true}}'
+      rule_toggles:
+        description: "[Rules] Validated JSON enable/disable map (normally sent by the portal)"
+        type: string
+        required: true
+        default: '{"entry_window_enabled":true,"max_premium_enabled":true,"max_spread_enabled":true,"opposite_macd_enabled":true,"profit_target_enabled":true,"stop_loss_enabled":true,"time_exit_enabled":true}'
+      max_premium:
+        description: "[Contract] Maximum option ask premium (0.01-100)"
+        type: number
+        required: true
+        default: 4.0
+      max_spread_percent:
+        description: "[Contract] Maximum bid/ask spread percent (0.01-200)"
+        type: number
+        required: true
+        default: 50.0
+      spread_denominator:
+        description: "[Contract] Spread-percent denominator"
+        type: choice
+        required: true
+        default: midpoint
+        options:
+          - midpoint
+          - ask
+      allow_zero_dte:
+        description: "[Contract] Allow same-day expiration"
+        type: boolean
+        required: true
+        default: true
+      scan_next_strike_if_nearest_fails:
+        description: "[Contract] Try the next ITM strike after a failed filter"
+        type: boolean
+        required: true
+        default: true
+      fallback_to_next_expiration:
+        description: "[Contract] Try the next expiration if nearest has no match"
+        type: boolean
+        required: true
+        default: true
+      profit_target_percent:
+        description: "[Exit] Profit target percent (0.1-500)"
+        type: number
+        required: true
+        default: 20.0
+      stop_loss_percent:
+        description: "[Exit] Maximum accepted loss percent (0.1-100)"
+        type: number
+        required: true
+        default: 10.0
+      commission_per_contract:
+        description: "[Sizing] Commission per contract in USD (0-100)"
+        type: number
+        required: true
+        default: 0.65
+      contracts_per_trade:
+        description: "[Sizing] Contracts per trade (1-100)"
+        type: number
+        required: true
+        default: 1
+      entry_delay_minutes:
+        description: "[Schedule] Minutes after market open before entries (0-240)"
+        type: number
+        required: true
+        default: 15
+      entry_cutoff_minutes:
+        description: "[Schedule] Minutes before market close to stop entries (0-240)"
+        type: number
+        required: true
+        default: 60
+      force_exit_time_riyadh:
+        description: "[Schedule] Forced exit in Asia/Riyadh time (HH:MM)"
+        type: string
+        required: true
+        default: "22:20"
+      validate_only:
+        description: "[Safety] Validate only; do not run or publish"
+        type: boolean
+        required: true
+        default: false
+      request_envelope:
+        description: "[Safety] Versioned window/cost acknowledgement JSON"
+        type: string
+        required: true
+        default: '{"schema_version":"mbbot.backtest-control.request.v1"}'
+
+permissions:
+  contents: write
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    if: github.ref_name == github.event.repository.default_branch
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy_primary.outputs.page_url || steps.deploy_retry.outputs.page_url }}
+    runs-on: [self-hosted, Windows, X64, backtest-pc-pages]
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: powershell
+    env:
+      BACKTEST_PROJECT_DIR: 'C:\Users\mesh\Desktop\Projects\MBbot'
+      BACKTEST_PUBLIC_BASE_URL: https://meshthegreat.github.io/MBbot/
+      BACKTEST_PUBLIC_BRANCH: main
+      BACKTEST_RUN_READ_TOKEN: ${{ github.token }}
+      BACKTEST_INPUT_DATASET_PROFILE: ${{ inputs.dataset_profile }}
+      BACKTEST_INPUT_EXPERIMENT_LABEL: ${{ inputs.experiment_label }}
+      BACKTEST_INPUT_SYMBOLS: ${{ inputs.symbols }}
+      BACKTEST_INPUT_START_DATE: ${{ inputs.start_date }}
+      BACKTEST_INPUT_END_DATE: ${{ inputs.end_date }}
+      BACKTEST_INPUT_SIGNAL_SOURCE: ${{ inputs.signal_source }}
+      BACKTEST_INPUT_BAR_MINUTES: ${{ inputs.bar_minutes }}
+      BACKTEST_INPUT_INDICATOR_SETTINGS: ${{ inputs.indicator_settings }}
+      BACKTEST_INPUT_ADVANCED_SETTINGS: ${{ inputs.advanced_settings }}
+      BACKTEST_INPUT_RULE_TOGGLES: ${{ inputs.rule_toggles }}
+      BACKTEST_INPUT_MAX_PREMIUM: ${{ inputs.max_premium }}
+      BACKTEST_INPUT_MAX_SPREAD_PERCENT: ${{ inputs.max_spread_percent }}
+      BACKTEST_INPUT_SPREAD_DENOMINATOR: ${{ inputs.spread_denominator }}
+      BACKTEST_INPUT_ALLOW_ZERO_DTE: ${{ inputs.allow_zero_dte }}
+      BACKTEST_INPUT_SCAN_NEXT_STRIKE_IF_NEAREST_FAILS: ${{ inputs.scan_next_strike_if_nearest_fails }}
+      BACKTEST_INPUT_FALLBACK_TO_NEXT_EXPIRATION: ${{ inputs.fallback_to_next_expiration }}
+      BACKTEST_INPUT_PROFIT_TARGET_PERCENT: ${{ inputs.profit_target_percent }}
+      BACKTEST_INPUT_STOP_LOSS_PERCENT: ${{ inputs.stop_loss_percent }}
+      BACKTEST_INPUT_COMMISSION_PER_CONTRACT: ${{ inputs.commission_per_contract }}
+      BACKTEST_INPUT_CONTRACTS_PER_TRADE: ${{ inputs.contracts_per_trade }}
+      BACKTEST_INPUT_ENTRY_DELAY_MINUTES: ${{ inputs.entry_delay_minutes }}
+      BACKTEST_INPUT_ENTRY_CUTOFF_MINUTES: ${{ inputs.entry_cutoff_minutes }}
+      BACKTEST_INPUT_FORCE_EXIT_TIME_RIYADH: ${{ inputs.force_exit_time_riyadh }}
+      BACKTEST_INPUT_VALIDATE_ONLY: ${{ inputs.validate_only }}
+      BACKTEST_INPUT_REQUEST_ENVELOPE: ${{ inputs.request_envelope }}
+
+    steps:
+      - name: Check out public report repository
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: public-site
+          persist-credentials: true
+
+      - name: Check out trusted private control repository
+        uses: actions/checkout@v7
+        with:
+          repository: meshTHEgreat/mbbot-backtest-control
+          ref: main
+          path: control-source
+          ssh-key: ${{ secrets.CONTROL_REPO_DEPLOY_KEY }}
+          persist-credentials: false
+
+      - name: Enforce committed offline-only data policy
+        run: |
+          $policy = Get-Content ".\control-source\config\runner-policy.json" -Raw | ConvertFrom-Json
+          if (
+            $policy.schema_version -ne "mbbot.backtest-control.runner-policy.v1" -or
+            $policy.mode -ne "offline-only" -or
+            $policy.provider_api_access -ne $false -or
+            $policy.project_python_network_access -ne $false -or
+            $policy.change_method -ne "manual-commit-only"
+          ) {
+            throw "The committed runner policy is not offline-only."
+          }
+
+      - name: Set up isolated Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Create workflow virtual environment
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:BACKTEST_PROJECT_DIR)) {
+            throw "Committed BACKTEST_PROJECT_DIR is required."
+          }
+          $environmentRoot = Join-Path $env:RUNNER_TEMP "mbbot-backtest-venv-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          python -m venv $environmentRoot
+          $pythonPath = Join-Path $environmentRoot "Scripts\python.exe"
+          & $pythonPath -m pip install --disable-pip-version-check --no-input -e $env:BACKTEST_PROJECT_DIR
+          "BACKTEST_PYTHON=$pythonPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Validate local data, replay offline, verify, and publish
+        id: backtest
+        run: |
+          & $env:BACKTEST_PYTHON ".\control-source\scripts\run_local_backtest.py"
+
+      - name: Upload non-sensitive run receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backtest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/mbbot-backtest-${{ github.run_id }}-${{ github.run_attempt }}/artifact/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Configure GitHub Pages
+        if: ${{ !inputs.validate_only }}
+        uses: actions/configure-pages@v6
+
+      - name: Enforce static-only Pages artifact
+        if: ${{ !inputs.validate_only }}
+        run: |
+          if (-not (Test-Path ".\public-site\index.html" -PathType Leaf)) {
+            throw "The report site has no index.html."
+          }
+          $prohibited = Get-ChildItem ".\public-site" -Recurse -File | Where-Object {
+            $_.Name -eq ".env" -or
+            $_.Extension -in @(".csv", ".toml", ".py", ".pem") -or
+            $_.Name.EndsWith(".dbn") -or
+            $_.Name.EndsWith(".dbn.zst")
+          } | Select-Object -First 1
+          if ($null -ne $prohibited) {
+            throw "Static Pages artifact contains prohibited local/data file: $($prohibited.FullName)"
+          }
+
+      - name: Upload complete report site for Pages
+        if: ${{ !inputs.validate_only }}
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: public-site
+
+      - name: Deploy complete report site to Pages
+        if: ${{ !inputs.validate_only }}
+        id: deploy_primary
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Retry Pages deployment after a transient failure
+        if: ${{ !inputs.validate_only && steps.deploy_primary.outcome == 'failure' }}
+        id: deploy_retry
+        uses: actions/deploy-pages@v5
+
+      - name: Confirm Pages deployment
+        if: ${{ !inputs.validate_only && always() && steps.backtest.outcome == 'success' }}
+        run: |
+          $primary = "${{ steps.deploy_primary.outcome }}"
+          $retry = "${{ steps.deploy_retry.outcome }}"
+          if ($primary -ne "success" -and $retry -ne "success") {
+            throw "Report was committed, but both in-run Pages deployment attempts failed. The next report run will redeploy the complete site."
+          }
+          "## GitHub Pages deployment complete`n`n- The committed report is live in the complete site artifact." |
+            Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append

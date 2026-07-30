@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-30T08:27:17.287343Z",
+  "generated_at": "2026-07-30T09:32:17.577572Z",
   "reports": [
     {
       "authoring": {
@@ -262,6 +262,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30525324460-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "d0cb2a7da2b276eb42eb6a380ea3d291fe37efff02f74f59b1667e5e3b050bc4",
@@ -729,7 +730,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #105",
-      "url": "reports/github-30525324460-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30525324460-1.html"
     },
     {
       "authoring": {
@@ -994,6 +996,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30493455834-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "59614d714b85d710bcb9c959154e7f53b4bace69bc97c22dabfad6116edf7dd8",
@@ -1461,8 +1464,9 @@
         "aapl",
         "zero-cost-simulation"
       ],
-      "title": "ZERO-COST SIMULATION — Baseline replay / Workflow #100",
-      "url": "reports/github-30493455834-1.html"
+      "title": "ZERO-COST SIMULATION \u2014 Baseline replay / Workflow #100",
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30493455834-1.html"
     },
     {
       "authoring": {
@@ -1697,6 +1701,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30486417182-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "26cb3497cca666f9a36e44f6a5c9fc64c5be0f89898300f2878b58dbf33c367a",
@@ -2163,7 +2168,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #96",
-      "url": "reports/github-30486417182-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30486417182-1.html"
     },
     {
       "authoring": {
@@ -2398,6 +2404,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30479927047-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "538e600e44e22821e9e8ff2fc33219d6b8577d8efdf5f3ea011e2bd065ac77fd",
@@ -2864,7 +2871,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #92",
-      "url": "reports/github-30479927047-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30479927047-1.html"
     },
     {
       "authoring": {
@@ -3099,6 +3107,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30475996562-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "010cbb9598d49c55787767844a33d91317726f2beee5ae864939e32ea412f607",
@@ -3565,7 +3574,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #91",
-      "url": "reports/github-30475996562-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30475996562-1.html"
     },
     {
       "authoring": {
@@ -3800,6 +3810,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30471637254-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "a63a09af35beb601c5f7bc5e069a90552d5f324da1ddb36ba3a3fc36ad6b28b8",
@@ -4266,7 +4277,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #90",
-      "url": "reports/github-30471637254-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30471637254-1.html"
     },
     {
       "authoring": {
@@ -4501,6 +4513,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30471231956-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "a63a09af35beb601c5f7bc5e069a90552d5f324da1ddb36ba3a3fc36ad6b28b8",
@@ -4967,7 +4980,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #89",
-      "url": "reports/github-30471231956-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30471231956-1.html"
     },
     {
       "authoring": {
@@ -5202,6 +5216,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30460741505-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "b2aab66cfa82de2d3b93b575651dc7060659e0ef4df4c9d277ca2ec56605f3ab",
@@ -5668,7 +5683,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #87",
-      "url": "reports/github-30460741505-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30460741505-1.html"
     },
     {
       "authoring": {
@@ -5902,6 +5918,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30454050860-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "e276667149d7c3366fbc01395b6b51dd5518bd931cb33715140d7af0a8e812d0",
@@ -6367,7 +6384,8 @@
         "spy"
       ],
       "title": "Baseline replay / Workflow #86",
-      "url": "reports/github-30454050860-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30454050860-1.html"
     },
     {
       "authoring": {
@@ -6602,6 +6620,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30449186922-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "e1b966a0fdbbe25859bfaa3abbdeac4c489c58ded6e33ef7d59b4b44a1d36fe1",
@@ -7068,7 +7087,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #85",
-      "url": "reports/github-30449186922-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30449186922-1.html"
     },
     {
       "authoring": {
@@ -7301,6 +7321,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30443265025-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "49e6ef14cc38f885b104c70a573b9f670004bd3daec87c78995e73131c7258af",
@@ -7765,7 +7786,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #81",
-      "url": "reports/github-30443265025-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30443265025-1.html"
     },
     {
       "authoring": {
@@ -7998,6 +8020,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30439720720-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "fc445e16e59e6e316f17ee5279e4c3d48bbf60ead6e15c48d524750da1070ed1",
@@ -8462,7 +8485,8 @@
         "aapl"
       ],
       "title": "Baseline replay / Workflow #80",
-      "url": "reports/github-30439720720-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30439720720-1.html"
     },
     {
       "authoring": {
@@ -8695,6 +8719,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30438573431-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "7db0d52b6aeb8f60d4728dfdc7bf5a6c74b9fd8b5b5757c7b9a88992113efe68",
@@ -9159,7 +9184,8 @@
         "spy"
       ],
       "title": "Baseline replay / Workflow #79",
-      "url": "reports/github-30438573431-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30438573431-1.html"
     },
     {
       "authoring": {
@@ -9392,6 +9418,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30437758258-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "6b211d28666426c4e27003f4f1238e8183f37dcd9b51f479d74e752e8399e603",
@@ -9856,7 +9883,8 @@
         "spy"
       ],
       "title": "Baseline replay / Workflow #78",
-      "url": "reports/github-30437758258-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30437758258-1.html"
     },
     {
       "authoring": {
@@ -10089,6 +10117,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30435603441-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "49e6ef14cc38f885b104c70a573b9f670004bd3daec87c78995e73131c7258af",
@@ -10553,7 +10582,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #76",
-      "url": "reports/github-30435603441-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30435603441-1.html"
     },
     {
       "authoring": {
@@ -10788,6 +10818,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30434716471-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "e8d6816b36d1228d5b5a42fd68b16bab1c7586016f84cd816c115d8e3945eb91",
@@ -11252,7 +11283,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #75",
-      "url": "reports/github-30434716471-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30434716471-1.html"
     },
     {
       "authoring": {
@@ -11487,6 +11519,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30433233177-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "3d026cf68f225ba2815794d05e4a1a478e8779844e7071f3fd065ad426550c69",
@@ -11951,7 +11984,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #74",
-      "url": "reports/github-30433233177-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30433233177-1.html"
     },
     {
       "authoring": {
@@ -12184,6 +12218,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30429068090-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "aa2ecfdc466ec03d0b20b1c78ae48ee56b8823d2b7badc59d1ab8c868ea41add",
@@ -12648,7 +12683,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #71",
-      "url": "reports/github-30429068090-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30429068090-1.html"
     },
     {
       "authoring": {
@@ -12883,6 +12919,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30427997915-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "f03240e9e1deae00377d6a2c548f0f447965eaabbcbd8bccbce33d0c007d32e7",
@@ -13347,7 +13384,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #70",
-      "url": "reports/github-30427997915-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30427997915-1.html"
     },
     {
       "authoring": {
@@ -13582,6 +13620,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30406712193-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "8827557a7163d115fda4071e9279856f99d54faa6a360a36b38f21d61e304368",
@@ -14046,7 +14085,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #69",
-      "url": "reports/github-30406712193-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30406712193-1.html"
     },
     {
       "authoring": {
@@ -14122,6 +14162,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/stop-loss-sweep-validation-64.html",
       "status": "research",
       "strategy": {
         "fingerprint": "8dd03208faeae692421198431ad9f060a7810729a1220b8a7d73d42c83ab53a0",
@@ -14582,8 +14623,9 @@
         "qqq",
         "stop-loss-sweep"
       ],
-      "title": "Exact stop-loss sweep · Report #64 configuration",
-      "url": "reports/stop-loss-sweep-validation-64.html"
+      "title": "Exact stop-loss sweep \u00b7 Report #64 configuration",
+      "ui": "classic",
+      "url": "/MBbot/reports/stop-loss-sweep-validation-64.html"
     },
     {
       "authoring": {
@@ -14816,6 +14858,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30402442950-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "ee0ccdb7800f7b4e00c7578a96bcf038b3c163cbb6b369bd29434f91eec7c92e",
@@ -15280,7 +15323,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #67",
-      "url": "reports/github-30402442950-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30402442950-1.html"
     },
     {
       "authoring": {
@@ -15513,6 +15557,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30399755814-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "e2c91d0cf5c9094428771bb3dc552d7bcebab1c5ecb84564f7919ba7cec1a5e8",
@@ -15977,7 +16022,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #66",
-      "url": "reports/github-30399755814-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30399755814-1.html"
     },
     {
       "authoring": {
@@ -16214,6 +16260,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30398435411-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "112cb8af81785ed358cb901840b7477e5cb6156aa52f291a53e2425f38a59c67",
@@ -16682,7 +16729,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #65",
-      "url": "reports/github-30398435411-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30398435411-1.html"
     },
     {
       "authoring": {
@@ -16915,6 +16963,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30397644382-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "1bf872220fabc0cc1258085982765646ced5e10a4b071d09c3bdbdf1fab3380b",
@@ -17379,7 +17428,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #64",
-      "url": "reports/github-30397644382-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30397644382-1.html"
     },
     {
       "authoring": {
@@ -17612,6 +17662,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30397162094-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "6f7a1960433de1b59bbb892c3846e32e03c10d8bc6a85739ca082d60c92cc4db",
@@ -18076,7 +18127,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #63",
-      "url": "reports/github-30397162094-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30397162094-1.html"
     },
     {
       "authoring": {
@@ -18311,6 +18363,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30396863822-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "78f4bb2c61e92968287c0c538ae71f6f746187cedf2e5eeb8008e2e7944ab50d",
@@ -18775,7 +18828,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #62",
-      "url": "reports/github-30396863822-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30396863822-1.html"
     },
     {
       "authoring": {
@@ -19008,6 +19062,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30392820280-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "08cbefb36c6d52e4ad9aaf1f43cfe229aff2bc8848f6ada9e0c5c915338c0309",
@@ -19472,7 +19527,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #61",
-      "url": "reports/github-30392820280-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30392820280-1.html"
     },
     {
       "authoring": {
@@ -19709,6 +19765,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30385458023-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "295a4e779d20e766002d440334a5472737e204903c520781d47095545a17711b",
@@ -20177,7 +20234,8 @@
         "nvda"
       ],
       "title": "Full 3-month advanced evidence validation / Workflow #59",
-      "url": "reports/github-30385458023-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30385458023-1.html"
     },
     {
       "authoring": {
@@ -20414,6 +20472,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30384245647-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "c6a6e2ff99f9b3f5d2fac6bb3aa8a5df689f50161a4f429aa767fff3363d423a",
@@ -20882,7 +20941,8 @@
         "nvda"
       ],
       "title": "Full 3-month Gamma validation / Workflow #58",
-      "url": "reports/github-30384245647-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30384245647-1.html"
     },
     {
       "authoring": {
@@ -21033,6 +21093,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30335694550-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "92dda0fc1f86d5be375ccedfc49bbc4b1d622e144b3252f1fb1c4b7893f7dbd6",
@@ -21293,7 +21354,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #57",
-      "url": "reports/github-30335694550-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30335694550-1.html"
     },
     {
       "authoring": {
@@ -21442,6 +21504,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30334883721-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "2ecde02bc885303fbaaa8ca1279bbec8db14a222c61162861ccbb1d3b116c02d",
@@ -21698,7 +21761,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #56",
-      "url": "reports/github-30334883721-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30334883721-1.html"
     },
     {
       "authoring": {
@@ -21845,6 +21909,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30313633519-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "608a85ef29119b9fb16a2b3ff0b190173e99a5ce36c26bb187a307c6a0c78c1a",
@@ -22101,7 +22166,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #55",
-      "url": "reports/github-30313633519-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30313633519-1.html"
     },
     {
       "authoring": {
@@ -22250,6 +22316,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30313129929-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "aa7efb0c086a8b4fad05e236996d63d000be41399f223640a5254e2f3bb79b5f",
@@ -22506,7 +22573,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #54",
-      "url": "reports/github-30313129929-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30313129929-1.html"
     },
     {
       "authoring": {
@@ -22653,6 +22721,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30312638268-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "39c0d7a3229516c4b9052b966ef18e930719c2e9e14b9a28bd89a3d87fdcfc13",
@@ -22909,7 +22978,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #53",
-      "url": "reports/github-30312638268-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30312638268-1.html"
     },
     {
       "authoring": {
@@ -23060,6 +23130,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30310832629-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "3bda62160a5ba545260ea744b6636aae03e01389387321f358435600ae54d95f",
@@ -23320,7 +23391,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #50",
-      "url": "reports/github-30310832629-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30310832629-1.html"
     },
     {
       "authoring": {
@@ -23471,6 +23543,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30310030333-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "e0cd64f3822c5866291d662a367fd6386335865e986bb3e7f16b6ddc7ec351e4",
@@ -23731,7 +23804,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #49",
-      "url": "reports/github-30310030333-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30310030333-1.html"
     },
     {
       "authoring": {
@@ -23884,6 +23958,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30308390145-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "fefc23dbcdccc00ebf81f84e38aac072134e0be36e1406085736b4955ace45d5",
@@ -24144,7 +24219,8 @@
         "nvda"
       ],
       "title": "Page readiness ThetaData 1m all five 24 Jul fixed / Workflow #47",
-      "url": "reports/github-30308390145-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30308390145-1.html"
     },
     {
       "authoring": {
@@ -24290,6 +24366,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30288892445-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "191575d2a5b11c3500d035c1bf478d686d37add6c4a53b5ac009567caec38658",
@@ -24542,7 +24619,8 @@
         "nvda"
       ],
       "title": "Theta exact workflow validation MACD 3-6-2 / Workflow #42",
-      "url": "reports/github-30288892445-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30288892445-1.html"
     },
     {
       "authoring": {
@@ -24714,6 +24792,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30281508716-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "a884fc693273025b3ff1607d8072d6e4e8a3da65bfa2765b45bda64a37d08bb4",
@@ -24954,7 +25033,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #33",
-      "url": "reports/github-30281508716-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30281508716-1.html"
     },
     {
       "authoring": {
@@ -25126,6 +25206,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30280631599-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "ad5d6ea2dd69b743f588a62bd637fdbc370c2227f77a69a98973dd9ed8e33a03",
@@ -25366,7 +25447,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #32",
-      "url": "reports/github-30280631599-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30280631599-1.html"
     },
     {
       "authoring": {
@@ -25539,6 +25621,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30279074021-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "9f917fee6c850cf27245ba34d978a727f31286d74bd9668e13e667d7842b2ee7",
@@ -25779,7 +25862,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #31",
-      "url": "reports/github-30279074021-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30279074021-1.html"
     },
     {
       "authoring": {
@@ -25951,6 +26035,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30278849041-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "15d2b9bb5ea6068ad97183f94779735d3f6e0ea0d82053dfc1f5186db6bf7ad7",
@@ -26191,7 +26276,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #30",
-      "url": "reports/github-30278849041-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30278849041-1.html"
     },
     {
       "authoring": {
@@ -26364,6 +26450,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30278215929-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "74256e7d08b995038fd5edec8b76f5f0cfd6b5c5b56963ab823f83f42c0b3b3c",
@@ -26604,7 +26691,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #29",
-      "url": "reports/github-30278215929-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30278215929-1.html"
     },
     {
       "authoring": {
@@ -26776,6 +26864,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30277342439-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "4bae298d0c69ed8ca40bd8a179790efcd2c35d2364ffebe1fa12d65dd979876a",
@@ -27016,7 +27105,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #28",
-      "url": "reports/github-30277342439-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30277342439-1.html"
     },
     {
       "authoring": {
@@ -27184,6 +27274,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30276908841-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "ab395449e321f1b1eb7c3441fbb9e4dc71dfba8b5e7edb98167d2a34b7cffeed",
@@ -27420,7 +27511,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #27",
-      "url": "reports/github-30276908841-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30276908841-1.html"
     },
     {
       "authoring": {
@@ -27586,6 +27678,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30276414614-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "b09535eed9c938944eeab9782cb6598aef685f6c1f016b053a47ae2dc8c06540",
@@ -27822,7 +27915,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #26",
-      "url": "reports/github-30276414614-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30276414614-1.html"
     },
     {
       "authoring": {
@@ -27990,6 +28084,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30275953221-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "616a7f5b6d392e7b51e0a09b33c9db2f7375c23c60113c516a971d39127d92cb",
@@ -28226,7 +28321,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #25",
-      "url": "reports/github-30275953221-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30275953221-1.html"
     },
     {
       "authoring": {
@@ -28392,6 +28488,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30275378311-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "136a0d8b5dff720678ee65f38030826bc9ead0517d4bf9690952d0d20e385dfe",
@@ -28628,7 +28725,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #24",
-      "url": "reports/github-30275378311-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30275378311-1.html"
     },
     {
       "authoring": {
@@ -28798,6 +28896,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30271975157-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "78a8b133e23a30b803742b7ec4263379c950f79fc6c14e9150a6607fb4392ffa",
@@ -29038,7 +29137,8 @@
         "nvda"
       ],
       "title": "Five-symbol Databento contract SMI 14-5-4 zones / Workflow #23",
-      "url": "reports/github-30271975157-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30271975157-1.html"
     },
     {
       "authoring": {
@@ -29210,6 +29310,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30271173655-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "1c2ae3d818fa8d63edf1f55245d0caa98d381b4da85098182671bb8ee8326eb8",
@@ -29450,7 +29551,8 @@
         "nvda"
       ],
       "title": "Five-symbol SMI replace 14-5-4 zones / Workflow #22",
-      "url": "reports/github-30271173655-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30271173655-1.html"
     },
     {
       "authoring": {
@@ -29601,6 +29703,7 @@
           "2 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30267336663-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "531b2af9bfdbfd364bf4c8e5ae2ccd0a4761c8fbf2691efa7829e690f7f2217a",
@@ -29797,7 +29900,8 @@
         "spy"
       ],
       "title": "Baseline replay / Workflow #17",
-      "url": "reports/github-30267336663-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30267336663-1.html"
     },
     {
       "authoring": {
@@ -29959,6 +30063,7 @@
           "Small sample: fewer than 30 closed trades; treat apparent patterns as unstable."
         ]
       },
+      "report_path": "reports/github-30266509613-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "59cb31c8ae98257079c8b8db43914f18601c1b2151269bc906384873359b6ab9",
@@ -30159,7 +30264,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #16",
-      "url": "reports/github-30266509613-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30266509613-1.html"
     },
     {
       "authoring": {
@@ -30321,6 +30427,7 @@
           "1 positions remained open at replay end."
         ]
       },
+      "report_path": "reports/github-30264602308-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "efe8c2a05df28f93ac0cc3a8dbb9c583722e7e5b1f0a1749361d994a77f14a9c",
@@ -30521,7 +30628,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #15",
-      "url": "reports/github-30264602308-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30264602308-1.html"
     },
     {
       "authoring": {
@@ -30684,6 +30792,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30261212214-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "1bfbd31a08ed6c1115e9ccd717d86276c3df0cfbe3e0f597cd15eff3b0e7d55f",
@@ -30884,7 +30993,8 @@
         "nvda"
       ],
       "title": "Baseline replay / Workflow #14",
-      "url": "reports/github-30261212214-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30261212214-1.html"
     },
     {
       "authoring": {
@@ -31040,6 +31150,7 @@
         "label": "research",
         "notes": []
       },
+      "report_path": "reports/github-30260840798-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "fa34e183f9fb9860cc831d37360d6ca52fd212f0095b368f4dc284dd5c6ff6a3",
@@ -31236,7 +31347,8 @@
         "qqq"
       ],
       "title": "Baseline replay / Workflow #13",
-      "url": "reports/github-30260840798-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30260840798-1.html"
     },
     {
       "authoring": {
@@ -31398,6 +31510,7 @@
           "63 entries were skipped because required data was unavailable."
         ]
       },
+      "report_path": "reports/github-30259091202-1.html",
       "status": "research",
       "strategy": {
         "fingerprint": "130e836777e5b21b8d260a54b4af8be460eb5a694211f0e5b18deb61a67c9969",
@@ -31598,7 +31711,8 @@
         "nvda"
       ],
       "title": "Five-symbol AV MACD 12-26-9 verified report / Workflow #11",
-      "url": "reports/github-30259091202-1.html"
+      "ui": "classic",
+      "url": "/MBbot/reports/github-30259091202-1.html"
     }
   ],
   "schema_version": "1.0",

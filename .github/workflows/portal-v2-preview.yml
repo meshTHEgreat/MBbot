@@ -1,17 +1,6 @@
 name: Build portal v2 preview artifact
 
 on:
-  push:
-    branches: ["portal-v2"]
-    paths:
-      - ".github/workflows/portal-v2-preview.yml"
-      - "index.html"
-      - "assets/backtest-control-model.js"
-      - "assets/site.js"
-      - "assets/styles.css"
-      - "test/**"
-      - "v2/**"
-      - "ui/**"
   workflow_dispatch:
 
 permissions:
