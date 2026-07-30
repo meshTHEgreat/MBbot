@@ -240,6 +240,7 @@ jobs:
           "BACKTEST_PYTHON=$pythonPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Validate local data, replay offline, verify, and publish
+        id: backtest
         run: |
           & $env:BACKTEST_PYTHON ".\control-source\scripts\run_local_backtest.py"
 
@@ -290,10 +291,12 @@ jobs:
         uses: actions/deploy-pages@v5
 
       - name: Confirm Pages deployment
-        if: ${{ !inputs.validate_only && always() }}
+        if: ${{ !inputs.validate_only && always() && steps.backtest.outcome == 'success' }}
         run: |
           $primary = "${{ steps.deploy_primary.outcome }}"
           $retry = "${{ steps.deploy_retry.outcome }}"
           if ($primary -ne "success" -and $retry -ne "success") {
             throw "Report was committed, but both in-run Pages deployment attempts failed. The next report run will redeploy the complete site."
           }
+          "## GitHub Pages deployment complete`n`n- The committed report is live in the complete site artifact." |
+            Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
