@@ -24,16 +24,16 @@ function baseValues(overrides = {}) {
     momentum_window_minutes: 15,
     momentum_percent: 0.1,
     orb_range_minutes: 30,
-    orb_buffer_percent: 0.1,
-    orb_regime_enabled: true,
+    orb_buffer_percent: 0,
+    orb_regime_enabled: false,
     order_flow_window_bars: 3,
-    order_flow_threshold: 0.2,
+    order_flow_threshold: 0.6,
     order_flow_underlying_agreement: true,
-    divergence_underlying_velocity_min: 0.2,
-    divergence_premium_velocity_max: 0,
+    divergence_underlying_velocity_min: 0.02,
+    divergence_premium_velocity_max: 0.02,
     divergence_window_minutes: 15,
     mean_reversion_rsi_period: 14,
-    mean_reversion_rsi_extreme: 30,
+    mean_reversion_rsi_extreme: 70,
     mean_reversion_reversal_confirm: true,
     legacy_macd_fast: 12,
     legacy_macd_slow: 26,
@@ -196,43 +196,50 @@ function validateSchema(value, schema, location = "$", rootSchema = schema) {
   }
 }
 
-test("default envelope preserves P1 signals with optional risk disabled", () => {
+test("default envelope matches the certified P1 request and risk defaults", () => {
   const envelope = engine.buildEnvelope(baseValues());
-  assert.equal(envelope.schema_version, "portal-engine-params.v1");
-  assert.deepEqual(envelope.dataset.symbols, ["SPY", "QQQ"]);
-  assert.deepEqual(envelope.setup_trigger.parameters, {
+  assert.equal(envelope.schema_version, "mbbot.portal.engine-params.v1");
+  assert.equal(envelope.family, "trend_persistence");
+  assert.deepEqual(envelope.symbols, ["QQQ", "SPY"]);
+  assert.deepEqual(envelope.trigger, {
     fast_ma_snapshots: 3,
     slow_ma_snapshots: 12,
-    ma_gap_percent: 0.15,
-    momentum_window_minutes: 15,
-    momentum_percent: 0.1,
+    ma_gap_min_pct: 0.15,
+    momentum_minutes: 15,
+    momentum_min_pct: 0.1,
   });
-  assert.deepEqual(envelope.contract_selection, {
-    target_absolute_delta: 0.6,
-    minimum_absolute_delta: 0.5,
-    maximum_absolute_delta: 0.7,
-    minimum_dte: 1,
-    maximum_dte: 4,
-    allow_zero_dte: false,
-    expiration_fallback: true,
-    next_strike_scan: true,
+  assert.deepEqual(envelope.delta_band, {
+    target: 0.6,
+    minimum: 0.5,
+    maximum: 0.7,
   });
+  assert.deepEqual(envelope.dte_range, { minimum: 1, maximum: 4 });
   assert.deepEqual(envelope.risk, {
-    enabled: false,
     contracts_per_trade: 1,
-    maximum_trades_per_symbol_day: 3,
+    maximum_trades_per_symbol_session: 3,
     reentry_cooldown_minutes: 30,
-    same_direction_spy_qqq_single_exposure: true,
+    correlated_exposure_skip: true,
   });
-  assert.equal(
-    engine.buildEnvelope(baseValues({ risk_enabled: true })).risk.enabled,
-    true,
+  assert.deepEqual(
+    engine.buildEnvelope(
+      baseValues({
+        risk_enabled: true,
+        contracts_per_trade: 2,
+        maximum_trades_per_symbol_day: 5,
+      }),
+    ).risk,
+    {
+      contracts_per_trade: 2,
+      maximum_trades_per_symbol_session: 5,
+      reentry_cooldown_minutes: 30,
+      correlated_exposure_skip: true,
+    },
   );
   assert.equal(
     envelope.provenance.adapter_command,
     "python -m portal_engine.cli --request request.json --out-dir DIR",
   );
-  assert.equal(envelope.provenance.adapter_status, "pending_parity_certified_package");
+  assert.equal(envelope.provenance.adapter_status, "parity_certified_connected");
 });
 
 test("portal-engine-params.v1 envelopes pass the versioned JSON Schema", () => {
@@ -249,7 +256,6 @@ test("portal-engine-params.v1 envelopes pass the versioned JSON Schema", () => {
       "order_flow_imbalance",
       "premium_underlying_divergence",
       "mean_reversion_fade",
-      "legacy_macd",
     ].map((trigger_family) => baseValues({ trigger_family })),
     baseValues({ commission_preset: "both" }),
     baseValues({
@@ -279,25 +285,29 @@ test("holdout audit stamps survive into report and run-log provenance", () => {
   assert.deepEqual(envelope.provenance.report_watermarks, ["HOLDOUT RUN"]);
   assert.deepEqual(envelope.provenance.run_log_stamps, [
     "holdout_burn_acknowledged=true",
+    "dataset_label=v1-study",
   ]);
 });
 
-test("all six trigger families emit their agreed parameter groups", () => {
+test("all five adapter families emit their certified parameter groups", () => {
   const families = {
     trend_persistence: "fast_ma_snapshots",
     opening_range_breakout: "range_minutes",
-    order_flow_imbalance: "rolling_window_bars",
+    order_flow_imbalance: "window_bars",
     premium_underlying_divergence: "window_minutes",
     mean_reversion_fade: "rsi_period",
-    legacy_macd: "fast_period",
   };
   for (const [family, expectedParameter] of Object.entries(families)) {
     const envelope = engine.buildEnvelope(baseValues({ trigger_family: family }));
     assert.ok(
-      Object.hasOwn(envelope.setup_trigger.parameters, expectedParameter),
+      Object.hasOwn(envelope.trigger, expectedParameter),
       `${family} should emit ${expectedParameter}`,
     );
   }
+  assert.throws(
+    () => engine.buildEnvelope(baseValues({ trigger_family: "legacy_macd" })),
+    /compatibility runner/,
+  );
 });
 
 test("holdout, zero costs, Delta order, and opposite SMI fail closed", () => {
@@ -310,7 +320,7 @@ test("holdout, zero costs, Delta order, and opposite SMI fail closed", () => {
           end_date: "2026-07-24",
         }),
       ),
-    /Acknowledge the one-time holdout/,
+    /Acknowledge the one-time protected-window/,
   );
   assert.throws(
     () => engine.buildEnvelope(baseValues({ commission_preset: "zero" })),
@@ -322,7 +332,7 @@ test("holdout, zero costs, Delta order, and opposite SMI fail closed", () => {
   );
   assert.throws(
     () => engine.buildEnvelope(baseValues({ opposite_smi_exit: true })),
-    /Enable the SMI gate/,
+    /not exposed by the certified adapter/,
   );
 });
 
@@ -449,10 +459,11 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     );
   }
   const legacyMode = stateModel.modes.legacy_macd;
-  const pendingMode = stateModel.modes.adapter_pending;
-  assert.ok(!pendingMode.locked_targets.includes("runner-access-key"));
+  const adapterMode = stateModel.modes.adapter_connected;
+  assert.equal(adapterMode.queueable, true);
+  assert.ok(!adapterMode.locked_targets.includes("runner-access-key"));
   assert.match(
-    pendingMode.state_overrides["runner-access-key"].description,
+    adapterMode.state_overrides["runner-access-key"].description,
     /kept only in this tab/i,
   );
   const legacyCoverage = new Set([

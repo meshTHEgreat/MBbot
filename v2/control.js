@@ -50,6 +50,7 @@
   let dependencyConfig = null;
   let dependenciesReady = false;
   let validatedLegacyHash = null;
+  let validatedEngineHash = null;
   let currentLegacyHash = null;
   let currentEngineHash = null;
   let dialogReturnFocus = null;
@@ -101,6 +102,7 @@
     const value = (name) => namedValue(name);
     return {
       dataset_version: value("dataset_version"),
+      experiment_label: form.elements.experiment_label.value,
       window_preset: value("window_preset"),
       start_date: value("start_date"),
       end_date: value("end_date"),
@@ -219,13 +221,12 @@
 
   function updateQueueGuidance() {
     if (!dependencyConfig || !queueActionHelp) return;
-    if (currentRunModeName() !== "legacy_macd") {
-      queueActionHelp.textContent =
-        "To generate a report today, select Legacy MACD in Stage 2, enter the access key, then validate.";
-      return;
-    }
+    const route =
+      currentRunModeName() === "legacy_macd"
+        ? "Legacy compatibility"
+        : "Phase-2 adapter";
     queueActionHelp.textContent = queueButton.disabled
-      ? "Legacy MACD can generate a report now. Enter the access key, then select Validate only."
+      ? `${route} can generate a report now. Enter the access key, then select Validate only.`
       : "Validation passed. Queue backtest is ready to generate the report.";
   }
 
@@ -274,6 +275,9 @@
     if (Object.hasOwn(condition, "equals")) {
       return String(causeValue) === String(condition.equals);
     }
+    if (Array.isArray(condition.one_of)) {
+      return condition.one_of.map(String).includes(String(causeValue));
+    }
     if (condition.truthy === true) return Boolean(causeValue);
     if (Object.hasOwn(condition, "less_than")) {
       return causeValue !== "" && Number(causeValue) < condition.less_than;
@@ -307,7 +311,7 @@
     const selector = dependencyConfig?.control_state_model?.selector;
     return selector && namedValue(selector) === "legacy_macd"
       ? "legacy_macd"
-      : "adapter_pending";
+      : "adapter_connected";
   }
 
   function currentRunMode() {
@@ -528,9 +532,9 @@
           id: "locked",
           label: "Read-only",
           description:
-            lockedTargets.has(targetName) && modeName === "adapter_pending"
-              ? "Queue is unavailable until the adapter engine connects, so no access key is needed."
-              : dependencyReason || "This value is derived or fixed and cannot be changed here.",
+            mode.locked_reasons?.[targetName] ||
+            dependencyReason ||
+            "This value is derived or fixed and cannot be changed here.",
         };
         if (lockedTargets.has(targetName)) lockForRunMode(targetName);
       } else if (dependencyLocked) {
@@ -555,7 +559,7 @@
                 mode.effective_values?.[targetName] ||
                 "The legacy compatibility runner does not read this value."
               }`
-            : "Saved to portal-engine-params.v1; queueable when the adapter engine connects.",
+            : "Included in the parity-certified adapter request and used by this run.",
         };
         if (readOnly) lockForRunMode(targetName);
       } else if (queueTargets.has(targetName)) {
@@ -728,6 +732,40 @@
           form.elements.start_date.max = binding.discovery_end;
           form.elements.end_date.min = binding.discovery_start;
           form.elements.end_date.max = binding.discovery_end;
+          const dateRule = dependencyConfig.rules.find(
+            (rule) => rule.id === "window-date-bindings",
+          );
+          const dateEffect = dateRule?.effects.find(
+            (candidate) => candidate.behavior === "mapped_value",
+          );
+          if (dateEffect) {
+            dateEffect.values = {
+              discovery: {
+                start_date: binding.discovery_start,
+                end_date: binding.discovery_end,
+              },
+              validation: {
+                start_date: binding.validation_start,
+                end_date: binding.validation_end,
+              },
+              holdout: {
+                start_date: binding.holdout_start,
+                end_date: binding.holdout_end || binding.latest_session,
+              },
+            };
+          }
+          const validation = form.querySelector(
+            'input[name="window_preset"][value="validation"]',
+          );
+          validation.disabled = !(
+            binding.validation_start && binding.validation_end
+          );
+          if (changedCause === "dataset_version") {
+            form.querySelector(
+              'input[name="window_preset"][value="discovery"]',
+            ).checked = true;
+            burnAck.checked = false;
+          }
         }
       } else if (
         effect.behavior === "require_acknowledgement" &&
@@ -817,6 +855,41 @@
     return optionalStageState.get(stage) || {
       customized: false,
       expanded: false,
+    };
+  }
+
+  function adapterWorkflowInputs(envelope) {
+    const baseline = legacyModel.buildInputs(
+      {
+        experiment_label: envelope.provenance.experiment_label,
+        symbols: envelope.symbols,
+        window_preset: "discovery",
+        start_date: "2026-04-27",
+        end_date: "2026-05-22",
+        holdout_burn_acknowledgement: false,
+        commission_preset: "reference",
+        unrealistic_costs_acknowledged: false,
+      },
+      false,
+    );
+    return {
+      ...baseline,
+      dataset_profile:
+        envelope.provenance.dataset === "v2-year"
+          ? "portal-adapter-v2-year"
+          : "portal-adapter-v1-study",
+      experiment_label: envelope.provenance.experiment_label,
+      symbols: envelope.symbols.join(","),
+      start_date: envelope.window.start,
+      end_date: envelope.window.end,
+      max_spread_percent:
+        envelope.liquidity.maximum_relative_spread_percent,
+      allow_zero_dte: envelope.dte_range.minimum === 0,
+      commission_per_contract:
+        envelope.costs.commission_per_contract_per_side,
+      contracts_per_trade: envelope.risk.contracts_per_trade,
+      validate_only: false,
+      request_envelope: engineModel.canonicalJson(envelope),
     };
   }
 
@@ -1080,6 +1153,7 @@
       throw new Error("Dependency graph schema is unsupported.");
     }
     dependencyConfig = payload;
+    await loadDatasetCapabilities();
     renderStateLegend();
     initializeOptionalStages();
     renderStageFlow();
@@ -1088,6 +1162,93 @@
     dependenciesReady = true;
     form.removeAttribute("data-initializing");
     validateButton.disabled = false;
+  }
+
+  async function loadDatasetCapabilities() {
+    const option = form.querySelector(
+      '#dataset_version option[value="v2-year"]',
+    );
+    const badge = document.getElementById("dataset-availability-badge");
+    const note = document.getElementById("dataset-version-help");
+    try {
+      const response = await fetch(
+        `${gatewayUrl()}/api/dataset-capabilities`,
+        { cache: "no-store" },
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const payload = await response.json();
+      if (
+        payload.schema_version !==
+          "mbbot.backtest-control.dataset-capabilities.v1" ||
+        !Array.isArray(payload.datasets)
+      ) {
+        throw new Error("unsupported capability schema");
+      }
+      const bindingRule = dependencyConfig.rules.find(
+        (rule) => rule.id === "dataset-window-bindings",
+      );
+      const bindingEffect = bindingRule?.effects.find(
+        (effect) => effect.behavior === "dataset_binding",
+      );
+      for (const dataset of payload.datasets) {
+        if (
+          !bindingEffect ||
+          !["v1", "v2-year"].includes(dataset.id) ||
+          !Array.isArray(dataset.windows)
+        ) {
+          continue;
+        }
+        const windows = Object.fromEntries(
+          dataset.windows.map((window) => [window.id, window]),
+        );
+        bindingEffect.values[dataset.id] = {
+          discovery_start: windows.discovery?.start,
+          discovery_end: windows.discovery?.end,
+          validation_start: windows.validation?.start,
+          validation_end: windows.validation?.end,
+          holdout_start: windows.holdout?.start,
+          holdout_end: windows.holdout?.end,
+          latest_session: dataset.latest_session || windows.holdout?.end,
+          symbols: dataset.symbols || ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"],
+        };
+      }
+      const year = payload.datasets.find(
+        (dataset) => dataset.id === "v2-year",
+      );
+      const available = Boolean(year?.available && year?.validated);
+      option.disabled = !available;
+      option.textContent = available
+        ? `v2 — 12 months · ${year.sessions || 251} sessions · ready`
+        : "v2 — 12 months · unavailable";
+      badge.textContent = available
+        ? `Minute + Tier-1 · latest ${year.latest_session}`
+        : "Minute · v1 ready";
+      const heading = document.createElement("strong");
+      heading.textContent = available
+        ? "Certified year archive ready."
+        : "Year archive unavailable.";
+      note.replaceChildren(
+        heading,
+        document.createTextNode(
+          available
+            ? " Discovery, Validation, and Holdout dates come from the runner capability receipt."
+            : ` ${year?.reason || "The runner did not publish a valid receipt."}`,
+        ),
+      );
+    } catch (reason) {
+      option.disabled = true;
+      badge.textContent = "Minute · v1 ready";
+      const heading = document.createElement("strong");
+      heading.textContent = "Year capability could not be verified.";
+      note.replaceChildren(
+        heading,
+        document.createTextNode(
+          " v2 stays unavailable; reload after the runner manifest is reachable.",
+        ),
+      );
+    }
   }
 
   function updateSummaries() {
@@ -1153,20 +1314,20 @@
     document.getElementById("stage_8_summary").textContent =
       modeName === "legacy_macd"
         ? "Review: queue-effective legacy compatibility request"
-        : "Review: envelope valid locally · queue waits for the adapter engine";
+        : "Review: parity-certified adapter request · queue-effective";
     renderReview();
   }
 
   function engineSentence(envelope) {
-    const symbols = envelope.dataset.symbols.join(" + ");
-    const family = envelope.setup_trigger.family.replaceAll("_", " ");
-    const costs = envelope.execution_costs.commission_preset === "both"
+    const symbols = envelope.symbols.join(" + ");
+    const family = envelope.family.replaceAll("_", " ");
+    const costs = envelope.provenance.commission_preset === "both"
       ? "$0.65 and $1.30 per side"
-      : `$${envelope.execution_costs.commission_per_contract_per_side} per side`;
-    return `${family} on ${symbols}, ${envelope.dataset.window_preset.replaceAll(
+      : `$${envelope.costs.commission_per_contract_per_side} per side`;
+    return `${family} on ${symbols}, ${envelope.provenance.window_preset.replaceAll(
       "_",
       " ",
-    )} ${envelope.dataset.start_date} through ${envelope.dataset.end_date}, ${costs}.`;
+    )} ${envelope.window.start} through ${envelope.window.end}, ${costs}.`;
   }
 
   async function renderConfig() {
@@ -1205,7 +1366,7 @@
         "report-85 legacy comparison · compatibility runner";
     } else {
       effectiveConfigTitle.textContent =
-        "Exact adapter envelope · not queueable yet";
+        "Exact parity-certified adapter request";
       sentence.textContent = envelope
         ? engineSentence(envelope)
         : "Engine envelope needs attention.";
@@ -1216,15 +1377,16 @@
     const allStagesValid = updateStepperValidity();
     queueButton.disabled =
       !dependenciesReady ||
-      !legacyRoute ||
       !allStagesValid ||
-      !validatedLegacyHash ||
-      validatedLegacyHash !== currentLegacyHash;
+      (legacyRoute
+        ? !validatedLegacyHash || validatedLegacyHash !== currentLegacyHash
+        : !validatedEngineHash || validatedEngineHash !== currentEngineHash);
     updateQueueGuidance();
   }
 
   function invalidate() {
     validatedLegacyHash = null;
+    validatedEngineHash = null;
     queueButton.disabled = true;
     updateQueueGuidance();
     setStatus(
@@ -1301,7 +1463,7 @@
     }
     if (
       index === 0 &&
-      selected("window_preset") === "holdout" &&
+      ["validation", "holdout"].includes(selected("window_preset")) &&
       !burnAck.checked
     ) {
       return false;
@@ -1472,7 +1634,9 @@
       } else if (payload.status === "in_progress") {
         setStatus(
           "running",
-          "Running legacy compatibility backtest",
+          currentRunModeName() === "legacy_macd"
+            ? "Running legacy compatibility backtest"
+            : "Running Phase-2 adapter backtest",
           "The production runner is using only the verified offline archive.",
         );
       } else if (payload.status === "completed") {
@@ -1518,11 +1682,12 @@
         const envelope = engineModel.buildEnvelope(engineValues());
         currentEngineHash = await sha256(engineModel.canonicalJson(envelope));
         validatedLegacyHash = null;
-        queueButton.disabled = true;
+        validatedEngineHash = currentEngineHash;
+        queueButton.disabled = false;
         setStatus(
           "success",
-          "Engine envelope valid",
-          "No runner was started. Queue remains disabled until the parity-certified adapter arrives.",
+          "Adapter request validation passed",
+          "No runner was started. Queue is enabled only for this exact certified request.",
         );
         updateQueueGuidance();
         return;
@@ -1530,6 +1695,7 @@
       const inputs = legacyModel.buildInputs(legacyValues(), false);
       currentLegacyHash = await sha256(legacyModel.canonicalJson(inputs));
       validatedLegacyHash = currentLegacyHash;
+      validatedEngineHash = null;
       queueButton.disabled = false;
       setStatus(
         "success",
@@ -1544,14 +1710,6 @@
 
   async function submit() {
     clearError();
-    if (form.elements.trigger_family.value !== "legacy_macd") {
-      showError(
-        new Error(
-          "Queue requires the parity-certified adapter for this trigger family.",
-        ),
-      );
-      return;
-    }
     const key = form.elements.runner_access_key.value;
     if (!key) {
       const reason = new Error("Enter the runner access key.");
@@ -1561,14 +1719,26 @@
     }
     let inputs;
     try {
-      inputs = legacyModel.buildInputs(legacyValues(), false);
-      const fingerprint = await sha256(legacyModel.canonicalJson(inputs));
-      if (fingerprint !== validatedLegacyHash) {
-        throw new Error(
-          "This legacy configuration changed after validation. Validate it again.",
-        );
+      if (currentRunModeName() === "legacy_macd") {
+        inputs = legacyModel.buildInputs(legacyValues(), false);
+        const fingerprint = await sha256(legacyModel.canonicalJson(inputs));
+        if (fingerprint !== validatedLegacyHash) {
+          throw new Error(
+            "This legacy configuration changed after validation. Validate it again.",
+          );
+        }
+        currentLegacyHash = fingerprint;
+      } else {
+        const envelope = engineModel.buildEnvelope(engineValues());
+        const fingerprint = await sha256(engineModel.canonicalJson(envelope));
+        if (fingerprint !== validatedEngineHash) {
+          throw new Error(
+            "This adapter configuration changed after validation. Validate it again.",
+          );
+        }
+        currentEngineHash = fingerprint;
+        inputs = adapterWorkflowInputs(envelope);
       }
-      currentLegacyHash = fingerprint;
     } catch (reason) {
       showError(reason);
       return;
@@ -1596,7 +1766,10 @@
       showError(reason);
     } finally {
       validateButton.disabled = false;
-      queueButton.disabled = validatedLegacyHash !== currentLegacyHash;
+      queueButton.disabled =
+        currentRunModeName() === "legacy_macd"
+          ? validatedLegacyHash !== currentLegacyHash
+          : validatedEngineHash !== currentEngineHash;
       updateQueueGuidance();
       form.removeAttribute("aria-busy");
     }

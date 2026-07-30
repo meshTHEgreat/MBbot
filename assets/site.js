@@ -213,6 +213,16 @@
     const resultActions = document.getElementById("backtest-result-actions");
     const resultLink = document.getElementById("backtest-result-link");
     const profile = form?.elements.namedItem("dataset_profile");
+    const datasetCapability = document.getElementById(
+      "classic-dataset-capability",
+    );
+    const discoveryDates = document.getElementById(
+      "classic-discovery-dates",
+    );
+    const validationDates = document.getElementById(
+      "classic-validation-dates",
+    );
+    const holdoutDates = document.getElementById("classic-holdout-dates");
     const signalSource = form?.elements.namedItem("signal_source");
     const startDate = form?.elements.namedItem("start_date");
     const endDate = form?.elements.namedItem("end_date");
@@ -345,7 +355,8 @@
       }
     }
 
-    const safetyWindows = model.WINDOWS;
+    let safetyWindows =
+      model.PROFILE_WINDOWS[profile.value] || model.WINDOWS;
     const commissionValues = model.COMMISSIONS;
 
     function selectedValue(name) {
@@ -357,7 +368,9 @@
     function updateSafetyWatermark() {
       const flags = [];
       if (
-        selectedValue("window_preset") === "holdout" &&
+        ["validation", "holdout"].includes(
+          selectedValue("window_preset"),
+        ) &&
         holdoutAcknowledged
       ) {
         flags.push("HOLDOUT RUN");
@@ -385,6 +398,10 @@
     function applyWindowState({ openHoldout = true } = {}) {
       const preset = selectedValue("window_preset");
       const custom = preset === "custom_discovery";
+      startDate.min = safetyWindows.discovery.start;
+      startDate.max = safetyWindows.discovery.end;
+      endDate.min = safetyWindows.discovery.start;
+      endDate.max = safetyWindows.discovery.end;
       startDate.disabled = !custom;
       endDate.disabled = !custom;
       resetDateRange?.toggleAttribute("disabled", !custom);
@@ -406,12 +423,21 @@
           windowReason.textContent =
             "Custom dates are clamped to the discovery boundary.";
         }
-      } else if (preset === "holdout") {
-        startDate.value = safetyWindows.holdout.start;
-        endDate.value = safetyWindows.holdout.end;
+      } else if (preset === "validation" || preset === "holdout") {
+        const protectedWindow = safetyWindows[preset];
+        if (!protectedWindow) {
+          form.querySelector(
+            'input[name="window_preset"][value="discovery"]',
+          ).checked = true;
+          applyWindowState({ openHoldout: false });
+          return;
+        }
+        startDate.value = protectedWindow.start;
+        endDate.value = protectedWindow.end;
         if (windowReason) {
           windowReason.textContent =
-            "Set by Holdout. The run and report will be watermarked.";
+            `Set by ${preset === "validation" ? "Validation" : "Holdout"}. ` +
+            "The run and report will be watermarked.";
         }
         if (!holdoutAcknowledged && openHoldout) openHoldoutDialog();
       } else {
@@ -424,6 +450,83 @@
         }
       }
       updateSafetyWatermark();
+    }
+
+    function shortDateRange(windowValue) {
+      if (!windowValue) return "Unavailable";
+      return `${windowValue.start}–${windowValue.end}`;
+    }
+
+    function applyDatasetState() {
+      safetyWindows =
+        model.PROFILE_WINDOWS[profile.value] || model.WINDOWS;
+      const year = profile.value === "portal-legacy-v2-year";
+      const validation = form.querySelector(
+        'input[name="window_preset"][value="validation"]',
+      );
+      if (validation instanceof HTMLInputElement) {
+        validation.disabled = !year;
+      }
+      if (discoveryDates) {
+        discoveryDates.textContent = shortDateRange(
+          safetyWindows.discovery,
+        );
+      }
+      if (validationDates) {
+        validationDates.textContent = year
+          ? `${shortDateRange(safetyWindows.validation)} · acknowledgement required`
+          : "Year dataset only · acknowledgement required";
+      }
+      if (holdoutDates) {
+        holdoutDates.textContent =
+          `${shortDateRange(safetyWindows.holdout)} · acknowledgement required`;
+      }
+      form.querySelector(
+        'input[name="window_preset"][value="discovery"]',
+      ).checked = true;
+      holdoutAcknowledged = false;
+      applyWindowState({ openHoldout: false });
+      updateExperimentSummary();
+    }
+
+    async function loadDatasetCapabilities() {
+      const yearOption = profile.querySelector(
+        'option[value="portal-legacy-v2-year"]',
+      );
+      try {
+        const response = await fetch(
+          `${gatewayUrl}/api/dataset-capabilities`,
+          { cache: "no-store" },
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const payload = await response.json();
+        if (
+          payload.schema_version !==
+          "mbbot.backtest-control.dataset-capabilities.v1"
+        ) {
+          throw new Error("unsupported capability schema");
+        }
+        const year = payload.datasets?.find(
+          (item) => item.id === "v2-year",
+        );
+        const available =
+          year?.available === true && year?.validated === true;
+        if (yearOption) yearOption.disabled = !available;
+        if (datasetCapability) {
+          datasetCapability.textContent = available
+            ? `Certified year archive ready · ${year.sessions} sessions · latest ${year.latest_session}.`
+            : `Year archive unavailable: ${year?.reason || "runner capability not certified"}.`;
+        }
+      } catch (capabilityError) {
+        if (yearOption) yearOption.disabled = true;
+        if (datasetCapability) {
+          datasetCapability.textContent =
+            "Year archive remains unavailable because runner capability could not be verified.";
+        }
+        console.warn("Classic dataset capability check failed", capabilityError);
+      }
     }
 
     function applyCostState() {
@@ -583,7 +686,7 @@
       const value = (name) => form.elements.namedItem(name)?.value || "—";
       experimentSummaryTitle.textContent =
         `${selected.length} ${selected.length === 1 ? "symbol" : "symbols"} · ` +
-        (windowPreset === "holdout"
+        (["validation", "holdout"].includes(windowPreset)
           ? "HOLDOUT RUN"
           : windowPreset === "discovery"
             ? "discovery window"
@@ -920,6 +1023,7 @@
           updateExperimentSummary();
         });
       });
+    profile.addEventListener("change", applyDatasetState);
     form
       .querySelectorAll('input[name="commission_preset"]')
       .forEach((input) => {
@@ -1006,9 +1110,10 @@
     });
     form.addEventListener("input", updateExperimentSummary);
     form.addEventListener("change", updateExperimentSummary);
-    applyWindowState({ openHoldout: false });
+    applyDatasetState();
     applyCostState();
     updateExperimentSummary();
+    void loadDatasetCapabilities();
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();

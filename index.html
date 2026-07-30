@@ -77,10 +77,32 @@
 
       <div class="control-workbench">
         <form class="backtest-form" id="backtest-form" novalidate>
-          <input name="dataset_profile" type="hidden"
-                 value="thetadata-options-2026-04-27-to-2026-07-24">
           <input name="signal_source" type="hidden"
                  value="thetadata_option_contract">
+          <fieldset class="control-fieldset">
+            <legend>Dataset</legend>
+            <label class="control-field">
+              <span>Local replay archive</span>
+              <select name="dataset_profile"
+                      aria-describedby="classic-dataset-capability classic-dataset-note">
+                <option value="thetadata-options-2026-04-27-to-2026-07-24">
+                  v1 — 3 months (62 sessions, minute)
+                </option>
+                <option value="portal-legacy-v2-year" disabled>
+                  v2 — 12 months (251 sessions, minute + Greeks Tier-1)
+                </option>
+              </select>
+            </label>
+            <p class="fieldset-help" id="classic-dataset-capability"
+               role="status" aria-live="polite">
+              Checking the runner’s certified year-data receipt…
+            </p>
+            <p class="fieldset-help" id="classic-dataset-note">
+              The classic strategy keeps its existing MACD entry logic.
+              Dataset choice changes only the retained offline replay archive
+              and available dates.
+            </p>
+          </fieldset>
           <div class="control-field-grid control-field-grid--intro control-intro-grid">
             <label class="control-field">
               <span>Experiment label</span>
@@ -105,16 +127,17 @@
           <fieldset class="control-fieldset date-range-fieldset">
             <legend>Stage 0 guard · replay window</legend>
             <p class="fieldset-help">
-              Discovery is the default strategy-development window. Holdout
-              is a one-time proof and always requires an explicit
-              acknowledgement before its fixed dates can be used.
+              Discovery is the default strategy-development window.
+              Validation and Holdout are protected result windows and always
+              require an explicit acknowledgement before their fixed dates
+              can be used.
             </p>
             <div class="safety-choice-grid" role="radiogroup"
                  aria-label="Window preset">
               <label class="control-check">
                 <input name="window_preset" type="radio"
                        value="discovery" checked>
-                <span><strong>Discovery (recommended)</strong><small>27 Apr–22 May 2026</small></span>
+                <span><strong>Discovery (recommended)</strong><small id="classic-discovery-dates">27 Apr–22 May 2026</small></span>
               </label>
               <label class="control-check">
                 <input name="window_preset" type="radio"
@@ -122,8 +145,13 @@
                 <span><strong>Custom inside discovery</strong><small>Dates remain clamped to discovery.</small></span>
               </label>
               <label class="control-check control-check--warning">
+                <input name="window_preset" type="radio" value="validation"
+                       disabled>
+                <span><strong>Validation ⚠</strong><small id="classic-validation-dates">Year dataset only · acknowledgement required</small></span>
+              </label>
+              <label class="control-check control-check--warning">
                 <input name="window_preset" type="radio" value="holdout">
-                <span><strong>Holdout ⚠</strong><small>26 May–24 Jul 2026 · acknowledgement required</small></span>
+                <span><strong>Holdout ⚠</strong><small id="classic-holdout-dates">26 May–24 Jul 2026 · acknowledgement required</small></span>
               </label>
             </div>
             <div class="control-field-grid control-field-grid--two">
@@ -1119,7 +1147,7 @@
           aria-describedby="classic-holdout-copy">
     <div class="classic-dialog-body">
       <p class="section-label">Irreversible evidence decision</p>
-      <h2 id="classic-holdout-title">Use the holdout?</h2>
+      <h2 id="classic-holdout-title">Open a protected result window?</h2>
       <p id="classic-holdout-copy">
         Holdout data proves a finished strategy ONCE. Reading results here
         permanently burns it for this strategy family.
@@ -1127,11 +1155,11 @@
       <label class="control-check control-check--warning">
         <input id="classic-holdout-ack" type="checkbox"
                aria-describedby="classic-holdout-copy">
-        <span><strong>I understand and want to use the holdout.</strong><small>This acknowledgement is stamped in the request and run log.</small></span>
+        <span><strong>I understand and want to open this protected window.</strong><small>This acknowledgement is stamped in the request and run log.</small></span>
       </label>
       <div class="classic-dialog-actions">
         <button class="primary-action" id="classic-holdout-confirm"
-                type="button" disabled>Acknowledge and use holdout</button>
+                type="button" disabled>Acknowledge and use window</button>
         <button class="secondary-action" id="classic-holdout-cancel"
                 type="button">Keep discovery window</button>
       </div>

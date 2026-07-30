@@ -1,423 +1,184 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://meshthegreat.github.io/MBbot/ui/portal-engine-params-v1.schema.json",
-  "title": "MBbot portal engine parameters v1",
+  "$id": "mbbot.portal.engine-params.v1",
+  "title": "MBbot portal backtest request (v1)",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
-    "dataset",
-    "regime",
-    "setup_trigger",
-    "filters",
-    "contract_selection",
-    "execution_costs",
+    "family",
+    "trigger",
+    "delta_band",
+    "dte_range",
+    "session_window",
+    "liquidity",
     "risk",
     "exits",
+    "costs",
+    "symbols",
+    "window",
     "provenance"
   ],
   "properties": {
-    "schema_version": {
-      "const": "portal-engine-params.v1"
+    "schema_version": {"const": "mbbot.portal.engine-params.v1"},
+    "family": {
+      "enum": [
+        "trend_persistence",
+        "opening_range_breakout",
+        "orderflow_imbalance",
+        "premium_underlying_divergence",
+        "mean_reversion_fade"
+      ]
     },
-    "dataset": {
+    "trigger": {
       "type": "object",
-      "additionalProperties": false,
-      "required": ["version", "window_preset", "start_date", "end_date", "symbols", "holdout_burn_acknowledgement"],
-      "properties": {
-        "version": { "enum": ["v1", "v2"] },
-        "window_preset": { "enum": ["discovery", "custom_discovery", "holdout"] },
-        "start_date": { "type": "string", "format": "date" },
-        "end_date": { "type": "string", "format": "date" },
-        "symbols": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "enum": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"] }
-        },
-        "holdout_burn_acknowledgement": { "type": "boolean" }
-      }
-    },
-    "regime": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["rule_source", "warmup_read_only"],
-      "properties": {
-        "rule_source": { "const": "family_supplied" },
-        "warmup_read_only": { "type": "string" }
-      }
-    },
-    "setup_trigger": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["family", "signal_price_source", "trigger_timeframe_minutes", "execution_timeframe_minutes", "parameters"],
-      "properties": {
-        "family": {
-          "enum": [
-            "trend_persistence",
-            "opening_range_breakout",
-            "order_flow_imbalance",
-            "premium_underlying_divergence",
-            "mean_reversion_fade",
-            "legacy_macd"
-          ]
-        },
-        "signal_price_source": { "type": "string" },
-        "trigger_timeframe_minutes": { "type": "integer", "minimum": 1, "maximum": 60 },
-        "execution_timeframe_minutes": { "const": 1 },
-        "parameters": {
-          "oneOf": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "fast_ma_snapshots",
-                "slow_ma_snapshots",
-                "ma_gap_percent",
-                "momentum_window_minutes",
-                "momentum_percent"
-              ],
-              "properties": {
-                "fast_ma_snapshots": { "type": "integer", "minimum": 1, "maximum": 240 },
-                "slow_ma_snapshots": { "type": "integer", "minimum": 2, "maximum": 500 },
-                "ma_gap_percent": { "type": "number", "minimum": 0, "maximum": 100 },
-                "momentum_window_minutes": { "type": "integer", "minimum": 1, "maximum": 390 },
-                "momentum_percent": { "type": "number", "minimum": 0, "maximum": 100 }
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["range_minutes", "buffer_percent", "regime_enabled"],
-              "properties": {
-                "range_minutes": { "type": "integer", "minimum": 1, "maximum": 180 },
-                "buffer_percent": { "type": "number", "minimum": 0, "maximum": 100 },
-                "regime_enabled": { "type": "boolean" }
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "rolling_window_bars",
-                "buy_minus_sell_share_threshold",
-                "underlying_agreement"
-              ],
-              "properties": {
-                "rolling_window_bars": { "type": "integer", "minimum": 1, "maximum": 240 },
-                "buy_minus_sell_share_threshold": { "type": "number", "minimum": -1, "maximum": 1 },
-                "underlying_agreement": { "type": "boolean" }
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "underlying_velocity_minimum",
-                "premium_velocity_maximum_vs_delta_implied",
-                "window_minutes"
-              ],
-              "properties": {
-                "underlying_velocity_minimum": { "type": "number", "minimum": -100, "maximum": 100 },
-                "premium_velocity_maximum_vs_delta_implied": { "type": "number", "minimum": -100, "maximum": 100 },
-                "window_minutes": { "type": "integer", "minimum": 1, "maximum": 390 }
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "rsi_period",
-                "rsi_extreme",
-                "reversal_bar_confirmation"
-              ],
-              "properties": {
-                "rsi_period": { "type": "integer", "minimum": 1, "maximum": 240 },
-                "rsi_extreme": { "type": "number", "minimum": 0, "maximum": 100 },
-                "reversal_bar_confirmation": { "type": "boolean" }
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "fast_period",
-                "slow_period",
-                "signal_period",
-                "comparison_only"
-              ],
-              "properties": {
-                "fast_period": { "type": "integer", "minimum": 1, "maximum": 240 },
-                "slow_period": { "type": "integer", "minimum": 2, "maximum": 500 },
-                "signal_period": { "type": "integer", "minimum": 1, "maximum": 240 },
-                "comparison_only": { "const": true }
-              }
-            }
-          ]
-        }
-      },
-      "allOf": [
+      "description": "Family-specific trigger parameters; keys depend on family.",
+      "oneOf": [
         {
-          "if": { "properties": { "family": { "const": "trend_persistence" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": [
-                  "fast_ma_snapshots",
-                  "slow_ma_snapshots",
-                  "ma_gap_percent",
-                  "momentum_window_minutes",
-                  "momentum_percent"
-                ]
-              }
-            }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fast_ma_snapshots", "slow_ma_snapshots", "ma_gap_min_pct", "momentum_minutes", "momentum_min_pct"],
+          "properties": {
+            "fast_ma_snapshots": {"type": "integer", "minimum": 1},
+            "slow_ma_snapshots": {"type": "integer", "minimum": 2, "maximum": 66},
+            "ma_gap_min_pct": {"type": "number"},
+            "momentum_minutes": {"enum": [5, 10, 15, 30, 60]},
+            "momentum_min_pct": {"type": "number"}
           }
         },
         {
-          "if": { "properties": { "family": { "const": "opening_range_breakout" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": ["range_minutes", "buffer_percent", "regime_enabled"]
-              }
-            }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["range_minutes", "buffer_pct", "regime_filter_enabled", "regime_max_width_vs_prior5"],
+          "properties": {
+            "range_minutes": {"type": "integer", "minimum": 5, "maximum": 120, "multipleOf": 5},
+            "buffer_pct": {"type": "number", "minimum": 0.0, "maximum": 5.0},
+            "regime_filter_enabled": {"type": "boolean"},
+            "regime_max_width_vs_prior5": {"type": "number", "exclusiveMinimum": 0.0}
           }
         },
         {
-          "if": { "properties": { "family": { "const": "order_flow_imbalance" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": [
-                  "rolling_window_bars",
-                  "buy_minus_sell_share_threshold",
-                  "underlying_agreement"
-                ]
-              }
-            }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["window_bars", "imbalance_threshold", "require_underlying_agreement"],
+          "properties": {
+            "window_bars": {"type": "integer", "minimum": 1, "maximum": 12},
+            "imbalance_threshold": {"type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0},
+            "require_underlying_agreement": {"type": "boolean"}
           }
         },
         {
-          "if": { "properties": { "family": { "const": "premium_underlying_divergence" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": [
-                  "underlying_velocity_minimum",
-                  "premium_velocity_maximum_vs_delta_implied",
-                  "window_minutes"
-                ]
-              }
-            }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["window_minutes", "underlying_velocity_min_pct_per_minute", "premium_velocity_max_pct_per_minute"],
+          "properties": {
+            "window_minutes": {"enum": [5, 10, 15, 30, 60]},
+            "underlying_velocity_min_pct_per_minute": {"type": "number", "exclusiveMinimum": 0.0},
+            "premium_velocity_max_pct_per_minute": {"type": "number"}
           }
         },
         {
-          "if": { "properties": { "family": { "const": "mean_reversion_fade" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": [
-                  "rsi_period",
-                  "rsi_extreme",
-                  "reversal_bar_confirmation"
-                ]
-              }
-            }
-          }
-        },
-        {
-          "if": { "properties": { "family": { "const": "legacy_macd" } } },
-          "then": {
-            "properties": {
-              "parameters": {
-                "required": [
-                  "fast_period",
-                  "slow_period",
-                  "signal_period",
-                  "comparison_only"
-                ]
-              }
-            }
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rsi_period", "rsi_extreme", "require_reversal_bar"],
+          "properties": {
+            "rsi_period": {"type": "integer", "minimum": 2, "maximum": 50},
+            "rsi_extreme": {"type": "number", "exclusiveMinimum": 50.0, "maximum": 100.0},
+            "require_reversal_bar": {"type": "boolean"}
           }
         }
       ]
     },
-    "filters": {
+    "delta_band": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["spread_cap_percent", "spread_denominator", "premium_floor", "premium_cap", "valid_nbbo_required", "quote_freshness_minutes", "indicator_gates"],
+      "required": ["target", "minimum", "maximum"],
       "properties": {
-        "spread_cap_percent": { "type": "number", "exclusiveMinimum": 0, "maximum": 200 },
-        "spread_denominator": { "enum": ["midpoint", "ask"] },
-        "premium_floor": { "type": "number", "minimum": 0 },
-        "premium_cap": { "type": ["number", "null"], "exclusiveMinimum": 0 },
-        "valid_nbbo_required": { "type": "boolean" },
-        "quote_freshness_minutes": { "const": 1 },
-        "indicator_gates": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["rsi", "smi", "momentum", "velocity", "activity", "trade_side"],
-          "properties": {
-            "rsi": { "$ref": "#/$defs/gate" },
-            "smi": { "$ref": "#/$defs/gate" },
-            "momentum": { "$ref": "#/$defs/gate" },
-            "velocity": { "$ref": "#/$defs/gate" },
-            "activity": { "$ref": "#/$defs/gate" },
-            "trade_side": { "$ref": "#/$defs/gate" }
-          }
-        }
+        "target": {"type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0},
+        "minimum": {"type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0},
+        "maximum": {"type": "number", "exclusiveMinimum": 0.0, "maximum": 1.0}
       }
     },
-    "contract_selection": {
+    "dte_range": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["target_absolute_delta", "minimum_absolute_delta", "maximum_absolute_delta", "minimum_dte", "maximum_dte", "allow_zero_dte", "expiration_fallback", "next_strike_scan"],
+      "required": ["minimum", "maximum"],
       "properties": {
-        "target_absolute_delta": { "type": "number", "minimum": 0, "maximum": 1 },
-        "minimum_absolute_delta": { "type": "number", "minimum": 0, "maximum": 1 },
-        "maximum_absolute_delta": { "type": "number", "minimum": 0, "maximum": 1 },
-        "minimum_dte": { "type": "integer", "minimum": 0, "maximum": 365 },
-        "maximum_dte": { "type": "integer", "minimum": 0, "maximum": 365 },
-        "allow_zero_dte": { "type": "boolean" },
-        "expiration_fallback": { "type": "boolean" },
-        "next_strike_scan": { "type": "boolean" }
+        "minimum": {"type": "integer", "minimum": 0, "maximum": 30},
+        "maximum": {"type": "integer", "minimum": 0, "maximum": 30}
       }
     },
-    "execution_costs": {
+    "session_window": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["commission_preset", "commission_per_contract_per_side", "unrealistic_costs_acknowledged", "fill_model"],
+      "required": ["entry_start", "entry_end"],
+      "description": "Must sit inside the fixed 09:45:00-15:00:00 entry bounds; force close is always 15:55:00.",
       "properties": {
-        "commission_preset": { "enum": ["reference", "stress", "both", "zero"] },
-        "commission_per_contract_per_side": {
-          "oneOf": [
-            { "type": "number", "enum": [0, 0.65, 1.3] },
-            { "type": "array", "prefixItems": [{ "const": 0.65 }, { "const": 1.3 }], "items": false }
-          ]
-        },
-        "unrealistic_costs_acknowledged": { "type": "boolean" },
-        "fill_model": {
-          "const": "buy_first_valid_ask_after_completed_trigger_bar_sell_first_valid_bid"
-        }
+        "entry_start": {"type": "string", "pattern": "^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$"},
+        "entry_end": {"type": "string", "pattern": "^[0-2][0-9]:[0-5][0-9]:[0-5][0-9]$"}
+      }
+    },
+    "liquidity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maximum_relative_spread_percent", "minimum_midpoint", "require_valid_nbbo"],
+      "properties": {
+        "maximum_relative_spread_percent": {"type": "number", "exclusiveMinimum": 0.0, "maximum": 100.0},
+        "minimum_midpoint": {"type": "number", "minimum": 0.0},
+        "require_valid_nbbo": {"type": "boolean"}
       }
     },
     "risk": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["contracts_per_trade", "maximum_trades_per_symbol_day", "reentry_cooldown_minutes", "same_direction_spy_qqq_single_exposure"],
+      "required": ["contracts_per_trade", "maximum_trades_per_symbol_session", "reentry_cooldown_minutes", "correlated_exposure_skip"],
       "properties": {
-        "enabled": { "type": "boolean" },
-        "contracts_per_trade": { "type": "integer", "minimum": 1, "maximum": 100 },
-        "maximum_trades_per_symbol_day": { "type": "integer", "minimum": 1, "maximum": 100 },
-        "reentry_cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 390 },
-        "same_direction_spy_qqq_single_exposure": { "type": "boolean" }
+        "contracts_per_trade": {"type": "integer", "minimum": 1, "maximum": 100},
+        "maximum_trades_per_symbol_session": {"type": "integer", "minimum": 1},
+        "reentry_cooldown_minutes": {"type": "integer", "minimum": 0},
+        "correlated_exposure_skip": {"type": "boolean"}
       }
     },
     "exits": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["underlying_invalidation", "profit_target", "time_stop", "forced_eod_close", "premium_percent_stop", "opposite_smi", "priority"],
+      "required": ["invalidation_enabled", "profit_target_mode", "profit_target_friction_multiple", "profit_target_percent", "time_stop_minutes", "premium_stop_enabled", "premium_stop_percent"],
       "properties": {
-        "underlying_invalidation": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled", "definition"],
-          "properties": {
-            "enabled": { "type": "boolean" },
-            "definition": { "type": "string", "minLength": 1 }
-          }
-        },
-        "profit_target": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled", "mode", "friction_multiple", "legacy_percent"],
-          "properties": {
-            "enabled": { "type": "boolean" },
-            "mode": { "enum": ["friction_multiple", "legacy_percent"] },
-            "friction_multiple": { "type": "number", "minimum": 0, "maximum": 100 },
-            "legacy_percent": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000 }
-          }
-        },
-        "time_stop": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled", "minutes"],
-          "properties": {
-            "enabled": { "type": "boolean" },
-            "minutes": { "type": "integer", "minimum": 1, "maximum": 390 }
-          }
-        },
-        "forced_eod_close": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled", "time_et"],
-          "properties": {
-            "enabled": { "const": true },
-            "time_et": { "const": "15:55" }
-          }
-        },
-        "premium_percent_stop": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled", "percent"],
-          "properties": {
-            "enabled": { "type": "boolean" },
-            "percent": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 }
-          }
-        },
-        "opposite_smi": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["enabled"],
-          "properties": {
-            "enabled": { "type": "boolean" }
-          }
-        },
-        "priority": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
+        "invalidation_enabled": {"type": "boolean"},
+        "profit_target_mode": {"enum": ["friction_multiple", "percent"]},
+        "profit_target_friction_multiple": {"type": "number", "exclusiveMinimum": 0.0},
+        "profit_target_percent": {"type": ["number", "null"], "exclusiveMinimum": 0.0},
+        "time_stop_minutes": {"type": "integer", "minimum": 5, "maximum": 375},
+        "premium_stop_enabled": {"type": "boolean"},
+        "premium_stop_percent": {"type": ["number", "null"], "exclusiveMinimum": 0.0, "exclusiveMaximum": 100.0}
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commission_per_contract_per_side"],
+      "properties": {
+        "commission_per_contract_per_side": {"type": "number", "minimum": 0.0}
+      }
+    },
+    "symbols": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["AAPL", "NVDA", "QQQ", "SPY", "TSLA"]}
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"}
       }
     },
     "provenance": {
       "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "ui",
-        "preset",
-        "report_watermarks",
-        "run_log_stamps",
-        "adapter_command",
-        "adapter_status"
-      ],
-      "properties": {
-        "ui": { "const": "v2" },
-        "preset": { "type": "string" },
-        "report_watermarks": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 1 },
-          "uniqueItems": true
-        },
-        "run_log_stamps": {
-          "type": "array",
-          "items": { "type": "string", "minLength": 1 },
-          "uniqueItems": true
-        },
-        "adapter_command": {
-          "const": "python -m portal_engine.cli --request request.json --out-dir DIR"
-        },
-        "adapter_status": { "const": "pending_parity_certified_package" }
-      }
-    }
-  },
-  "$defs": {
-    "gate": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["enabled"],
-      "properties": {
-        "enabled": { "type": "boolean" }
-      }
+      "description": "Opaque UI provenance; echoed verbatim into the report."
     }
   }
 }

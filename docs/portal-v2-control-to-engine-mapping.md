@@ -2,151 +2,83 @@
 
 Date: 2026-07-30
 
-This document maps the v3 safety request and the
-`portal-engine-params.v1` strategy envelope to their execution paths. The
-engine-independent envelope is implemented; the parity-certified adapter that
-consumes it is still arriving from the research side. A UI control is not
-considered executable merely because it is present in the envelope or resembles
-a frozen research constant.
-
-## Shipped safety controls
-
-| Portal control | Request / runner mapping | Execution status |
-| --- | --- | --- |
-| Producing UI | `request_envelope.ui` → `RequestSafety.ui` → report tag and run receipt | Shipped for `classic` and `v2` |
-| Discovery window | `window_preset=discovery` → `2026-04-27..2026-05-22` | Shipped and enforced before replay |
-| Custom discovery | `window_preset=custom_discovery` plus dates, clamped to discovery | Shipped and enforced before replay |
-| Holdout | `window_preset=holdout` plus acknowledgement → fixed `2026-05-26..2026-07-24` | Shipped; `HOLDOUT RUN` appears in the page state, report metadata, and run receipt |
-| Reference commission | `commission_preset=reference` → `commission_per_contract=0.65` | Shipped |
-| Stress commission | `commission_preset=stress` → `commission_per_contract=1.30` | Shipped |
-| Zero commission | `commission_preset=zero` plus acknowledgement → `commission_per_contract=0` | Shipped; `ZERO-COST SIMULATION` appears in page and report metadata |
-| Dual cost report | `commission_preset=both` | Not executable in the legacy report path; rejected honestly |
-
-The public controls use `mbbot.backtest-control.request.v3`. The runner retains
-v1 and v2 acceptance for queued and legacy requests.
-
-## Portal adapter surface
-
-The guided portal builds a versioned `portal-engine-params.v1` envelope and
-validates it against `ui/portal-engine-params-v1.schema.json`. The adapter
-contract is:
+The guided portal emits `mbbot.portal.engine-params.v1`. The private runner
+validates that exact envelope and invokes:
 
 ```text
 python -m portal_engine.cli --request request.json --out-dir DIR
 ```
 
-| Portal stage | Envelope path | Current execution state |
+For `v2-year`, the runner additionally supplies the certified Windows dataset
+configuration with `--dataset-config`. Legacy MACD continues through the
+unchanged compatibility engine. A setting is editable only when its active
+route consumes it.
+
+## Data, safety, and provenance
+
+| Portal control | Request mapping | Effective behavior |
 | --- | --- | --- |
-| Data & Window | `dataset.*` | Safety window and cost subset runs through the legacy compatibility request; strategy envelope waits for adapter |
-| Regime | `regime.rule_source`, `regime.warmup_read_only` | Declared read-only; adapter pending |
-| Setup & Trigger | `setup_trigger.family`, `setup_trigger.parameters.*` | All six agreed parameter shapes emitted; only legacy MACD can queue through the compatibility route |
-| Filters | `filters.*` | Emitted; adapter pending |
-| Contract selection | `contract_selection.*` | Emitted; adapter pending |
-| Execution & Costs | `execution_costs.*` | Reference/stress/zero safety controls exist; dual reporting waits for adapter |
-| Risk | `risk.enabled`, `risk.*` | Defaults disabled; limits are emitted only as active intent after explicit opt-in; adapter pending |
-| Exits | `exits.*` | Emitted with explicit priority; adapter pending |
-| Report/run provenance | `provenance.*` | `ui=v2`, preset, report watermarks, and run-log stamps emitted |
+| Dataset v1 | `provenance.dataset=v1`, workflow profile `portal-adapter-v1-study` | Frozen three-month study archive |
+| Dataset v2 | `provenance.dataset=v2-year`, `dataset_label=v2-year`, workflow profile `portal-adapter-v2-year` | Certified 251-session archive and feature store selected only through `--dataset-config` |
+| Discovery | `window`, `provenance.window_preset=discovery` | v1: 2026-04-27..2026-05-22; v2: 2025-07-25..2026-05-22 |
+| Custom discovery | `window`, `window_preset=custom_discovery` | Dates must remain inside the selected dataset’s discovery boundary |
+| Validation | v2 `2026-05-26..2026-06-26` plus acknowledgement | Protected; `HOLDOUT RUN` watermark and `holdout_burn_acknowledged=true` run-log stamp |
+| Holdout | v2 `2026-06-29..latest` plus acknowledgement | Protected with the same watermark and audit stamp |
+| Symbols | `symbols[]` | Exact selected symbols; single names remain robustness-only evidence |
+| Producing UI | `provenance.ui=v2` | Stored in the request, report, and unified index |
+| Request identity | canonical JSON SHA-256 | Validation binds Queue to the exact request; any edit invalidates it |
 
-The UI fails closed: validation can inspect any envelope, but Queue is enabled
-only for the existing legacy MACD compatibility route until the certified
-adapter is installed.
+## Strategy parameters
 
-## Phase-2 strategy controls
-
-| Portal stage / control | Closest frozen-engine field or code | Support state |
+| Stage / control | `portal-engine-params.v1` field | Adapter behavior |
 | --- | --- | --- |
-| Trigger family: trend persistence | `engine.run_family._family_events`, event `P1_primary` | Executable only as the frozen P1 definition; no portal request adapter exists |
-| Fast MA snapshots | `engine.feature_store`: rolling 3 snapshots | Frozen at 3; not a runner parameter |
-| Slow MA snapshots | `engine.feature_store`: rolling 12 snapshots | Frozen at 12; not a runner parameter |
-| MA gap | `engine.run_family`: aligned gap `>= 0.15` | Frozen at 0.15%; not a runner parameter |
-| Momentum window | Feature `underlying_return_15m_pct` | Frozen at 15 minutes; not a runner parameter |
-| Momentum threshold | `engine.run_family`: aligned return `>= 0.10` | Frozen at 0.10%; not a runner parameter |
-| Opening-range breakout | Research catalog screen events | Catalogued for research only; no executable `FamilyConfig` or family stop |
-| Order-flow imbalance | Research catalog screen events | Catalogued for research only; no executable `FamilyConfig` or family stop |
-| Premium-underlying divergence | Research catalog screen events | Catalogued for research only; no executable `FamilyConfig` or family stop |
-| Mean-reversion fade | No executable family in `run_family.py` | Unsupported |
-| Legacy MACD premium crossover | Legacy runner, not the Phase-2 family runner | Executable only through the classic legacy path |
-| Trigger timeframe | `research-config.json.bar_minutes=5` and prebuilt feature store | Frozen at 5 minutes; changing it requires feature regeneration |
-| Signal source | P1 feature rows use underlying snapshot features | Frozen and read-only |
+| Trend persistence | `family=trend_persistence`, `trigger.fast_ma_snapshots`, `slow_ma_snapshots`, `ma_gap_min_pct`, `momentum_minutes`, `momentum_min_pct` | Queue-effective |
+| Opening-range breakout | `family=opening_range_breakout`, `trigger.range_minutes`, `buffer_pct`, `regime_filter_enabled`, `regime_max_width_vs_prior5` | Queue-effective |
+| Order-flow imbalance | `family=orderflow_imbalance`, `trigger.window_bars`, `imbalance_threshold`, `require_underlying_agreement` | Queue-effective; result is explicitly no-fuel-labeled while classified tick volume is zero |
+| Premium/underlying divergence | `family=premium_underlying_divergence`, `trigger.underlying_velocity_min_pct_per_minute`, `premium_velocity_max_pct_per_minute`, `window_minutes` | Queue-effective |
+| Mean-reversion fade | `family=mean_reversion_fade`, `trigger.rsi_period`, `rsi_extreme`, `require_reversal_bar` | Queue-effective |
+| Legacy MACD | legacy flat workflow inputs | Queue-effective only through the compatibility runner; adapter-only controls are locked |
+| Trigger timeframe | fixed five-minute completed bars | Read-only because the certified feature store is five-minute |
+| Signal source | family-defined underlying or option evidence | Read-only |
 
-`engine/run_family.py` constructs only three `FamilyConfig` instances:
-`P1_primary`, `P1_A1_no_ma_gap`, and `P1_A2_no_momentum`. The latter two are
-formal ablations, not additional trigger families.
+## Contract, liquidity, risk, exits, and costs
 
-## Contract selection
-
-| Portal control | Closest engine field | Support state |
+| Portal control | Envelope field | Effective behavior |
 | --- | --- | --- |
-| Target absolute Delta | `liquidity.target_absolute_delta` | Runtime-selected by `select_signal_candidates` |
-| Delta acceptance band | `liquidity.minimum_absolute_delta` / `maximum_absolute_delta` | Applied while building `entry_eligible`; not dynamically adjustable against the frozen store |
-| DTE range | `scope.minimum_dte` / `maximum_dte` | Applied while building the feature store; not dynamically adjustable |
-| 0DTE | `scope.allow_zero_dte=false` | No runtime portal path; frozen store is scoped to 1–4 DTE |
-| Expiration fallback / next-strike scan | No Phase-2 runtime control | Unsupported in the transferred family runner |
-| IV source, Vega, Rho, OI, IV-rank | v2 dataset not transferred | Unavailable by dependency |
+| Delta target/band | `delta_band.target`, `minimum`, `maximum` | Runtime adapter selection |
+| DTE | `dte_range.minimum`, `maximum` | Certified 1–4 DTE by default; 0DTE carries `OUTSIDE PREREGISTERED SCOPE` |
+| Entry window | `session_window.entry_start`, `entry_end` | Inclusive start, exclusive end |
+| Spread cap | `liquidity.maximum_relative_spread_percent` | Midpoint denominator; explicit warnings remain audit UI |
+| Premium floor | `liquidity.minimum_midpoint` | Applied by adapter |
+| Valid NBBO | `liquidity.require_valid_nbbo` | Applied by adapter |
+| Contracts/trade | `risk.contracts_per_trade` | Certified default is 1 |
+| Max trades/symbol/day | `risk.maximum_trades_per_symbol_session` | Certified default is 3 |
+| Re-entry cooldown | `risk.reentry_cooldown_minutes` | Certified default is 30 |
+| SPY/QQQ correlated exposure | `risk.correlated_exposure_skip` | Certified default is enabled |
+| Invalidation | `exits.invalidation_enabled` | Formula is fixed by family |
+| Profit target | `exits.profit_target_mode`, `profit_target_friction_multiple`, `profit_target_percent` | Certified default is 3× friction |
+| Time stop | `exits.time_stop_minutes` | Certified default is 60 minutes |
+| Forced close | runner constant | Fixed at 15:55 ET |
+| Commission | `costs.commission_per_contract_per_side` | Reference $0.65, stress $1.30, or acknowledged zero |
+| Dual report | `provenance.commission_preset=both` with primary cost $0.65 | Adapter always emits reference and stress result columns; audit stamp is `DUAL-COST REPORT` |
 
-## Risk
+Controls not represented by the certified schema remain visible and read-only:
+indicator veto gates, expiration fallback, next-strike scan, IV source,
+Vega/Rho/OI/IV-rank filters, legacy percent targets/stops, opposite-SMI exit,
+and a configurable exit priority. They never imply an effect on a real run.
 
-| Portal control | Engine field | Support state |
-| --- | --- | --- |
-| Enable Risk stage | `risk.enabled` | Defaults `false`; the portal exposes controls and emits active risk intent only after “Enable & customize” |
-| Contracts per trade | `scope.contracts_per_trade` | Configuration constant; trade accounting is currently one contract |
-| Max trades per symbol/day | `scope.maximum_trades_per_symbol_session` | Runtime-consumed |
-| Re-entry cooldown | `scope.reentry_cooldown_minutes` | Runtime-consumed |
-| SPY/QQQ same-direction exposure | `scope.same_direction_spy_qqq_single_exposure` | Runtime-consumed |
+## Result publication
 
-These values exist in the engine configuration, but the runner has no validated
-portal request schema that passes them into a per-run configuration copy.
-`risk.enabled=false` therefore remains adapter-envelope intent and must cause
-the adapter to ignore the accompanying inactive values when that route is
-connected; it does not change strategy math in the legacy runner.
+The adapter emits and the v2 publisher surfaces:
 
-## Exits
+- reference and stress cost columns;
+- mid-to-mid P&L with the pre-friction explanation;
+- MAE and MFE;
+- per-symbol and exit-reason tables;
+- an insufficient-evidence marker when `n < 60`;
+- `ui: v2`, `dataset_label`, canonical request SHA-256, watermarks, and
+  run-log stamps.
 
-| Portal control | Engine behavior | Support state |
-| --- | --- | --- |
-| Underlying invalidation | Family `invalidation_level_column`; P1 uses `underlying_slow_ma_60m` | Always evaluated when the level exists; no toggle |
-| Friction-multiple profit target | `costs.minimum_profit_target_friction_multiple` | Always evaluated; runtime value exists |
-| Legacy percent profit target | No Phase-2 implementation | Unsupported |
-| Time stop | `scope.maximum_hold_minutes` | Always evaluated; runtime value exists |
-| Forced 15:55 close | `scope.force_close` | Always evaluated |
-| Premium-percent stop | No Phase-2 implementation | Unsupported |
-| Opposite SMI exit | No Phase-2 implementation | Unsupported |
-| Exit priority | Profit target → invalidation → time exit → forced close in `engine/fills.py` | Fixed; read-only |
-
-The independently toggleable Stage-7 behavior in the portal specification
-cannot be represented by the transferred `simulate_long_option_fill` API.
-
-## Results
-
-The transferred backtester already calculates:
-
-- reference and stress cost summaries;
-- mid-to-mid P&L;
-- per-symbol summaries;
-- MAE and MFE fields on each trade;
-- exit reasons.
-
-It emits `mbbot.phase2.backtest-result.v1`, while the Actions publication path
-still consumes the legacy report input schema. A verified adapter is required
-before these values can be published by the portal.
-
-## Pending adapter package
-
-Completing engine execution without changing math requires the research-side
-adapter package to supply:
-
-1. the agreed offline `portal_engine.cli` entrypoint consuming
-   `portal-engine-params.v1`;
-2. executable definitions and invalidation levels for all six trigger
-   families, or an authoritative declaration that some choices must remain
-   disabled;
-3. runtime-vs-feature-build classification for timeframe, Delta band, DTE, and
-   every filter;
-4. independent exit toggles and their exact priority semantics;
-5. a converter from `mbbot.phase2.backtest-result.v1` to the report publisher's
-   accepted input schema;
-6. parity fixtures for every newly parameterized behavior.
-
-Until that package arrives and passes parity, the strategy controls remain
-visible and inspectable but cannot queue the Phase-2 engine. They are never
-translated into similar-looking legacy parameters.
+Reports publish under `/v2/reports/` and are also appended to the shared
+`reports/report-index.md` and `data/manifest.json` with both UI and dataset
+columns.

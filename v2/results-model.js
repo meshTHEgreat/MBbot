@@ -20,7 +20,10 @@
   }
 
   function summary(payload, key) {
-    const source = payload?.pooled?.[key] || {};
+    const source =
+      payload?.pooled?.[key] ||
+      payload?.dual_costs?.[key]?.pooled ||
+      {};
     return {
       trades: finite(source.trades) || 0,
       mid_to_mid_pnl: finite(source.mid_to_mid_pnl),
@@ -44,15 +47,45 @@
   function normalizeResult(payload) {
     const reference = summary(payload, "reference_0.65");
     const stress = summary(payload, "stress_1.30");
-    const tradeCount = Math.max(reference.trades, stress.trades);
+    const tradeCount =
+      finite(payload?.metrics?.closed_trades) ??
+      Math.max(reference.trades, stress.trades);
     const trades = Array.isArray(payload?.trades) ? payload.trades : [];
-    const perSymbol = Object.entries(payload?.per_symbol || {})
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([symbol, costs]) => ({
-        symbol,
-        reference: summary({ pooled: costs }, "reference_0.65"),
-        stress: summary({ pooled: costs }, "stress_1.30"),
-      }));
+    const adapterReference =
+      payload?.dual_costs?.["reference_0.65"]?.per_symbol || {};
+    const adapterStress =
+      payload?.dual_costs?.["stress_1.30"]?.per_symbol || {};
+    const symbolNames = new Set([
+      ...Object.keys(payload?.per_symbol || {}),
+      ...Object.keys(adapterReference),
+      ...Object.keys(adapterStress),
+    ]);
+    const perSymbol = [...symbolNames]
+      .sort((left, right) => left.localeCompare(right))
+      .map((symbol) => {
+        const legacy = payload?.per_symbol?.[symbol] || {};
+        return {
+          symbol,
+          reference: summary(
+            {
+              pooled: {
+                "reference_0.65":
+                  legacy["reference_0.65"] || adapterReference[symbol],
+              },
+            },
+            "reference_0.65",
+          ),
+          stress: summary(
+            {
+              pooled: {
+                "stress_1.30":
+                  legacy["stress_1.30"] || adapterStress[symbol],
+              },
+            },
+            "stress_1.30",
+          ),
+        };
+      });
     const exitReasons = new Map();
     for (const trade of trades) {
       const reason = String(trade.exit_reason || "unknown");
@@ -61,6 +94,11 @@
     if (!trades.length && payload?.exit_reasons) {
       for (const [reason, count] of Object.entries(payload.exit_reasons)) {
         exitReasons.set(reason, finite(count) || 0);
+      }
+    }
+    if (!exitReasons.size && Array.isArray(payload?.breakdowns?.exit_reason)) {
+      for (const row of payload.breakdowns.exit_reason) {
+        exitReasons.set(String(row.label || "unknown"), finite(row.trades) || 0);
       }
     }
     return {
@@ -74,9 +112,11 @@
         ...summary(payload, key),
       })),
       average_mae_percent:
+        finite(payload?.mae_mfe?.mae_percent?.mean) ??
         finite(payload?.excursions?.average_mae_percent) ??
         average(trades.map((trade) => trade.maximum_adverse_excursion_percent)),
       average_mfe_percent:
+        finite(payload?.mae_mfe?.mfe_percent?.mean) ??
         finite(payload?.excursions?.average_mfe_percent) ??
         average(trades.map((trade) => trade.maximum_favorable_excursion_percent)),
       per_symbol: perSymbol,

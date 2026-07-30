@@ -54,9 +54,8 @@ async function main() {
     process.stderr.write("Portal document loaded\n");
     await page.waitForFunction(
       () =>
-        document
-          .getElementById("route-mode-banner")
-          ?.textContent.includes("Envelope-only"),
+        document.getElementById("safety-form")?.dataset.initializing !==
+        "true",
       { timeout: 10000 },
     );
 

@@ -172,11 +172,19 @@ async function main() {
       () =>
         document
           .querySelector("#run-status strong")
-          .textContent.includes("Engine envelope valid"),
+          .textContent.includes("Adapter request validation passed"),
     );
     assert(
-      await page.$eval("#queue-button", (button) => button.disabled),
-      "Adapter-pending family incorrectly enabled Queue",
+      !(await page.$eval("#queue-button", (button) => button.disabled)),
+      "Certified adapter family did not enable Queue",
+    );
+    await page.click("#queue-button");
+    await page.waitForFunction(
+      () =>
+        !document.getElementById("result-link").hidden &&
+        document
+          .querySelector("#run-status strong")
+          .textContent.includes("Report generated"),
     );
 
     await page.click('[role="tab"][data-stage="2"]');
@@ -235,7 +243,7 @@ async function main() {
           risk_enable_disable: "passed",
           runner_key_editable: true,
           validate_keyboard: "passed",
-          queue_pointer: "passed",
+          queue_pointer: "adapter and legacy passed",
           intercepted_report_route: intercepted,
         },
         null,

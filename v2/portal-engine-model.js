@@ -9,9 +9,23 @@
 })(typeof globalThis === "object" ? globalThis : this, function createModel() {
   "use strict";
 
-  const SCHEMA_VERSION = "portal-engine-params.v1";
+  const SCHEMA_VERSION = "mbbot.portal.engine-params.v1";
   const ADAPTER_COMMAND =
     "python -m portal_engine.cli --request request.json --out-dir DIR";
+  const FAMILY_NAMES = Object.freeze([
+    "trend_persistence",
+    "opening_range_breakout",
+    "orderflow_imbalance",
+    "premium_underlying_divergence",
+    "mean_reversion_fade",
+  ]);
+  const UI_TO_ENGINE_FAMILY = Object.freeze({
+    trend_persistence: "trend_persistence",
+    opening_range_breakout: "opening_range_breakout",
+    order_flow_imbalance: "orderflow_imbalance",
+    premium_underlying_divergence: "premium_underlying_divergence",
+    mean_reversion_fade: "mean_reversion_fade",
+  });
   const FAMILY_SOURCES = Object.freeze({
     trend_persistence: "UNDERLYING snapshot price",
     opening_range_breakout: "UNDERLYING snapshot price",
@@ -24,9 +38,10 @@
   const COMMISSIONS = Object.freeze({
     reference: 0.65,
     stress: 1.3,
-    both: Object.freeze([0.65, 1.3]),
+    both: 0.65,
     zero: 0,
   });
+  const MOMENTUM_WINDOWS = Object.freeze([5, 10, 15, 30, 60]);
 
   function inputError(message, field) {
     const error = new Error(message);
@@ -52,18 +67,23 @@
     return parsed;
   }
 
-  function optionalNumber(values, name, minimum, maximum) {
-    const raw = values[name];
-    if (raw === "" || raw === null || raw === undefined) return null;
-    return number(values, name, minimum, maximum);
+  function oneOf(values, name, allowed) {
+    const parsed = number(values, name, Math.min(...allowed), Math.max(...allowed), true);
+    if (!allowed.includes(parsed)) {
+      throw inputError(
+        `${name.replaceAll("_", " ")} must be one of ${allowed.join(", ")}.`,
+        name,
+      );
+    }
+    return parsed;
   }
 
   function selectedSymbols(values) {
     const symbols = Array.isArray(values.symbols)
       ? values.symbols
       : [values.symbols].filter(Boolean);
-    const allowed = new Set(["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]);
-    const result = [...new Set(symbols.map((value) => String(value)))];
+    const allowed = new Set(["AAPL", "NVDA", "QQQ", "SPY", "TSLA"]);
+    const result = [...new Set(symbols.map(String))].sort();
     if (!result.length || result.some((symbol) => !allowed.has(symbol))) {
       throw inputError("Choose at least one available symbol.", "symbols");
     }
@@ -78,153 +98,209 @@
     return value;
   }
 
-  function familyParameters(values, family) {
-    if (family === "trend_persistence") {
+  function trigger(values, uiFamily) {
+    if (uiFamily === "trend_persistence") {
+      const fast = number(values, "fast_ma_snapshots", 1, 65, true);
+      const slow = number(values, "slow_ma_snapshots", 2, 66, true);
+      if (fast >= slow) {
+        throw inputError(
+          "Fast MA snapshots must be fewer than slow MA snapshots.",
+          "fast_ma_snapshots",
+        );
+      }
       return {
-        fast_ma_snapshots: number(values, "fast_ma_snapshots", 1, 240, true),
-        slow_ma_snapshots: number(values, "slow_ma_snapshots", 2, 500, true),
-        ma_gap_percent: number(values, "ma_gap_percent", 0, 100),
-        momentum_window_minutes: number(
+        fast_ma_snapshots: fast,
+        slow_ma_snapshots: slow,
+        ma_gap_min_pct: number(values, "ma_gap_percent", 0, 100),
+        momentum_minutes: oneOf(
           values,
           "momentum_window_minutes",
-          1,
-          390,
-          true,
+          MOMENTUM_WINDOWS,
         ),
-        momentum_percent: number(values, "momentum_percent", 0, 100),
+        momentum_min_pct: number(values, "momentum_percent", 0, 100),
       };
     }
-    if (family === "opening_range_breakout") {
+    if (uiFamily === "opening_range_breakout") {
+      const range = number(values, "orb_range_minutes", 5, 120, true);
+      if (range % 5 !== 0) {
+        throw inputError(
+          "Opening range must be a multiple of five minutes.",
+          "orb_range_minutes",
+        );
+      }
       return {
-        range_minutes: number(values, "orb_range_minutes", 1, 180, true),
-        buffer_percent: number(values, "orb_buffer_percent", 0, 100),
-        regime_enabled: Boolean(values.orb_regime_enabled),
+        range_minutes: range,
+        buffer_pct: number(values, "orb_buffer_percent", 0, 5),
+        regime_filter_enabled: Boolean(values.orb_regime_enabled),
+        regime_max_width_vs_prior5: 1.5,
       };
     }
-    if (family === "order_flow_imbalance") {
-      return {
-        rolling_window_bars: number(
-          values,
-          "order_flow_window_bars",
-          1,
-          240,
-          true,
-        ),
-        buy_minus_sell_share_threshold: number(
-          values,
+    if (uiFamily === "order_flow_imbalance") {
+      const threshold = number(values, "order_flow_threshold", 0, 1);
+      if (threshold === 0) {
+        throw inputError(
+          "Order-flow threshold must be greater than zero.",
           "order_flow_threshold",
-          -1,
-          1,
+        );
+      }
+      return {
+        window_bars: number(values, "order_flow_window_bars", 1, 12, true),
+        imbalance_threshold: threshold,
+        require_underlying_agreement: Boolean(
+          values.order_flow_underlying_agreement,
         ),
-        underlying_agreement: Boolean(values.order_flow_underlying_agreement),
       };
     }
-    if (family === "premium_underlying_divergence") {
-      return {
-        underlying_velocity_minimum: number(
-          values,
+    if (uiFamily === "premium_underlying_divergence") {
+      const underlying = number(
+        values,
+        "divergence_underlying_velocity_min",
+        0,
+        100,
+      );
+      if (underlying === 0) {
+        throw inputError(
+          "Underlying velocity minimum must be greater than zero.",
           "divergence_underlying_velocity_min",
-          -100,
-          100,
+        );
+      }
+      return {
+        window_minutes: oneOf(
+          values,
+          "divergence_window_minutes",
+          MOMENTUM_WINDOWS,
         ),
-        premium_velocity_maximum_vs_delta_implied: number(
+        underlying_velocity_min_pct_per_minute: underlying,
+        premium_velocity_max_pct_per_minute: number(
           values,
           "divergence_premium_velocity_max",
           -100,
           100,
         ),
-        window_minutes: number(
-          values,
-          "divergence_window_minutes",
-          1,
-          390,
-          true,
-        ),
       };
     }
-    if (family === "mean_reversion_fade") {
+    if (uiFamily === "mean_reversion_fade") {
+      const extreme = number(
+        values,
+        "mean_reversion_rsi_extreme",
+        50,
+        100,
+      );
+      if (extreme === 50) {
+        throw inputError(
+          "Mean-reversion RSI extreme must be greater than 50.",
+          "mean_reversion_rsi_extreme",
+        );
+      }
       return {
-        rsi_period: number(values, "mean_reversion_rsi_period", 1, 240, true),
-        rsi_extreme: number(values, "mean_reversion_rsi_extreme", 0, 100),
-        reversal_bar_confirmation: Boolean(
+        rsi_period: number(
+          values,
+          "mean_reversion_rsi_period",
+          2,
+          50,
+          true,
+        ),
+        rsi_extreme: extreme,
+        require_reversal_bar: Boolean(
           values.mean_reversion_reversal_confirm,
         ),
       };
     }
-    if (family === "legacy_macd") {
-      return {
-        fast_period: number(values, "legacy_macd_fast", 1, 240, true),
-        slow_period: number(values, "legacy_macd_slow", 2, 500, true),
-        signal_period: number(values, "legacy_macd_signal", 1, 240, true),
-        comparison_only: true,
-      };
-    }
-    throw inputError("Choose a supported trigger family.", "trigger_family");
-  }
-
-  function gate(values, name) {
-    return { enabled: Boolean(values[name]) };
+    throw inputError(
+      "Legacy MACD uses the compatibility runner, not the Phase-2 adapter.",
+      "trigger_family",
+    );
   }
 
   function buildEnvelope(values) {
     if (!values || typeof values !== "object") {
       throw inputError("Portal engine settings are missing.");
     }
-    const family = String(values.trigger_family || "");
-    if (!Object.hasOwn(FAMILY_SOURCES, family)) {
-      throw inputError("Choose a supported trigger family.", "trigger_family");
+    const uiFamily = String(values.trigger_family || "");
+    const family = UI_TO_ENGINE_FAMILY[uiFamily];
+    if (!family || !FAMILY_NAMES.includes(family)) {
+      throw inputError(
+        uiFamily === "legacy_macd"
+          ? "Legacy MACD uses the compatibility runner."
+          : "Choose a supported trigger family.",
+        "trigger_family",
+      );
+    }
+
+    const dataset = String(values.dataset_version || "v1");
+    if (!["v1", "v2-year"].includes(dataset)) {
+      throw inputError("Choose an available certified dataset.", "dataset_version");
     }
     const windowPreset = String(values.window_preset || "");
-    if (!["discovery", "custom_discovery", "holdout"].includes(windowPreset)) {
+    if (
+      !["discovery", "custom_discovery", "validation", "holdout"].includes(
+        windowPreset,
+      )
+    ) {
       throw inputError("Choose a supported window preset.", "window_preset");
     }
-    const startDate = isoDate(values, "start_date");
-    const endDate = isoDate(values, "end_date");
-    if (startDate > endDate) {
+    const start = isoDate(values, "start_date");
+    const end = isoDate(values, "end_date");
+    if (start > end) {
       throw inputError("Start date cannot be later than end date.", "start_date");
     }
-    if (
-      windowPreset === "holdout" &&
-      !Boolean(values.holdout_burn_acknowledgement)
-    ) {
+    const acknowledged = Boolean(values.holdout_burn_acknowledgement);
+    if (["validation", "holdout"].includes(windowPreset) && !acknowledged) {
       throw inputError(
-        "Acknowledge the one-time holdout decision.",
+        "Acknowledge the one-time protected-window decision.",
         "holdout_burn_acknowledgement",
       );
     }
+
     const commissionPreset = String(values.commission_preset || "");
     if (!Object.hasOwn(COMMISSIONS, commissionPreset)) {
       throw inputError("Choose a supported commission preset.", "commission_preset");
     }
-    if (
-      commissionPreset === "zero" &&
-      !Boolean(values.unrealistic_costs_acknowledged)
-    ) {
+    const unrealistic = Boolean(values.unrealistic_costs_acknowledged);
+    if (commissionPreset === "zero" && !unrealistic) {
       throw inputError(
         "Acknowledge unrealistic costs before using zero commission.",
         "unrealistic_costs_acknowledged",
       );
     }
-    const deltaMinimum = number(values, "delta_minimum", 0, 1);
-    const deltaTarget = number(values, "delta_target", 0, 1);
-    const deltaMaximum = number(values, "delta_maximum", 0, 1);
+
+    const deltaMinimum = number(values, "delta_minimum", 0.01, 1);
+    const deltaTarget = number(values, "delta_target", 0.01, 1);
+    const deltaMaximum = number(values, "delta_maximum", 0.01, 1);
     if (!(deltaMinimum <= deltaTarget && deltaTarget <= deltaMaximum)) {
       throw inputError(
         "Delta target must remain inside the acceptance band.",
         "delta_target",
       );
     }
-    const minimumDte = number(values, "dte_minimum", 0, 365, true);
-    const maximumDte = number(values, "dte_maximum", 0, 365, true);
+    const allowZeroDte = Boolean(values.allow_zero_dte);
+    const minimumDte = number(values, "dte_minimum", 0, 30, true);
+    const maximumDte = number(values, "dte_maximum", 0, 30, true);
     if (minimumDte > maximumDte) {
       throw inputError("Minimum DTE cannot exceed maximum DTE.", "dte_minimum");
     }
-    const premiumStopEnabled = Boolean(values.premium_stop_enabled);
-    const smiGateEnabled = Boolean(values.smi_gate_enabled);
-    const oppositeSmiEnabled = Boolean(values.opposite_smi_exit);
-    if (oppositeSmiEnabled && !smiGateEnabled) {
+    if (allowZeroDte !== (minimumDte === 0)) {
       throw inputError(
-        "Enable the SMI gate before the opposite-SMI exit.",
+        "0DTE and the minimum DTE must agree.",
+        "allow_zero_dte",
+      );
+    }
+
+    if (values.profit_target_enabled === false) {
+      throw inputError(
+        "The certified adapter always applies a profit target.",
+        "profit_target_enabled",
+      );
+    }
+    if (values.time_stop_enabled === false) {
+      throw inputError(
+        "The certified adapter always applies a time stop.",
+        "time_stop_enabled",
+      );
+    }
+    if (values.opposite_smi_exit === true) {
+      throw inputError(
+        "Opposite-SMI exit is not exposed by the certified adapter.",
         "opposite_smi_exit",
       );
     }
@@ -233,155 +309,131 @@
       throw inputError("Choose a profit-target mode.", "profit_target_mode");
     }
 
+    const reportWatermarks = [
+      ...(["validation", "holdout"].includes(windowPreset)
+        ? ["HOLDOUT RUN"]
+        : []),
+      ...(commissionPreset === "zero" ? ["ZERO-COST SIMULATION"] : []),
+      ...(commissionPreset === "both" ? ["DUAL-COST REPORT"] : []),
+      ...(minimumDte === 0 ? ["OUTSIDE PREREGISTERED SCOPE"] : []),
+    ];
+    const runLogStamps = [
+      ...(["validation", "holdout"].includes(windowPreset)
+        ? ["holdout_burn_acknowledged=true"]
+        : []),
+      `dataset_label=${dataset === "v2-year" ? "v2-year" : "v1-study"}`,
+    ];
+    const symbols = selectedSymbols(values);
+    const riskCustomized = Boolean(values.risk_enabled);
+
     return {
       schema_version: SCHEMA_VERSION,
-      dataset: {
-        version: String(values.dataset_version || "v1"),
-        window_preset: windowPreset,
-        start_date: startDate,
-        end_date: endDate,
-        symbols: selectedSymbols(values),
-        holdout_burn_acknowledgement: Boolean(
-          values.holdout_burn_acknowledgement,
-        ),
+      family,
+      trigger: trigger(values, uiFamily),
+      delta_band: {
+        target: deltaTarget,
+        minimum: deltaMinimum,
+        maximum: deltaMaximum,
       },
-      regime: {
-        rule_source: "family_supplied",
-        warmup_read_only: String(values.warmup_requirement || ""),
+      dte_range: {
+        minimum: minimumDte,
+        maximum: maximumDte,
       },
-      setup_trigger: {
-        family,
-        signal_price_source: FAMILY_SOURCES[family],
-        trigger_timeframe_minutes: number(
+      session_window: {
+        entry_start: "09:45:00",
+        entry_end: "15:00:00",
+      },
+      liquidity: {
+        maximum_relative_spread_percent: number(
           values,
-          "trigger_timeframe_minutes",
-          1,
-          60,
-          true,
-        ),
-        execution_timeframe_minutes: 1,
-        parameters: familyParameters(values, family),
-      },
-      filters: {
-        spread_cap_percent: number(values, "spread_cap_percent", 0.01, 200),
-        spread_denominator: String(values.spread_denominator || "midpoint"),
-        premium_floor: number(values, "premium_floor", 0, 10000),
-        premium_cap: optionalNumber(values, "premium_cap", 0.01, 10000),
-        valid_nbbo_required: Boolean(values.valid_nbbo_required),
-        quote_freshness_minutes: 1,
-        indicator_gates: {
-          rsi: gate(values, "rsi_gate_enabled"),
-          smi: gate(values, "smi_gate_enabled"),
-          momentum: gate(values, "momentum_gate_enabled"),
-          velocity: gate(values, "velocity_gate_enabled"),
-          activity: gate(values, "activity_gate_enabled"),
-          trade_side: gate(values, "trade_side_gate_enabled"),
-        },
-      },
-      contract_selection: {
-        target_absolute_delta: deltaTarget,
-        minimum_absolute_delta: deltaMinimum,
-        maximum_absolute_delta: deltaMaximum,
-        minimum_dte: minimumDte,
-        maximum_dte: maximumDte,
-        allow_zero_dte: Boolean(values.allow_zero_dte),
-        expiration_fallback: Boolean(values.expiration_fallback),
-        next_strike_scan: Boolean(values.next_strike_scan),
-      },
-      execution_costs: {
-        commission_preset: commissionPreset,
-        commission_per_contract_per_side: COMMISSIONS[commissionPreset],
-        unrealistic_costs_acknowledged: Boolean(
-          values.unrealistic_costs_acknowledged,
-        ),
-        fill_model:
-          "buy_first_valid_ask_after_completed_trigger_bar_sell_first_valid_bid",
-      },
-      risk: {
-        enabled: Boolean(values.risk_enabled),
-        contracts_per_trade: number(
-          values,
-          "contracts_per_trade",
-          1,
+          "spread_cap_percent",
+          0.01,
           100,
-          true,
         ),
-        maximum_trades_per_symbol_day: number(
-          values,
-          "maximum_trades_per_symbol_day",
-          1,
-          100,
-          true,
-        ),
-        reentry_cooldown_minutes: number(
-          values,
-          "reentry_cooldown_minutes",
-          0,
-          390,
-          true,
-        ),
-        same_direction_spy_qqq_single_exposure: Boolean(
-          values.same_direction_spy_qqq_single_exposure,
-        ),
+        minimum_midpoint: number(values, "premium_floor", 0, 10000),
+        require_valid_nbbo: Boolean(values.valid_nbbo_required),
       },
+      risk: riskCustomized
+        ? {
+            contracts_per_trade: number(
+              values,
+              "contracts_per_trade",
+              1,
+              100,
+              true,
+            ),
+            maximum_trades_per_symbol_session: number(
+              values,
+              "maximum_trades_per_symbol_day",
+              1,
+              100,
+              true,
+            ),
+            reentry_cooldown_minutes: number(
+              values,
+              "reentry_cooldown_minutes",
+              0,
+              390,
+              true,
+            ),
+            correlated_exposure_skip: Boolean(
+              values.same_direction_spy_qqq_single_exposure,
+            ),
+          }
+        : {
+            contracts_per_trade: 1,
+            maximum_trades_per_symbol_session: 3,
+            reentry_cooldown_minutes: 30,
+            correlated_exposure_skip: true,
+          },
       exits: {
-        underlying_invalidation: {
-          enabled: Boolean(values.invalidation_stop_enabled),
-          definition: String(values.invalidation_formula || ""),
-        },
-        profit_target: {
-          enabled: Boolean(values.profit_target_enabled),
-          mode: profitMode,
-          friction_multiple: number(values, "profit_friction_multiple", 0, 100),
-          legacy_percent: number(values, "profit_legacy_percent", 0.01, 1000),
-        },
-        time_stop: {
-          enabled: Boolean(values.time_stop_enabled),
-          minutes: number(values, "time_stop_minutes", 1, 390, true),
-        },
-        forced_eod_close: {
-          enabled: true,
-          time_et: "15:55",
-        },
-        premium_percent_stop: {
-          enabled: premiumStopEnabled,
-          percent: number(values, "premium_stop_percent", 0.01, 100),
-        },
-        opposite_smi: {
-          enabled: oppositeSmiEnabled,
-        },
-        priority: [
-          "profit_target",
-          "underlying_invalidation",
-          "premium_percent_stop",
-          "opposite_smi",
-          "time_stop",
-          "forced_eod_close",
-        ],
+        invalidation_enabled: Boolean(values.invalidation_stop_enabled),
+        profit_target_mode:
+          profitMode === "legacy_percent" ? "percent" : "friction_multiple",
+        profit_target_friction_multiple: number(
+          values,
+          "profit_friction_multiple",
+          0.01,
+          100,
+        ),
+        profit_target_percent:
+          profitMode === "legacy_percent"
+            ? number(values, "profit_legacy_percent", 0.01, 1000)
+            : null,
+        time_stop_minutes: number(
+          values,
+          "time_stop_minutes",
+          5,
+          375,
+          true,
+        ),
+        premium_stop_enabled: Boolean(values.premium_stop_enabled),
+        premium_stop_percent: Boolean(values.premium_stop_enabled)
+          ? number(values, "premium_stop_percent", 0.01, 99.99)
+          : null,
       },
+      costs: {
+        commission_per_contract_per_side: COMMISSIONS[commissionPreset],
+      },
+      symbols,
+      window: { start, end },
       provenance: {
         ui: "v2",
+        dataset,
+        dataset_label: dataset === "v2-year" ? "v2-year" : "v1-study",
+        window_preset: windowPreset,
+        holdout_burn_acknowledgement: acknowledged,
+        commission_preset: commissionPreset,
+        unrealistic_costs_acknowledged: unrealistic,
         preset:
           family === "trend_persistence"
             ? "P1/U08 preregistered"
-            : family === "legacy_macd"
-              ? "report-85 legacy comparison"
-              : "custom portal surface",
-        report_watermarks: [
-          ...(windowPreset === "holdout" ? ["HOLDOUT RUN"] : []),
-          ...(commissionPreset === "zero" ? ["ZERO-COST SIMULATION"] : []),
-          ...(minimumDte === 0 ? ["OUTSIDE PREREGISTERED SCOPE"] : []),
-          ...(family === "legacy_macd"
-            ? ["LEGACY MACD BASELINE ONLY"]
-            : []),
-        ],
-        run_log_stamps: [
-          ...(windowPreset === "holdout"
-            ? ["holdout_burn_acknowledged=true"]
-            : []),
-        ],
+            : "custom portal surface",
+        experiment_label: String(values.experiment_label || "Guided backtest"),
+        report_watermarks: reportWatermarks,
+        run_log_stamps: runLogStamps,
         adapter_command: ADAPTER_COMMAND,
-        adapter_status: "pending_parity_certified_package",
+        adapter_status: "parity_certified_connected",
       },
     };
   }
@@ -405,6 +457,7 @@
   return Object.freeze({
     SCHEMA_VERSION,
     ADAPTER_COMMAND,
+    FAMILY_NAMES,
     FAMILY_SOURCES,
     COMMISSIONS,
     buildEnvelope,

@@ -18,7 +18,7 @@
     <nav class="topline" aria-label="Portal navigation">
       <span class="brand">MBbot Research Desk</span>
       <span class="preview-chip">Guided portal v2</span>
-      <span class="engine-chip">Adapter pending · legacy compatibility available</span>
+      <span class="engine-chip">Parity-certified adapter · legacy compatibility available</span>
       <a class="portal-switcher" href="../reports/report-index.md">All reports</a>
       <a class="portal-switcher" href="../index.html">Classic portal →</a>
     </nav>
@@ -27,9 +27,9 @@
       <p class="eyebrow">Guided portal v2 · strategy pipeline</p>
       <h1>Build the decision machine, one stage at a time.</h1>
       <p class="lede">
-        The nine-stage surface emits <code>portal-engine-params.v1</code>.
-        Until the parity-certified adapter arrives, queued reports use the
-        clearly labelled legacy compatibility path.
+        The nine-stage surface emits the certified
+        <code>mbbot.portal.engine-params.v1</code> request. Five Phase-2
+        families use the adapter; Legacy MACD keeps its compatibility path.
       </p>
     </header>
 
@@ -118,17 +118,17 @@
         <div class="field field-card dataset-field">
           <div class="field-heading">
             <label for="dataset_version">Dataset</label>
-            <span class="availability-badge">Minute · v1 ready</span>
+            <span id="dataset-availability-badge" class="availability-badge">Checking runner datasets…</span>
           </div>
           <select id="dataset_version" name="dataset_version"
             aria-describedby="dataset-version-help">
             <option value="v1">v1 — 3 months · 62 sessions</option>
-            <option value="v2" disabled>v2 — 12 months · 251 sessions (pending)</option>
+            <option value="v2-year" disabled>v2 — 12 months · 251 sessions</option>
           </select>
           <span id="dataset-version-help" class="reason availability-note">
-            <strong>Year archive pending.</strong>
-            v2 adds minute data plus Tier-1 Greeks and stays visible but
-            unavailable until its archive transfers.
+            <strong>Checking the runner capability receipt.</strong>
+            A dataset becomes selectable only after its local archive and
+            feature store are certified.
           </span>
           <span class="affects-chip" data-affects-for="dataset_version"></span>
         </div>
@@ -143,6 +143,10 @@
             <label class="choice">
               <input name="window_preset" type="radio" value="custom_discovery">
               <span><strong>Custom inside discovery</strong><small>Dates remain clamped to discovery</small></span>
+            </label>
+            <label class="choice">
+              <input name="window_preset" type="radio" value="validation" disabled>
+              <span><strong>Validation ⚠</strong><small>Year dataset only · acknowledgement required</small></span>
             </label>
             <label class="choice">
               <input name="window_preset" type="radio" value="holdout">
@@ -184,6 +188,8 @@
           </div>
           <p id="symbols-help" class="helper">
             Single names carry unobservable event risk; use them for robustness only.
+            On the year archive, 84 early AAPL/NVDA/TSLA symbol-sessions have
+            no 1–4 DTE contract; that is real weekly-expiration market structure.
           </p>
         </fieldset>
         <div id="holdout_page_watermark" class="inline-flag dependency-target" hidden>HOLDOUT RUN</div>
@@ -252,7 +258,8 @@
             <option value="legacy_macd">MACD premium crossover — legacy rejected</option>
           </select>
           <span id="trigger-family-help" class="reason">
-            All families emit the agreed parameter surface; execution waits for the certified adapter.
+            Five Phase-2 families run through the parity-certified adapter;
+            Legacy MACD uses the compatibility runner.
           </span>
           <span class="affects-chip" data-affects-for="trigger_family"></span>
         </div>
@@ -294,8 +301,8 @@
           <legend>Opening-range breakout parameters</legend>
           <div class="field-grid">
             <label>Range minutes<input name="orb_range_minutes" type="number" min="1" value="30" disabled></label>
-            <label>Buffer %<input name="orb_buffer_percent" type="number" min="0" step="0.01" value="0.10" disabled></label>
-            <label class="choice"><input name="orb_regime_enabled" type="checkbox" checked disabled><span>Prior-5-session regime</span></label>
+            <label>Buffer %<input name="orb_buffer_percent" type="number" min="0" max="5" step="0.01" value="0" disabled></label>
+            <label class="choice"><input name="orb_regime_enabled" type="checkbox" disabled><span>Prior-5-session regime</span></label>
           </div>
           <span class="dependency-reason" data-dependency-reason-for="params_opening_range"></span>
         </fieldset>
@@ -304,17 +311,18 @@
           <legend>Order-flow imbalance parameters</legend>
           <div class="field-grid">
             <label>Rolling window bars<input name="order_flow_window_bars" type="number" min="1" value="3" disabled></label>
-            <label>(buy−sell)/total threshold<input name="order_flow_threshold" type="number" min="-1" max="1" step="0.01" value="0.20" disabled></label>
+            <label>(buy−sell)/total threshold<input name="order_flow_threshold" type="number" min="0.01" max="1" step="0.01" value="0.60" disabled></label>
             <label class="choice"><input name="order_flow_underlying_agreement" type="checkbox" checked disabled><span>Underlying agreement</span></label>
           </div>
+          <p class="warning">No fuel on the certified datasets: retained volume has zero classified buy/sell flow because tick data is absent. This family can queue, but currently produces no events.</p>
           <span class="dependency-reason" data-dependency-reason-for="params_order_flow"></span>
         </fieldset>
         <fieldset id="params_premium_divergence" class="parameter-group dependency-target"
           data-family="premium_underlying_divergence" aria-disabled="true">
           <legend>Premium-underlying divergence parameters</legend>
           <div class="field-grid">
-            <label>Underlying velocity minimum<input name="divergence_underlying_velocity_min" type="number" step="0.01" value="0.20" disabled></label>
-            <label>Premium velocity maximum<input name="divergence_premium_velocity_max" type="number" step="0.01" value="0" disabled></label>
+            <label>Underlying velocity minimum<input name="divergence_underlying_velocity_min" type="number" min="0.01" step="0.01" value="0.02" disabled></label>
+            <label>Premium velocity maximum<input name="divergence_premium_velocity_max" type="number" step="0.01" value="0.02" disabled></label>
             <label>Window minutes<input name="divergence_window_minutes" type="number" min="1" value="15" disabled></label>
           </div>
           <span class="dependency-reason" data-dependency-reason-for="params_premium_divergence"></span>
@@ -323,8 +331,8 @@
           data-family="mean_reversion_fade" aria-disabled="true">
           <legend>Mean-reversion fade parameters</legend>
           <div class="field-grid">
-            <label>RSI period<input name="mean_reversion_rsi_period" type="number" min="1" value="14" disabled></label>
-            <label>RSI extreme<input name="mean_reversion_rsi_extreme" type="number" min="0" max="100" value="30" disabled></label>
+            <label>RSI period<input name="mean_reversion_rsi_period" type="number" min="2" max="50" value="14" disabled></label>
+            <label>RSI extreme<input name="mean_reversion_rsi_extreme" type="number" min="50.01" max="100" value="70" disabled></label>
             <label class="choice"><input name="mean_reversion_reversal_confirm" type="checkbox" checked disabled><span>Reversal-bar confirmation</span></label>
           </div>
           <span class="dependency-reason" data-dependency-reason-for="params_mean_reversion"></span>

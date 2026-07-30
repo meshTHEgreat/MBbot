@@ -41,9 +41,8 @@ async function main() {
     });
     await page.waitForFunction(
       () =>
-        document
-          .getElementById("route-mode-banner")
-          ?.textContent.includes("Envelope-only"),
+        document.getElementById("safety-form")?.dataset.initializing !==
+        "true",
       { timeout: 10000 },
     );
     await page.addScriptTag({ content: axeSource });
@@ -98,7 +97,7 @@ async function main() {
       }
     }
 
-    await auditStages("adapter-pending");
+    await auditStages("adapter-connected");
 
     await openStage(0);
     await page.click('input[name="window_preset"][value="holdout"]');

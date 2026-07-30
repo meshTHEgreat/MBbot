@@ -91,13 +91,13 @@
       "stage": 6,
       "button_label": "Enable & customize",
       "reset_label": "Disable risk controls",
-      "default_summary": "Optional — disabled: no portal risk limits apply.",
+      "default_summary": "Optional — customization disabled; required adapter defaults apply: 1 contract, 3 trades/symbol/session, 30-minute cooldown, correlated-exposure protection on.",
       "controls_target": "optional-controls-6",
       "read_only": false,
       "activation": "opt_in",
       "activation_target": "risk_enabled",
-      "inactive_title": "Risk disabled",
-      "inactive_description": "No portal risk limits apply until you enable and customize this stage.",
+      "inactive_title": "Risk customization disabled",
+      "inactive_description": "The adapter requires risk values, so the visible certified defaults still apply until you enable customization.",
       "active_title": "Risk enabled",
       "active_description": "The configured limits are included in the adapter envelope.",
       "defaults": {
@@ -231,6 +231,12 @@
         "condition": { "equals": "holdout" },
         "targets": ["window_preset", "burn-ack"],
         "description": "Holdout requires an explicit acknowledgement and remains watermarked and logged."
+      },
+      {
+        "cause": "window_preset",
+        "condition": { "equals": "validation" },
+        "targets": ["window_preset", "burn-ack"],
+        "description": "Validation is protected evidence and requires the same explicit acknowledgement, watermark, and run-log stamp."
       },
       {
         "cause": "commission_preset",
@@ -413,17 +419,65 @@
           "7": "Fixed +20% target, -10% option-premium stop, historical opposite-MACD/time exits, forced exit 15:20 ET."
         }
       },
-      "adapter_pending": {
-        "queueable": false,
-        "banner": "Envelope-only — queueable when the adapter engine connects. Editable values are saved to portal-engine-params.v1 but cannot start a run today.",
-        "queue_effective_targets": [],
-        "adapter_only_targets": "*",
-        "locked_targets": [],
+      "adapter_connected": {
+        "queueable": true,
+        "banner": "Queue-effective parity-certified adapter route. Editable controls in this mode are sent verbatim to the frozen engine parameter contract.",
+        "queue_effective_targets": [
+          "dataset_version", "window_preset", "burn-ack", "start_date", "end_date",
+          "symbol_combobox", "trigger_family", "fast_ma_snapshots",
+          "slow_ma_snapshots", "ma_gap_percent", "momentum_window_minutes",
+          "momentum_percent", "orb_range_minutes", "orb_buffer_percent",
+          "orb_regime_enabled", "order_flow_window_bars", "order_flow_threshold",
+          "order_flow_underlying_agreement", "divergence_underlying_velocity_min",
+          "divergence_premium_velocity_max", "divergence_window_minutes",
+          "mean_reversion_rsi_period", "mean_reversion_rsi_extreme",
+          "mean_reversion_reversal_confirm", "spread_cap_percent", "premium_floor",
+          "valid_nbbo_required", "delta_minimum", "delta_target", "delta_maximum",
+          "delta_slider_pair", "dte_minimum", "dte_maximum", "allow_zero_dte",
+          "commission_preset", "unrealistic_costs_acknowledged", "experiment-label",
+          "risk_enabled", "contracts_per_trade", "maximum_trades_per_symbol_day",
+          "reentry_cooldown_minutes", "same_direction_spy_qqq_single_exposure",
+          "invalidation_stop_enabled", "profit_target_mode",
+          "profit_friction_multiple", "profit_legacy_percent",
+          "time_stop_minutes", "premium_stop_enabled", "premium_stop_percent",
+          "runner-access-key"
+        ],
+        "adapter_only_targets": [],
+        "locked_targets": [
+          "trigger_timeframe_minutes", "spread_denominator", "premium_cap",
+          "rsi_gate_enabled", "smi_gate_enabled", "momentum_gate_enabled",
+          "velocity_gate_enabled", "activity_gate_enabled",
+          "trade_side_gate_enabled", "expiration_fallback", "next_strike_scan",
+          "iv_source", "vega_filter", "rho_filter", "open_interest_minimum",
+          "iv_rank_gate", "profit_target_enabled", "time_stop_enabled",
+          "opposite_smi_exit"
+        ],
+        "locked_reasons": {
+          "trigger_timeframe_minutes": "The certified feature store uses fixed 5-minute trigger snapshots; this run uses 5 minutes.",
+          "spread_denominator": "The certified adapter defines relative spread against midpoint.",
+          "premium_cap": "The certified adapter exposes a premium floor but no premium cap.",
+          "rsi_gate_enabled": "This indicator veto is not a parameter in the certified adapter.",
+          "smi_gate_enabled": "This indicator veto is not a parameter in the certified adapter.",
+          "momentum_gate_enabled": "This separate veto is not exposed; family momentum belongs in Stage 2.",
+          "velocity_gate_enabled": "This separate veto is not exposed; family velocity belongs in Stage 2.",
+          "activity_gate_enabled": "This indicator veto is not a parameter in the certified adapter.",
+          "trade_side_gate_enabled": "This gate is unavailable and the retained datasets have zero classified buy/sell volume.",
+          "expiration_fallback": "Expiration fallback is fixed on by the certified contract selector.",
+          "next_strike_scan": "Next-strike scanning is fixed on by the certified contract selector.",
+          "iv_source": "The certified adapter does not expose an IV-source choice.",
+          "vega_filter": "The certified adapter does not expose a Vega filter.",
+          "rho_filter": "The certified adapter does not expose a Rho filter.",
+          "open_interest_minimum": "The certified adapter does not expose an open-interest minimum.",
+          "iv_rank_gate": "The certified adapter does not expose an IV-rank gate.",
+          "profit_target_enabled": "A profit target is always active in the certified adapter; choose its mode below.",
+          "time_stop_enabled": "A time stop is always active in the certified adapter; set its minutes below.",
+          "opposite_smi_exit": "Opposite-SMI exit is not exposed by the certified adapter."
+        },
         "effective_values": {},
         "state_overrides": {
           "runner-access-key": {
-            "label": "Credential entry · queue waits",
-            "description": "Editable now and kept only in this tab. It is used only after the selected route becomes queueable."
+            "label": "Credential entry · queue-effective",
+            "description": "Editable and kept only in this tab. It authorizes dispatch and never enters the request or report."
           }
         },
         "disabled_options": {},
@@ -459,9 +513,14 @@
               "holdout_end": "2026-07-24",
               "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
             },
-            "v2": {
-              "discovery_start": "2025-04-28",
-              "discovery_end": "2026-04-24",
+            "v2-year": {
+              "discovery_start": "2025-07-25",
+              "discovery_end": "2026-05-22",
+              "validation_start": "2026-05-26",
+              "validation_end": "2026-06-26",
+              "holdout_start": "2026-06-29",
+              "holdout_end": "2026-07-24",
+              "latest_session": "2026-07-24",
               "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
             }
           }
@@ -499,26 +558,26 @@
               "regime-rule": "No regime rule for trend persistence."
             },
             "opening_range_breakout": {
-              "invalidation_formula": "Adapter pending: research-side family structure is required.",
-              "warmup_requirement": "Opening range plus family regime warm-up; adapter pending.",
+              "invalidation_formula": "Exit when price crosses back through the completed opening-range boundary.",
+              "warmup_requirement": "30-minute opening range plus prior-session regime history when enabled.",
               "signal_price_source": "UNDERLYING snapshot price",
               "regime-rule": "Prior-5-session opening-range regime, controlled by the Stage-2 regime toggle."
             },
             "order_flow_imbalance": {
-              "invalidation_formula": "Adapter pending: research-side family structure is required.",
-              "warmup_requirement": "Rolling imbalance window; adapter pending.",
+              "invalidation_formula": "Exit when the underlying agreement condition reverses.",
+              "warmup_requirement": "Three completed 5-minute imbalance snapshots by default.",
               "signal_price_source": "OPTION trade flow plus underlying agreement",
               "regime-rule": "No separate regime rule for order-flow imbalance."
             },
             "premium_underlying_divergence": {
-              "invalidation_formula": "Adapter pending: research-side family structure is required.",
-              "warmup_requirement": "Velocity window; adapter pending.",
+              "invalidation_formula": "Exit when the measured divergence closes or reverses.",
+              "warmup_requirement": "15 minutes of synchronized premium and underlying observations by default.",
               "signal_price_source": "UNDERLYING and OPTION premium snapshots",
               "regime-rule": "No separate regime rule for premium-underlying divergence."
             },
             "mean_reversion_fade": {
-              "invalidation_formula": "Adapter pending: research-side family structure is required.",
-              "warmup_requirement": "RSI period plus reversal confirmation; adapter pending.",
+              "invalidation_formula": "Exit when the fade structure is invalidated by a renewed session extreme.",
+              "warmup_requirement": "14 RSI snapshots plus reversal-bar confirmation by default.",
               "signal_price_source": "UNDERLYING snapshot price",
               "regime-rule": "No separate regime rule for mean-reversion fade."
             },
@@ -641,12 +700,12 @@
     {
       "id": "holdout-burn-guard",
       "cause": "window_preset",
-      "condition": { "equals": "holdout" },
+      "condition": { "one_of": ["validation", "holdout"] },
       "effects": [
         {
           "targets": ["burn-ack", "burn-dialog"],
           "behavior": "require_acknowledgement",
-          "reason": "Holdout selection requires an explicit acknowledgement."
+          "reason": "Protected-window selection requires an explicit acknowledgement."
         },
         {
           "targets": ["stage_0_summary", "stage_8_summary"],
@@ -659,7 +718,7 @@
       "cause": "holdout_burn_acknowledgement",
       "condition": {
         "all": [
-          { "control": "window_preset", "equals": "holdout" },
+          { "control": "window_preset", "one_of": ["validation", "holdout"] },
           { "control": "holdout_burn_acknowledgement", "truthy": true }
         ]
       },
@@ -672,7 +731,7 @@
             "holdout_run_log_stamp"
           ],
           "behavior": "activate",
-          "reason": "Set by acknowledged Holdout window."
+          "reason": "Set by an acknowledged protected window."
         }
       ]
     },
@@ -700,6 +759,10 @@
             "discovery": {
               "start_date": "2026-04-27",
               "end_date": "2026-05-22"
+            },
+            "validation": {
+              "start_date": "2026-05-26",
+              "end_date": "2026-06-26"
             },
             "holdout": {
               "start_date": "2026-05-26",
