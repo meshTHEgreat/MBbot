@@ -18,29 +18,15 @@
       "AAPL",
       "NVDA",
     ]),
-    "portal-legacy-v2-year": Object.freeze([
-      "QQQ",
-      "SPY",
-      "TSLA",
-      "AAPL",
-      "NVDA",
-    ]),
   });
   const PROFILE_SIGNAL_SOURCES = Object.freeze({
     "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze([
-      "thetadata_option_contract",
-    ]),
-    "portal-legacy-v2-year": Object.freeze([
       "thetadata_option_contract",
     ]),
   });
   const PROFILE_DATE_RANGES = Object.freeze({
     "thetadata-options-2026-04-27-to-2026-07-24": Object.freeze({
       start: "2026-04-27",
-      end: "2026-07-24",
-    }),
-    "portal-legacy-v2-year": Object.freeze({
-      start: "2025-07-25",
       end: "2026-07-24",
     }),
   });
@@ -53,23 +39,6 @@
     holdout: Object.freeze({
       start: "2026-05-26",
       end: "2026-07-24",
-    }),
-  });
-  const PROFILE_WINDOWS = Object.freeze({
-    "thetadata-options-2026-04-27-to-2026-07-24": WINDOWS,
-    "portal-legacy-v2-year": Object.freeze({
-      discovery: Object.freeze({
-        start: "2025-07-25",
-        end: "2026-05-22",
-      }),
-      validation: Object.freeze({
-        start: "2026-05-26",
-        end: "2026-06-26",
-      }),
-      holdout: Object.freeze({
-        start: "2026-06-29",
-        end: "2026-07-24",
-      }),
     }),
   });
   const COMMISSIONS = Object.freeze({
@@ -545,11 +514,10 @@
       );
     }
     const windowPreset = String(values.window_preset || "");
-    const windows = PROFILE_WINDOWS[profile];
     if (windowPreset === "discovery") {
       if (
-        normalized.start_date !== windows.discovery.start ||
-        normalized.end_date !== windows.discovery.end
+        normalized.start_date !== WINDOWS.discovery.start ||
+        normalized.end_date !== WINDOWS.discovery.end
       ) {
         throw inputError(
           "Discovery preset dates must match the discovery window.",
@@ -558,35 +526,18 @@
       }
     } else if (windowPreset === "custom_discovery") {
       if (
-        normalized.start_date < windows.discovery.start ||
-        normalized.end_date > windows.discovery.end
+        normalized.start_date < WINDOWS.discovery.start ||
+        normalized.end_date > WINDOWS.discovery.end
       ) {
         throw inputError(
           "Custom dates must stay inside the discovery window.",
           "start_date",
         );
       }
-    } else if (windowPreset === "validation") {
-      if (
-        !windows.validation ||
-        normalized.start_date !== windows.validation.start ||
-        normalized.end_date !== windows.validation.end
-      ) {
-        throw inputError(
-          "Validation preset dates must match the protected validation window.",
-          "window_preset",
-        );
-      }
-      if (values.holdout_burn_acknowledgement !== true) {
-        throw inputError(
-          "Acknowledge protected result access before continuing.",
-          "window_preset",
-        );
-      }
     } else if (windowPreset === "holdout") {
       if (
-        normalized.start_date !== windows.holdout.start ||
-        normalized.end_date !== windows.holdout.end
+        normalized.start_date !== WINDOWS.holdout.start ||
+        normalized.end_date !== WINDOWS.holdout.end
       ) {
         throw inputError(
           "Holdout preset dates must match the holdout window.",
@@ -800,7 +751,6 @@
     PROFILE_SYMBOLS,
     PROFILE_SIGNAL_SOURCES,
     PROFILE_DATE_RANGES,
-    PROFILE_WINDOWS,
     REQUEST_SCHEMA,
     WINDOWS,
     COMMISSIONS,

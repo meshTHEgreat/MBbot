@@ -2,14 +2,6 @@ name: Deploy report portal
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "data/**"
-      - "reports/**"
-      - "v2/data/**"
-      - "v2/reports/**"
 
 permissions:
   contents: read

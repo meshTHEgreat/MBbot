@@ -2,15 +2,11 @@
 
 This index contains reports produced by both the classic and v2 portals. Rows are ordered newest first.
 
-- **Index updated (UTC):** `2026-07-30T20:21:50.420591Z`
+- **Index updated (UTC):** `2026-07-30T22:41:35.072372Z`
 
 | Report | Title | Timestamp (UTC) | File | UI | Dataset |
 |---:|---|---|---|---|---|
-| #110 | Guided portal v2 run / Workflow #110 | `2026-07-30T20:21:24.596390Z` | [Open](../v2/reports/github-30578766245-1.html) | `v2` | `v2-year` |
-| #109 | Guided portal v2 run / Workflow #109 | `2026-07-30T18:38:02.652864Z` | [Open](../v2/reports/github-30571235561-1.html) | `v2` | `v2-year` |
-| #108 | Guided portal v2 run / Workflow #108 | `2026-07-30T16:13:05.969469Z` | [Open](../v2/reports/github-30560403034-1.html) | `v2` | `v2-year` |
-| #107 | v2 legacy compatibility smoke 2026-07-30 / Workflow #107 | `2026-07-30T13:12:07.814308Z` | [Open](../v2/reports/github-30545636569-1.html) | `v2` | `v1` |
-| #106 | Guided portal v2 run / Workflow #106 | `2026-07-30T10:52:22.757544Z` | [Open](../v2/reports/github-30536169781-1.html) | `v2` | `v1` |
+| #111 | ZERO-COST SIMULATION — Baseline replay / Workflow #111 | `2026-07-30T22:39:05.468027Z` | [Open](github-30586744960-1.html) | `classic` | `v1` |
 | #105 | Baseline replay / Workflow #105 | `2026-07-30T08:24:59.297091Z` | [Open](github-30525324460-1.html) | `classic` | `v1` |
 | #100 | ZERO-COST SIMULATION — Baseline replay / Workflow #100 | `2026-07-29T22:18:41.788255Z` | [Open](github-30493455834-1.html) | `classic` | `v1` |
 | #96 | Baseline replay / Workflow #96 | `2026-07-29T20:28:43.529990Z` | [Open](github-30486417182-1.html) | `classic` | `v1` |
