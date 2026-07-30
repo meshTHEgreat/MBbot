@@ -421,9 +421,23 @@ test("HTML contains nine APG tabs, result surfaces, and production wording", () 
   assert.doesNotMatch(html, /preview runner/i);
 });
 
-test("routine pushes cannot trigger repository workflows", () => {
+test("only report-file pushes trigger the public Pages workflow", () => {
+  const pagesWorkflow = fs.readFileSync(
+    path.join(root, ".github/workflows/pages.yml"),
+    "utf8",
+  );
+  assert.match(pagesWorkflow, /^\s+push:/m);
+  assert.match(pagesWorkflow, /^\s+- main$/m);
+  for (const reportPath of [
+    '"data/**"',
+    '"reports/**"',
+    '"v2/data/**"',
+    '"v2/reports/**"',
+  ]) {
+    assert.ok(pagesWorkflow.includes(reportPath), reportPath);
+  }
+
   for (const relative of [
-    ".github/workflows/pages.yml",
     ".github/workflows/portal-v2-preview.yml",
     "v2/.github/workflows/pages.yml",
   ]) {
