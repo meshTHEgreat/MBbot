@@ -15,25 +15,25 @@
   "state_legend": [
     {
       "id": "queue_effective",
-      "symbol": "✅",
+      "icon": "circle-check",
       "label": "Queue-effective now",
       "description": "You can change it and the current runner will use it."
     },
     {
       "id": "adapter_only",
-      "symbol": "🟡",
+      "icon": "circle-dashed",
       "label": "Adapter-only",
       "description": "It is recorded in the adapter envelope but does not affect today's legacy run."
     },
     {
       "id": "locked",
-      "symbol": "🔒",
+      "icon": "lock-keyhole",
       "label": "Read-only or unavailable",
       "description": "You cannot change it in the current state; the visible reason names the cause."
     },
     {
       "id": "warning",
-      "symbol": "⚠",
+      "icon": "triangle-alert",
       "label": "Explicit acknowledgement",
       "description": "This setting requires a deliberate scope or cost acknowledgement."
     }

@@ -103,7 +103,9 @@
           </div>
           <button class="info-button" type="button"
             aria-label="Explain discovery and holdout windows"
-            aria-expanded="false" aria-controls="window-help">()</button>
+            aria-expanded="false" aria-controls="window-help">
+            <span class="ui-icon" data-icon="info" aria-hidden="true"></span>
+          </button>
         </div>
         <p id="window-help" class="disclosure" hidden>
           Discovery may be inspected repeatedly. Holdout proves a finished
@@ -113,15 +115,20 @@
           Data: v1 · Discovery · SPY + QQQ
         </span>
 
-        <div class="field">
-          <label for="dataset_version">Dataset</label>
+        <div class="field field-card dataset-field">
+          <div class="field-heading">
+            <label for="dataset_version">Dataset</label>
+            <span class="availability-badge">Minute · v1 ready</span>
+          </div>
           <select id="dataset_version" name="dataset_version"
             aria-describedby="dataset-version-help">
-            <option value="v1">v1 — 3 months (62 sessions, minute)</option>
-            <option value="v2" disabled>v2 — 12 months + Greeks Tier-1 — not yet transferred</option>
+            <option value="v1">v1 — 3 months · 62 sessions</option>
+            <option value="v2" disabled>v2 — 12 months · 251 sessions (pending)</option>
           </select>
-          <span id="dataset-version-help" class="reason">
-            v2 remains visible and unavailable until its archive transfers.
+          <span id="dataset-version-help" class="reason availability-note">
+            <strong>Year archive pending.</strong>
+            v2 adds minute data plus Tier-1 Greeks and stays visible but
+            unavailable until its archive transfers.
           </span>
           <span class="affects-chip" data-affects-for="dataset_version"></span>
         </div>
@@ -221,7 +228,9 @@
           </div>
           <button class="info-button" type="button"
             aria-label="Explain indicators and triggers"
-            aria-expanded="false" aria-controls="trigger-help">()</button>
+            aria-expanded="false" aria-controls="trigger-help">
+            <span class="ui-icon" data-icon="info" aria-hidden="true"></span>
+          </button>
         </div>
         <p id="trigger-help" class="disclosure" hidden>
           An indicator is arithmetic on past prices — a thermometer, not a cook.
@@ -459,7 +468,9 @@
             <p class="definition">Translate the completed trigger into executable fills and honest friction.</p>
           </div>
           <button class="info-button" type="button" aria-label="Explain fill model"
-            aria-expanded="false" aria-controls="fill-help">()</button>
+            aria-expanded="false" aria-controls="fill-help">
+            <span class="ui-icon" data-icon="info" aria-hidden="true"></span>
+          </button>
         </div>
         <p id="fill-help" class="disclosure" hidden>
           Buy the first valid ask after the completed trigger bar; sell the first valid bid.
@@ -527,7 +538,9 @@
           </div>
           <button class="info-button" type="button"
             aria-label="Explain underlying invalidation"
-            aria-expanded="false" aria-controls="invalidation-help">()</button>
+            aria-expanded="false" aria-controls="invalidation-help">
+            <span class="ui-icon" data-icon="info" aria-hidden="true"></span>
+          </button>
         </div>
         <p id="invalidation-help" class="disclosure" hidden>
           Exit when the reason for the trade is gone, not when the noisy option price wiggles.
@@ -694,7 +707,9 @@
                     Mid-to-mid P&amp;L
                     <button class="info-button compact" type="button"
                       aria-label="Explain mid-to-mid profit and loss"
-                      aria-expanded="false" aria-controls="midpoint-help">()</button>
+                      aria-expanded="false" aria-controls="midpoint-help">
+                      <span class="ui-icon" data-icon="info" aria-hidden="true"></span>
+                    </button>
                   </th>
                 </tr>
               </thead>

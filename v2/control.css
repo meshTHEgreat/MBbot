@@ -23,6 +23,18 @@
   box-sizing: border-box;
 }
 
+main,
+nav,
+form,
+section,
+fieldset,
+div,
+label,
+p,
+span {
+  min-width: 0;
+}
+
 [hidden] {
   display: none !important;
 }
@@ -51,6 +63,36 @@ select {
   min-height: 2.75rem;
   font: inherit;
   font-size: 1rem;
+}
+
+select {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.75rem 3rem 0.75rem 0.85rem;
+  appearance: none;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  color: var(--ink);
+  background-color: #091522;
+  background-image: url("assets/icons/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 1.15rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+select:hover:not(:disabled) {
+  border-color: #4b6985;
+}
+
+select:disabled {
+  color: #8291a2;
+  background-color: #14202d;
+  cursor: not-allowed;
 }
 
 button,
@@ -254,8 +296,10 @@ h2 {
 .definition,
 .helper,
 .reason {
+  max-width: 100%;
   color: var(--muted);
   line-height: 1.55;
+  overflow-wrap: anywhere;
 }
 
 .control-group {
@@ -272,6 +316,8 @@ h2 {
 }
 
 .info-button {
+  display: inline-grid;
+  place-items: center;
   width: 2.75rem;
   min-width: 2.75rem;
   padding: 0;
@@ -283,8 +329,49 @@ h2 {
   cursor: pointer;
 }
 
+.info-button:hover,
+.info-button[aria-expanded="true"] {
+  border-color: var(--blue);
+  color: #bce5ff;
+  background: #123b5b;
+}
+
+.ui-icon,
+.control-state-symbol {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 1.2rem;
+  background: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.ui-icon[data-icon="info"] {
+  mask-image: url("assets/icons/info.svg");
+}
+
+.control-state-symbol[data-icon="circle-check"] {
+  mask-image: url("assets/icons/circle-check.svg");
+}
+
+.control-state-symbol[data-icon="circle-dashed"] {
+  mask-image: url("assets/icons/circle-dashed.svg");
+}
+
+.control-state-symbol[data-icon="lock-keyhole"] {
+  mask-image: url("assets/icons/lock-keyhole.svg");
+}
+
+.control-state-symbol[data-icon="triangle-alert"] {
+  mask-image: url("assets/icons/triangle-alert.svg");
+}
+
 .disclosure {
+  max-width: 100%;
   padding: 0.85rem;
+  overflow-wrap: anywhere;
   border-left: 0.2rem solid var(--blue);
   background: #0b1726;
   color: var(--muted);
@@ -308,6 +395,7 @@ h2 {
   border-radius: 0.85rem;
   background: var(--panel-soft);
   cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
 .choice:has(input:checked) {
@@ -340,12 +428,21 @@ h2 {
 
 .field {
   display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 0.45rem;
   margin-top: 1rem;
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.field input {
   padding: 0.65rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: 0.75rem;
@@ -356,6 +453,59 @@ h2 {
 .field input:disabled {
   color: #8291a2;
   background: #14202d;
+}
+
+.field-card {
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: linear-gradient(145deg, #172537, #0b1724);
+}
+
+.field-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.field-heading label {
+  font-weight: 850;
+}
+
+.availability-badge {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid #277253;
+  border-radius: 999px;
+  color: var(--green);
+  background: #0d3124;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.dataset-field select {
+  min-height: 3.5rem;
+  border-color: #42607c;
+  background-color: #07131f;
+  box-shadow: inset 0 1px 0 #ffffff0a;
+  font-weight: 760;
+}
+
+.availability-note {
+  display: block;
+  margin-top: 0.2rem;
+  padding-left: 0.7rem;
+  border-left: 0.18rem solid #866a2d;
+}
+
+.availability-note strong {
+  display: block;
+  color: #ffe1a6;
+  font-size: 0.82rem;
 }
 
 .date-grid,
@@ -651,6 +801,7 @@ dialog::backdrop {
 
 .stage-panel {
   min-width: 0;
+  max-width: 100%;
   padding: 1rem;
   border: 1px solid var(--line);
   border-radius: 1.25rem;
@@ -666,6 +817,9 @@ dialog::backdrop {
 .affects-chip,
 .evidence-chip {
   display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
   min-height: 2.75rem;
   align-items: center;
   margin: 0.85rem 0;
@@ -676,6 +830,9 @@ dialog::backdrop {
   background: #0b1623;
   font-size: 0.84rem;
   font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .affects-chip:empty {
@@ -683,8 +840,11 @@ dialog::backdrop {
 }
 
 .affects-chip {
+  width: 100%;
   min-height: 2.75rem;
   margin: 0.35rem 0 0;
+  align-items: flex-start;
+  border-radius: 0.8rem;
   color: var(--blue);
 }
 
@@ -699,6 +859,7 @@ dialog::backdrop {
 .switch-grid,
 .range-pair {
   display: grid;
+  min-width: 0;
   gap: 0.8rem;
   margin: 0.85rem 0;
 }
@@ -763,10 +924,12 @@ dialog::backdrop {
 
 .dependency-reason {
   display: block;
+  max-width: 100%;
   margin-top: 0.35rem;
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .dependency-target {
@@ -1013,6 +1176,9 @@ th {
 .state-legend-item,
 .control-state-marker {
   display: grid;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   gap: 0.28rem;
   padding: 0.65rem 0.75rem;
   border: 1px solid var(--line);
@@ -1021,6 +1187,7 @@ th {
   background: #0a1623;
   font-size: 0.82rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .control-state-marker {
@@ -1030,20 +1197,20 @@ th {
 
 .control-state-marker-heading {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 0.45rem;
   color: var(--ink);
 }
 
 .control-state-symbol {
-  display: inline-flex;
-  min-width: 1.25rem;
-  justify-content: center;
-  font-size: 1rem;
+  color: currentColor;
 }
 
 .control-state-copy {
   display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 [data-state="queue_effective"] {
@@ -1051,9 +1218,17 @@ th {
   background: #0d2b21;
 }
 
+[data-state="queue_effective"] .control-state-symbol {
+  color: var(--green);
+}
+
 [data-state="adapter_only"] {
   border-color: #866a2d;
   background: #2b240f;
+}
+
+[data-state="adapter_only"] .control-state-symbol {
+  color: var(--amber);
 }
 
 [data-state="locked"] {
@@ -1061,9 +1236,17 @@ th {
   background: #111923;
 }
 
+[data-state="locked"] .control-state-symbol {
+  color: #b4c0cc;
+}
+
 [data-state="warning"] {
   border-color: #a46d18;
   background: var(--amber-bg);
+}
+
+[data-state="warning"] .control-state-symbol {
+  color: var(--amber);
 }
 
 [data-control-state="adapter_only"] input,
@@ -1072,7 +1255,7 @@ input[aria-readonly="true"],
 select[aria-readonly="true"] {
   color: #c4ced8;
   border-color: #596471;
-  background: #151c25;
+  background-color: #151c25;
 }
 
 .choice > .control-state-marker {
@@ -1104,6 +1287,7 @@ select[aria-readonly="true"] {
 }
 
 .route-mode-banner {
+  max-width: 100%;
   margin: 0 0 1rem;
   padding: 0.85rem 1rem;
   border: 1px solid #456a89;
@@ -1113,6 +1297,7 @@ select[aria-readonly="true"] {
   background: #0d2334;
   font-weight: 760;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .route-mode-banner[data-mode="legacy_macd"] {
@@ -1142,9 +1327,11 @@ select[aria-readonly="true"] {
 
 .optional-stage-status {
   display: grid;
+  max-width: 100%;
   gap: 0.25rem;
   color: var(--muted);
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .optional-stage-status strong {

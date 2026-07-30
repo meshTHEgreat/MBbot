@@ -20,18 +20,25 @@ async function main() {
   const browser = await puppeteer.launch({
     executablePath: chromePath,
     headless: true,
+    timeout: 10000,
     args: [
       "--disable-gpu",
+      "--disable-dev-shm-usage",
       "--no-first-run",
       "--no-default-browser-check",
+      "--no-sandbox",
       "--window-size=360,800",
     ],
   });
   const page = await browser.newPage();
+  page.setDefaultTimeout(5000);
   await page.setViewport({ width: 360, height: 800 });
   const audits = [];
   try {
-    await page.goto(url, { waitUntil: "networkidle0" });
+    await page.goto(url, {
+      waitUntil: "domcontentloaded",
+      timeout: 10000,
+    });
     await page.waitForFunction(
       () =>
         document

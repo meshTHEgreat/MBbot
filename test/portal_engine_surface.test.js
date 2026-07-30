@@ -417,6 +417,18 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     graph.state_legend.map((state) => state.id),
     ["queue_effective", "adapter_only", "locked", "warning"],
   );
+  assert.deepEqual(
+    graph.state_legend.map((state) => state.icon),
+    ["circle-check", "circle-dashed", "lock-keyhole", "triangle-alert"],
+  );
+  for (const state of graph.state_legend) {
+    assert.ok(
+      fs.existsSync(
+        path.join(root, "v2", "assets", "icons", `${state.icon}.svg`),
+      ),
+      `Lucide asset for ${state.id}`,
+    );
+  }
   const stateModel = graph.control_state_model;
   const elementTargets = stateModel.elements.map((element) => element.target);
   assert.equal(new Set(elementTargets).size, elementTargets.length);
@@ -464,6 +476,8 @@ test("HTML contains the guided review flow, result surfaces, and production word
   );
   assert.equal((html.match(/role="tab"/g) || []).length, 9);
   assert.equal((html.match(/role="tabpanel"/g) || []).length, 9);
+  assert.equal((html.match(/data-icon="info"/g) || []).length, 5);
+  assert.doesNotMatch(html, />\(\)<\/button>/);
   assert.match(html, /Review &amp; Run/);
   assert.match(html, /id="review-rows"/);
   assert.match(html, /id="state-legend-items"/);

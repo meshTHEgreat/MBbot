@@ -57,6 +57,17 @@
   const delay = (milliseconds) =>
     new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
+  function createStateIcon(state) {
+    const configured = dependencyConfig?.state_legend.find(
+      (item) => item.id === state.id,
+    );
+    const icon = document.createElement("span");
+    icon.className = "control-state-symbol";
+    icon.dataset.icon = state.icon || configured?.icon || "circle-dashed";
+    icon.setAttribute("aria-hidden", "true");
+    return icon;
+  }
+
   function rememberDisabled(control) {
     if (!originalDisabled.has(control)) {
       originalDisabled.set(control, Boolean(control.disabled));
@@ -371,10 +382,7 @@
     marker.replaceChildren();
     const heading = document.createElement("span");
     heading.className = "control-state-marker-heading";
-    const symbol = document.createElement("span");
-    symbol.className = "control-state-symbol";
-    symbol.setAttribute("aria-hidden", "true");
-    symbol.textContent = state.symbol;
+    const symbol = createStateIcon(state);
     const label = document.createElement("strong");
     label.textContent = state.label;
     heading.append(symbol, label);
@@ -497,7 +505,6 @@
       if (Object.hasOwn(disabledOptions, targetName)) {
         state = {
           id: "locked",
-          symbol: "🔒",
           label: "Unavailable on this route",
           description: disabledOptions[targetName],
         };
@@ -505,7 +512,6 @@
       } else if (readOnlyTargets.has(targetName) || lockedTargets.has(targetName)) {
         state = {
           id: "locked",
-          symbol: "🔒",
           label: "Read-only",
           description:
             lockedTargets.has(targetName) && modeName === "adapter_pending"
@@ -516,7 +522,6 @@
       } else if (dependencyLocked) {
         state = {
           id: "locked",
-          symbol: "🔒",
           label: queueTargets.has(targetName)
             ? "Read-only · queue-effective"
             : "Unavailable in this state",
@@ -528,7 +533,6 @@
         const readOnly = modeName === "legacy_macd";
         state = {
           id: "adapter_only",
-          symbol: "🟡",
           label: readOnly
             ? "Adapter-only · read-only"
             : "Adapter-only · editable",
@@ -543,7 +547,6 @@
       } else if (queueTargets.has(targetName)) {
         state = {
           id: "queue_effective",
-          symbol: "✅",
           label: "Queue-effective now",
           description:
             targetName === "runner-access-key"
@@ -553,7 +556,6 @@
       } else {
         state = {
           id: "locked",
-          symbol: "🔒",
           label: "Read-only",
           description:
             dependencyReason ||
@@ -564,7 +566,6 @@
       if (warning) {
         state = {
           id: "warning",
-          symbol: "⚠",
           label: `${state.label} · explicit acknowledgement`,
           description: `${state.description} ${warning}`,
         };
@@ -778,10 +779,7 @@
       entry.dataset.state = item.id;
       const heading = document.createElement("span");
       heading.className = "control-state-marker-heading";
-      const symbol = document.createElement("span");
-      symbol.className = "control-state-symbol";
-      symbol.setAttribute("aria-hidden", "true");
-      symbol.textContent = item.symbol;
+      const symbol = createStateIcon(item);
       const label = document.createElement("strong");
       label.textContent = item.label;
       heading.append(symbol, label);
@@ -1005,9 +1003,12 @@
         : modeName === "legacy_macd"
           ? "queue_effective"
           : "adapter_only";
-      const stateSymbol = document.createElement("span");
-      stateSymbol.setAttribute("aria-hidden", "true");
-      stateSymbol.textContent = isIgnored || modeName !== "legacy_macd" ? "🟡" : "✅";
+      const stateSymbol = createStateIcon({
+        id:
+          isIgnored || modeName !== "legacy_macd"
+            ? "adapter_only"
+            : "queue_effective",
+      });
       const stateText = document.createElement("span");
       stateText.textContent = isIgnored
         ? "Adapter-only · ignored by this run"
