@@ -16,17 +16,8 @@ python scripts/build_report_site.py <result-json-or-directory> `
   --site <path-to-this-repository>
 ```
 
-Commit and push the changed files with `[skip ci]` for source-only updates.
-Push-triggered deploys are disabled: Actions minutes are reserved for queued
-backtest/report publication runs. Serve the repository root locally for portal
-review:
-
-```powershell
-py -m http.server 8776
-```
-
-Then open `http://127.0.0.1:8776/v2/`. Run unit tests, axe-core, Lighthouse
-mobile, schema validation, and responsive checks locally.
+Commit and push the changed files. The included GitHub Actions workflow deploys
+the site automatically.
 
 ## Direct backtest control
 

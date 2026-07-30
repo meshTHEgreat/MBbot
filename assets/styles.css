@@ -5701,10 +5701,14 @@ h1 {
 }
 
 .classic-alertdialog {
-  width: min(calc(100% - 2rem), 36rem);
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
   padding: 0;
-  border: 1px solid var(--amber);
-  border-radius: var(--radius-lg);
+  border: 0;
+  border-radius: 0;
   background: var(--surface);
   color: var(--text);
   box-shadow: var(--shadow);
@@ -5716,6 +5720,10 @@ h1 {
 }
 
 .classic-dialog-body {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: center;
   padding: 1.25rem;
 }
 
@@ -5729,29 +5737,26 @@ h1 {
   margin-top: 1rem;
 }
 
-@media (max-width: 29.99rem) {
+input,
+select,
+button {
+  font-size: 1rem;
+}
+
+@media (min-width: 30rem) {
   .classic-alertdialog {
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    max-height: none;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
+    width: min(calc(100% - 2rem), 36rem);
+    height: auto;
+    max-height: calc(100% - 2rem);
+    margin: auto;
+    border: 1px solid var(--amber);
+    border-radius: var(--radius-lg);
   }
 
   .classic-dialog-body {
-    display: flex;
-    min-height: 100%;
-    flex-direction: column;
-    justify-content: center;
+    min-height: auto;
   }
 
-  input,
-  select,
-  button {
-    font-size: 1rem;
-  }
 }
 
 @media (min-width: 48rem) {
