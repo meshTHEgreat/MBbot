@@ -5633,6 +5633,142 @@ h1 {
   }
 }
 
+.portal-version-link {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border)) !important;
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  font-weight: 750;
+}
+
+.classic-safety-watermark {
+  position: sticky;
+  z-index: 12;
+  top: 0.5rem;
+  width: var(--page);
+  margin: 0 auto 1rem;
+  padding: 0.85rem 1rem;
+  border: 0.15rem solid var(--danger);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger-soft) 88%, var(--canvas));
+  color: var(--text);
+  font-family: var(--font-data);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.safety-choice-grid,
+.commission-choice-grid {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.safety-choice-grid .control-check,
+.commission-choice-grid label {
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--canvas-raised);
+}
+
+.safety-choice-grid .control-check:has(input:checked),
+.commission-choice-grid label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.control-check--warning {
+  border-color: color-mix(in srgb, var(--amber) 58%, var(--border)) !important;
+  background: color-mix(in srgb, var(--amber-soft) 50%, var(--canvas-raised)) !important;
+}
+
+.commission-choice-grid label {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.commission-choice-grid input {
+  width: 1.15rem;
+  min-height: 1.15rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.classic-alertdialog {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.classic-alertdialog::backdrop {
+  background: rgba(2, 8, 7, 0.88);
+  backdrop-filter: blur(0.35rem);
+}
+
+.classic-dialog-body {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.classic-dialog-body > p {
+  color: var(--text-muted);
+}
+
+.classic-dialog-actions {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+input,
+select,
+button {
+  font-size: 1rem;
+}
+
+@media (min-width: 30rem) {
+  .classic-alertdialog {
+    width: min(calc(100% - 2rem), 36rem);
+    height: auto;
+    max-height: calc(100% - 2rem);
+    margin: auto;
+    border: 1px solid var(--amber);
+    border-radius: var(--radius-lg);
+  }
+
+  .classic-dialog-body {
+    min-height: auto;
+  }
+
+}
+
+@media (min-width: 48rem) {
+  .safety-choice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .commission-choice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
