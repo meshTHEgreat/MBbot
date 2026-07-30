@@ -2,7 +2,7 @@
 
 Date: 2026-07-30
 
-Status: **BLOCKED before implementation**
+Status: **ENGINE-INDEPENDENT WORK COMPLETE LOCALLY; ADAPTER EXECUTION BLOCKED**
 
 ## Last completed milestone
 
@@ -21,10 +21,12 @@ Step B is live:
 
 Classic and `/v2/` both remain live. No cutover or deprecation was performed.
 
-## Blocking check
+## Current blocker
 
-The Step-4 requirement is to wire Stages 2, 4, 6, and 7 to the transferred
-Phase-2 engine without modifying backtest math.
+The nine-stage UI, dependency graph, versioned parameter envelope, and
+results-display components are implemented without changing strategy math.
+Execution of Stages 2, 4, 6, and 7 still requires the research-side,
+parity-certified adapter package.
 
 The transferred engine cannot currently represent the requested control
 surface:
@@ -44,7 +46,7 @@ surface:
    has no engine-parameter object.
 6. The engine result schema is not connected to the existing report publisher.
 
-## Why work stopped
+## Why engine wiring remains stopped
 
 Adding parameterized event formulas, inventing invalidation rules for five
 families, or changing exit logic would be a behavioral engine change. That
@@ -54,14 +56,19 @@ would violate both:
 - the transfer rule requiring parity and a written erratum for behavioral
   changes.
 
-Building the nine-stage controls without an executable contract would also
-violate the specification's explicit warning that UI controls must not be
-wired to nothing.
+The controls therefore emit a stubbed, versioned envelope for inspection while
+the Queue action fails closed except for the explicitly labelled legacy MACD
+compatibility route.
 
-## Work deliberately not performed
+## Engine-independent work completed
 
-- No Step-4 UI was merged or pushed.
-- No `ui/config-dependencies.json` was created without a rendering consumer.
+- Nine APG tab/tabpanel stages with one open stage at a time.
+- `ui/config-dependencies.json`, rendered by the portal with visible reasons,
+  affects chips, and ripple highlighting.
+- `ui/portal-engine-params-v1.schema.json` and a stub request builder.
+- Stage 8 result components for dual costs, mid-to-mid P&L, MAE/MFE,
+  per-symbol evidence, exit reasons, and the `n < 60` evidence flag.
+- Holdout report watermark and run-log audit stamp in the envelope provenance.
 - No engine source, frozen tree, lock, fixture, or backtest math was edited.
 - No GitHub Action was triggered after the user's no-Actions instruction.
 
@@ -70,7 +77,8 @@ The detailed control support matrix is in
 
 ## Required unblock
 
-Provide a research-side portal adapter/erratum covering the six family
-definitions, family stops, runtime-vs-feature-store parameters, exit toggles,
-result conversion, and parity fixtures listed in the mapping document. After
-that package is verified, Step 4 can resume without guessing.
+Install and verify the parity-certified research-side adapter covering the six
+family definitions, family stops, runtime-vs-feature-store parameters, exit
+toggles, result conversion, and parity fixtures listed in the mapping
+document. Then connect Queue to the agreed CLI without changing the envelope
+shape or strategy math.

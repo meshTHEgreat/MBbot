@@ -1,0 +1,326 @@
+{
+  "schema_version": "mbbot.portal.config-dependencies.v1",
+  "ripple_duration_ms": 1500,
+  "rules": [
+    {
+      "id": "dataset-tier-one-features",
+      "cause": "dataset_version",
+      "condition": { "equals": "v1" },
+      "effects": [
+        {
+          "targets": ["iv_source", "vega_filter", "rho_filter", "open_interest_minimum", "iv_rank_gate"],
+          "behavior": "disable",
+          "reason": "Tier-1 Greeks and open interest need the 12-month dataset (v2) — currently v1 selected."
+        }
+      ]
+    },
+    {
+      "id": "dataset-window-bindings",
+      "cause": "dataset_version",
+      "effects": [
+        {
+          "targets": ["window_preset", "symbol_combobox"],
+          "behavior": "dataset_binding",
+          "values": {
+            "v1": {
+              "discovery_start": "2026-04-27",
+              "discovery_end": "2026-05-22",
+              "holdout_start": "2026-05-26",
+              "holdout_end": "2026-07-24",
+              "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
+            },
+            "v2": {
+              "discovery_start": "2025-04-28",
+              "discovery_end": "2026-04-24",
+              "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
+            }
+          }
+        },
+        {
+          "targets": ["stage_0_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    },
+    {
+      "id": "trigger-family-parameters",
+      "cause": "trigger_family",
+      "effects": [
+        {
+          "targets": [
+            "params_trend_persistence",
+            "params_opening_range",
+            "params_order_flow",
+            "params_premium_divergence",
+            "params_mean_reversion",
+            "params_legacy_macd"
+          ],
+          "behavior": "activate_matching_group",
+          "reason_template": "Available when Trigger family is {label}."
+        },
+        {
+          "targets": ["invalidation_formula", "warmup_requirement", "signal_price_source"],
+          "behavior": "mapped_content",
+          "values": {
+            "trend_persistence": {
+              "invalidation_formula": "Exit calls when the underlying falls to or below the slow 60-minute MA; exit puts when it rises to or above it.",
+              "warmup_requirement": "12 trigger bars = 60 minutes at the 5-minute default.",
+              "signal_price_source": "UNDERLYING snapshot price"
+            },
+            "opening_range_breakout": {
+              "invalidation_formula": "Adapter pending: research-side family structure is required.",
+              "warmup_requirement": "Opening range plus family regime warm-up; adapter pending.",
+              "signal_price_source": "UNDERLYING snapshot price"
+            },
+            "order_flow_imbalance": {
+              "invalidation_formula": "Adapter pending: research-side family structure is required.",
+              "warmup_requirement": "Rolling imbalance window; adapter pending.",
+              "signal_price_source": "OPTION trade flow plus underlying agreement"
+            },
+            "premium_underlying_divergence": {
+              "invalidation_formula": "Adapter pending: research-side family structure is required.",
+              "warmup_requirement": "Velocity window; adapter pending.",
+              "signal_price_source": "UNDERLYING and OPTION premium snapshots"
+            },
+            "mean_reversion_fade": {
+              "invalidation_formula": "Adapter pending: research-side family structure is required.",
+              "warmup_requirement": "RSI period plus reversal confirmation; adapter pending.",
+              "signal_price_source": "UNDERLYING snapshot price"
+            },
+            "legacy_macd": {
+              "invalidation_formula": "Legacy comparison uses its historical option-premium exit rules.",
+              "warmup_requirement": "Slow EMA plus signal seed; legacy comparison only.",
+              "signal_price_source": "OPTION premium"
+            }
+          }
+        },
+        {
+          "targets": ["stage_1_summary", "stage_2_summary", "stage_7_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    },
+    {
+      "id": "legacy-macd-warning",
+      "cause": "trigger_family",
+      "condition": { "equals": "legacy_macd" },
+      "effects": [
+        {
+          "targets": ["legacy_macd_banner", "legacy_macd_report_banner"],
+          "behavior": "activate",
+          "reason": "Failed formal testing 0/30 (2026-07); baseline only."
+        }
+      ]
+    },
+    {
+      "id": "smi-opposite-exit",
+      "cause": "smi_gate_enabled",
+      "condition": { "truthy": true },
+      "effects": [
+        {
+          "targets": ["opposite_smi_exit"],
+          "behavior": "enable",
+          "reason": "Set by SMI gate enabled."
+        }
+      ]
+    },
+    {
+      "id": "timeframe-conversions",
+      "cause": "trigger_timeframe_minutes",
+      "condition": {
+        "all": [
+          { "control": "trigger_family", "equals": "trend_persistence" }
+        ]
+      },
+      "effects": [
+        {
+          "targets": ["warmup_requirement", "momentum_conversion"],
+          "behavior": "timeframe_conversion",
+          "bars": {
+            "fast_ma_snapshots": 3,
+            "slow_ma_snapshots": 12,
+            "momentum_window_minutes": 15
+          }
+        },
+        {
+          "targets": ["stage_1_summary", "stage_2_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    },
+    {
+      "id": "zero-dte-scope",
+      "cause": "allow_zero_dte",
+      "condition": { "truthy": true },
+      "effects": [
+        {
+          "targets": ["dte_minimum"],
+          "behavior": "set_value",
+          "value": 0,
+          "reason": "Set by 0DTE toggle."
+        },
+        {
+          "targets": ["formal_validity_flag", "scope_report_stamp"],
+          "behavior": "activate",
+          "reason": "Outside preregistered scope."
+        }
+      ]
+    },
+    {
+      "id": "spread-denominator-semantics",
+      "cause": "spread_denominator",
+      "effects": [
+        {
+          "targets": ["spread_cap_semantics"],
+          "behavior": "spread_semantics"
+        }
+      ]
+    },
+    {
+      "id": "spread-cap-semantics",
+      "cause": "spread_cap_percent",
+      "effects": [
+        {
+          "targets": ["spread_cap_semantics"],
+          "behavior": "spread_semantics"
+        }
+      ]
+    },
+    {
+      "id": "dual-cost-results",
+      "cause": "commission_preset",
+      "condition": { "equals": "both" },
+      "effects": [
+        {
+          "targets": ["dual_cost_columns", "run_sentence_costs"],
+          "behavior": "activate",
+          "reason": "Set by Commission preset: both."
+        },
+        {
+          "targets": ["stage_5_summary", "stage_8_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    },
+    {
+      "id": "holdout-burn-guard",
+      "cause": "window_preset",
+      "condition": { "equals": "holdout" },
+      "effects": [
+        {
+          "targets": ["burn-ack", "burn-dialog"],
+          "behavior": "require_acknowledgement",
+          "reason": "Holdout selection requires an explicit acknowledgement."
+        },
+        {
+          "targets": ["stage_0_summary", "stage_8_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    },
+    {
+      "id": "holdout-watermarks",
+      "cause": "holdout_burn_acknowledgement",
+      "condition": {
+        "all": [
+          { "control": "window_preset", "equals": "holdout" },
+          { "control": "holdout_burn_acknowledgement", "truthy": true }
+        ]
+      },
+      "effects": [
+        {
+          "targets": [
+            "holdout_global_watermark",
+            "holdout_page_watermark",
+            "holdout_report_watermark",
+            "holdout_run_log_stamp"
+          ],
+          "behavior": "activate",
+          "reason": "Set by acknowledged Holdout window."
+        }
+      ]
+    },
+    {
+      "id": "custom-discovery-dates",
+      "cause": "window_preset",
+      "condition": { "equals": "custom_discovery" },
+      "effects": [
+        {
+          "targets": ["start_date", "end_date"],
+          "behavior": "enable",
+          "reason": "Editable because Window preset is Custom inside discovery."
+        }
+      ]
+    },
+    {
+      "id": "window-date-bindings",
+      "cause": "window_preset",
+      "effects": [
+        {
+          "targets": ["start_date", "end_date"],
+          "behavior": "mapped_value",
+          "values": {
+            "discovery": {
+              "start_date": "2026-04-27",
+              "end_date": "2026-05-22"
+            },
+            "holdout": {
+              "start_date": "2026-05-26",
+              "end_date": "2026-07-24"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "zero-cost-acknowledgement",
+      "cause": "commission_preset",
+      "condition": { "equals": "zero" },
+      "effects": [
+        {
+          "targets": ["unrealistic_costs_acknowledged"],
+          "behavior": "enable",
+          "reset_when_inactive": true,
+          "reason": "Enabled by Commission preset: $0 comparison."
+        },
+        {
+          "targets": [
+            "zero_cost_global_watermark",
+            "zero_cost_page_watermark",
+            "zero_cost_report_watermark"
+          ],
+          "behavior": "activate",
+          "reason": "Set by Commission preset: $0 comparison."
+        }
+      ]
+    },
+    {
+      "id": "wide-spread-warning",
+      "cause": "spread_cap_percent",
+      "condition": { "greater_than": 15 },
+      "effects": [
+        {
+          "targets": ["spread_warning"],
+          "behavior": "activate",
+          "reason": "Spread cap above 15% requires explicit review."
+        }
+      ]
+    },
+    {
+      "id": "insufficient-evidence",
+      "cause": "result_trade_count",
+      "condition": { "less_than": 60 },
+      "effects": [
+        {
+          "targets": ["insufficient_evidence_chip", "headline_metrics"],
+          "behavior": "activate",
+          "reason": "Fewer than 60 closed trades."
+        },
+        {
+          "targets": ["stage_8_summary"],
+          "behavior": "ripple_only"
+        }
+      ]
+    }
+  ]
+}

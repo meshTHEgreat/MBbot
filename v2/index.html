@@ -3,271 +3,664 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mobile-first guided MBbot strategy pipeline and backtest controls.">
   <title>MBbot Guided Portal v2</title>
   <link rel="stylesheet" href="control.css">
   <script src="site-config.js" defer></script>
   <script src="control-model.js" defer></script>
+  <script src="portal-engine-model.js" defer></script>
+  <script src="results-model.js" defer></script>
   <script src="control.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#stage-panel-0">Skip to strategy controls</a>
   <main class="shell">
     <nav class="topline" aria-label="Portal navigation">
       <span class="brand">MBbot Research Desk</span>
       <span class="preview-chip">Guided portal v2</span>
-      <span class="engine-chip">Phase-2 parity · 71/71 green</span>
+      <span class="engine-chip">Adapter pending · UI surface v1</span>
       <a class="portal-switcher" href="../index.html">Classic portal →</a>
     </nav>
 
     <header class="hero">
-      <p class="eyebrow">Guided portal v2 · guarded runner</p>
-      <h1>Protect the window. Price the trade honestly.</h1>
+      <p class="eyebrow">Guided portal v2 · strategy pipeline</p>
+      <h1>Build the decision machine, one stage at a time.</h1>
       <p class="lede">
-        This release wires Data &amp; Window and Execution &amp; Costs to
-        the real offline runner. The remaining strategy stages stay fixed
-        until their Phase-2 controls are engine-backed.
+        The nine-stage surface emits <code>portal-engine-params.v1</code>.
+        Until the parity-certified adapter arrives, queued reports use the
+        clearly labelled legacy compatibility path.
       </p>
     </header>
 
-    <p class="legacy-banner" role="note">
-      <strong>Legacy MACD baseline — comparison only.</strong>
-      The trigger remains fixed in this early safety slice; it is not the
-      preregistered P1 trend-persistence family.
+    <div class="watermark-stack" role="status" aria-label="Run warnings">
+      <span id="holdout_global_watermark" class="watermark dependency-target" hidden>
+        HOLDOUT RUN
+      </span>
+      <span id="zero_cost_global_watermark" class="watermark dependency-target" hidden>
+        ZERO-COST SIMULATION
+      </span>
+    </div>
+    <p id="legacy_macd_banner" class="legacy-banner dependency-target"
+      role="note" hidden>
+      <strong>Failed formal testing 0/30 (2026-07); baseline only.</strong>
+      Legacy MACD remains available solely for report-85 comparison.
     </p>
-    <div id="safety-watermark" class="watermark" role="status" hidden></div>
 
     <form id="safety-form" novalidate>
-      <div class="grid">
-        <section class="stage" aria-labelledby="stage-data-title">
-          <div class="stage-head">
-            <div>
-              <span class="stage-number">Stage 0</span>
-              <h2 id="stage-data-title">Data &amp; Window</h2>
-              <p class="definition">
-                Choose what evidence the strategy may see. Holdout is a
-                one-time proof, not another tuning surface.
-              </p>
-            </div>
-            <button class="info-button" type="button"
-              aria-label="Explain discovery and holdout windows"
-              aria-expanded="false" aria-controls="window-help">()</button>
-          </div>
-          <p id="window-help" class="disclosure" hidden>
-            Discovery data may be inspected repeatedly while building the
-            strategy. Reading holdout results burns that evidence for this
-            strategy family.
-          </p>
-
-          <div class="field">
-            <label class="label" for="dataset-v1">Dataset</label>
-            <input id="dataset-v1" value="v1 — 3 months (62 sessions, minute)"
-              aria-describedby="dataset-reason" disabled>
-            <span id="dataset-reason" class="reason">
-              v2 — 12 months + Tier-1 Greeks remains visible in the full
-              build, but is not yet transferred.
-            </span>
-          </div>
-
-          <fieldset class="control-group">
-            <legend>Window preset</legend>
-            <div class="choice-list">
-              <label class="choice">
-                <input name="window_preset" type="radio"
-                  value="discovery" checked>
-                <span>
-                  <strong>Discovery (recommended)</strong>
-                  <small>27 Apr–22 May 2026 · safe for strategy development</small>
-                </span>
-              </label>
-              <label class="choice">
-                <input name="window_preset" type="radio"
-                  value="custom_discovery">
-                <span>
-                  <strong>Custom inside discovery</strong>
-                  <small>Date pickers stay clamped to the discovery boundary</small>
-                </span>
-              </label>
-              <label class="choice">
-                <input name="window_preset" type="radio" value="holdout">
-                <span>
-                  <strong>Holdout ⚠</strong>
-                  <small>26 May–24 Jul 2026 · requires acknowledgement</small>
-                </span>
-              </label>
-            </div>
-          </fieldset>
-
-          <div id="custom-dates" class="date-shell" data-enabled="false">
-            <div class="date-grid">
-              <div class="field">
-                <label for="start-date">Start date</label>
-                <input id="start-date" name="start_date" type="date"
-                  min="2026-04-27" max="2026-05-22"
-                  value="2026-04-27" aria-describedby="custom-date-reason"
-                  disabled>
-              </div>
-              <div class="field">
-                <label for="end-date">End date</label>
-                <input id="end-date" name="end_date" type="date"
-                  min="2026-04-27" max="2026-05-22"
-                  value="2026-05-22" aria-describedby="custom-date-reason"
-                  disabled>
-              </div>
-            </div>
-            <p id="custom-date-reason" class="reason">
-              Set by Window preset; choose Custom inside discovery to edit.
-            </p>
-          </div>
-          <p id="window-run-count" class="run-count">
-            You have run 14 configs on this window.
-          </p>
-
-          <fieldset class="control-group" aria-describedby="symbols-help">
-            <legend>Symbols</legend>
-            <div class="symbol-grid">
-              <label class="choice">
-                <input name="symbol" type="checkbox" value="SPY" checked>
-                <strong>SPY</strong>
-              </label>
-              <label class="choice">
-                <input name="symbol" type="checkbox" value="QQQ" checked>
-                <strong>QQQ</strong>
-              </label>
-              <label class="choice">
-                <input name="symbol" type="checkbox" value="AAPL">
-                <strong>AAPL</strong>
-              </label>
-              <label class="choice">
-                <input name="symbol" type="checkbox" value="NVDA">
-                <strong>NVDA</strong>
-              </label>
-              <label class="choice">
-                <input name="symbol" type="checkbox" value="TSLA">
-                <strong>TSLA</strong>
-              </label>
-            </div>
-            <p id="symbols-help" class="helper">
-              SPY + QQQ are the discovery default. Single names carry
-              unobservable event risk, so use them for robustness only.
-            </p>
-          </fieldset>
-        </section>
-
-        <section class="stage" aria-labelledby="stage-cost-title">
-          <div class="stage-head">
-            <div>
-              <span class="stage-number">Stage 5</span>
-              <h2 id="stage-cost-title">Execution &amp; Costs</h2>
-              <p class="definition">
-                Convert a signal into a fill and charge the friction a live
-                trade would actually pay.
-              </p>
-            </div>
-            <button class="info-button" type="button"
-              aria-label="Explain the fill model"
-              aria-expanded="false" aria-controls="fill-help">()</button>
-          </div>
-          <p id="fill-help" class="disclosure" hidden>
-            Buy at the first valid ask after the completed trigger bar; sell
-            at the first valid bid. Execution stays at one-minute resolution.
-          </p>
-
-          <fieldset class="control-group">
-            <legend>Commission per contract per side</legend>
-            <div class="choice-list costs">
-              <label class="choice">
-                <input name="commission_preset" type="radio"
-                  value="reference" checked>
-                <span>
-                  <strong>$0.65 reference</strong>
-                  <small>Default honest-cost assumption</small>
-                </span>
-              </label>
-              <label class="choice">
-                <input name="commission_preset" type="radio" value="stress">
-                <span>
-                  <strong>$1.30 stress</strong>
-                  <small>Double-commission sensitivity</small>
-                </span>
-              </label>
-              <label class="choice" aria-describedby="both-reason">
-                <input name="commission_preset" type="radio"
-                  value="both" disabled>
-                <span>
-                  <strong>Both (dual report)</strong>
-                  <small id="both-reason">
-                    Visible but unavailable: dual columns arrive with Stage 8.
-                  </small>
-                </span>
-              </label>
-              <label class="choice">
-                <input name="commission_preset" type="radio" value="zero">
-                <span>
-                  <strong>$0 comparison ⚠</strong>
-                  <small>Requires explicit unrealistic-cost acknowledgement</small>
-                </span>
-              </label>
-            </div>
-          </fieldset>
-
-          <div class="flag">
-            <label class="choice">
-              <input id="zero-cost-ack"
-                name="unrealistic_costs_acknowledged" type="checkbox"
-                aria-describedby="zero-cost-reason" disabled>
-              <span>
-                <strong>Unrealistic costs acknowledged</strong>
-                <small id="zero-cost-reason">
-                  Available only after selecting the $0 comparison preset.
-                </small>
-              </span>
-            </label>
-          </div>
-
-          <div class="field">
-            <label for="experiment-label">Experiment label</label>
-            <input id="experiment-label" name="experiment_label" type="text"
-              value="Guided portal v2 run" maxlength="80" required>
-          </div>
-
-          <div class="field">
-            <label for="runner-access-key">Runner access key</label>
-            <input id="runner-access-key" name="runner_access_key"
-              type="password" autocomplete="off"
-              aria-describedby="runner-key-help">
-            <span id="runner-key-help" class="reason">
-              Kept only in this tab while following the run; never placed in
-              the URL or report.
-            </span>
-          </div>
-
-          <div class="summary" aria-live="polite">
-            <h3>Exact configuration</h3>
-            <p id="config-sentence"></p>
-            <span class="label">SHA-256</span>
-            <code id="config-hash" class="hash"></code>
-          </div>
-
-          <div id="run-status" class="run-status" data-state="ready"
-            role="status" aria-live="polite">
-            <strong>Ready to validate</strong>
-            <span>Queue stays disabled until this exact configuration passes.</span>
-          </div>
-          <p id="form-error" class="form-error" role="alert"
-            tabindex="-1" hidden></p>
-          <a id="result-link" class="result-link" href="#" hidden>
-            Open guided-portal report
-          </a>
-        </section>
+      <div class="stepper-shell">
+        <p id="current-stage-indicator" class="current-stage-indicator"
+          aria-live="polite">Stage 0 of 8 · Data &amp; Window</p>
+        <div id="strategy-stepper" class="stepper" role="tablist"
+          aria-label="Strategy pipeline stages">
+          <button id="stage-tab-0" class="step-tab" type="button" role="tab"
+            aria-selected="true" aria-controls="stage-panel-0" tabindex="0"
+            data-stage="0"><span class="stage-dot"></span><b>0</b> Data</button>
+          <button id="stage-tab-1" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-1" tabindex="-1"
+            data-stage="1"><span class="stage-dot"></span><b>1</b> Regime</button>
+          <button id="stage-tab-2" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-2" tabindex="-1"
+            data-stage="2"><span class="stage-dot"></span><b>2</b> Trigger</button>
+          <button id="stage-tab-3" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-3" tabindex="-1"
+            data-stage="3"><span class="stage-dot"></span><b>3</b> Filters</button>
+          <button id="stage-tab-4" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-4" tabindex="-1"
+            data-stage="4"><span class="stage-dot"></span><b>4</b> Contract</button>
+          <button id="stage-tab-5" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-5" tabindex="-1"
+            data-stage="5"><span class="stage-dot"></span><b>5</b> Costs</button>
+          <button id="stage-tab-6" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-6" tabindex="-1"
+            data-stage="6"><span class="stage-dot"></span><b>6</b> Risk</button>
+          <button id="stage-tab-7" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-7" tabindex="-1"
+            data-stage="7"><span class="stage-dot"></span><b>7</b> Exits</button>
+          <button id="stage-tab-8" class="step-tab" type="button" role="tab"
+            aria-selected="false" aria-controls="stage-panel-8" tabindex="-1"
+            data-stage="8"><span class="stage-dot"></span><b>8</b> Run</button>
+        </div>
       </div>
 
+      <section id="stage-panel-0" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-0" tabindex="0" data-stage="0">
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 0</span>
+            <h2>Data &amp; Window</h2>
+            <p class="definition">Define what evidence the strategy may see and which symbols it must survive.</p>
+          </div>
+          <button class="info-button" type="button"
+            aria-label="Explain discovery and holdout windows"
+            aria-expanded="false" aria-controls="window-help">()</button>
+        </div>
+        <p id="window-help" class="disclosure" hidden>
+          Discovery may be inspected repeatedly. Holdout proves a finished
+          strategy once and is permanently burned for that family.
+        </p>
+        <span id="stage_0_summary" class="summary-chip dependency-target">
+          Data: v1 · Discovery · SPY + QQQ
+        </span>
+
+        <div class="field">
+          <label for="dataset_version">Dataset</label>
+          <select id="dataset_version" name="dataset_version"
+            aria-describedby="dataset-version-help">
+            <option value="v1">v1 — 3 months (62 sessions, minute)</option>
+            <option value="v2" disabled>v2 — 12 months + Greeks Tier-1 — not yet transferred</option>
+          </select>
+          <span id="dataset-version-help" class="reason">
+            v2 remains visible and unavailable until its archive transfers.
+          </span>
+          <span class="affects-chip" data-affects-for="dataset_version"></span>
+        </div>
+
+        <fieldset class="control-group">
+          <legend>Window preset</legend>
+          <div class="choice-list">
+            <label class="choice">
+              <input name="window_preset" type="radio" value="discovery" checked>
+              <span><strong>Discovery (recommended)</strong><small>27 Apr–22 May 2026</small></span>
+            </label>
+            <label class="choice">
+              <input name="window_preset" type="radio" value="custom_discovery">
+              <span><strong>Custom inside discovery</strong><small>Dates remain clamped to discovery</small></span>
+            </label>
+            <label class="choice">
+              <input name="window_preset" type="radio" value="holdout">
+              <span><strong>Holdout ⚠</strong><small>26 May–24 Jul 2026 · acknowledgement required</small></span>
+            </label>
+          </div>
+          <span class="affects-chip" data-affects-for="window_preset"></span>
+        </fieldset>
+
+        <div class="date-grid">
+          <div class="field">
+            <label for="start_date">Start date</label>
+            <input id="start_date" name="start_date" type="date"
+              min="2026-04-27" max="2026-05-22" value="2026-04-27"
+              aria-describedby="start-date-reason" disabled>
+            <span id="start-date-reason" class="reason dependency-reason"
+              data-dependency-reason-for="start_date">Set by Window preset: Discovery.</span>
+          </div>
+          <div class="field">
+            <label for="end_date">End date</label>
+            <input id="end_date" name="end_date" type="date"
+              min="2026-04-27" max="2026-05-22" value="2026-05-22"
+              aria-describedby="end-date-reason" disabled>
+            <span id="end-date-reason" class="reason dependency-reason"
+              data-dependency-reason-for="end_date">Set by Window preset: Discovery.</span>
+          </div>
+        </div>
+        <p class="run-count">You have run 14 configs on this window.</p>
+
+        <fieldset id="symbol_combobox" class="control-group dependency-target"
+          aria-describedby="symbols-help">
+          <legend>Symbols · multi-select</legend>
+          <div class="symbol-grid">
+            <label class="choice"><input name="symbol" type="checkbox" value="SPY" checked><strong>SPY</strong></label>
+            <label class="choice"><input name="symbol" type="checkbox" value="QQQ" checked><strong>QQQ</strong></label>
+            <label class="choice"><input name="symbol" type="checkbox" value="AAPL"><strong>AAPL</strong></label>
+            <label class="choice"><input name="symbol" type="checkbox" value="NVDA"><strong>NVDA</strong></label>
+            <label class="choice"><input name="symbol" type="checkbox" value="TSLA"><strong>TSLA</strong></label>
+          </div>
+          <p id="symbols-help" class="helper">
+            Single names carry unobservable event risk; use them for robustness only.
+          </p>
+        </fieldset>
+        <div id="holdout_page_watermark" class="inline-flag dependency-target" hidden>HOLDOUT RUN</div>
+      </section>
+
+      <section id="stage-panel-1" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-1" tabindex="0" data-stage="1" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 1</span>
+            <h2>Regime</h2>
+            <p class="definition">Regime — the market context a family requires before its setup is eligible.</p>
+          </div>
+        </div>
+        <span id="stage_1_summary" class="summary-chip">Regime: supplied by Trigger family</span>
+        <div class="read-only-card">
+          <strong>Family-supplied regime slot</strong>
+          <p id="regime-rule">No regime rule for trend persistence.</p>
+        </div>
+        <div class="read-only-card">
+          <strong>Warm-up requirement</strong>
+          <p id="warmup_requirement" class="dependency-target">
+            12 trigger bars = 60 minutes at the 5-minute default.
+          </p>
+          <span class="dependency-reason" data-dependency-reason-for="warmup_requirement">
+            Set by Trigger family: trend persistence.
+          </span>
+        </div>
+      </section>
+
+      <section id="stage-panel-2" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-2" tabindex="0" data-stage="2" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 2</span>
+            <h2>Setup &amp; Trigger</h2>
+            <p class="definition">Turn an exact, completed-bar event into permission to consider a trade.</p>
+          </div>
+          <button class="info-button" type="button"
+            aria-label="Explain indicators and triggers"
+            aria-expanded="false" aria-controls="trigger-help">()</button>
+        </div>
+        <p id="trigger-help" class="disclosure" hidden>
+          An indicator is arithmetic on past prices — a thermometer, not a cook.
+          It becomes a trigger only when wired to an exact event.
+        </p>
+        <span id="stage_2_summary" class="summary-chip dependency-target">
+          Trigger: trend persistence · 0.15% MA gap + 15m push
+        </span>
+
+        <div class="field">
+          <label for="trigger_family">Trigger family</label>
+          <select id="trigger_family" name="trigger_family"
+            aria-describedby="trigger-family-help">
+            <option value="trend_persistence">Trend persistence — P1/U08 preregistered</option>
+            <option value="opening_range_breakout">Opening-range breakout</option>
+            <option value="order_flow_imbalance">Order-flow imbalance</option>
+            <option value="premium_underlying_divergence">Premium-underlying divergence</option>
+            <option value="mean_reversion_fade">Mean-reversion fade</option>
+            <option value="legacy_macd">MACD premium crossover — legacy rejected</option>
+          </select>
+          <span id="trigger-family-help" class="reason">
+            All families emit the agreed parameter surface; execution waits for the certified adapter.
+          </span>
+          <span class="affects-chip" data-affects-for="trigger_family"></span>
+        </div>
+        <div class="split-grid">
+          <div class="field">
+            <label for="trigger_timeframe_minutes">Trigger timeframe</label>
+            <input id="trigger_timeframe_minutes" name="trigger_timeframe_minutes"
+              type="number" min="1" max="60" step="1" value="5"
+              aria-describedby="timeframe-help">
+            <span id="timeframe-help" class="reason">Completed trigger bars; 5 minutes by default.</span>
+            <span class="affects-chip" data-affects-for="trigger_timeframe_minutes"></span>
+          </div>
+          <div class="field">
+            <label for="execution_timeframe">Execution timeframe</label>
+            <input id="execution_timeframe" value="1 minute" disabled
+              aria-describedby="execution-timeframe-help">
+            <span id="execution-timeframe-help" class="reason">Read-only fill evidence.</span>
+          </div>
+        </div>
+        <div class="read-only-card">
+          <strong>Signal price source</strong>
+          <p id="signal_price_source" class="dependency-target">UNDERLYING snapshot price</p>
+        </div>
+        <p id="momentum_conversion" class="helper dependency-target">3 bars = 15 minutes.</p>
+
+        <fieldset id="params_trend_persistence" class="parameter-group dependency-target"
+          data-family="trend_persistence">
+          <legend>Trend persistence parameters</legend>
+          <div class="field-grid">
+            <label>Fast MA snapshots<input name="fast_ma_snapshots" type="number" min="1" value="3"></label>
+            <label>Slow MA snapshots<input name="slow_ma_snapshots" type="number" min="2" value="12"></label>
+            <label>MA gap %<input name="ma_gap_percent" type="number" min="0" step="0.01" value="0.15"></label>
+            <label>Momentum window minutes<input name="momentum_window_minutes" type="number" min="1" value="15"></label>
+            <label>Momentum %<input name="momentum_percent" type="number" min="0" step="0.01" value="0.10"></label>
+          </div>
+        </fieldset>
+        <fieldset id="params_opening_range" class="parameter-group dependency-target"
+          data-family="opening_range_breakout" aria-disabled="true">
+          <legend>Opening-range breakout parameters</legend>
+          <div class="field-grid">
+            <label>Range minutes<input name="orb_range_minutes" type="number" min="1" value="30" disabled></label>
+            <label>Buffer %<input name="orb_buffer_percent" type="number" min="0" step="0.01" value="0.10" disabled></label>
+            <label class="choice"><input name="orb_regime_enabled" type="checkbox" checked disabled><span>Prior-5-session regime</span></label>
+          </div>
+          <span class="dependency-reason" data-dependency-reason-for="params_opening_range"></span>
+        </fieldset>
+        <fieldset id="params_order_flow" class="parameter-group dependency-target"
+          data-family="order_flow_imbalance" aria-disabled="true">
+          <legend>Order-flow imbalance parameters</legend>
+          <div class="field-grid">
+            <label>Rolling window bars<input name="order_flow_window_bars" type="number" min="1" value="3" disabled></label>
+            <label>(buy−sell)/total threshold<input name="order_flow_threshold" type="number" min="-1" max="1" step="0.01" value="0.20" disabled></label>
+            <label class="choice"><input name="order_flow_underlying_agreement" type="checkbox" checked disabled><span>Underlying agreement</span></label>
+          </div>
+          <span class="dependency-reason" data-dependency-reason-for="params_order_flow"></span>
+        </fieldset>
+        <fieldset id="params_premium_divergence" class="parameter-group dependency-target"
+          data-family="premium_underlying_divergence" aria-disabled="true">
+          <legend>Premium-underlying divergence parameters</legend>
+          <div class="field-grid">
+            <label>Underlying velocity minimum<input name="divergence_underlying_velocity_min" type="number" step="0.01" value="0.20" disabled></label>
+            <label>Premium velocity maximum<input name="divergence_premium_velocity_max" type="number" step="0.01" value="0" disabled></label>
+            <label>Window minutes<input name="divergence_window_minutes" type="number" min="1" value="15" disabled></label>
+          </div>
+          <span class="dependency-reason" data-dependency-reason-for="params_premium_divergence"></span>
+        </fieldset>
+        <fieldset id="params_mean_reversion" class="parameter-group dependency-target"
+          data-family="mean_reversion_fade" aria-disabled="true">
+          <legend>Mean-reversion fade parameters</legend>
+          <div class="field-grid">
+            <label>RSI period<input name="mean_reversion_rsi_period" type="number" min="1" value="14" disabled></label>
+            <label>RSI extreme<input name="mean_reversion_rsi_extreme" type="number" min="0" max="100" value="30" disabled></label>
+            <label class="choice"><input name="mean_reversion_reversal_confirm" type="checkbox" checked disabled><span>Reversal-bar confirmation</span></label>
+          </div>
+          <span class="dependency-reason" data-dependency-reason-for="params_mean_reversion"></span>
+        </fieldset>
+        <fieldset id="params_legacy_macd" class="parameter-group dependency-target"
+          data-family="legacy_macd" aria-disabled="true">
+          <legend>Legacy MACD comparison parameters</legend>
+          <div class="field-grid">
+            <label>Fast EMA<input name="legacy_macd_fast" type="number" min="1" value="12" disabled></label>
+            <label>Slow EMA<input name="legacy_macd_slow" type="number" min="2" value="26" disabled></label>
+            <label>Signal EMA<input name="legacy_macd_signal" type="number" min="1" value="9" disabled></label>
+          </div>
+          <span class="dependency-reason" data-dependency-reason-for="params_legacy_macd"></span>
+        </fieldset>
+      </section>
+
+      <section id="stage-panel-3" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-3" tabindex="0" data-stage="3" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 3</span>
+            <h2>Filters</h2>
+            <p class="definition">Filters are pass/fail vetoes. They remove trades; they never create them.</p>
+          </div>
+        </div>
+        <span id="stage_3_summary" class="summary-chip">Filters: 10% midpoint spread · $0.50 floor · valid NBBO</span>
+        <div class="field-grid">
+          <label>Spread cap %
+            <input id="spread_cap_percent" name="spread_cap_percent" type="number"
+              min="0.01" max="200" step="0.01" value="10"
+              aria-describedby="spread-cap-help">
+            <span id="spread-cap-help" class="reason">Legacy 50% is allowed but remains flagged.</span>
+            <span class="affects-chip" data-affects-for="spread_cap_percent"></span>
+          </label>
+          <label>Spread denominator
+            <select id="spread_denominator" name="spread_denominator">
+              <option value="midpoint">Midpoint</option>
+              <option value="ask">Ask</option>
+            </select>
+            <span class="affects-chip" data-affects-for="spread_denominator"></span>
+          </label>
+          <label>Premium floor $
+            <input name="premium_floor" type="number" min="0" step="0.05" value="0.50">
+          </label>
+          <label>Premium cap $ · optional
+            <input name="premium_cap" type="number" min="0.01" step="0.05" value="">
+          </label>
+        </div>
+        <p id="spread_cap_semantics" class="read-only-card dependency-target">10% of midpoint</p>
+        <p id="spread_warning" class="warning dependency-target" hidden>Spread cap above 15% — explicit review required.</p>
+        <label class="choice"><input name="valid_nbbo_required" type="checkbox" checked><span><strong>Valid NBBO required</strong><small>Default on</small></span></label>
+        <p class="helper">Quote freshness: current one-minute snapshot (read-only).</p>
+        <fieldset class="control-group">
+          <legend>Optional indicator vetoes</legend>
+          <p class="helper">Each gate adds a veto; test with and without it (ablation).</p>
+          <div class="switch-grid">
+            <label class="choice"><input name="rsi_gate_enabled" type="checkbox"><span>RSI gate</span></label>
+            <label class="choice"><input id="smi_gate_enabled" name="smi_gate_enabled" type="checkbox"><span>SMI gate</span></label>
+            <label class="choice"><input name="momentum_gate_enabled" type="checkbox"><span>Momentum gate</span></label>
+            <label class="choice"><input name="velocity_gate_enabled" type="checkbox"><span>Velocity gate</span></label>
+            <label class="choice"><input name="activity_gate_enabled" type="checkbox"><span>Activity gate</span></label>
+            <label class="choice"><input name="trade_side_gate_enabled" type="checkbox"><span>Trade-side gate</span></label>
+          </div>
+          <span class="affects-chip" data-affects-for="smi_gate_enabled"></span>
+        </fieldset>
+      </section>
+
+      <section id="stage-panel-4" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-4" tabindex="0" data-stage="4" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 4</span>
+            <h2>Contract selection</h2>
+            <p class="definition">Choose the option that expresses the signal without changing the signal.</p>
+          </div>
+        </div>
+        <span id="stage_4_summary" class="summary-chip">Contract: |Delta| 0.60 · band 0.50–0.70 · 1–4 DTE</span>
+        <fieldset class="control-group">
+          <legend>Absolute Delta targeting</legend>
+          <div class="range-pair" aria-describedby="delta-help">
+            <label>Minimum
+              <input id="delta_minimum" name="delta_minimum" type="number" min="0" max="1" step="0.01" value="0.50">
+            </label>
+            <label>Target
+              <input id="delta_target" name="delta_target" type="number" min="0" max="1" step="0.01" value="0.60">
+            </label>
+            <label>Maximum
+              <input id="delta_maximum" name="delta_maximum" type="number" min="0" max="1" step="0.01" value="0.70">
+            </label>
+          </div>
+          <div class="slider-stack">
+            <input id="delta-min-slider" type="range" min="0" max="1" step="0.01"
+              value="0.50" aria-label="Minimum accepted absolute Delta">
+            <input id="delta-max-slider" type="range" min="0" max="1" step="0.01"
+              value="0.70" aria-label="Maximum accepted absolute Delta">
+          </div>
+          <p id="delta-help" class="helper">Paired numeric inputs provide precise touch entry.</p>
+        </fieldset>
+        <div class="field-grid">
+          <label>Minimum DTE<input id="dte_minimum" name="dte_minimum" type="number" min="0" value="1"></label>
+          <label>Maximum DTE<input id="dte_maximum" name="dte_maximum" type="number" min="0" value="4"></label>
+        </div>
+        <label class="choice">
+          <input id="allow_zero_dte" name="allow_zero_dte" type="checkbox">
+          <span><strong>Allow 0DTE ⚠</strong><small>Outside preregistered scope</small></span>
+        </label>
+        <span class="affects-chip" data-affects-for="allow_zero_dte"></span>
+        <p id="formal_validity_flag" class="warning dependency-target" hidden>Outside preregistered scope.</p>
+        <div class="switch-grid">
+          <label class="choice"><input name="expiration_fallback" type="checkbox" checked><span>Expiration fallback</span></label>
+          <label class="choice"><input name="next_strike_scan" type="checkbox" checked><span>Next-strike scan</span></label>
+        </div>
+        <fieldset class="control-group unavailable-group" aria-describedby="tier-one-reason">
+          <legend>v2-only contract evidence</legend>
+          <p id="tier-one-reason" class="reason">Disabled by Dataset v1: Tier-1 evidence needs v2.</p>
+          <label>IV source<select id="iv_source" disabled><option>Midpoint</option></select></label>
+          <label class="choice"><input id="vega_filter" type="checkbox" disabled><span>Vega filter</span></label>
+          <label class="choice"><input id="rho_filter" type="checkbox" disabled><span>Rho filter</span></label>
+          <label>Daily OI minimum<input id="open_interest_minimum" value="0" disabled></label>
+          <label class="choice"><input id="iv_rank_gate" type="checkbox" disabled><span>IV-rank regime gate</span></label>
+        </fieldset>
+      </section>
+
+      <section id="stage-panel-5" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-5" tabindex="0" data-stage="5" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 5</span>
+            <h2>Execution &amp; Costs</h2>
+            <p class="definition">Translate the completed trigger into executable fills and honest friction.</p>
+          </div>
+          <button class="info-button" type="button" aria-label="Explain fill model"
+            aria-expanded="false" aria-controls="fill-help">()</button>
+        </div>
+        <p id="fill-help" class="disclosure" hidden>
+          Buy the first valid ask after the completed trigger bar; sell the first valid bid.
+        </p>
+        <span id="stage_5_summary" class="summary-chip">Costs: $0.65 per contract per side</span>
+        <fieldset class="control-group">
+          <legend>Commission per contract per side</legend>
+          <div class="choice-list">
+            <label class="choice"><input name="commission_preset" type="radio" value="reference" checked><span><strong>$0.65 reference</strong><small>Default</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="stress"><span><strong>$1.30 stress</strong><small>Sensitivity</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="both"><span><strong>Both</strong><small>Dual report columns</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="zero"><span><strong>$0 comparison ⚠</strong><small>Requires acknowledgement</small></span></label>
+          </div>
+          <span class="affects-chip" data-affects-for="commission_preset"></span>
+        </fieldset>
+        <label class="choice">
+          <input id="unrealistic_costs_acknowledged"
+            name="unrealistic_costs_acknowledged" type="checkbox" disabled>
+          <span><strong>Unrealistic costs acknowledged</strong><small class="dependency-reason" data-dependency-reason-for="unrealistic_costs_acknowledged">Available only for the $0 preset.</small></span>
+        </label>
+        <div id="zero_cost_page_watermark" class="inline-flag dependency-target" hidden>ZERO-COST SIMULATION</div>
+        <div class="read-only-card">
+          <strong>Fill model</strong>
+          <p>Buy first valid ask after the completed trigger bar; sell first valid bid.</p>
+        </div>
+        <div class="field">
+          <label for="experiment-label">Experiment label</label>
+          <input id="experiment-label" name="experiment_label" type="text"
+            value="Guided portal v2 run" maxlength="80" required>
+        </div>
+        <div class="field">
+          <label for="runner-access-key">Runner access key</label>
+          <input id="runner-access-key" name="runner_access_key" type="password"
+            autocomplete="off" aria-describedby="runner-key-help">
+          <span id="runner-key-help" class="reason">Kept only in this tab; never placed in a URL or report.</span>
+        </div>
+      </section>
+
+      <section id="stage-panel-6" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-6" tabindex="0" data-stage="6" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 6</span>
+            <h2>Risk</h2>
+            <p class="definition">Limit how much one signal, symbol, or correlated idea may consume.</p>
+          </div>
+        </div>
+        <span id="stage_6_summary" class="summary-chip">Risk: 1 contract · 3 trades/symbol/day · 30m cooldown</span>
+        <div class="field-grid">
+          <label>Contracts per trade<input name="contracts_per_trade" type="number" min="1" value="1"></label>
+          <label>Max trades/symbol/day<input name="maximum_trades_per_symbol_day" type="number" min="1" value="3"></label>
+          <label>Re-entry cooldown minutes<input name="reentry_cooldown_minutes" type="number" min="0" value="30"></label>
+        </div>
+        <label class="choice">
+          <input name="same_direction_spy_qqq_single_exposure" type="checkbox" checked>
+          <span><strong>Correlated-exposure rule</strong><small>SPY + QQQ same direction = one position</small></span>
+        </label>
+      </section>
+
+      <section id="stage-panel-7" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-7" tabindex="0" data-stage="7" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 7</span>
+            <h2>Exits</h2>
+            <p class="definition">Define why the trade is over before observing its result.</p>
+          </div>
+          <button class="info-button" type="button"
+            aria-label="Explain underlying invalidation"
+            aria-expanded="false" aria-controls="invalidation-help">()</button>
+        </div>
+        <p id="invalidation-help" class="disclosure" hidden>
+          Exit when the reason for the trade is gone, not when the noisy option price wiggles.
+        </p>
+        <span id="stage_7_summary" class="summary-chip">Exits: structure · 3× friction · 60m · 15:55 ET</span>
+        <label class="choice"><input name="invalidation_stop_enabled" type="checkbox" checked><span><strong>Underlying invalidation stop</strong><small>Family-defined structure</small></span></label>
+        <div class="read-only-card">
+          <strong>Family stop formula</strong>
+          <p id="invalidation_formula" class="dependency-target">
+            Exit calls when the underlying falls to or below the slow 60-minute MA; exit puts when it rises to or above it.
+          </p>
+          <span class="dependency-reason" data-dependency-reason-for="invalidation_formula">Set by Trigger family: trend persistence.</span>
+        </div>
+        <label class="choice"><input name="profit_target_enabled" type="checkbox" checked><span>Profit target</span></label>
+        <div class="field-grid">
+          <label>Profit mode
+            <select name="profit_target_mode">
+              <option value="friction_multiple">Friction multiple</option>
+              <option value="legacy_percent">Legacy percent</option>
+            </select>
+          </label>
+          <label>Friction multiple<input name="profit_friction_multiple" type="number" min="0" step="0.5" value="3"></label>
+          <label>Legacy target %<input name="profit_legacy_percent" type="number" min="0.01" step="0.01" value="20"></label>
+        </div>
+        <label class="choice"><input name="time_stop_enabled" type="checkbox" checked><span>Time stop</span></label>
+        <label>Time-stop minutes<input name="time_stop_minutes" type="number" min="1" value="60"></label>
+        <div class="read-only-card"><strong>Forced EOD close</strong><p>15:55 ET · always on</p></div>
+        <label class="choice"><input name="premium_stop_enabled" type="checkbox"><span><strong>Premium-% stop-loss</strong><small>Default off; 67.6% of prior losses came from this exit harvesting noise</small></span></label>
+        <label>Premium stop %<input name="premium_stop_percent" type="number" min="0.01" step="0.01" value="10"></label>
+        <label class="choice">
+          <input id="opposite_smi_exit" name="opposite_smi_exit" type="checkbox" disabled>
+          <span><strong>Opposite SMI exit</strong><small class="dependency-reason" data-dependency-reason-for="opposite_smi_exit">Enable the SMI gate first.</small></span>
+        </label>
+        <div class="read-only-card">
+          <strong>Exit priority</strong>
+          <p>Profit target → invalidation → premium stop → opposite SMI → time stop → forced close</p>
+        </div>
+      </section>
+
+      <section id="stage-panel-8" class="stage-panel" role="tabpanel"
+        aria-labelledby="stage-tab-8" tabindex="0" data-stage="8" hidden>
+        <div class="stage-head">
+          <div>
+            <span class="stage-number">Stage 8</span>
+            <h2>Run &amp; Results</h2>
+            <p class="definition">Validate the exact request, queue one reproducible replay, then read evidence rather than a score.</p>
+          </div>
+        </div>
+        <span id="stage_8_summary" class="summary-chip">Run: adapter envelope ready · execution adapter pending</span>
+        <p class="adapter-banner" role="status">
+          The engine-independent envelope is ready. The certified adapter command
+          will be <code>python -m portal_engine.cli --request request.json --out-dir DIR</code>.
+          Until it arrives, Queue uses the fixed legacy compatibility strategy.
+        </p>
+
+        <div class="summary" aria-live="polite">
+          <h3>Exact legacy compatibility configuration</h3>
+          <p id="config-sentence"></p>
+          <span class="label">SHA-256</span>
+          <code id="config-hash" class="hash"></code>
+        </div>
+        <details class="envelope-preview">
+          <summary>View portal-engine-params.v1 envelope</summary>
+          <pre id="engine-envelope"></pre>
+        </details>
+        <div class="report-audit-preview" aria-label="Report and run audit stamps">
+          <strong>Report and run audit preview</strong>
+          <div class="audit-stamps">
+            <span id="legacy_macd_report_banner" class="inline-flag dependency-target" hidden>
+              REPORT: LEGACY MACD BASELINE ONLY
+            </span>
+            <span id="scope_report_stamp" class="inline-flag dependency-target" hidden>
+              REPORT: OUTSIDE PREREGISTERED SCOPE
+            </span>
+            <span id="holdout_report_watermark" class="inline-flag dependency-target" hidden>
+              REPORT: HOLDOUT RUN
+            </span>
+            <code id="holdout_run_log_stamp" class="audit-stamp dependency-target" hidden>
+              RUN LOG: holdout_burn_acknowledged=true
+            </code>
+            <span id="zero_cost_report_watermark" class="inline-flag dependency-target" hidden>
+              REPORT: ZERO-COST SIMULATION
+            </span>
+            <span id="run_sentence_costs" class="audit-stamp dependency-target" hidden>
+              REPORT COSTS: $0.65 reference and $1.30 stress
+            </span>
+          </div>
+        </div>
+
+        <div id="run-status" class="run-status" data-state="ready"
+          role="status" aria-live="polite">
+          <strong>Ready to validate</strong>
+          <span>Queue stays disabled until this exact configuration passes.</span>
+        </div>
+        <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
+        <a id="result-link" class="result-link" href="#" hidden>Open guided-portal report</a>
+
+        <section id="results-display" class="results-display" aria-labelledby="results-title">
+          <span id="result_trade_count" data-value="" hidden></span>
+          <div class="results-heading">
+            <div>
+              <p class="eyebrow">Result component surface</p>
+              <h3 id="results-title">Evidence after the adapter returns</h3>
+            </div>
+            <span id="insufficient_evidence_chip" class="evidence-chip dependency-target" hidden>
+              Insufficient evidence · n &lt; 60
+            </span>
+          </div>
+          <p id="results-empty" class="helper">No Phase-2 result loaded yet. Column structure is ready for the adapter payload.</p>
+          <div id="headline_metrics" class="metric-grid dependency-target">
+            <div><span>Closed trades</span><strong id="result-trades">—</strong></div>
+            <div><span>Average MAE</span><strong id="result-mae">—</strong></div>
+            <div><span>Average MFE</span><strong id="result-mfe">—</strong></div>
+          </div>
+          <div class="table-scroll" tabindex="0" aria-label="Cost comparison results">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Metric</th>
+                  <th id="dual_cost_columns" scope="col" class="dependency-target">$0.65 reference</th>
+                  <th scope="col">$1.30 stress</th>
+                  <th scope="col">
+                    Mid-to-mid P&amp;L
+                    <button class="info-button compact" type="button"
+                      aria-label="Explain mid-to-mid profit and loss"
+                      aria-expanded="false" aria-controls="midpoint-help">()</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="cost-results-body">
+                <tr><th scope="row">Friction-applied P&amp;L</th><td>—</td><td>—</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p id="midpoint-help" class="disclosure" hidden>
+            Edge before frictions — if approximately zero, filters cannot save it.
+          </p>
+          <h4>Per-symbol evidence</h4>
+          <div class="table-scroll" tabindex="0" aria-label="Per-symbol results">
+            <table>
+              <thead><tr><th scope="col">Symbol</th><th scope="col">Trades</th><th scope="col">$0.65 P&amp;L</th><th scope="col">$1.30 P&amp;L</th><th scope="col">Mid-to-mid</th></tr></thead>
+              <tbody id="per-symbol-results-body"><tr><td colspan="5">Awaiting adapter result.</td></tr></tbody>
+            </table>
+          </div>
+          <h4>Exit reasons</h4>
+          <div class="table-scroll" tabindex="0" aria-label="Exit reason results">
+            <table>
+              <thead><tr><th scope="col">Exit reason</th><th scope="col">Trades</th></tr></thead>
+              <tbody id="exit-reason-results-body"><tr><td colspan="2">Awaiting adapter result.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
       <div class="sticky-actions" aria-label="Backtest actions">
-        <button id="validate-button" class="button" type="button">
-          Validate only
-        </button>
-        <button id="queue-button" class="button secondary" type="button"
-          disabled>
-          Queue backtest
-        </button>
+        <button id="validate-button" class="button" type="button">Validate only</button>
+        <button id="queue-button" class="button secondary" type="button" disabled>Queue backtest</button>
       </div>
     </form>
   </main>
@@ -281,23 +674,14 @@
         Holdout data proves a finished strategy ONCE. Reading results here
         permanently burns it for this strategy family.
       </p>
-      <div class="flag">
-        <label class="choice">
-          <input id="burn-ack" type="checkbox"
-            aria-describedby="burn-copy">
-          <span>
-            <strong>I understand and want to use the holdout.</strong>
-            <small>This acknowledgement is recorded in the request, report, and run log.</small>
-          </span>
-        </label>
-      </div>
+      <label class="choice">
+        <input id="burn-ack" name="holdout_burn_acknowledgement" type="checkbox"
+          aria-describedby="burn-copy">
+        <span><strong>I understand and want to use the holdout.</strong><small>This acknowledgement is recorded in the request, report, and run log.</small></span>
+      </label>
       <div class="dialog-actions">
-        <button id="burn-confirm" class="button" type="button" disabled>
-          Acknowledge and use holdout
-        </button>
-        <button id="burn-cancel" class="button secondary" type="button">
-          Keep discovery window
-        </button>
+        <button id="burn-confirm" class="button" type="button" disabled>Acknowledge and use holdout</button>
+        <button id="burn-cancel" class="button secondary" type="button">Keep discovery window</button>
       </div>
     </div>
   </dialog>

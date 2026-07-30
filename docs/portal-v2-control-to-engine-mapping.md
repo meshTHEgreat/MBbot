@@ -2,10 +2,12 @@
 
 Date: 2026-07-30
 
-This document maps the v3 portal controls to the code that currently executes
-them. It is deliberately explicit about controls that the transferred Phase-2
-engine does not expose. A UI control is not considered wired merely because a
-matching constant exists in research configuration.
+This document maps the v3 safety request and the
+`portal-engine-params.v1` strategy envelope to their execution paths. The
+engine-independent envelope is implemented; the parity-certified adapter that
+consumes it is still arriving from the research side. A UI control is not
+considered executable merely because it is present in the envelope or resembles
+a frozen research constant.
 
 ## Shipped safety controls
 
@@ -22,6 +24,32 @@ matching constant exists in research configuration.
 
 The public controls use `mbbot.backtest-control.request.v3`. The runner retains
 v1 and v2 acceptance for queued and legacy requests.
+
+## Portal adapter surface
+
+The guided portal builds a versioned `portal-engine-params.v1` envelope and
+validates it against `ui/portal-engine-params-v1.schema.json`. The adapter
+contract is:
+
+```text
+python -m portal_engine.cli --request request.json --out-dir DIR
+```
+
+| Portal stage | Envelope path | Current execution state |
+| --- | --- | --- |
+| Data & Window | `dataset.*` | Safety window and cost subset runs through the legacy compatibility request; strategy envelope waits for adapter |
+| Regime | `regime.rule_source`, `regime.warmup_read_only` | Declared read-only; adapter pending |
+| Setup & Trigger | `setup_trigger.family`, `setup_trigger.parameters.*` | All six agreed parameter shapes emitted; only legacy MACD can queue through the compatibility route |
+| Filters | `filters.*` | Emitted; adapter pending |
+| Contract selection | `contract_selection.*` | Emitted; adapter pending |
+| Execution & Costs | `execution_costs.*` | Reference/stress/zero safety controls exist; dual reporting waits for adapter |
+| Risk | `risk.*` | Emitted; adapter pending |
+| Exits | `exits.*` | Emitted with explicit priority; adapter pending |
+| Report/run provenance | `provenance.*` | `ui=v2`, preset, report watermarks, and run-log stamps emitted |
+
+The UI fails closed: validation can inspect any envelope, but Queue is enabled
+only for the existing legacy MACD compatibility route until the certified
+adapter is installed.
 
 ## Phase-2 strategy controls
 
@@ -98,12 +126,13 @@ It emits `mbbot.phase2.backtest-result.v1`, while the Actions publication path
 still consumes the legacy report input schema. A verified adapter is required
 before these values can be published by the portal.
 
-## Required engine-facing contract
+## Pending adapter package
 
-Completing Step 4 without changing engine math requires a research-side
-transfer or erratum that supplies:
+Completing engine execution without changing math requires the research-side
+adapter package to supply:
 
-1. an offline portal entrypoint with an explicit, versioned request schema;
+1. the agreed offline `portal_engine.cli` entrypoint consuming
+   `portal-engine-params.v1`;
 2. executable definitions and invalidation levels for all six trigger
    families, or an authoritative declaration that some choices must remain
    disabled;
@@ -114,5 +143,6 @@ transfer or erratum that supplies:
    accepted input schema;
 6. parity fixtures for every newly parameterized behavior.
 
-Until that contract arrives, unsupported controls must remain absent or visibly
-disabled. They must not be mapped to similar-looking legacy parameters.
+Until that package arrives and passes parity, the strategy controls remain
+visible and inspectable but cannot queue the Phase-2 engine. They are never
+translated into similar-looking legacy parameters.
