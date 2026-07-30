@@ -298,6 +298,7 @@
           "buy_first_valid_ask_after_completed_trigger_bar_sell_first_valid_bid",
       },
       risk: {
+        enabled: Boolean(values.risk_enabled),
         contracts_per_trade: number(
           values,
           "contracts_per_trade",

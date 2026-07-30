@@ -81,7 +81,8 @@ State terms:
 | Unrealistic-cost acknowledgement (`unrealistic_costs_acknowledged`) | 5 | Acknowledged; effective with zero cost | Zero cost cannot validate until deliberately acknowledged; watermark persists. |
 | Fill model (`fill_model`) | 5 | Intrinsic read-only | Exact buy-ask/sell-bid rule stays visible with read-only marker. |
 | Experiment label (`experiment-label`) | 5 | Effective | Added queue-effective marker and validated-request invalidation on edit. |
-| Contracts per trade (`contracts_per_trade`) | 6 | Adapter-editable; adapter-locked at actual legacy 1 | Shows the legacy-effective value and route cause. |
+| Risk stage activation (`risk_enabled`) | 6 | Optional, disabled by default | “Enable & customize” sets `risk.enabled=true`; “Disable risk controls” restores false and collapses the controls. |
+| Contracts per trade (`contracts_per_trade`) | 6 | Adapter-editable after Risk opt-in; adapter-locked at actual legacy 1 | Shows the legacy-effective value and route cause. |
 | Daily trade cap (`maximum_trades_per_symbol_day`) | 6 | Adapter-editable; adapter-locked on legacy | Shows the legacy-effective value and route cause. |
 | Re-entry cooldown (`reentry_cooldown_minutes`) | 6 | Adapter-editable; adapter-locked on legacy | Shows the legacy-effective value and route cause. |
 | Correlated-exposure rule (`same_direction_spy_qqq_single_exposure`) | 6 | Adapter-editable; adapter-locked on legacy | Switch remains visible with the actual legacy state. |
@@ -98,7 +99,7 @@ State terms:
 | Premium stop percent (`premium_stop_percent`) | 7 | Adapter-editable; adapter-locked at actual legacy 10% | Shows the real legacy threshold. |
 | Opposite SMI exit (`opposite_smi_exit`) | 7 | Dependency-locked until SMI gate; adapter-only | Visible at all times with SMI gate named as the cause. |
 | Exit priority (`exit_priority`) | 7 | Intrinsic read-only | Exact priority is visible and never masquerades as a choice. |
-| Runner access key (`runner-access-key`) | 8 | Effective only on a queueable route | Moved to Review & Run; locked with adapter-pending reason on nonqueueable families. |
+| Runner access key (`runner-access-key`) | 8 | Editable in every route; consumed only by Queue | Kept only in the current tab, preserved across family changes, and never placed in the envelope, URL, report, or index. |
 
 ## Stage-level interaction elements
 

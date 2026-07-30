@@ -89,12 +89,19 @@
     },
     {
       "stage": 6,
-      "button_label": "Customize",
-      "reset_label": "Reset to defaults",
-      "default_summary": "Optional — defaults: 1 contract, 3 trades/symbol/day, 30-minute cooldown, correlated exposure on.",
+      "button_label": "Enable & customize",
+      "reset_label": "Disable risk controls",
+      "default_summary": "Optional — disabled: no portal risk limits apply.",
       "controls_target": "optional-controls-6",
       "read_only": false,
+      "activation": "opt_in",
+      "activation_target": "risk_enabled",
+      "inactive_title": "Risk disabled",
+      "inactive_description": "No portal risk limits apply until you enable and customize this stage.",
+      "active_title": "Risk enabled",
+      "active_description": "The configured limits are included in the adapter envelope.",
       "defaults": {
+        "risk_enabled": false,
         "contracts_per_trade": 1,
         "maximum_trades_per_symbol_day": 3,
         "reentry_cooldown_minutes": 30,
@@ -308,6 +315,7 @@
           "rho_filter",
           "open_interest_minimum",
           "iv_rank_gate",
+          "risk_enabled",
           "contracts_per_trade",
           "maximum_trades_per_symbol_day",
           "reentry_cooldown_minutes",
@@ -382,6 +390,7 @@
           "allow_zero_dte": false,
           "expiration_fallback": true,
           "next_strike_scan": true,
+          "risk_enabled": false,
           "contracts_per_trade": 1,
           "invalidation_stop_enabled": false,
           "profit_target_enabled": true,
@@ -409,8 +418,14 @@
         "banner": "Envelope-only — queueable when the adapter engine connects. Editable values are saved to portal-engine-params.v1 but cannot start a run today.",
         "queue_effective_targets": [],
         "adapter_only_targets": "*",
-        "locked_targets": ["runner-access-key"],
+        "locked_targets": [],
         "effective_values": {},
+        "state_overrides": {
+          "runner-access-key": {
+            "label": "Credential entry · queue waits",
+            "description": "Editable now and kept only in this tab. It is used only after the selected route becomes queueable."
+          }
+        },
         "disabled_options": {},
         "ignored_review_stages": []
       }

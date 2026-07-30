@@ -306,6 +306,7 @@
       "additionalProperties": false,
       "required": ["contracts_per_trade", "maximum_trades_per_symbol_day", "reentry_cooldown_minutes", "same_direction_spy_qqq_single_exposure"],
       "properties": {
+        "enabled": { "type": "boolean" },
         "contracts_per_trade": { "type": "integer", "minimum": 1, "maximum": 100 },
         "maximum_trades_per_symbol_day": { "type": "integer", "minimum": 1, "maximum": 100 },
         "reentry_cooldown_minutes": { "type": "integer", "minimum": 0, "maximum": 390 },

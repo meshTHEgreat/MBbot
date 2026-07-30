@@ -9,6 +9,7 @@
 
   const validateButton = document.getElementById("validate-button");
   const queueButton = document.getElementById("queue-button");
+  const queueActionHelp = document.getElementById("queue-action-help");
   const status = document.getElementById("run-status");
   const error = document.getElementById("form-error");
   const sentence = document.getElementById("config-sentence");
@@ -162,6 +163,7 @@
       unrealistic_costs_acknowledged: value(
         "unrealistic_costs_acknowledged",
       ),
+      risk_enabled: value("risk_enabled"),
       contracts_per_trade: value("contracts_per_trade"),
       maximum_trades_per_symbol_day: value(
         "maximum_trades_per_symbol_day",
@@ -213,6 +215,18 @@
     status.dataset.state = state;
     status.querySelector("strong").textContent = title;
     status.querySelector("span").textContent = copy;
+  }
+
+  function updateQueueGuidance() {
+    if (!dependencyConfig || !queueActionHelp) return;
+    if (currentRunModeName() !== "legacy_macd") {
+      queueActionHelp.textContent =
+        "To generate a report today, select Legacy MACD in Stage 2, enter the access key, then validate.";
+      return;
+    }
+    queueActionHelp.textContent = queueButton.disabled
+      ? "Legacy MACD can generate a report now. Enter the access key, then select Validate only."
+      : "Validation passed. Queue backtest is ready to generate the report.";
   }
 
   function clearError() {
@@ -570,6 +584,8 @@
           description: `${state.description} ${warning}`,
         };
       }
+      const override = mode.state_overrides?.[targetName];
+      if (override) state = { ...state, ...override };
       renderControlMarker(targetName, state);
     }
   }
@@ -820,6 +836,7 @@
   function renderOptionalStage(stage) {
     const config = optionalConfig(stage);
     const state = optionalState(stage);
+    const optIn = config.activation === "opt_in";
     const controls = document.getElementById(config.controls_target);
     const gate = document.querySelector(
       `[data-optional-stage="${stage}"]`,
@@ -829,17 +846,25 @@
     const statusCopy = document.createElement("span");
     statusCopy.className = "optional-stage-status";
     const statusTitle = document.createElement("strong");
-    statusTitle.textContent = config.read_only
-      ? "Using family defaults"
-      : state.customized
-        ? "Using customized values"
-        : "Using defaults";
+    statusTitle.textContent = optIn
+      ? state.customized
+        ? config.active_title
+        : config.inactive_title
+      : config.read_only
+        ? "Using family defaults"
+        : state.customized
+          ? "Using customized values"
+          : "Using defaults";
     const statusDetail = document.createElement("span");
-    statusDetail.textContent = config.read_only
-      ? "This optional stage is visible and read-only."
-      : state.customized
-        ? "These values replace the stated defaults in the adapter envelope."
-        : "The stated defaults apply even while the controls are collapsed.";
+    statusDetail.textContent = optIn
+      ? state.customized
+        ? config.active_description
+        : config.inactive_description
+      : config.read_only
+        ? "This optional stage is visible and read-only."
+        : state.customized
+          ? "These values replace the stated defaults in the adapter envelope."
+          : "The stated defaults apply even while the controls are collapsed.";
     statusCopy.append(statusTitle, statusDetail);
     const toggle = document.createElement("button");
     toggle.type = "button";
@@ -855,7 +880,12 @@
           : config.button_label;
     toggle.addEventListener("click", () => {
       const next = optionalState(stage);
-      if (!config.read_only && !next.customized) next.customized = true;
+      if (!config.read_only && !next.customized) {
+        next.customized = true;
+        if (optIn) {
+          setOptionalControlDefault(config.activation_target, true);
+        }
+      }
       next.expanded = !next.expanded;
       optionalStageState.set(stage, next);
       renderOptionalStage(stage);
@@ -1114,7 +1144,7 @@
       `Costs: ${costLabels[selected("commission_preset")]}`;
     document.getElementById("stage_6_summary").textContent = optionalSummary(
       6,
-      `Risk: ${form.elements.contracts_per_trade.value} contract(s) · ${form.elements.maximum_trades_per_symbol_day.value} trades/symbol/day · ${form.elements.reentry_cooldown_minutes.value}m cooldown`,
+      `Risk enabled: ${form.elements.contracts_per_trade.value} contract(s) · ${form.elements.maximum_trades_per_symbol_day.value} trades/symbol/day · ${form.elements.reentry_cooldown_minutes.value}m cooldown`,
     );
     document.getElementById("stage_7_summary").textContent = optionalSummary(
       7,
@@ -1190,11 +1220,13 @@
       !allStagesValid ||
       !validatedLegacyHash ||
       validatedLegacyHash !== currentLegacyHash;
+    updateQueueGuidance();
   }
 
   function invalidate() {
     validatedLegacyHash = null;
     queueButton.disabled = true;
+    updateQueueGuidance();
     setStatus(
       "ready",
       "Ready to validate",
@@ -1492,6 +1524,7 @@
           "Engine envelope valid",
           "No runner was started. Queue remains disabled until the parity-certified adapter arrives.",
         );
+        updateQueueGuidance();
         return;
       }
       const inputs = legacyModel.buildInputs(legacyValues(), false);
@@ -1503,6 +1536,7 @@
         "Legacy compatibility validation passed",
         "No runner was started. Queue is enabled only for this exact effective request.",
       );
+      updateQueueGuidance();
     } catch (reason) {
       showError(reason);
     }
@@ -1541,6 +1575,8 @@
     }
     validateButton.disabled = true;
     queueButton.disabled = true;
+    queueActionHelp.textContent =
+      "Submitting the validated request. Keep this tab open until the report link appears.";
     form.setAttribute("aria-busy", "true");
     setStatus(
       "authorizing",
@@ -1561,6 +1597,7 @@
     } finally {
       validateButton.disabled = false;
       queueButton.disabled = validatedLegacyHash !== currentLegacyHash;
+      updateQueueGuidance();
       form.removeAttribute("aria-busy");
     }
   }

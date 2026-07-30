@@ -43,7 +43,7 @@ python -m portal_engine.cli --request request.json --out-dir DIR
 | Filters | `filters.*` | Emitted; adapter pending |
 | Contract selection | `contract_selection.*` | Emitted; adapter pending |
 | Execution & Costs | `execution_costs.*` | Reference/stress/zero safety controls exist; dual reporting waits for adapter |
-| Risk | `risk.*` | Emitted; adapter pending |
+| Risk | `risk.enabled`, `risk.*` | Defaults disabled; limits are emitted only as active intent after explicit opt-in; adapter pending |
 | Exits | `exits.*` | Emitted with explicit priority; adapter pending |
 | Report/run provenance | `provenance.*` | `ui=v2`, preset, report watermarks, and run-log stamps emitted |
 
@@ -88,6 +88,7 @@ formal ablations, not additional trigger families.
 
 | Portal control | Engine field | Support state |
 | --- | --- | --- |
+| Enable Risk stage | `risk.enabled` | Defaults `false`; the portal exposes controls and emits active risk intent only after “Enable & customize” |
 | Contracts per trade | `scope.contracts_per_trade` | Configuration constant; trade accounting is currently one contract |
 | Max trades per symbol/day | `scope.maximum_trades_per_symbol_session` | Runtime-consumed |
 | Re-entry cooldown | `scope.reentry_cooldown_minutes` | Runtime-consumed |
@@ -95,6 +96,9 @@ formal ablations, not additional trigger families.
 
 These values exist in the engine configuration, but the runner has no validated
 portal request schema that passes them into a per-run configuration copy.
+`risk.enabled=false` therefore remains adapter-envelope intent and must cause
+the adapter to ignore the accompanying inactive values when that route is
+connected; it does not change strategy math in the legacy runner.
 
 ## Exits
 

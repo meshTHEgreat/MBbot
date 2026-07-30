@@ -59,6 +59,7 @@ function baseValues(overrides = {}) {
     next_strike_scan: true,
     commission_preset: "reference",
     unrealistic_costs_acknowledged: false,
+    risk_enabled: false,
     contracts_per_trade: 1,
     maximum_trades_per_symbol_day: 3,
     reentry_cooldown_minutes: 30,
@@ -195,7 +196,7 @@ function validateSchema(value, schema, location = "$", rootSchema = schema) {
   }
 }
 
-test("default envelope reproduces the preregistered P1 surface", () => {
+test("default envelope preserves P1 signals with optional risk disabled", () => {
   const envelope = engine.buildEnvelope(baseValues());
   assert.equal(envelope.schema_version, "portal-engine-params.v1");
   assert.deepEqual(envelope.dataset.symbols, ["SPY", "QQQ"]);
@@ -217,11 +218,16 @@ test("default envelope reproduces the preregistered P1 surface", () => {
     next_strike_scan: true,
   });
   assert.deepEqual(envelope.risk, {
+    enabled: false,
     contracts_per_trade: 1,
     maximum_trades_per_symbol_day: 3,
     reentry_cooldown_minutes: 30,
     same_direction_spy_qqq_single_exposure: true,
   });
+  assert.equal(
+    engine.buildEnvelope(baseValues({ risk_enabled: true })).risk.enabled,
+    true,
+  );
   assert.equal(
     envelope.provenance.adapter_command,
     "python -m portal_engine.cli --request request.json --out-dir DIR",
@@ -413,6 +419,10 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     graph.optional_stages.map((stage) => stage.stage),
     [1, 3, 4, 6, 7],
   );
+  const riskStage = graph.optional_stages.find((stage) => stage.stage === 6);
+  assert.equal(riskStage.activation, "opt_in");
+  assert.equal(riskStage.activation_target, "risk_enabled");
+  assert.equal(riskStage.defaults.risk_enabled, false);
   assert.deepEqual(
     graph.state_legend.map((state) => state.id),
     ["queue_effective", "adapter_only", "locked", "warning"],
@@ -439,6 +449,12 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     );
   }
   const legacyMode = stateModel.modes.legacy_macd;
+  const pendingMode = stateModel.modes.adapter_pending;
+  assert.ok(!pendingMode.locked_targets.includes("runner-access-key"));
+  assert.match(
+    pendingMode.state_overrides["runner-access-key"].description,
+    /kept only in this tab/i,
+  );
   const legacyCoverage = new Set([
     ...stateModel.read_only_targets,
     ...legacyMode.queue_effective_targets,
@@ -481,6 +497,8 @@ test("HTML contains the guided review flow, result surfaces, and production word
   assert.match(html, /Review &amp; Run/);
   assert.match(html, /id="review-rows"/);
   assert.match(html, /id="state-legend-items"/);
+  assert.match(html, /id="risk_enabled"[^>]+type="checkbox"[^>]+hidden/);
+  assert.match(html, /id="queue-action-help"/);
   assert.equal((html.match(/class="optional-stage-gate"/g) || []).length, 5);
   assert.equal((html.match(/class="optional-stage-controls"/g) || []).length, 5);
   assert.match(script, /focusStageHeading/);

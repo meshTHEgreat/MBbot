@@ -512,9 +512,10 @@
             <p class="definition">Limit how much one signal, symbol, or correlated idea may consume.</p>
           </div>
         </div>
-        <span id="stage_6_summary" class="summary-chip">Optional — defaults: 1 contract, 3 trades/symbol/day, 30-minute cooldown, correlated exposure on.</span>
+        <span id="stage_6_summary" class="summary-chip">Optional — disabled: no portal risk limits apply.</span>
         <div class="optional-stage-gate" data-optional-stage="6"></div>
         <div id="optional-controls-6" class="optional-stage-controls" hidden>
+        <input id="risk_enabled" name="risk_enabled" type="checkbox" hidden>
         <div class="field-grid">
           <label>Contracts per trade<input name="contracts_per_trade" type="number" min="1" value="1"></label>
           <label>Max trades/symbol/day<input name="maximum_trades_per_symbol_day" type="number" min="1" value="3"></label>
@@ -663,7 +664,11 @@
           <label for="runner-access-key">Runner access key</label>
           <input id="runner-access-key" name="runner_access_key" type="password"
             autocomplete="off" aria-describedby="runner-key-help">
-          <span id="runner-key-help" class="reason">Used only to authorize Queue in this tab; never placed in a URL, request report, or index.</span>
+          <span id="runner-key-help" class="reason">
+            You can paste it now. It stays only in this tab and is used only
+            when Queue is available; it never enters a URL, request, report,
+            or index.
+          </span>
         </div>
 
         <div id="run-status" class="run-status" data-state="ready"
@@ -676,7 +681,12 @@
 
         <div class="sticky-actions" aria-label="Backtest actions">
           <button id="validate-button" class="button" type="button">Validate only</button>
-          <button id="queue-button" class="button secondary" type="button" disabled>Queue backtest</button>
+          <button id="queue-button" class="button secondary" type="button"
+            aria-describedby="queue-action-help" disabled>Queue backtest</button>
+          <p id="queue-action-help" class="action-guidance" aria-live="polite">
+            To generate a report today, select Legacy MACD in Stage 2, enter
+            the access key, then validate.
+          </p>
         </div>
 
         <section id="results-display" class="results-display" aria-labelledby="results-title">
