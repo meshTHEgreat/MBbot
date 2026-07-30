@@ -2,10 +2,11 @@
 
 This index contains reports produced by both the classic and v2 portals. Rows are ordered newest first.
 
-- **Index updated (UTC):** `2026-07-30T10:52:51.077117Z`
+- **Index updated (UTC):** `2026-07-30T13:12:37.304886Z`
 
 | Report | Title | Timestamp (UTC) | File | UI |
 |---:|---|---|---|---|
+| #107 | v2 legacy compatibility smoke 2026-07-30 / Workflow #107 | `2026-07-30T13:12:07.814308Z` | [Open](../v2/reports/github-30545636569-1.html) | `v2` |
 | #106 | Guided portal v2 run / Workflow #106 | `2026-07-30T10:52:22.757544Z` | [Open](../v2/reports/github-30536169781-1.html) | `v2` |
 | #105 | Baseline replay / Workflow #105 | `2026-07-30T08:24:59.297091Z` | [Open](github-30525324460-1.html) | `classic` |
 | #100 | ZERO-COST SIMULATION — Baseline replay / Workflow #100 | `2026-07-29T22:18:41.788255Z` | [Open](github-30493455834-1.html) | `classic` |
