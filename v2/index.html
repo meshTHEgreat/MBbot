@@ -225,7 +225,11 @@
           <div>
             <span class="stage-number">Stage 1</span>
             <h2>Regime</h2>
-            <p class="definition">Regime — the market context a family requires before its setup is eligible.</p>
+            <p class="definition">
+              Regime — the market context a family requires before its setup is eligible.
+              The selected family owns this rule; only Opening-range breakout currently
+              exposes a regime switch.
+            </p>
           </div>
         </div>
         <span id="stage_1_summary" class="summary-chip">Optional — defaults: family-supplied regime slot and calculated warm-up.</span>
@@ -234,6 +238,9 @@
           <div id="regime-rule-card" class="read-only-card">
             <strong>Family-supplied regime slot</strong>
             <p id="regime-rule">No regime rule for trend persistence.</p>
+            <p id="regime-guidance" class="helper">
+              This family has no regime parameter, so there is nothing to configure.
+            </p>
           </div>
           <div class="read-only-card">
             <strong>Warm-up requirement</strong>
@@ -244,6 +251,9 @@
               Set by Trigger family: trend persistence.
             </span>
           </div>
+          <button id="regime-settings-button" class="button secondary" type="button">
+            Open family settings →
+          </button>
           <div class="optional-reset-slot" data-optional-reset-stage="1"></div>
         </div>
       </section>
@@ -288,19 +298,24 @@
           <span class="affects-chip" data-affects-for="trigger_family"></span>
         </div>
         <div class="split-grid">
-          <div class="field">
-            <label for="trigger_timeframe_minutes">Trigger timeframe</label>
-            <input id="trigger_timeframe_minutes" name="trigger_timeframe_minutes"
-              type="number" min="1" max="60" step="1" value="5"
-              aria-describedby="timeframe-help">
-            <span id="timeframe-help" class="reason">Completed trigger bars; 5 minutes by default.</span>
+          <input id="trigger_timeframe_minutes" name="trigger_timeframe_minutes"
+            type="hidden" value="5">
+          <div id="trigger_timeframe_display" class="read-only-card">
+            <strong>Trigger timeframe</strong>
+            <p><output for="trigger_timeframe_minutes">5 minutes</output></p>
+            <span id="timeframe-help" class="reason">
+              Fixed by the certified feature store. Every adapter family and the
+              legacy compatibility route use completed 5-minute trigger snapshots.
+            </span>
             <span class="affects-chip" data-affects-for="trigger_timeframe_minutes"></span>
           </div>
-          <div class="field">
-            <label for="execution_timeframe">Execution timeframe</label>
-            <input id="execution_timeframe" value="1 minute" disabled
-              aria-describedby="execution-timeframe-help">
-            <span id="execution-timeframe-help" class="reason">Read-only fill evidence.</span>
+          <div id="execution_timeframe" class="read-only-card">
+            <strong>Execution timeframe</strong>
+            <p>1 minute</p>
+            <span id="execution-timeframe-help" class="reason">
+              Fixed fill evidence: orders use the first valid 1-minute quote after
+              the completed trigger bar.
+            </span>
           </div>
         </div>
         <div class="read-only-card">

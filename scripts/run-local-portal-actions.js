@@ -274,6 +274,96 @@ async function main() {
       nextButtons.push(label);
     }
 
+    await page.click('[role="tab"][data-stage="2"]');
+    const fixedTimeframes = await page.evaluate(() => ({
+      hiddenRequestValue:
+        document.getElementById("trigger_timeframe_minutes").type === "hidden" &&
+        document.getElementById("trigger_timeframe_minutes").value === "5",
+      triggerCopy: document
+        .getElementById("trigger_timeframe_display")
+        .textContent.replace(/\s+/g, " ")
+        .trim(),
+      executionCopy: document
+        .getElementById("execution_timeframe")
+        .textContent.replace(/\s+/g, " ")
+        .trim(),
+    }));
+    assert(
+      fixedTimeframes.hiddenRequestValue &&
+        fixedTimeframes.triggerCopy.includes("Fixed by the certified feature store"),
+      "Fixed trigger timeframe still presents as a writable control",
+    );
+    assert(
+      fixedTimeframes.executionCopy.includes("first valid 1-minute quote"),
+      "Execution timeframe does not explain its fixed evidence",
+    );
+
+    const familyControlSets = {
+      trend_persistence: [
+        "fast_ma_snapshots",
+        "slow_ma_snapshots",
+        "ma_gap_percent",
+        "momentum_window_minutes",
+        "momentum_percent",
+      ],
+      opening_range_breakout: [
+        "orb_range_minutes",
+        "orb_buffer_percent",
+        "orb_regime_enabled",
+      ],
+      order_flow_imbalance: [
+        "order_flow_window_bars",
+        "order_flow_threshold",
+        "order_flow_underlying_agreement",
+      ],
+      premium_underlying_divergence: [
+        "divergence_underlying_velocity_min",
+        "divergence_premium_velocity_max",
+        "divergence_window_minutes",
+      ],
+      mean_reversion_fade: [
+        "mean_reversion_rsi_period",
+        "mean_reversion_rsi_extreme",
+        "mean_reversion_reversal_confirm",
+      ],
+    };
+    for (const [family, names] of Object.entries(familyControlSets)) {
+      await page.select("#trigger_family", family);
+      const locked = await page.evaluate(
+        (controlNames) =>
+          controlNames.filter((name) => {
+            const control = document.querySelector(`[name="${name}"]`);
+            return !control || control.disabled || control.readOnly;
+          }),
+        names,
+      );
+      assert(
+        locked.length === 0,
+        `${family} has queue-effective controls locked: ${locked.join(", ")}`,
+      );
+    }
+
+    await page.select("#trigger_family", "opening_range_breakout");
+    await page.click('[role="tab"][data-stage="1"]');
+    await page.click('[data-optional-stage="1"] button');
+    const regimeGuidance = await page
+      .$eval("#regime-guidance", (node) => node.textContent.trim());
+    assert(
+      regimeGuidance.includes("Queue-effective option available"),
+      "Regime stage does not identify the configurable ORB regime option",
+    );
+    await page.click("#regime-settings-button");
+    assert(
+      await page.evaluate(
+        () =>
+          !document.getElementById("stage-panel-2").hidden &&
+          document.activeElement ===
+            document.querySelector("#stage-panel-2 h2"),
+      ),
+      "Regime settings button did not open and focus Setup & Trigger",
+    );
+    await page.select("#trigger_family", "trend_persistence");
+
     await page.click('[role="tab"][data-stage="6"]');
     const riskBefore = await page.evaluate(() => ({
       enabled: document.getElementById("risk_enabled").checked,
@@ -427,6 +517,9 @@ async function main() {
           protected_all_window: "passed",
           risk_default: "disabled",
           risk_enable_disable: "passed",
+          fixed_timeframe_presentation: "passed",
+          active_family_controls_editable: "passed",
+          regime_settings_route: "passed",
           runner_key_editable: true,
           validate_keyboard: "passed",
           queue_pointer: "adapter and legacy passed",

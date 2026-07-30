@@ -1998,6 +1998,10 @@
     });
   });
 
+  document
+    .getElementById("regime-settings-button")
+    .addEventListener("click", () => focusStageHeading(2));
+
   form.addEventListener("change", (event) => {
     const name = event.target.name || event.target.id;
     if (name === "runner_access_key") return;

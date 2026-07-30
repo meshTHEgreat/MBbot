@@ -484,8 +484,15 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     [],
     "every control must have an explicit legacy-route state",
   );
+  assert.ok(
+    stateModel.read_only_targets.includes("trigger_timeframe_display"),
+    "fixed trigger timeframe must render as an intrinsic read-only value",
+  );
+  assert.ok(
+    !legacyMode.adapter_only_targets.includes("trigger_timeframe_minutes"),
+    "fixed trigger timeframe must not be mislabeled as an adapter parameter",
+  );
   for (const target of [
-    "trigger_timeframe_minutes",
     "spread_cap_percent",
     "delta_target",
     "allow_zero_dte",

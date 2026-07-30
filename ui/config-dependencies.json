@@ -141,7 +141,7 @@
       { "target": "regime-rule-card", "stage": 1, "label": "Family regime rule" },
       { "target": "warmup_requirement", "stage": 1, "label": "Warm-up requirement" },
       { "target": "trigger_family", "stage": 2, "label": "Trigger family" },
-      { "target": "trigger_timeframe_minutes", "stage": 2, "label": "Trigger timeframe" },
+      { "target": "trigger_timeframe_display", "stage": 2, "label": "Trigger timeframe" },
       { "target": "execution_timeframe", "stage": 2, "label": "Execution timeframe" },
       { "target": "signal_price_source", "stage": 2, "label": "Signal price source" },
       { "target": "fast_ma_snapshots", "stage": 2, "label": "Fast MA snapshots" },
@@ -217,6 +217,7 @@
     "read_only_targets": [
       "regime-rule-card",
       "warmup_requirement",
+      "trigger_timeframe_display",
       "execution_timeframe",
       "signal_price_source",
       "quote_freshness",
@@ -281,7 +282,6 @@
           "runner-access-key"
         ],
         "adapter_only_targets": [
-          "trigger_timeframe_minutes",
           "fast_ma_snapshots",
           "slow_ma_snapshots",
           "ma_gap_percent",
@@ -344,7 +344,6 @@
           "opposite_smi_exit"
         ],
         "effective_values": {
-          "trigger_timeframe_minutes": "Legacy runs use fixed 5-minute trigger bars.",
           "legacy_macd_fast": "Legacy runs use fixed EMA 12.",
           "legacy_macd_slow": "Legacy runs use fixed EMA 26.",
           "legacy_macd_signal": "Legacy runs use fixed signal EMA 9.",
@@ -384,7 +383,6 @@
           "opposite_smi_exit": "Legacy runs keep SMI off and use their historical opposite-MACD exit."
         },
         "display_values": {
-          "trigger_timeframe_minutes": 5,
           "legacy_macd_fast": 12,
           "legacy_macd_slow": 26,
           "legacy_macd_signal": 9,
@@ -450,7 +448,7 @@
         ],
         "adapter_only_targets": [],
         "locked_targets": [
-          "trigger_timeframe_minutes", "spread_denominator", "premium_cap",
+          "spread_denominator", "premium_cap",
           "rsi_gate_enabled", "smi_gate_enabled", "momentum_gate_enabled",
           "velocity_gate_enabled", "activity_gate_enabled",
           "trade_side_gate_enabled", "expiration_fallback", "next_strike_scan",
@@ -459,7 +457,6 @@
           "opposite_smi_exit"
         ],
         "locked_reasons": {
-          "trigger_timeframe_minutes": "The certified feature store uses fixed 5-minute trigger snapshots; this run uses 5 minutes.",
           "spread_denominator": "The certified adapter defines relative spread against midpoint.",
           "premium_cap": "The certified adapter exposes a premium floor but no premium cap.",
           "rsi_gate_enabled": "This indicator veto is not a parameter in the certified adapter.",
@@ -558,44 +555,50 @@
           "reason_template": "Available when Trigger family is {label}."
         },
         {
-          "targets": ["invalidation_formula", "warmup_requirement", "signal_price_source", "regime-rule"],
+          "targets": ["invalidation_formula", "warmup_requirement", "signal_price_source", "regime-rule", "regime-guidance"],
           "behavior": "mapped_content",
           "values": {
             "trend_persistence": {
               "invalidation_formula": "Exit calls when the underlying falls to or below the slow 60-minute MA; exit puts when it rises to or above it.",
               "warmup_requirement": "12 trigger bars = 60 minutes at the 5-minute default.",
               "signal_price_source": "UNDERLYING snapshot price",
-              "regime-rule": "No regime rule for trend persistence."
+              "regime-rule": "No regime rule for trend persistence.",
+              "regime-guidance": "This family has no regime parameter, so there is nothing to configure."
             },
             "opening_range_breakout": {
               "invalidation_formula": "Exit when price crosses back through the completed opening-range boundary.",
               "warmup_requirement": "30-minute opening range plus prior-session regime history when enabled.",
               "signal_price_source": "UNDERLYING snapshot price",
-              "regime-rule": "Prior-5-session opening-range regime, controlled by the Stage-2 regime toggle."
+              "regime-rule": "Prior-5-session opening-range regime, controlled by the Stage-2 regime toggle.",
+              "regime-guidance": "Queue-effective option available: open family settings, then switch Prior-5-session regime on or off."
             },
             "order_flow_imbalance": {
               "invalidation_formula": "Exit when the underlying agreement condition reverses.",
               "warmup_requirement": "Three completed 5-minute imbalance snapshots by default.",
               "signal_price_source": "OPTION trade flow plus underlying agreement",
-              "regime-rule": "No separate regime rule for order-flow imbalance."
+              "regime-rule": "No separate regime rule for order-flow imbalance.",
+              "regime-guidance": "This family has no separate regime parameter, so there is nothing to configure."
             },
             "premium_underlying_divergence": {
               "invalidation_formula": "Exit when the measured divergence closes or reverses.",
               "warmup_requirement": "15 minutes of synchronized premium and underlying observations by default.",
               "signal_price_source": "UNDERLYING and OPTION premium snapshots",
-              "regime-rule": "No separate regime rule for premium-underlying divergence."
+              "regime-rule": "No separate regime rule for premium-underlying divergence.",
+              "regime-guidance": "This family has no separate regime parameter, so there is nothing to configure."
             },
             "mean_reversion_fade": {
               "invalidation_formula": "Exit when the fade structure is invalidated by a renewed session extreme.",
               "warmup_requirement": "14 RSI snapshots plus reversal-bar confirmation by default.",
               "signal_price_source": "UNDERLYING snapshot price",
-              "regime-rule": "No separate regime rule for mean-reversion fade."
+              "regime-rule": "No separate regime rule for mean-reversion fade.",
+              "regime-guidance": "This family has no separate regime parameter, so there is nothing to configure."
             },
             "legacy_macd": {
               "invalidation_formula": "Legacy comparison uses its historical option-premium exit rules.",
               "warmup_requirement": "Slow EMA plus signal seed; legacy comparison only.",
               "signal_price_source": "OPTION premium",
-              "regime-rule": "No portal regime rule is applied by the legacy compatibility runner."
+              "regime-rule": "No portal regime rule is applied by the legacy compatibility runner.",
+              "regime-guidance": "The compatibility runner has no portal-configurable regime parameter."
             }
           }
         },

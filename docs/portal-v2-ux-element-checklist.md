@@ -24,11 +24,11 @@ State terms:
 | Start date (`start_date`) | 0 | Effective only for Custom; dependency-locked for presets | Keeps the actual preset dates visible and names Window preset as the locking cause. |
 | End date (`end_date`) | 0 | Effective only for Custom; dependency-locked for presets | Keeps the actual preset dates visible and names Window preset as the locking cause. |
 | Symbols (`symbol_combobox`) | 0 | Effective on legacy; adapter-editable otherwise | Added route marker, accessible group description, and robustness helper. |
-| Family regime rule (`regime-rule-card`) | 1 | Intrinsic read-only | Optional default view now states the exact family-supplied rule or that none exists. |
+| Family regime rule (`regime-rule-card`) | 1 | Intrinsic read-only; family-owned | Now states whether the family has a regime parameter and provides a working route to its family settings. Opening-range breakout exposes the only current on/off regime control. |
 | Warm-up requirement (`warmup_requirement`) | 1 | Intrinsic read-only | Added live session/bar conversion and a read-only state marker. |
 | Trigger family (`trigger_family`) | 2 | Effective route selector | Now drives the complete mode model, persistent route banner, affected-control ripple, and review honesty. |
-| Trigger timeframe (`trigger_timeframe_minutes`) | 2 | Adapter-editable; adapter-locked on legacy | Legacy route now shows the actual fixed five-minute value and why editing is unavailable. |
-| Execution timeframe (`execution_timeframe`) | 2 | Intrinsic read-only | Keeps the one-minute execution rule visible with a read-only marker. |
+| Trigger timeframe (`trigger_timeframe_display`) | 2 | Intrinsic read-only | Replaced the misleading number box with a fixed-value card. The frozen feature store and both runner routes use completed five-minute snapshots; the adapter contract has no timeframe parameter. |
+| Execution timeframe (`execution_timeframe`) | 2 | Intrinsic read-only | Replaced the disabled textbox with a fixed-value card explaining the one-minute fill evidence. |
 | Signal price source (`signal_price_source`) | 2 | Intrinsic read-only, family-derived | Names Trigger family as its cause and displays the exact underlying/premium source. |
 | Fast MA snapshots (`fast_ma_snapshots`) | 2 | Adapter-editable; adapter-locked on legacy | Route marker and family dependency now prevent implying that it changes a legacy run. |
 | Slow MA snapshots (`slow_ma_snapshots`) | 2 | Adapter-editable; adapter-locked on legacy | Route marker and family dependency now prevent implying that it changes a legacy run. |
