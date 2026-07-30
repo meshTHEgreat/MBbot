@@ -376,7 +376,7 @@ test("dependency graph declares every authoritative cross-control rule", () => {
     fs.readFileSync(path.join(root, "ui", "config-dependencies.json"), "utf8"),
   );
   const html = fs.readFileSync(path.join(root, "v2", "index.html"), "utf8");
-  assert.equal(graph.schema_version, "mbbot.portal.config-dependencies.v1");
+  assert.equal(graph.schema_version, "mbbot.portal.config-dependencies.v2");
   const identifiers = new Set(graph.rules.map((rule) => rule.id));
   for (const expected of [
     "dataset-tier-one-features",
@@ -407,18 +407,77 @@ test("dependency graph declares every authoritative cross-control rule", () => {
       }
     }
   }
+
+  assert.equal(graph.stage_flow.length, 9);
+  assert.deepEqual(
+    graph.optional_stages.map((stage) => stage.stage),
+    [1, 3, 4, 6, 7],
+  );
+  assert.deepEqual(
+    graph.state_legend.map((state) => state.id),
+    ["queue_effective", "adapter_only", "locked", "warning"],
+  );
+  const stateModel = graph.control_state_model;
+  const elementTargets = stateModel.elements.map((element) => element.target);
+  assert.equal(new Set(elementTargets).size, elementTargets.length);
+  for (const target of elementTargets) {
+    assert.ok(
+      html.includes(`id="${target}"`) || html.includes(`name="${target}"`),
+      `control-state target ${target} must render in the portal`,
+    );
+  }
+  const legacyMode = stateModel.modes.legacy_macd;
+  const legacyCoverage = new Set([
+    ...stateModel.read_only_targets,
+    ...legacyMode.queue_effective_targets,
+    ...legacyMode.adapter_only_targets,
+    ...Object.keys(legacyMode.disabled_options),
+  ]);
+  assert.deepEqual(
+    elementTargets.filter((target) => !legacyCoverage.has(target)),
+    [],
+    "every control must have an explicit legacy-route state",
+  );
+  for (const target of [
+    "trigger_timeframe_minutes",
+    "spread_cap_percent",
+    "delta_target",
+    "allow_zero_dte",
+    "maximum_trades_per_symbol_day",
+    "premium_stop_enabled",
+  ]) {
+    assert.ok(legacyMode.adapter_only_targets.includes(target), target);
+    assert.ok(legacyMode.effective_values[target], `${target} effective value`);
+  }
+  assert.match(
+    legacyMode.disabled_options["commission-both"],
+    /adapter engine/,
+  );
 });
 
-test("HTML contains nine APG tabs, result surfaces, and production wording", () => {
+test("HTML contains the guided review flow, result surfaces, and production wording", () => {
   const html = fs.readFileSync(path.join(root, "v2", "index.html"), "utf8");
+  const script = fs.readFileSync(path.join(root, "v2", "control.js"), "utf8");
+  const model = fs.readFileSync(
+    path.join(root, "v2", "control-model.js"),
+    "utf8",
+  );
   assert.equal((html.match(/role="tab"/g) || []).length, 9);
   assert.equal((html.match(/role="tabpanel"/g) || []).length, 9);
+  assert.match(html, /Review &amp; Run/);
+  assert.match(html, /id="review-rows"/);
+  assert.match(html, /id="state-legend-items"/);
+  assert.equal((html.match(/class="optional-stage-gate"/g) || []).length, 5);
+  assert.equal((html.match(/class="optional-stage-controls"/g) || []).length, 5);
+  assert.match(script, /focusStageHeading/);
+  assert.match(script, /stage-flow-actions/);
+  assert.match(script, /Adapter-only · read-only/);
   assert.match(html, /Mid-to-mid P&amp;L/);
   assert.match(html, /Average MAE/);
   assert.match(html, /Average MFE/);
   assert.match(html, /Per-symbol evidence/);
   assert.match(html, /Insufficient evidence/);
-  assert.doesNotMatch(html, /preview runner/i);
+  assert.doesNotMatch(`${html}\n${script}\n${model}`, /preview runner/i);
 });
 
 test("only report-file pushes trigger the public Pages workflow", () => {

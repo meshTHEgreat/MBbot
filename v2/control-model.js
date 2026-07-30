@@ -212,7 +212,7 @@
     const commissionPreset = String(values.commission_preset || "");
     if (commissionPreset === "both") {
       throw inputError(
-        "Dual-cost reports are not available on the legacy preview runner yet.",
+        "Dual-cost reports are not available on the legacy compatibility runner yet.",
         "commission_preset",
       );
     }

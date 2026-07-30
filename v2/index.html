@@ -18,7 +18,7 @@
     <nav class="topline" aria-label="Portal navigation">
       <span class="brand">MBbot Research Desk</span>
       <span class="preview-chip">Guided portal v2</span>
-      <span class="engine-chip">Adapter pending · UI surface v1</span>
+      <span class="engine-chip">Adapter pending · legacy compatibility available</span>
       <a class="portal-switcher" href="../reports/report-index.md">All reports</a>
       <a class="portal-switcher" href="../index.html">Classic portal →</a>
     </nav>
@@ -32,6 +32,15 @@
         clearly labelled legacy compatibility path.
       </p>
     </header>
+
+    <section id="control-state-legend" class="state-legend"
+      aria-labelledby="control-state-legend-title">
+      <div>
+        <p class="eyebrow">Control truthfulness</p>
+        <h2 id="control-state-legend-title">What each setting can do today</h2>
+      </div>
+      <div id="state-legend-items" class="state-legend-items"></div>
+    </section>
 
     <div class="watermark-stack" role="status" aria-label="Run warnings">
       <span id="holdout_global_watermark" class="watermark dependency-target" hidden>
@@ -47,7 +56,7 @@
       Legacy MACD remains available solely for report-85 comparison.
     </p>
 
-    <form id="safety-form" novalidate>
+    <form id="safety-form" novalidate data-initializing="true">
       <div class="stepper-shell">
         <p id="current-stage-indicator" class="current-stage-indicator"
           aria-live="polite">Stage 0 of 8 · Data &amp; Window</p>
@@ -79,9 +88,10 @@
             data-stage="7"><span class="stage-dot"></span><b>7</b> Exits</button>
           <button id="stage-tab-8" class="step-tab" type="button" role="tab"
             aria-selected="false" aria-controls="stage-panel-8" tabindex="-1"
-            data-stage="8"><span class="stage-dot"></span><b>8</b> Run</button>
+            data-stage="8"><span class="stage-dot"></span><b>8</b> Review</button>
         </div>
       </div>
+      <p id="route-mode-banner" class="route-mode-banner" role="status"></p>
 
       <section id="stage-panel-0" class="stage-panel" role="tabpanel"
         aria-labelledby="stage-tab-0" tabindex="0" data-stage="0">
@@ -181,19 +191,23 @@
             <p class="definition">Regime — the market context a family requires before its setup is eligible.</p>
           </div>
         </div>
-        <span id="stage_1_summary" class="summary-chip">Regime: supplied by Trigger family</span>
-        <div class="read-only-card">
-          <strong>Family-supplied regime slot</strong>
-          <p id="regime-rule">No regime rule for trend persistence.</p>
-        </div>
-        <div class="read-only-card">
-          <strong>Warm-up requirement</strong>
-          <p id="warmup_requirement" class="dependency-target">
-            12 trigger bars = 60 minutes at the 5-minute default.
-          </p>
-          <span class="dependency-reason" data-dependency-reason-for="warmup_requirement">
-            Set by Trigger family: trend persistence.
-          </span>
+        <span id="stage_1_summary" class="summary-chip">Optional — defaults: family-supplied regime slot and calculated warm-up.</span>
+        <div class="optional-stage-gate" data-optional-stage="1"></div>
+        <div id="optional-controls-1" class="optional-stage-controls" hidden>
+          <div id="regime-rule-card" class="read-only-card">
+            <strong>Family-supplied regime slot</strong>
+            <p id="regime-rule">No regime rule for trend persistence.</p>
+          </div>
+          <div class="read-only-card">
+            <strong>Warm-up requirement</strong>
+            <p id="warmup_requirement" class="dependency-target">
+              12 trigger bars = 60 minutes at the 5-minute default.
+            </p>
+            <span class="dependency-reason" data-dependency-reason-for="warmup_requirement">
+              Set by Trigger family: trend persistence.
+            </span>
+          </div>
+          <div class="optional-reset-slot" data-optional-reset-stage="1"></div>
         </div>
       </section>
 
@@ -327,7 +341,9 @@
             <p class="definition">Filters are pass/fail vetoes. They remove trades; they never create them.</p>
           </div>
         </div>
-        <span id="stage_3_summary" class="summary-chip">Filters: 10% midpoint spread · $0.50 floor · valid NBBO</span>
+        <span id="stage_3_summary" class="summary-chip">Optional — defaults: 10% midpoint spread, $0.50 floor, valid NBBO, indicator gates off.</span>
+        <div class="optional-stage-gate" data-optional-stage="3"></div>
+        <div id="optional-controls-3" class="optional-stage-controls" hidden>
         <div class="field-grid">
           <label>Spread cap %
             <input id="spread_cap_percent" name="spread_cap_percent" type="number"
@@ -353,7 +369,10 @@
         <p id="spread_cap_semantics" class="read-only-card dependency-target">10% of midpoint</p>
         <p id="spread_warning" class="warning dependency-target" hidden>Spread cap above 15% — explicit review required.</p>
         <label class="choice"><input name="valid_nbbo_required" type="checkbox" checked><span><strong>Valid NBBO required</strong><small>Default on</small></span></label>
-        <p class="helper">Quote freshness: current one-minute snapshot (read-only).</p>
+        <div class="read-only-card">
+          <strong>Quote freshness</strong>
+          <p id="quote_freshness">Current one-minute snapshot.</p>
+        </div>
         <fieldset class="control-group">
           <legend>Optional indicator vetoes</legend>
           <p class="helper">Each gate adds a veto; test with and without it (ablation).</p>
@@ -367,6 +386,8 @@
           </div>
           <span class="affects-chip" data-affects-for="smi_gate_enabled"></span>
         </fieldset>
+        <div class="optional-reset-slot" data-optional-reset-stage="3"></div>
+        </div>
       </section>
 
       <section id="stage-panel-4" class="stage-panel" role="tabpanel"
@@ -378,7 +399,9 @@
             <p class="definition">Choose the option that expresses the signal without changing the signal.</p>
           </div>
         </div>
-        <span id="stage_4_summary" class="summary-chip">Contract: |Delta| 0.60 · band 0.50–0.70 · 1–4 DTE</span>
+        <span id="stage_4_summary" class="summary-chip">Optional — defaults: |Delta| 0.60 in a 0.50–0.70 band, 1–4 DTE, fallbacks on, 0DTE off.</span>
+        <div class="optional-stage-gate" data-optional-stage="4"></div>
+        <div id="optional-controls-4" class="optional-stage-controls" hidden>
         <fieldset class="control-group">
           <legend>Absolute Delta targeting</legend>
           <div class="range-pair" aria-describedby="delta-help">
@@ -392,7 +415,7 @@
               <input id="delta_maximum" name="delta_maximum" type="number" min="0" max="1" step="0.01" value="0.70">
             </label>
           </div>
-          <div class="slider-stack">
+          <div id="delta_slider_pair" class="slider-stack">
             <input id="delta-min-slider" type="range" min="0" max="1" step="0.01"
               value="0.50" aria-label="Minimum accepted absolute Delta">
             <input id="delta-max-slider" type="range" min="0" max="1" step="0.01"
@@ -423,6 +446,8 @@
           <label>Daily OI minimum<input id="open_interest_minimum" value="0" disabled></label>
           <label class="choice"><input id="iv_rank_gate" type="checkbox" disabled><span>IV-rank regime gate</span></label>
         </fieldset>
+        <div class="optional-reset-slot" data-optional-reset-stage="4"></div>
+        </div>
       </section>
 
       <section id="stage-panel-5" class="stage-panel" role="tabpanel"
@@ -445,7 +470,7 @@
           <div class="choice-list">
             <label class="choice"><input name="commission_preset" type="radio" value="reference" checked><span><strong>$0.65 reference</strong><small>Default</small></span></label>
             <label class="choice"><input name="commission_preset" type="radio" value="stress"><span><strong>$1.30 stress</strong><small>Sensitivity</small></span></label>
-            <label class="choice"><input name="commission_preset" type="radio" value="both"><span><strong>Both</strong><small>Dual report columns</small></span></label>
+            <label class="choice"><input id="commission-both" name="commission_preset" type="radio" value="both"><span><strong>Both</strong><small>Dual report columns</small></span></label>
             <label class="choice"><input name="commission_preset" type="radio" value="zero"><span><strong>$0 comparison ⚠</strong><small>Requires acknowledgement</small></span></label>
           </div>
           <span class="affects-chip" data-affects-for="commission_preset"></span>
@@ -456,7 +481,7 @@
           <span><strong>Unrealistic costs acknowledged</strong><small class="dependency-reason" data-dependency-reason-for="unrealistic_costs_acknowledged">Available only for the $0 preset.</small></span>
         </label>
         <div id="zero_cost_page_watermark" class="inline-flag dependency-target" hidden>ZERO-COST SIMULATION</div>
-        <div class="read-only-card">
+        <div id="fill_model" class="read-only-card">
           <strong>Fill model</strong>
           <p>Buy first valid ask after the completed trigger bar; sell first valid bid.</p>
         </div>
@@ -464,12 +489,6 @@
           <label for="experiment-label">Experiment label</label>
           <input id="experiment-label" name="experiment_label" type="text"
             value="Guided portal v2 run" maxlength="80" required>
-        </div>
-        <div class="field">
-          <label for="runner-access-key">Runner access key</label>
-          <input id="runner-access-key" name="runner_access_key" type="password"
-            autocomplete="off" aria-describedby="runner-key-help">
-          <span id="runner-key-help" class="reason">Kept only in this tab; never placed in a URL or report.</span>
         </div>
       </section>
 
@@ -482,7 +501,9 @@
             <p class="definition">Limit how much one signal, symbol, or correlated idea may consume.</p>
           </div>
         </div>
-        <span id="stage_6_summary" class="summary-chip">Risk: 1 contract · 3 trades/symbol/day · 30m cooldown</span>
+        <span id="stage_6_summary" class="summary-chip">Optional — defaults: 1 contract, 3 trades/symbol/day, 30-minute cooldown, correlated exposure on.</span>
+        <div class="optional-stage-gate" data-optional-stage="6"></div>
+        <div id="optional-controls-6" class="optional-stage-controls" hidden>
         <div class="field-grid">
           <label>Contracts per trade<input name="contracts_per_trade" type="number" min="1" value="1"></label>
           <label>Max trades/symbol/day<input name="maximum_trades_per_symbol_day" type="number" min="1" value="3"></label>
@@ -492,6 +513,8 @@
           <input name="same_direction_spy_qqq_single_exposure" type="checkbox" checked>
           <span><strong>Correlated-exposure rule</strong><small>SPY + QQQ same direction = one position</small></span>
         </label>
+        <div class="optional-reset-slot" data-optional-reset-stage="6"></div>
+        </div>
       </section>
 
       <section id="stage-panel-7" class="stage-panel" role="tabpanel"
@@ -509,7 +532,9 @@
         <p id="invalidation-help" class="disclosure" hidden>
           Exit when the reason for the trade is gone, not when the noisy option price wiggles.
         </p>
-        <span id="stage_7_summary" class="summary-chip">Exits: structure · 3× friction · 60m · 15:55 ET</span>
+        <span id="stage_7_summary" class="summary-chip">Optional — defaults: family invalidation, 3× friction, 60-minute time stop, 15:55 ET close; premium stop off.</span>
+        <div class="optional-stage-gate" data-optional-stage="7"></div>
+        <div id="optional-controls-7" class="optional-stage-controls" hidden>
         <label class="choice"><input name="invalidation_stop_enabled" type="checkbox" checked><span><strong>Underlying invalidation stop</strong><small>Family-defined structure</small></span></label>
         <div class="read-only-card">
           <strong>Family stop formula</strong>
@@ -531,16 +556,18 @@
         </div>
         <label class="choice"><input name="time_stop_enabled" type="checkbox" checked><span>Time stop</span></label>
         <label>Time-stop minutes<input name="time_stop_minutes" type="number" min="1" value="60"></label>
-        <div class="read-only-card"><strong>Forced EOD close</strong><p>15:55 ET · always on</p></div>
+        <div id="forced_eod_close" class="read-only-card"><strong>Forced EOD close</strong><p>15:55 ET · always on</p></div>
         <label class="choice"><input name="premium_stop_enabled" type="checkbox"><span><strong>Premium-% stop-loss</strong><small>Default off; 67.6% of prior losses came from this exit harvesting noise</small></span></label>
         <label>Premium stop %<input name="premium_stop_percent" type="number" min="0.01" step="0.01" value="10"></label>
         <label class="choice">
           <input id="opposite_smi_exit" name="opposite_smi_exit" type="checkbox" disabled>
           <span><strong>Opposite SMI exit</strong><small class="dependency-reason" data-dependency-reason-for="opposite_smi_exit">Enable the SMI gate first.</small></span>
         </label>
-        <div class="read-only-card">
+        <div id="exit_priority" class="read-only-card">
           <strong>Exit priority</strong>
           <p>Profit target → invalidation → premium stop → opposite SMI → time stop → forced close</p>
+        </div>
+        <div class="optional-reset-slot" data-optional-reset-stage="7"></div>
         </div>
       </section>
 
@@ -549,25 +576,50 @@
         <div class="stage-head">
           <div>
             <span class="stage-number">Stage 8</span>
-            <h2>Run &amp; Results</h2>
-            <p class="definition">Validate the exact request, queue one reproducible replay, then read evidence rather than a score.</p>
+            <h2>Review &amp; Run</h2>
+            <p class="definition">Read the effective strategy on one screen, validate the exact request, then queue one reproducible replay.</p>
           </div>
         </div>
-        <span id="stage_8_summary" class="summary-chip">Run: adapter envelope ready · execution adapter pending</span>
-        <p class="adapter-banner" role="status">
-          The engine-independent envelope is ready. The certified adapter command
-          will be <code>python -m portal_engine.cli --request request.json --out-dir DIR</code>.
-          Until it arrives, Queue uses the fixed legacy compatibility strategy.
-        </p>
+        <span id="stage_8_summary" class="summary-chip">Review: choose a trigger family, then validate the effective request.</span>
+        <p id="review-route-banner" class="route-mode-banner" role="status"></p>
+
+        <section class="review-card" aria-labelledby="review-title">
+          <div class="review-heading">
+            <div>
+              <p class="eyebrow">Effective configuration</p>
+              <h3 id="review-title">What this route will actually use</h3>
+            </div>
+            <p class="helper">Muted rows are recorded for the adapter but ignored by the current legacy route.</p>
+          </div>
+          <div class="table-scroll review-scroll" tabindex="0"
+            aria-label="Effective configuration review by stage">
+            <table class="review-table">
+              <thead>
+                <tr>
+                  <th scope="col">Stage</th>
+                  <th scope="col">Effective values</th>
+                  <th scope="col">State</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody id="review-rows"></tbody>
+            </table>
+          </div>
+        </section>
 
         <div class="summary" aria-live="polite">
-          <h3>Exact legacy compatibility configuration</h3>
+          <h3 id="effective-config-title">Exact effective request</h3>
           <p id="config-sentence"></p>
           <span class="label">SHA-256</span>
           <code id="config-hash" class="hash"></code>
+          <dl class="provenance-list">
+            <div><dt>Dataset</dt><dd id="config-dataset-badge">v1</dd></div>
+            <div><dt>Preset provenance</dt><dd id="config-preset-provenance">Pending</dd></div>
+            <div><dt>Producing UI</dt><dd><code>ui: v2</code></dd></div>
+          </dl>
         </div>
         <details class="envelope-preview">
-          <summary>View portal-engine-params.v1 envelope</summary>
+          <summary>View adapter-only portal-engine-params.v1 envelope</summary>
           <pre id="engine-envelope"></pre>
         </details>
         <div class="report-audit-preview" aria-label="Report and run audit stamps">
@@ -594,6 +646,13 @@
           </div>
         </div>
 
+        <div class="field review-key-field">
+          <label for="runner-access-key">Runner access key</label>
+          <input id="runner-access-key" name="runner_access_key" type="password"
+            autocomplete="off" aria-describedby="runner-key-help">
+          <span id="runner-key-help" class="reason">Used only to authorize Queue in this tab; never placed in a URL, request report, or index.</span>
+        </div>
+
         <div id="run-status" class="run-status" data-state="ready"
           role="status" aria-live="polite">
           <strong>Ready to validate</strong>
@@ -601,6 +660,11 @@
         </div>
         <p id="form-error" class="form-error" role="alert" tabindex="-1" hidden></p>
         <a id="result-link" class="result-link" href="#" hidden>Open guided-portal report</a>
+
+        <div class="sticky-actions" aria-label="Backtest actions">
+          <button id="validate-button" class="button" type="button">Validate only</button>
+          <button id="queue-button" class="button secondary" type="button" disabled>Queue backtest</button>
+        </div>
 
         <section id="results-display" class="results-display" aria-labelledby="results-title">
           <span id="result_trade_count" data-value="" hidden></span>
@@ -658,11 +722,6 @@
           </div>
         </section>
       </section>
-
-      <div class="sticky-actions" aria-label="Backtest actions">
-        <button id="validate-button" class="button" type="button">Validate only</button>
-        <button id="queue-button" class="button secondary" type="button" disabled>Queue backtest</button>
-      </div>
     </form>
   </main>
 

@@ -15,6 +15,19 @@
   const hash = document.getElementById("config-hash");
   const envelopePreview = document.getElementById("engine-envelope");
   const resultLink = document.getElementById("result-link");
+  const routeModeBanner = document.getElementById("route-mode-banner");
+  const reviewRouteBanner = document.getElementById("review-route-banner");
+  const reviewRows = document.getElementById("review-rows");
+  const effectiveConfigTitle = document.getElementById(
+    "effective-config-title",
+  );
+  const configDatasetBadge = document.getElementById(
+    "config-dataset-badge",
+  );
+  const configPresetProvenance = document.getElementById(
+    "config-preset-provenance",
+  );
+  const legendItems = document.getElementById("state-legend-items");
   const burnDialog = document.getElementById("burn-dialog");
   const burnAck = document.getElementById("burn-ack");
   const burnConfirm = document.getElementById("burn-confirm");
@@ -29,6 +42,9 @@
   const deltaMinSlider = document.getElementById("delta-min-slider");
   const deltaMaxSlider = document.getElementById("delta-max-slider");
   const originalDisabled = new WeakMap();
+  const modeLockedControls = new Set();
+  const modeDisplayOriginals = new Map();
+  const optionalStageState = new Map();
   const dependencyReasons = new Map();
   let dependencyConfig = null;
   let dependenciesReady = false;
@@ -254,6 +270,309 @@
     return [...target.querySelectorAll("input,select,textarea,button")];
   }
 
+  function controlsForTarget(targetName) {
+    return [
+      ...new Set(
+        targetElements(targetName).flatMap((target) => controlsInside(target)),
+      ),
+    ];
+  }
+
+  function currentRunModeName() {
+    const selector = dependencyConfig?.control_state_model?.selector;
+    return selector && namedValue(selector) === "legacy_macd"
+      ? "legacy_macd"
+      : "adapter_pending";
+  }
+
+  function currentRunMode() {
+    return dependencyConfig?.control_state_model?.modes?.[
+      currentRunModeName()
+    ];
+  }
+
+  function appendDescription(control, descriptionId) {
+    const ids = new Set(
+      String(control.getAttribute("aria-describedby") || "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    ids.add(descriptionId);
+    control.setAttribute("aria-describedby", [...ids].join(" "));
+  }
+
+  function markerHost(targetName) {
+    const targets = targetElements(targetName);
+    if (!targets.length) return null;
+    if (targets.length > 1) {
+      const fieldset = targets[0].closest("fieldset");
+      if (fieldset && targets.every((target) => target.closest("fieldset") === fieldset)) {
+        return fieldset;
+      }
+    }
+    const target = targets[0];
+    if (
+      target.matches(
+        "fieldset,.read-only-card,.slider-stack,.parameter-group",
+      )
+    ) {
+      return target;
+    }
+    const host =
+      target.closest(".field,.choice,label,.read-only-card,.control-group") ||
+      target.parentElement;
+    if (host?.matches("label")) {
+      if (host.parentElement?.dataset.stateWrapperFor === targetName) {
+        return host.parentElement;
+      }
+      const wrapper = document.createElement("div");
+      wrapper.className = "state-control-wrap";
+      wrapper.dataset.stateWrapperFor = targetName;
+      host.parentElement.insertBefore(wrapper, host);
+      wrapper.append(host);
+      return wrapper;
+    }
+    return host;
+  }
+
+  function markerId(targetName) {
+    return `control-state-${targetName.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+  }
+
+  function dependencyReasonFor(targetName) {
+    if (dependencyReasons.get(targetName)) {
+      return dependencyReasons.get(targetName);
+    }
+    const target = targetElements(targetName)[0];
+    const group = target?.closest(".parameter-group,.unavailable-group");
+    if (group?.id && dependencyReasons.get(group.id)) {
+      return dependencyReasons.get(group.id);
+    }
+    return (
+      target
+        ?.closest(".field,.choice,.parameter-group,.unavailable-group,.read-only-card")
+        ?.querySelector(".dependency-reason,.reason")
+        ?.textContent.trim() || ""
+    );
+  }
+
+  function renderControlMarker(targetName, state) {
+    const host = markerHost(targetName);
+    if (!host) return;
+    const id = markerId(targetName);
+    let marker = document.getElementById(id);
+    if (!marker) {
+      marker = document.createElement("span");
+      marker.id = id;
+      marker.className = "control-state-marker";
+      host.append(marker);
+    }
+    marker.dataset.state = state.id;
+    marker.replaceChildren();
+    const heading = document.createElement("span");
+    heading.className = "control-state-marker-heading";
+    const symbol = document.createElement("span");
+    symbol.className = "control-state-symbol";
+    symbol.setAttribute("aria-hidden", "true");
+    symbol.textContent = state.symbol;
+    const label = document.createElement("strong");
+    label.textContent = state.label;
+    heading.append(symbol, label);
+    const copy = document.createElement("span");
+    copy.className = "control-state-copy";
+    copy.textContent = state.description;
+    marker.append(heading, copy);
+    for (const control of controlsForTarget(targetName)) {
+      appendDescription(control, id);
+    }
+    host.dataset.controlState = state.id;
+  }
+
+  function clearRunModeLocks() {
+    for (const [control, original] of modeDisplayOriginals.entries()) {
+      if (Object.hasOwn(original, "checked")) {
+        control.checked = original.checked;
+      }
+      if (Object.hasOwn(original, "value")) {
+        control.value = original.value;
+      }
+    }
+    modeDisplayOriginals.clear();
+    for (const control of modeLockedControls) {
+      if (control.dataset.modeReadonly === "true") {
+        control.readOnly = false;
+        delete control.dataset.modeReadonly;
+      }
+      if (control.dataset.modeDisabled === "true") {
+        control.disabled = originalDisabled.get(control) || false;
+        delete control.dataset.modeDisabled;
+      }
+      control.removeAttribute("aria-readonly");
+    }
+    modeLockedControls.clear();
+  }
+
+  function applyRunModeDisplayValues() {
+    const displayValues = currentRunMode()?.display_values || {};
+    for (const [targetName, value] of Object.entries(displayValues)) {
+      for (const control of controlsForTarget(targetName)) {
+        if (!modeDisplayOriginals.has(control)) {
+          modeDisplayOriginals.set(
+            control,
+            control.type === "checkbox" || control.type === "radio"
+              ? { checked: control.checked }
+              : { value: control.value },
+          );
+        }
+        if (control.type === "checkbox") {
+          control.checked = Boolean(value);
+        } else if (control.type === "radio") {
+          control.checked = String(control.value) === String(value);
+        } else if ("value" in control) {
+          control.value = String(value);
+        }
+      }
+    }
+  }
+
+  function lockForRunMode(targetName) {
+    for (const control of controlsForTarget(targetName)) {
+      rememberDisabled(control);
+      const canUseReadonly =
+        control.matches("input:not([type]),input[type='text'],input[type='number'],input[type='password'],input[type='date'],textarea");
+      if (canUseReadonly) {
+        control.readOnly = true;
+        control.dataset.modeReadonly = "true";
+        control.setAttribute("aria-readonly", "true");
+      } else {
+        control.disabled = true;
+        control.dataset.modeDisabled = "true";
+        control.removeAttribute("aria-readonly");
+      }
+      modeLockedControls.add(control);
+    }
+  }
+
+  function warningForTarget(targetName, modeName) {
+    for (const rule of dependencyConfig.control_state_model.warning_rules || []) {
+      if (!rule.targets.includes(targetName)) continue;
+      const cause = readCause(rule.cause);
+      if (!conditionMatches(rule.condition, cause)) continue;
+      if (
+        modeName === "legacy_macd" &&
+        currentRunMode().adapter_only_targets.includes(targetName)
+      ) {
+        continue;
+      }
+      return rule.description;
+    }
+    return "";
+  }
+
+  function applyRunModeState() {
+    const model = dependencyConfig.control_state_model;
+    const modeName = currentRunModeName();
+    const mode = currentRunMode();
+    const readOnlyTargets = new Set(model.read_only_targets || []);
+    const queueTargets = new Set(mode.queue_effective_targets || []);
+    const adapterTargets =
+      mode.adapter_only_targets === "*"
+        ? new Set(model.elements.map((element) => element.target))
+        : new Set(mode.adapter_only_targets || []);
+    const lockedTargets = new Set(mode.locked_targets || []);
+    const disabledOptions = mode.disabled_options || {};
+    routeModeBanner.textContent = mode.banner;
+    reviewRouteBanner.textContent = mode.banner;
+    routeModeBanner.dataset.mode = modeName;
+    reviewRouteBanner.dataset.mode = modeName;
+
+    for (const element of model.elements) {
+      const targetName = element.target;
+      const controls = controlsForTarget(targetName);
+      const dependencyLocked = controls.some((control) => control.disabled);
+      const dependencyReason = dependencyReasonFor(targetName);
+      const warning = warningForTarget(targetName, modeName);
+      let state;
+
+      if (Object.hasOwn(disabledOptions, targetName)) {
+        state = {
+          id: "locked",
+          symbol: "🔒",
+          label: "Unavailable on this route",
+          description: disabledOptions[targetName],
+        };
+        lockForRunMode(targetName);
+      } else if (readOnlyTargets.has(targetName) || lockedTargets.has(targetName)) {
+        state = {
+          id: "locked",
+          symbol: "🔒",
+          label: "Read-only",
+          description:
+            lockedTargets.has(targetName) && modeName === "adapter_pending"
+              ? "Queue is unavailable until the adapter engine connects, so no access key is needed."
+              : dependencyReason || "This value is derived or fixed and cannot be changed here.",
+        };
+        if (lockedTargets.has(targetName)) lockForRunMode(targetName);
+      } else if (dependencyLocked) {
+        state = {
+          id: "locked",
+          symbol: "🔒",
+          label: queueTargets.has(targetName)
+            ? "Read-only · queue-effective"
+            : "Unavailable in this state",
+          description:
+            dependencyReason ||
+            "Another visible choice controls whether this setting is available.",
+        };
+      } else if (adapterTargets.has(targetName)) {
+        const readOnly = modeName === "legacy_macd";
+        state = {
+          id: "adapter_only",
+          symbol: "🟡",
+          label: readOnly
+            ? "Adapter-only · read-only"
+            : "Adapter-only · editable",
+          description: readOnly
+            ? `Does not affect this run. ${
+                mode.effective_values?.[targetName] ||
+                "The legacy compatibility runner does not read this value."
+              }`
+            : "Saved to portal-engine-params.v1; queueable when the adapter engine connects.",
+        };
+        if (readOnly) lockForRunMode(targetName);
+      } else if (queueTargets.has(targetName)) {
+        state = {
+          id: "queue_effective",
+          symbol: "✅",
+          label: "Queue-effective now",
+          description:
+            targetName === "runner-access-key"
+              ? "Authorizes dispatch only; it never enters the request, report, or index."
+              : "Changing this value changes the current queued run or its report provenance.",
+        };
+      } else {
+        state = {
+          id: "locked",
+          symbol: "🔒",
+          label: "Read-only",
+          description:
+            dependencyReason ||
+            "This value is fixed or unavailable in the current state.",
+        };
+      }
+
+      if (warning) {
+        state = {
+          id: "warning",
+          symbol: "⚠",
+          label: `${state.label} · explicit acknowledgement`,
+          description: `${state.description} ${warning}`,
+        };
+      }
+      renderControlMarker(targetName, state);
+    }
+  }
+
   function setDependencyReason(targetName, copy) {
     dependencyReasons.set(targetName, copy || "");
     document
@@ -314,7 +633,8 @@
           targetName,
           active
             ? effect.reason
-            : `Unavailable because ${changedCause || "its prerequisite"} is not active.`,
+            : effect.inactive_reason ||
+                `Unavailable because ${changedCause || "its prerequisite"} is not active.`,
         );
       } else if (effect.behavior === "activate") {
         for (const target of targets) {
@@ -409,6 +729,8 @@
 
   function applyDependencies(changedCause = null) {
     if (!dependencyConfig) return;
+    clearRunModeLocks();
+    applyRunModeDisplayValues();
     for (const rule of dependencyConfig.rules) {
       const causeValue = readCause(rule.cause);
       const active = conditionMatches(rule.condition, causeValue);
@@ -421,6 +743,7 @@
         );
       }
     }
+    applyRunModeState();
     updateSummaries();
   }
 
@@ -447,6 +770,270 @@
     }
   }
 
+  function renderStateLegend() {
+    legendItems.replaceChildren();
+    for (const item of dependencyConfig.state_legend) {
+      const entry = document.createElement("div");
+      entry.className = "state-legend-item";
+      entry.dataset.state = item.id;
+      const heading = document.createElement("span");
+      heading.className = "control-state-marker-heading";
+      const symbol = document.createElement("span");
+      symbol.className = "control-state-symbol";
+      symbol.setAttribute("aria-hidden", "true");
+      symbol.textContent = item.symbol;
+      const label = document.createElement("strong");
+      label.textContent = item.label;
+      heading.append(symbol, label);
+      const copy = document.createElement("span");
+      copy.className = "control-state-copy";
+      copy.textContent = item.description;
+      entry.append(heading, copy);
+      legendItems.append(entry);
+    }
+  }
+
+  function optionalConfig(stage) {
+    return dependencyConfig.optional_stages.find(
+      (item) => item.stage === stage,
+    );
+  }
+
+  function optionalState(stage) {
+    return optionalStageState.get(stage) || {
+      customized: false,
+      expanded: false,
+    };
+  }
+
+  function setOptionalControlDefault(targetName, value) {
+    const controls = targetElements(targetName);
+    for (const control of controls) {
+      if (control.type === "checkbox") {
+        control.checked = Boolean(value);
+      } else if (control.type === "radio") {
+        control.checked = String(control.value) === String(value);
+      } else if ("value" in control) {
+        control.value = String(value);
+      }
+    }
+  }
+
+  function renderOptionalStage(stage) {
+    const config = optionalConfig(stage);
+    const state = optionalState(stage);
+    const controls = document.getElementById(config.controls_target);
+    const gate = document.querySelector(
+      `[data-optional-stage="${stage}"]`,
+    );
+    controls.hidden = !state.expanded;
+    gate.replaceChildren();
+    const statusCopy = document.createElement("span");
+    statusCopy.className = "optional-stage-status";
+    const statusTitle = document.createElement("strong");
+    statusTitle.textContent = config.read_only
+      ? "Using family defaults"
+      : state.customized
+        ? "Using customized values"
+        : "Using defaults";
+    const statusDetail = document.createElement("span");
+    statusDetail.textContent = config.read_only
+      ? "This optional stage is visible and read-only."
+      : state.customized
+        ? "These values replace the stated defaults in the adapter envelope."
+        : "The stated defaults apply even while the controls are collapsed.";
+    statusCopy.append(statusTitle, statusDetail);
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "button tertiary optional-toggle";
+    toggle.setAttribute("aria-expanded", String(state.expanded));
+    toggle.setAttribute("aria-controls", config.controls_target);
+    toggle.textContent = state.expanded
+      ? "Hide details"
+      : config.read_only
+        ? config.button_label
+        : state.customized
+          ? "Continue customizing"
+          : config.button_label;
+    toggle.addEventListener("click", () => {
+      const next = optionalState(stage);
+      if (!config.read_only && !next.customized) next.customized = true;
+      next.expanded = !next.expanded;
+      optionalStageState.set(stage, next);
+      renderOptionalStage(stage);
+      updateSummaries();
+      if (next.expanded) {
+        document.getElementById(config.controls_target).focus({
+          preventScroll: true,
+        });
+      }
+    });
+    gate.append(statusCopy, toggle);
+
+    const resetSlot = document.querySelector(
+      `[data-optional-reset-stage="${stage}"]`,
+    );
+    resetSlot.replaceChildren();
+    const reset = document.createElement("button");
+    reset.type = "button";
+    reset.className = "button text-button";
+    reset.textContent = config.reset_label;
+    reset.addEventListener("click", () => {
+      if (!config.read_only) {
+        for (const [targetName, value] of Object.entries(config.defaults)) {
+          setOptionalControlDefault(targetName, value);
+        }
+        syncDelta(deltaMinimum);
+        syncDelta(deltaMaximum);
+      }
+      optionalStageState.set(stage, {
+        customized: false,
+        expanded: false,
+      });
+      applyDependencies();
+      if (!config.read_only) invalidate();
+      renderOptionalStage(stage);
+      document
+        .querySelector(`[data-optional-stage="${stage}"] button`)
+        ?.focus();
+    });
+    resetSlot.append(reset);
+  }
+
+  function initializeOptionalStages() {
+    for (const config of dependencyConfig.optional_stages) {
+      optionalStageState.set(config.stage, {
+        customized: false,
+        expanded: false,
+      });
+      const controls = document.getElementById(config.controls_target);
+      controls.tabIndex = -1;
+      renderOptionalStage(config.stage);
+    }
+  }
+
+  function focusStageHeading(stage) {
+    showStage(stage, { focus: false });
+    const heading = panels[stage].querySelector("h2");
+    heading?.focus();
+  }
+
+  function renderStageFlow() {
+    for (const definition of dependencyConfig.stage_flow) {
+      const tab = tabs[definition.stage];
+      if (!tab.querySelector(".stage-requirement")) {
+        const requirement = document.createElement("small");
+        requirement.className = "stage-requirement";
+        requirement.textContent = definition.requirement;
+        tab.append(requirement);
+      }
+      const heading = panels[definition.stage].querySelector("h2");
+      heading.tabIndex = -1;
+      if (definition.stage === 8) continue;
+      const actions = document.createElement("div");
+      actions.className = "stage-flow-actions";
+      const next = document.createElement("button");
+      next.type = "button";
+      next.className = "button stage-next";
+      next.textContent = definition.next_label;
+      const advance = () => focusStageHeading(definition.stage + 1);
+      next.addEventListener("click", advance);
+      next.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        advance();
+      });
+      actions.append(next);
+      if (definition.fast_review_label) {
+        const review = document.createElement("button");
+        review.type = "button";
+        review.className = "button secondary";
+        review.textContent = definition.fast_review_label;
+        const reviewDefaults = () => focusStageHeading(8);
+        review.addEventListener("click", reviewDefaults);
+        review.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          reviewDefaults();
+        });
+        actions.append(review);
+      }
+      panels[definition.stage].append(actions);
+    }
+    showStage(activeStage, { focus: false });
+  }
+
+  function reviewSummary(stage) {
+    const modeName = currentRunModeName();
+    const mode = currentRunMode();
+    if (
+      modeName === "legacy_macd" &&
+      Object.hasOwn(mode.review_values || {}, String(stage))
+    ) {
+      return mode.review_values[String(stage)];
+    }
+    const optional = optionalConfig(stage);
+    if (optional && !optionalState(stage).customized) {
+      return `Defaults — ${optional.default_summary.replace(
+        /^Optional\s+—\s+defaults:\s*/i,
+        "",
+      )}`;
+    }
+    return document.getElementById(`stage_${stage}_summary`).textContent;
+  }
+
+  function renderReview() {
+    if (!reviewRows || !dependencyConfig) return;
+    const modeName = currentRunModeName();
+    const mode = currentRunMode();
+    const ignored = new Set(mode.ignored_review_stages || []);
+    reviewRows.replaceChildren();
+    for (const definition of dependencyConfig.stage_flow.slice(0, 8)) {
+      const row = document.createElement("tr");
+      const isIgnored = modeName === "legacy_macd" && ignored.has(definition.stage);
+      row.classList.toggle("review-row-ignored", isIgnored);
+      const name = document.createElement("th");
+      name.scope = "row";
+      name.textContent = `${definition.stage} · ${definition.name}`;
+      const values = document.createElement("td");
+      values.textContent = reviewSummary(definition.stage);
+      const state = document.createElement("td");
+      const stateBadge = document.createElement("span");
+      stateBadge.className = "review-state-badge";
+      stateBadge.dataset.state = isIgnored
+        ? "adapter_only"
+        : modeName === "legacy_macd"
+          ? "queue_effective"
+          : "adapter_only";
+      const stateSymbol = document.createElement("span");
+      stateSymbol.setAttribute("aria-hidden", "true");
+      stateSymbol.textContent = isIgnored || modeName !== "legacy_macd" ? "🟡" : "✅";
+      const stateText = document.createElement("span");
+      stateText.textContent = isIgnored
+        ? "Adapter-only · ignored by this run"
+        : modeName === "legacy_macd"
+          ? "Queue-effective"
+          : "Envelope-only";
+      stateBadge.append(stateSymbol, stateText);
+      state.append(stateBadge);
+      const action = document.createElement("td");
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.className = "button text-button review-edit";
+      edit.textContent = "Edit";
+      edit.setAttribute(
+        "aria-label",
+        `Edit Stage ${definition.stage}: ${definition.name}`,
+      );
+      edit.addEventListener("click", () =>
+        focusStageHeading(definition.stage),
+      );
+      action.append(edit);
+      row.append(name, values, state, action);
+      reviewRows.append(row);
+    }
+  }
+
   async function loadDependencies() {
     const response = await fetch("../ui/config-dependencies.json", {
       cache: "no-store",
@@ -456,15 +1043,19 @@
     }
     const payload = await response.json();
     if (
-      payload.schema_version !== "mbbot.portal.config-dependencies.v1" ||
+      payload.schema_version !== "mbbot.portal.config-dependencies.v2" ||
       !Array.isArray(payload.rules)
     ) {
       throw new Error("Dependency graph schema is unsupported.");
     }
     dependencyConfig = payload;
+    renderStateLegend();
+    initializeOptionalStages();
+    renderStageFlow();
     renderAffectsChips();
     applyDependencies();
     dependenciesReady = true;
+    form.removeAttribute("data-initializing");
     validateButton.disabled = false;
   }
 
@@ -477,16 +1068,62 @@
       `Data: ${form.elements.dataset_version.value} · ${windowLabel} · ${
         symbols || "no symbols"
       }`;
-    const family = form.elements.trigger_family.value.replaceAll("_", " ");
+    const modeName = currentRunModeName();
+    const mode = currentRunMode();
+    const familyValue = form.elements.trigger_family.value;
+    const family = familyValue.replaceAll("_", " ");
+    const optionalByStage = new Map(
+      dependencyConfig.optional_stages.map((item) => [item.stage, item]),
+    );
+    const optionalSummary = (stage, configured) => {
+      if (
+        modeName === "legacy_macd" &&
+        Object.hasOwn(mode.review_values || {}, String(stage))
+      ) {
+        return `Optional · adapter-only — ${mode.review_values[String(stage)]}`;
+      }
+      return optionalState(stage).customized
+        ? configured
+        : optionalByStage.get(stage).default_summary;
+    };
+    document.getElementById("stage_1_summary").textContent = optionalSummary(
+      1,
+      `Regime: ${document.getElementById("regime-rule").textContent.trim()}`,
+    );
     document.getElementById("stage_2_summary").textContent =
-      `Trigger: ${family} · ${form.elements.trigger_timeframe_minutes.value}m bars`;
+      familyValue === "legacy_macd"
+        ? "Trigger: legacy MACD baseline · fixed EMA 12/26/9 · 5m option-premium signal"
+        : `Trigger: ${family} · ${form.elements.trigger_timeframe_minutes.value}m bars`;
     const spread = form.elements.spread_cap_percent.value;
-    document.getElementById("stage_3_summary").textContent =
-      `Filters: ${spread}% ${form.elements.spread_denominator.value} spread · $${form.elements.premium_floor.value} floor`;
-    document.getElementById("stage_4_summary").textContent =
-      `Contract: |Delta| ${form.elements.delta_target.value} · band ${form.elements.delta_minimum.value}–${form.elements.delta_maximum.value} · ${form.elements.dte_minimum.value}–${form.elements.dte_maximum.value} DTE`;
+    document.getElementById("stage_3_summary").textContent = optionalSummary(
+      3,
+      `Filters: ${spread}% ${form.elements.spread_denominator.value} spread · $${form.elements.premium_floor.value} floor`,
+    );
+    document.getElementById("stage_4_summary").textContent = optionalSummary(
+      4,
+      `Contract: |Delta| ${form.elements.delta_target.value} · band ${form.elements.delta_minimum.value}–${form.elements.delta_maximum.value} · ${form.elements.dte_minimum.value}–${form.elements.dte_maximum.value} DTE`,
+    );
+    const costLabels = {
+      reference: "$0.65 reference per contract per side",
+      stress: "$1.30 stress per contract per side",
+      both: "$0.65 + $1.30 dual-cost report",
+      zero: "$0 comparison · ZERO-COST SIMULATION",
+    };
     document.getElementById("stage_5_summary").textContent =
-      `Costs: ${selected("commission_preset").replaceAll("_", " ")}`;
+      `Costs: ${costLabels[selected("commission_preset")]}`;
+    document.getElementById("stage_6_summary").textContent = optionalSummary(
+      6,
+      `Risk: ${form.elements.contracts_per_trade.value} contract(s) · ${form.elements.maximum_trades_per_symbol_day.value} trades/symbol/day · ${form.elements.reentry_cooldown_minutes.value}m cooldown`,
+    );
+    document.getElementById("stage_7_summary").textContent = optionalSummary(
+      7,
+      `Exits: ${form.elements.profit_target_mode.value.replaceAll("_", " ")} · ${form.elements.time_stop_minutes.value}m · 15:55 ET`,
+    );
+    document.getElementById("stage_8_summary").textContent =
+      modeName === "legacy_macd"
+        ? "Review: queue-effective legacy compatibility request"
+        : "Review: envelope valid locally · queue waits for the adapter engine";
+    renderReview();
   }
 
   function engineSentence(envelope) {
@@ -503,35 +1140,55 @@
 
   async function renderConfig() {
     resultLink.hidden = true;
+    let envelope = null;
     try {
-      const envelope = engineModel.buildEnvelope(engineValues());
+      envelope = engineModel.buildEnvelope(engineValues());
       const canonical = engineModel.canonicalJson(envelope);
       currentEngineHash = await sha256(canonical);
       envelopePreview.textContent = JSON.stringify(envelope, null, 2);
-      sentence.textContent = engineSentence(envelope);
-      hash.textContent = currentEngineHash;
     } catch (reason) {
       currentEngineHash = null;
       envelopePreview.textContent =
         reason instanceof Error ? reason.message : "Envelope is invalid.";
-      sentence.textContent = "Engine envelope needs attention.";
-      hash.textContent = "Not available";
     }
     currentLegacyHash = null;
+    let legacyInputs = null;
     try {
-      const legacyInputs = legacyModel.buildInputs(legacyValues(), false);
+      legacyInputs = legacyModel.buildInputs(legacyValues(), false);
       currentLegacyHash = await sha256(
         legacyModel.canonicalJson(legacyInputs),
       );
     } catch {
       // The engine surface intentionally includes values the legacy route cannot run.
     }
+    const legacyRoute = currentRunModeName() === "legacy_macd";
+    configDatasetBadge.textContent = form.elements.dataset_version.value;
+    if (legacyRoute) {
+      effectiveConfigTitle.textContent =
+        "Exact legacy compatibility request";
+      sentence.textContent = legacyInputs
+        ? legacyModel.sentence(legacyInputs)
+        : "Legacy compatibility request needs attention.";
+      hash.textContent = currentLegacyHash || "Not available";
+      configPresetProvenance.textContent =
+        "report-85 legacy comparison · compatibility runner";
+    } else {
+      effectiveConfigTitle.textContent =
+        "Exact adapter envelope · not queueable yet";
+      sentence.textContent = envelope
+        ? engineSentence(envelope)
+        : "Engine envelope needs attention.";
+      hash.textContent = currentEngineHash || "Not available";
+      configPresetProvenance.textContent =
+        envelope?.provenance?.preset || "Not available";
+    }
+    const allStagesValid = updateStepperValidity();
     queueButton.disabled =
       !dependenciesReady ||
-      form.elements.trigger_family.value !== "legacy_macd" ||
+      !legacyRoute ||
+      !allStagesValid ||
       !validatedLegacyHash ||
       validatedLegacyHash !== currentLegacyHash;
-    updateStepperValidity();
   }
 
   function invalidate() {
@@ -580,11 +1237,14 @@
     panels.forEach((panel, panelIndex) => {
       panel.hidden = panelIndex !== activeStage;
     });
-    const label = tabs[activeStage].textContent.replace(/\s+/g, " ").trim();
-    currentStageIndicator.textContent =
-      `Stage ${activeStage} of 8 · ${label.replace(/^\d+\s*/, "")}`;
+    const definition = dependencyConfig?.stage_flow?.[activeStage];
+    currentStageIndicator.textContent = definition
+      ? `Stage ${activeStage} of 8 · ${definition.name} · ${definition.requirement}`
+      : `Stage ${activeStage} of 8`;
     tabs[activeStage].scrollIntoView({
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
       block: "nearest",
       inline: "center",
     });
@@ -592,6 +1252,10 @@
   }
 
   function stageIsValid(index) {
+    const optional = optionalConfig(index);
+    if (optional && !optionalState(index).customized) {
+      return true;
+    }
     const panel = panels[index];
     if ([...panel.querySelectorAll(":invalid")].some((node) => !node.disabled)) {
       return false;
@@ -629,13 +1293,25 @@
   }
 
   function updateStepperValidity() {
+    const stageValidity = panels
+      .slice(0, 8)
+      .map((panel, index) => stageIsValid(index));
+    const allConfigurationStagesValid = stageValidity.every(Boolean);
     tabs.forEach((tab, index) => {
-      tab.dataset.valid = String(stageIsValid(index));
+      const valid =
+        index === 8 ? allConfigurationStagesValid : stageValidity[index];
+      const definition = dependencyConfig.stage_flow[index];
+      tab.dataset.valid = String(valid);
       tab.setAttribute(
         "aria-label",
-        `${tab.textContent.trim()} — ${stageIsValid(index) ? "valid" : "needs attention"}`,
+        `Stage ${index}: ${definition.name} (${definition.requirement}) — ${
+          valid ? "valid" : "needs attention"
+        }`,
       );
     });
+    validateButton.disabled =
+      !dependenciesReady || !allConfigurationStagesValid;
+    return allConfigurationStagesValid;
   }
 
   function syncDelta(source) {
@@ -796,10 +1472,18 @@
       showError(new Error("Dependency graph has not loaded."));
       return;
     }
+    if (!updateStepperValidity()) {
+      showError(
+        new Error(
+          "Complete the required stages marked needs attention before validation.",
+        ),
+      );
+      return;
+    }
     try {
-      const envelope = engineModel.buildEnvelope(engineValues());
-      currentEngineHash = await sha256(engineModel.canonicalJson(envelope));
-      if (form.elements.trigger_family.value !== "legacy_macd") {
+      if (currentRunModeName() !== "legacy_macd") {
+        const envelope = engineModel.buildEnvelope(engineValues());
+        currentEngineHash = await sha256(engineModel.canonicalJson(envelope));
         validatedLegacyHash = null;
         queueButton.disabled = true;
         setStatus(
@@ -816,7 +1500,7 @@
       setStatus(
         "success",
         "Legacy compatibility validation passed",
-        "No runner was started. Queue is enabled for this exact legacy comparison.",
+        "No runner was started. Queue is enabled only for this exact effective request.",
       );
     } catch (reason) {
       showError(reason);
@@ -893,13 +1577,19 @@
   });
 
   document.querySelectorAll(".info-button").forEach((button) => {
-    button.addEventListener("click", () => {
+    const toggleDisclosure = () => {
       const target = document.getElementById(
         button.getAttribute("aria-controls"),
       );
       const expanded = button.getAttribute("aria-expanded") === "true";
       button.setAttribute("aria-expanded", String(!expanded));
       target.hidden = expanded;
+    };
+    button.addEventListener("click", toggleDisclosure);
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      toggleDisclosure();
     });
   });
 
@@ -922,6 +1612,7 @@
 
   form.addEventListener("change", (event) => {
     const name = event.target.name || event.target.id;
+    if (name === "runner_access_key") return;
     if (
       event.target === deltaMinimum ||
       event.target === deltaMaximum ||
@@ -934,6 +1625,9 @@
     invalidate();
   });
   form.addEventListener("input", (event) => {
+    if ((event.target.name || event.target.id) === "runner_access_key") {
+      return;
+    }
     if (
       event.target === deltaMinimum ||
       event.target === deltaMaximum ||
@@ -947,6 +1641,11 @@
   });
 
   validateButton.addEventListener("click", () => void validateLocally());
+  validateButton.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    void validateLocally();
+  });
   queueButton.addEventListener("click", () => void submit());
 
   window.MBbotPortalV2 = Object.freeze({
@@ -960,6 +1659,7 @@
   void loadDependencies()
     .then(() => renderConfig())
     .catch((reason) => {
+      form.removeAttribute("data-initializing");
       showError(reason);
       validateButton.disabled = true;
       queueButton.disabled = true;

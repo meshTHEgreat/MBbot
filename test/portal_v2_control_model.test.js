@@ -1,4 +1,5 @@
 const assert = require("node:assert/strict");
+const crypto = require("node:crypto");
 const test = require("node:test");
 
 const model = require("../v2/control-model.js");
@@ -103,6 +104,22 @@ test("both is visible in UI but honestly refused by the legacy model", () => {
           commission_preset: "both",
         }),
       ),
-    /Dual-cost/,
+    /legacy compatibility runner/,
+  );
+});
+
+test("default live v2 legacy request remains byte-identical after the UX pass", () => {
+  const canonical = model.canonicalJson(
+    model.buildInputs(
+      values({
+        experiment_label: "Guided portal v2 run",
+      }),
+      false,
+    ),
+  );
+  assert.equal(Buffer.byteLength(canonical, "utf8"), 3023);
+  assert.equal(
+    crypto.createHash("sha256").update(canonical).digest("hex"),
+    "7291ed8f85c047391f879de631e3734938a9348f6ce4803e3c249e22c5002235",
   );
 });
