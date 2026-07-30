@@ -33,6 +33,14 @@
   const burnAck = document.getElementById("burn-ack");
   const burnConfirm = document.getElementById("burn-confirm");
   const burnCancel = document.getElementById("burn-cancel");
+  const burnTitle = document.getElementById("burn-title");
+  const burnCopy = document.getElementById("burn-copy");
+  const burnAckLabel = document.getElementById("burn-ack-label");
+  const reviewModeHelp = document.getElementById("review-mode-help");
+  const envelopePreviewSummary = document.getElementById(
+    "envelope-preview-summary",
+  );
+  const windowDateError = document.getElementById("window-date-error");
   const tabs = [...document.querySelectorAll('[role="tab"][data-stage]')];
   const panels = [...document.querySelectorAll('[role="tabpanel"][data-stage]')];
   const currentStageIndicator = document.getElementById(
@@ -55,6 +63,7 @@
   let currentEngineHash = null;
   let dialogReturnFocus = null;
   let activeStage = 0;
+  const protectedWindowPresets = new Set(["all", "validation", "holdout"]);
 
   const delay = (milliseconds) =>
     new Promise((resolve) => window.setTimeout(resolve, milliseconds));
@@ -191,6 +200,8 @@
 
   function legacyValues() {
     return {
+      dataset_version: form.elements.dataset_version.value,
+      window_bounds: activeWindowBinding(),
       experiment_label: form.elements.experiment_label.value,
       symbols: [...form.querySelectorAll('input[name="symbol"]:checked')].map(
         (input) => input.value,
@@ -698,6 +709,7 @@
           target.textContent = `${spread}% of ${denominator}`;
         }
       } else if (effect.behavior === "mapped_value") {
+        if (effect.update_when_cause_changes_only && !changedCause) continue;
         for (const target of targets) {
           const copy = mappedValue(effect, causeValue, targetName);
           if (copy !== undefined && "value" in target) {
@@ -744,6 +756,17 @@
                 start_date: binding.discovery_start,
                 end_date: binding.discovery_end,
               },
+              custom_discovery: {
+                start_date: binding.discovery_start,
+                end_date: binding.discovery_end,
+              },
+              all: {
+                start_date: binding.all_start || binding.discovery_start,
+                end_date:
+                  binding.all_end ||
+                  binding.holdout_end ||
+                  binding.latest_session,
+              },
               validation: {
                 start_date: binding.validation_start,
                 end_date: binding.validation_end,
@@ -754,6 +777,7 @@
               },
             };
           }
+          renderWindowPresetCopy(binding, String(causeValue));
           const validation = form.querySelector(
             'input[name="window_preset"][value="validation"]',
           );
@@ -764,6 +788,8 @@
             form.querySelector(
               'input[name="window_preset"][value="discovery"]',
             ).checked = true;
+            form.elements.start_date.value = binding.discovery_start;
+            form.elements.end_date.value = binding.discovery_end;
             burnAck.checked = false;
           }
         }
@@ -799,6 +825,8 @@
       }
     }
     applyRunModeState();
+    renderTierOneReason();
+    renderWindowDateError();
     updateSummaries();
   }
 
@@ -856,6 +884,119 @@
       customized: false,
       expanded: false,
     };
+  }
+
+  function activeWindowBinding() {
+    const rule = dependencyConfig?.rules.find(
+      (candidate) => candidate.id === "dataset-window-bindings",
+    );
+    const effect = rule?.effects.find(
+      (candidate) => candidate.behavior === "dataset_binding",
+    );
+    return effect?.values?.[form.elements.dataset_version.value] || null;
+  }
+
+  function shortDate(value) {
+    if (!value) return "unavailable";
+    const [year, month, day] = String(value).split("-").map(Number);
+    return new Intl.DateTimeFormat("en", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(year, month - 1, day)));
+  }
+
+  function rangeCopy(start, end) {
+    return `${shortDate(start)}–${shortDate(end)}`;
+  }
+
+  function setWindowCopy(preset, title, description) {
+    const titleNode = document.querySelector(
+      `[data-window-title="${preset}"]`,
+    );
+    const descriptionNode = document.querySelector(
+      `[data-window-description="${preset}"]`,
+    );
+    if (titleNode) titleNode.textContent = title;
+    if (descriptionNode) descriptionNode.textContent = description;
+  }
+
+  function renderWindowPresetCopy(binding, dataset) {
+    const year = dataset === "v2-year";
+    setWindowCopy(
+      "discovery",
+      year
+        ? "Recommended — 10-month discovery"
+        : "Recommended — 4-week discovery",
+      `Reusable evidence · ${rangeCopy(
+        binding.discovery_start,
+        binding.discovery_end,
+      )}`,
+    );
+    setWindowCopy(
+      "custom_discovery",
+      "Custom dates inside recommended block",
+      `Choose any shorter range within ${rangeCopy(
+        binding.discovery_start,
+        binding.discovery_end,
+      )}`,
+    );
+    setWindowCopy(
+      "all",
+      "All available data ⚠",
+      `${rangeCopy(
+        binding.all_start || binding.discovery_start,
+        binding.all_end || binding.latest_session,
+      )} · includes protected evidence and requires acknowledgement`,
+    );
+    setWindowCopy(
+      "validation",
+      "Validation block ⚠",
+      year && binding.validation_start
+        ? `${rangeCopy(
+            binding.validation_start,
+            binding.validation_end,
+          )} · protected evidence; acknowledgement required`
+        : "Available only with the certified year dataset",
+    );
+    setWindowCopy(
+      "holdout",
+      "Holdout block ⚠",
+      `${rangeCopy(
+        binding.holdout_start,
+        binding.holdout_end || binding.latest_session,
+      )} · one-time evidence; acknowledgement required`,
+    );
+  }
+
+  function renderWindowDateError() {
+    if (!windowDateError) return;
+    const startDate = form.elements.start_date;
+    const endDate = form.elements.end_date;
+    const hasReversedDates = Boolean(
+      startDate.value
+        && endDate.value
+        && startDate.value > endDate.value
+    );
+    windowDateError.hidden = !hasReversedDates;
+    startDate.setAttribute("aria-invalid", String(hasReversedDates));
+    endDate.setAttribute("aria-invalid", String(hasReversedDates));
+  }
+
+  function renderTierOneReason() {
+    const reason = document.getElementById("tier-one-reason");
+    if (!reason) return;
+    const dataset = form.elements.dataset_version.value;
+    if (dataset === "v1") {
+      reason.textContent =
+        "Unavailable on Dataset v1: Tier-1 Greeks and open interest require the certified year dataset.";
+      return;
+    }
+    reason.textContent =
+      currentRunModeName() === "legacy_macd"
+        ? "Dataset v2-year contains Tier-1 evidence, but the legacy compatibility runner does not read these controls."
+        : "Dataset v2-year contains Tier-1 evidence, but IV source, Vega, Rho, open-interest, and IV-rank controls are not exposed by the certified adapter.";
   }
 
   function adapterWorkflowInputs(envelope) {
@@ -1103,21 +1244,14 @@
       stateBadge.className = "review-state-badge";
       stateBadge.dataset.state = isIgnored
         ? "adapter_only"
-        : modeName === "legacy_macd"
-          ? "queue_effective"
-          : "adapter_only";
+        : "queue_effective";
       const stateSymbol = createStateIcon({
-        id:
-          isIgnored || modeName !== "legacy_macd"
-            ? "adapter_only"
-            : "queue_effective",
+        id: isIgnored ? "adapter_only" : "queue_effective",
       });
       const stateText = document.createElement("span");
       stateText.textContent = isIgnored
         ? "Adapter-only · ignored by this run"
-        : modeName === "legacy_macd"
-          ? "Queue-effective"
-          : "Envelope-only";
+        : "Queue-effective";
       stateBadge.append(stateSymbol, stateText);
       state.append(stateBadge);
       const action = document.createElement("td");
@@ -1206,6 +1340,11 @@
         bindingEffect.values[dataset.id] = {
           discovery_start: windows.discovery?.start,
           discovery_end: windows.discovery?.end,
+          all_start: windows.discovery?.start,
+          all_end:
+            windows.all?.end ||
+            dataset.latest_session ||
+            windows.holdout?.end,
           validation_start: windows.validation?.start,
           validation_end: windows.validation?.end,
           holdout_start: windows.holdout?.start,
@@ -1233,7 +1372,7 @@
         heading,
         document.createTextNode(
           available
-            ? " Discovery, Validation, and Holdout dates come from the runner capability receipt."
+            ? " The recommended block is the reusable 10-month discovery window. All available, Validation, and Holdout dates come from the runner capability receipt and preserve the protected-evidence guard."
             : ` ${year?.reason || "The runner did not publish a valid receipt."}`,
         ),
       );
@@ -1255,7 +1394,11 @@
     const symbols = [...form.querySelectorAll('input[name="symbol"]:checked')]
       .map((input) => input.value)
       .join(" + ");
-    const windowLabel = selected("window_preset").replaceAll("_", " ");
+    const windowPreset = selected("window_preset");
+    const windowLabel =
+      document.querySelector(
+        `[data-window-title="${windowPreset}"]`,
+      )?.textContent || windowPreset.replaceAll("_", " ");
     document.getElementById("stage_0_summary").textContent =
       `Data: ${form.elements.dataset_version.value} · ${windowLabel} · ${
         symbols || "no symbols"
@@ -1356,6 +1499,10 @@
     const legacyRoute = currentRunModeName() === "legacy_macd";
     configDatasetBadge.textContent = form.elements.dataset_version.value;
     if (legacyRoute) {
+      reviewModeHelp.textContent =
+        "Muted rows are adapter-only and do not affect this legacy compatibility run.";
+      envelopePreviewSummary.textContent =
+        "View adapter-only portal-engine-params.v1 envelope";
       effectiveConfigTitle.textContent =
         "Exact legacy compatibility request";
       sentence.textContent = legacyInputs
@@ -1365,6 +1512,10 @@
       configPresetProvenance.textContent =
         "report-85 legacy comparison · compatibility runner";
     } else {
+      reviewModeHelp.textContent =
+        "Every row below is queue-effective for the selected adapter family; collapsed optional stages use their stated defaults.";
+      envelopePreviewSummary.textContent =
+        "View exact portal-engine-params.v1 envelope";
       effectiveConfigTitle.textContent =
         "Exact parity-certified adapter request";
       sentence.textContent = envelope
@@ -1399,6 +1550,26 @@
 
   function openBurnDialog() {
     if (burnDialog.open) return;
+    const preset = selected("window_preset");
+    if (preset === "all") {
+      burnTitle.textContent = "Use all available data?";
+      burnCopy.textContent =
+        "All available data includes Validation and Holdout. Holdout data proves a finished strategy ONCE. Reading results here permanently burns it for this strategy family.";
+      burnAckLabel.textContent =
+        "I understand and want to use all available data.";
+    } else if (preset === "validation") {
+      burnTitle.textContent = "Use the validation block?";
+      burnCopy.textContent =
+        "Validation is protected evidence. Reading these results consumes that evidence for this strategy family and is recorded like a holdout burn.";
+      burnAckLabel.textContent =
+        "I understand and want to use the validation block.";
+    } else {
+      burnTitle.textContent = "Use the holdout?";
+      burnCopy.textContent =
+        "Holdout data proves a finished strategy ONCE. Reading results here permanently burns it for this strategy family.";
+      burnAckLabel.textContent =
+        "I understand and want to use the holdout.";
+    }
     dialogReturnFocus = document.activeElement;
     burnAck.checked = false;
     burnConfirm.disabled = true;
@@ -1463,7 +1634,13 @@
     }
     if (
       index === 0 &&
-      ["validation", "holdout"].includes(selected("window_preset")) &&
+      form.elements.start_date.value > form.elements.end_date.value
+    ) {
+      return false;
+    }
+    if (
+      index === 0 &&
+      protectedWindowPresets.has(selected("window_preset")) &&
       !burnAck.checked
     ) {
       return false;
@@ -1824,6 +2001,12 @@
   form.addEventListener("change", (event) => {
     const name = event.target.name || event.target.id;
     if (name === "runner_access_key") return;
+    if (
+      name === "window_preset" &&
+      !protectedWindowPresets.has(selected("window_preset"))
+    ) {
+      burnAck.checked = false;
+    }
     if (
       event.target === deltaMinimum ||
       event.target === deltaMaximum ||

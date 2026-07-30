@@ -268,6 +268,13 @@ test("portal-engine-params.v1 envelopes pass the versioned JSON Schema", () => {
       end_date: "2026-07-24",
       holdout_burn_acknowledgement: true,
     }),
+    baseValues({
+      dataset_version: "v2-year",
+      window_preset: "all",
+      start_date: "2025-07-25",
+      end_date: "2026-07-29",
+      holdout_burn_acknowledgement: true,
+    }),
   ]) {
     validateSchema(engine.buildEnvelope(values), schema);
   }
@@ -494,6 +501,28 @@ test("dependency graph declares every authoritative cross-control rule", () => {
   );
 });
 
+test("all available data is protected and carries the same audit trail", () => {
+  const values = baseValues({
+    dataset_version: "v2-year",
+    window_preset: "all",
+    start_date: "2025-07-25",
+    end_date: "2026-07-29",
+  });
+  assert.throws(
+    () => engine.buildEnvelope(values),
+    /Acknowledge the one-time protected-window/,
+  );
+  const envelope = engine.buildEnvelope({
+    ...values,
+    holdout_burn_acknowledgement: true,
+  });
+  assert.deepEqual(envelope.provenance.report_watermarks, ["HOLDOUT RUN"]);
+  assert.deepEqual(envelope.provenance.run_log_stamps, [
+    "holdout_burn_acknowledged=true",
+    "dataset_label=v2-year",
+  ]);
+});
+
 test("HTML contains the guided review flow, result surfaces, and production wording", () => {
   const html = fs.readFileSync(path.join(root, "v2", "index.html"), "utf8");
   const script = fs.readFileSync(path.join(root, "v2", "control.js"), "utf8");
@@ -510,6 +539,9 @@ test("HTML contains the guided review flow, result surfaces, and production word
   assert.match(html, /id="state-legend-items"/);
   assert.match(html, /id="risk_enabled"[^>]+type="checkbox"[^>]+hidden/);
   assert.match(html, /id="queue-action-help"/);
+  assert.match(html, /value="all"/);
+  assert.match(script, /Recommended — 10-month discovery/);
+  assert.doesNotMatch(html, /You have run 14 configs/);
   assert.equal((html.match(/class="optional-stage-gate"/g) || []).length, 5);
   assert.equal((html.match(/class="optional-stage-controls"/g) || []).length, 5);
   assert.match(script, /focusStageHeading/);

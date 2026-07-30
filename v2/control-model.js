@@ -13,14 +13,28 @@
   const REQUEST_SCHEMA = "mbbot.backtest-control.request.v3";
   const DATASET_PROFILE =
     "thetadata-options-2026-04-27-to-2026-07-24";
+  const DATASET_PROFILES = Object.freeze({
+    v1: DATASET_PROFILE,
+    "v2-year": "portal-legacy-v2-year",
+  });
   const WINDOWS = Object.freeze({
-    discovery: Object.freeze({
-      start: "2026-04-27",
-      end: "2026-05-22",
+    v1: Object.freeze({
+      discovery_start: "2026-04-27",
+      discovery_end: "2026-05-22",
+      holdout_start: "2026-05-26",
+      holdout_end: "2026-07-24",
+      all_start: "2026-04-27",
+      all_end: "2026-07-24",
     }),
-    holdout: Object.freeze({
-      start: "2026-05-26",
-      end: "2026-07-24",
+    "v2-year": Object.freeze({
+      discovery_start: "2025-07-25",
+      discovery_end: "2026-05-22",
+      validation_start: "2026-05-26",
+      validation_end: "2026-06-26",
+      holdout_start: "2026-06-29",
+      holdout_end: "2026-07-29",
+      all_start: "2025-07-25",
+      all_end: "2026-07-29",
     }),
   });
   const COMMISSIONS = Object.freeze({
@@ -90,7 +104,7 @@
       selected.some((symbol) => !allowed.has(symbol))
     ) {
       throw inputError(
-        "Choose unique symbols available in dataset v1.",
+        "Choose unique symbols available in the selected dataset.",
         "symbols",
       );
     }
@@ -179,26 +193,75 @@
       );
     }
     const selectedSymbols = symbols(values);
+    const dataset = String(values.dataset_version || "v1");
+    const datasetProfile = DATASET_PROFILES[dataset];
+    if (!datasetProfile) {
+      throw inputError(
+        "Choose an available dataset for the legacy compatibility runner.",
+        "dataset_version",
+      );
+    }
+    const bounds = values.window_bounds || WINDOWS[dataset];
+    if (
+      !bounds ||
+      !bounds.discovery_start ||
+      !bounds.discovery_end ||
+      !bounds.holdout_start ||
+      !(bounds.holdout_end || bounds.latest_session)
+    ) {
+      throw inputError(
+        "The selected dataset has no certified window receipt.",
+        "dataset_version",
+      );
+    }
+    const protectedEnd =
+      bounds.holdout_end || bounds.latest_session;
     const preset = String(values.window_preset || "");
     let start;
     let end;
     if (preset === "discovery") {
-      ({ start, end } = WINDOWS.discovery);
+      start = bounds.discovery_start;
+      end = bounds.discovery_end;
     } else if (preset === "custom_discovery") {
       start = isoDate(values.start_date, "start_date");
       end = isoDate(values.end_date, "end_date");
       if (
-        start < WINDOWS.discovery.start ||
-        end > WINDOWS.discovery.end ||
+        start < bounds.discovery_start ||
+        end > bounds.discovery_end ||
         start > end
       ) {
         throw inputError(
-          `Custom dates must stay inside ${WINDOWS.discovery.start} through ${WINDOWS.discovery.end}.`,
+          `Custom dates must stay inside ${bounds.discovery_start} through ${bounds.discovery_end}.`,
           "start_date",
         );
       }
+    } else if (preset === "all") {
+      start = bounds.all_start || bounds.discovery_start;
+      end = bounds.all_end || protectedEnd;
+      if (values.holdout_burn_acknowledgement !== true) {
+        throw inputError(
+          "Acknowledge that All available data includes protected evidence.",
+          "window_preset",
+        );
+      }
+    } else if (preset === "validation") {
+      if (!bounds.validation_start || !bounds.validation_end) {
+        throw inputError(
+          "The Validation block requires the certified year dataset.",
+          "window_preset",
+        );
+      }
+      start = bounds.validation_start;
+      end = bounds.validation_end;
+      if (values.holdout_burn_acknowledgement !== true) {
+        throw inputError(
+          "Acknowledge the protected Validation block before using it.",
+          "window_preset",
+        );
+      }
     } else if (preset === "holdout") {
-      ({ start, end } = WINDOWS.holdout);
+      start = bounds.holdout_start;
+      end = protectedEnd;
       if (values.holdout_burn_acknowledgement !== true) {
         throw inputError(
           "Acknowledge the one-time holdout use before using holdout data.",
@@ -207,6 +270,15 @@
       }
     } else {
       throw inputError("Choose a window preset.", "window_preset");
+    }
+    if (
+      !["all", "validation", "holdout"].includes(preset) &&
+      values.holdout_burn_acknowledgement === true
+    ) {
+      throw inputError(
+        "Reusable discovery windows cannot carry a protected-window acknowledgement.",
+        "window_preset",
+      );
     }
 
     const commissionPreset = String(values.commission_preset || "");
@@ -243,7 +315,7 @@
         values.unrealistic_costs_acknowledged === true,
     };
     const inputs = {
-      dataset_profile: DATASET_PROFILE,
+      dataset_profile: datasetProfile,
       experiment_label: label,
       symbols: selectedSymbols.join(","),
       start_date: start,
@@ -309,7 +381,7 @@
       keys.length !== expected.length ||
       keys.some((key, index) => key !== expected[index])
     ) {
-      throw inputError("Preview request does not match the runner schema.");
+      throw inputError("Portal request does not match the runner schema.");
     }
     return inputs;
   }
@@ -338,7 +410,7 @@
         ? "ZERO-COST SIMULATION"
         : `$${Number(inputs.commission_per_contract).toFixed(2)} per contract per side`;
     const window =
-      envelope.window_preset === "holdout"
+      ["all", "validation", "holdout"].includes(envelope.window_preset)
         ? `HOLDOUT RUN ${inputs.start_date} through ${inputs.end_date}`
         : `discovery ${inputs.start_date} through ${inputs.end_date}`;
     return `Replay the fixed legacy MACD baseline on ${symbolText}, ${window}, with ${cost}.`;
@@ -347,6 +419,7 @@
   return Object.freeze({
     REQUEST_SCHEMA,
     DATASET_PROFILE,
+    DATASET_PROFILES,
     WINDOWS,
     COMMISSIONS,
     WORKFLOW_INPUT_NAMES,

@@ -19,11 +19,12 @@ route consumes it.
 | Portal control | Request mapping | Effective behavior |
 | --- | --- | --- |
 | Dataset v1 | `provenance.dataset=v1`, workflow profile `portal-adapter-v1-study` | Frozen three-month study archive |
-| Dataset v2 | `provenance.dataset=v2-year`, `dataset_label=v2-year`, workflow profile `portal-adapter-v2-year` | Certified 251-session archive and feature store selected only through `--dataset-config` |
-| Discovery | `window`, `provenance.window_preset=discovery` | v1: 2026-04-27..2026-05-22; v2: 2025-07-25..2026-05-22 |
-| Custom discovery | `window`, `window_preset=custom_discovery` | Dates must remain inside the selected dataset’s discovery boundary |
+| Dataset v2 | `provenance.dataset=v2-year`, `dataset_label=v2-year`, workflow profile `portal-adapter-v2-year` | Certified year archive and feature store selected only through `--dataset-config`; current session count comes from the capability manifest |
+| Recommended discovery | `window`, `provenance.window_preset=discovery` | v1: reusable four-week block, 2026-04-27..2026-05-22; v2-year: reusable ten-month block, 2025-07-25..2026-05-22 |
+| Custom dates inside recommended | `window`, `window_preset=custom_discovery` | Dates remain clamped inside the selected dataset’s reusable discovery boundary |
+| All available data | `window`, `window_preset=all` | Starts at the dataset’s first discovery session and ends at the capability manifest’s latest session; protected, so acknowledgement, `HOLDOUT RUN`, and the burn log stamp are mandatory |
 | Validation | v2 `2026-05-26..2026-06-26` plus acknowledgement | Protected; `HOLDOUT RUN` watermark and `holdout_burn_acknowledged=true` run-log stamp |
-| Holdout | v2 `2026-06-29..latest` plus acknowledgement | Protected with the same watermark and audit stamp |
+| Holdout | Capability receipt’s holdout start/end plus acknowledgement | Protected and refreshed from the runner capability manifest; never hard-coded in the browser or runner policy |
 | Symbols | `symbols[]` | Exact selected symbols; single names remain robustness-only evidence |
 | Producing UI | `provenance.ui=v2` | Stored in the request, report, and unified index |
 | Request identity | canonical JSON SHA-256 | Validation binds Queue to the exact request; any edit invalidates it |

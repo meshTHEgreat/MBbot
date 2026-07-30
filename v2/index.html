@@ -108,8 +108,10 @@
           </button>
         </div>
         <p id="window-help" class="disclosure" hidden>
-          Discovery may be inspected repeatedly. Holdout proves a finished
-          strategy once and is permanently burned for that family.
+          The recommended block is reusable discovery evidence. Custom dates
+          stay inside that same safe block. Validation, Holdout, and All
+          available data include protected evidence and require an
+          acknowledgement, page/report watermark, and run-log stamp.
         </p>
         <span id="stage_0_summary" class="summary-chip dependency-target">
           Data: v1 · Discovery · SPY + QQQ
@@ -138,19 +140,38 @@
           <div class="choice-list">
             <label class="choice">
               <input name="window_preset" type="radio" value="discovery" checked>
-              <span><strong>Discovery (recommended)</strong><small>27 Apr–22 May 2026</small></span>
+              <span>
+                <strong data-window-title="discovery">Recommended discovery block</strong>
+                <small data-window-description="discovery">Reusable evidence · 27 Apr–22 May 2026</small>
+              </span>
             </label>
             <label class="choice">
               <input name="window_preset" type="radio" value="custom_discovery">
-              <span><strong>Custom inside discovery</strong><small>Dates remain clamped to discovery</small></span>
+              <span>
+                <strong data-window-title="custom_discovery">Custom dates inside recommended block</strong>
+                <small data-window-description="custom_discovery">Choose a shorter reusable range; protected dates stay unavailable</small>
+              </span>
+            </label>
+            <label class="choice">
+              <input name="window_preset" type="radio" value="all">
+              <span>
+                <strong data-window-title="all">All available data ⚠</strong>
+                <small data-window-description="all">Includes protected validation and holdout evidence · acknowledgement required</small>
+              </span>
             </label>
             <label class="choice">
               <input name="window_preset" type="radio" value="validation" disabled>
-              <span><strong>Validation ⚠</strong><small>Year dataset only · acknowledgement required</small></span>
+              <span>
+                <strong data-window-title="validation">Validation block ⚠</strong>
+                <small data-window-description="validation">Year dataset only · acknowledgement required</small>
+              </span>
             </label>
             <label class="choice">
               <input name="window_preset" type="radio" value="holdout">
-              <span><strong>Holdout ⚠</strong><small>26 May–24 Jul 2026 · acknowledgement required</small></span>
+              <span>
+                <strong data-window-title="holdout">Holdout block ⚠</strong>
+                <small data-window-description="holdout">One-time evidence · acknowledgement required</small>
+              </span>
             </label>
           </div>
           <span class="affects-chip" data-affects-for="window_preset"></span>
@@ -161,20 +182,23 @@
             <label for="start_date">Start date</label>
             <input id="start_date" name="start_date" type="date"
               min="2026-04-27" max="2026-05-22" value="2026-04-27"
-              aria-describedby="start-date-reason" disabled>
+              aria-describedby="start-date-reason window-date-error" disabled>
             <span id="start-date-reason" class="reason dependency-reason"
-              data-dependency-reason-for="start_date">Set by Window preset: Discovery.</span>
+              data-dependency-reason-for="start_date">Set by the selected window preset.</span>
           </div>
           <div class="field">
             <label for="end_date">End date</label>
             <input id="end_date" name="end_date" type="date"
               min="2026-04-27" max="2026-05-22" value="2026-05-22"
-              aria-describedby="end-date-reason" disabled>
+              aria-describedby="end-date-reason window-date-error" disabled>
             <span id="end-date-reason" class="reason dependency-reason"
-              data-dependency-reason-for="end_date">Set by Window preset: Discovery.</span>
+              data-dependency-reason-for="end_date">Set by the selected window preset.</span>
           </div>
         </div>
-        <p class="run-count">You have run 14 configs on this window.</p>
+        <p id="window-date-error" class="form-error" role="alert" hidden>
+          Start date cannot be later than end date.
+        </p>
+        <p class="run-count">Completed configurations are recorded in the shared report index; this page does not guess a stale per-window count.</p>
 
         <fieldset id="symbol_combobox" class="control-group dependency-target"
           aria-describedby="symbols-help">
@@ -288,6 +312,7 @@
         <fieldset id="params_trend_persistence" class="parameter-group dependency-target"
           data-family="trend_persistence">
           <legend>Trend persistence parameters</legend>
+          <p class="helper">Requires both a fast-over-slow MA gap and a same-direction momentum push on completed underlying snapshots.</p>
           <div class="field-grid">
             <label>Fast MA snapshots<input name="fast_ma_snapshots" type="number" min="1" value="3"></label>
             <label>Slow MA snapshots<input name="slow_ma_snapshots" type="number" min="2" value="12"></label>
@@ -299,6 +324,7 @@
         <fieldset id="params_opening_range" class="parameter-group dependency-target"
           data-family="opening_range_breakout" aria-disabled="true">
           <legend>Opening-range breakout parameters</legend>
+          <p class="helper">Defines the completed opening range, the breakout buffer beyond it, and an optional prior-five-session width regime.</p>
           <div class="field-grid">
             <label>Range minutes<input name="orb_range_minutes" type="number" min="1" value="30" disabled></label>
             <label>Buffer %<input name="orb_buffer_percent" type="number" min="0" max="5" step="0.01" value="0" disabled></label>
@@ -309,6 +335,7 @@
         <fieldset id="params_order_flow" class="parameter-group dependency-target"
           data-family="order_flow_imbalance" aria-disabled="true">
           <legend>Order-flow imbalance parameters</legend>
+          <p class="helper">Compares classified buy and sell volume over the rolling bar window, optionally requiring the underlying to agree.</p>
           <div class="field-grid">
             <label>Rolling window bars<input name="order_flow_window_bars" type="number" min="1" value="3" disabled></label>
             <label>(buy−sell)/total threshold<input name="order_flow_threshold" type="number" min="0.01" max="1" step="0.01" value="0.60" disabled></label>
@@ -320,6 +347,7 @@
         <fieldset id="params_premium_divergence" class="parameter-group dependency-target"
           data-family="premium_underlying_divergence" aria-disabled="true">
           <legend>Premium-underlying divergence parameters</legend>
+          <p class="helper">Looks for a fast underlying move while option premium velocity lags its Delta-implied response.</p>
           <div class="field-grid">
             <label>Underlying velocity minimum<input name="divergence_underlying_velocity_min" type="number" min="0.01" step="0.01" value="0.02" disabled></label>
             <label>Premium velocity maximum<input name="divergence_premium_velocity_max" type="number" step="0.01" value="0.02" disabled></label>
@@ -330,6 +358,7 @@
         <fieldset id="params_mean_reversion" class="parameter-group dependency-target"
           data-family="mean_reversion_fade" aria-disabled="true">
           <legend>Mean-reversion fade parameters</legend>
+          <p class="helper">Requires an RSI extreme and, when enabled, a completed reversal bar before entry.</p>
           <div class="field-grid">
             <label>RSI period<input name="mean_reversion_rsi_period" type="number" min="2" max="50" value="14" disabled></label>
             <label>RSI extreme<input name="mean_reversion_rsi_extreme" type="number" min="50.01" max="100" value="70" disabled></label>
@@ -340,6 +369,7 @@
         <fieldset id="params_legacy_macd" class="parameter-group dependency-target"
           data-family="legacy_macd" aria-disabled="true">
           <legend>Legacy MACD comparison parameters</legend>
+          <p class="helper">Fixed 12/26/9 option-premium crossover retained only for report-85 baseline comparison.</p>
           <div class="field-grid">
             <label>Fast EMA<input name="legacy_macd_fast" type="number" min="1" value="12" disabled></label>
             <label>Slow EMA<input name="legacy_macd_slow" type="number" min="2" value="26" disabled></label>
@@ -366,7 +396,7 @@
             <input id="spread_cap_percent" name="spread_cap_percent" type="number"
               min="0.01" max="200" step="0.01" value="10"
               aria-describedby="spread-cap-help">
-            <span id="spread-cap-help" class="reason">Legacy 50% is allowed but remains flagged.</span>
+          <span id="spread-cap-help" class="reason">Rejects contracts above this relative spread; values above 15% stay visibly flagged.</span>
             <span class="affects-chip" data-affects-for="spread_cap_percent"></span>
           </label>
           <label>Spread denominator
@@ -378,9 +408,11 @@
           </label>
           <label>Premium floor $
             <input name="premium_floor" type="number" min="0" step="0.05" value="0.50">
+            <small class="helper">Reject contracts whose midpoint is below this price.</small>
           </label>
           <label>Premium cap $ · optional
             <input name="premium_cap" type="number" min="0.01" step="0.05" value="">
+            <small class="helper">Visible for comparison; the certified adapter does not expose a cap.</small>
           </label>
         </div>
         <p id="spread_cap_semantics" class="read-only-card dependency-target">10% of midpoint</p>
@@ -441,8 +473,8 @@
           <p id="delta-help" class="helper">Paired numeric inputs provide precise touch entry.</p>
         </fieldset>
         <div class="field-grid">
-          <label>Minimum DTE<input id="dte_minimum" name="dte_minimum" type="number" min="0" value="1"></label>
-          <label>Maximum DTE<input id="dte_maximum" name="dte_maximum" type="number" min="0" value="4"></label>
+          <label>Minimum DTE<input id="dte_minimum" name="dte_minimum" type="number" min="0" value="1"><small class="helper">Fewest calendar days to expiration accepted.</small></label>
+          <label>Maximum DTE<input id="dte_maximum" name="dte_maximum" type="number" min="0" value="4"><small class="helper">Most calendar days to expiration accepted.</small></label>
         </div>
         <label class="choice">
           <input id="allow_zero_dte" name="allow_zero_dte" type="checkbox">
@@ -451,12 +483,12 @@
         <span class="affects-chip" data-affects-for="allow_zero_dte"></span>
         <p id="formal_validity_flag" class="warning dependency-target" hidden>Outside preregistered scope.</p>
         <div class="switch-grid">
-          <label class="choice"><input name="expiration_fallback" type="checkbox" checked><span>Expiration fallback</span></label>
-          <label class="choice"><input name="next_strike_scan" type="checkbox" checked><span>Next-strike scan</span></label>
+          <label class="choice"><input name="expiration_fallback" type="checkbox" checked><span><strong>Expiration fallback</strong><small>Try the next eligible expiration when the nearest cannot fill.</small></span></label>
+          <label class="choice"><input name="next_strike_scan" type="checkbox" checked><span><strong>Next-strike scan</strong><small>Continue outward when the nearest strike fails contract checks.</small></span></label>
         </div>
         <fieldset class="control-group unavailable-group" aria-describedby="tier-one-reason">
-          <legend>v2-only contract evidence</legend>
-          <p id="tier-one-reason" class="reason">Disabled by Dataset v1: Tier-1 evidence needs v2.</p>
+          <legend>Tier-1 contract evidence · not parameterized</legend>
+          <p id="tier-one-reason" class="reason">Checking the selected dataset and certified adapter surface.</p>
           <label>IV source<select id="iv_source" disabled><option>Midpoint</option></select></label>
           <label class="choice"><input id="vega_filter" type="checkbox" disabled><span>Vega filter</span></label>
           <label class="choice"><input id="rho_filter" type="checkbox" disabled><span>Rho filter</span></label>
@@ -487,10 +519,10 @@
         <fieldset class="control-group">
           <legend>Commission per contract per side</legend>
           <div class="choice-list">
-            <label class="choice"><input name="commission_preset" type="radio" value="reference" checked><span><strong>$0.65 reference</strong><small>Default</small></span></label>
-            <label class="choice"><input name="commission_preset" type="radio" value="stress"><span><strong>$1.30 stress</strong><small>Sensitivity</small></span></label>
-            <label class="choice"><input id="commission-both" name="commission_preset" type="radio" value="both"><span><strong>Both</strong><small>Dual report columns</small></span></label>
-            <label class="choice"><input name="commission_preset" type="radio" value="zero"><span><strong>$0 comparison ⚠</strong><small>Requires acknowledgement</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="reference" checked><span><strong>$0.65 reference</strong><small>Primary realistic cost per contract, per side.</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="stress"><span><strong>$1.30 stress</strong><small>Higher-friction sensitivity run.</small></span></label>
+            <label class="choice"><input id="commission-both" name="commission_preset" type="radio" value="both"><span><strong>Both cost levels</strong><small>One adapter run with reference and stress report columns.</small></span></label>
+            <label class="choice"><input name="commission_preset" type="radio" value="zero"><span><strong>$0 comparison ⚠</strong><small>Unrealistic comparison; acknowledgement and watermark required.</small></span></label>
           </div>
           <span class="affects-chip" data-affects-for="commission_preset"></span>
         </fieldset>
@@ -525,9 +557,9 @@
         <div id="optional-controls-6" class="optional-stage-controls" hidden>
         <input id="risk_enabled" name="risk_enabled" type="checkbox" hidden>
         <div class="field-grid">
-          <label>Contracts per trade<input name="contracts_per_trade" type="number" min="1" value="1"></label>
-          <label>Max trades/symbol/day<input name="maximum_trades_per_symbol_day" type="number" min="1" value="3"></label>
-          <label>Re-entry cooldown minutes<input name="reentry_cooldown_minutes" type="number" min="0" value="30"></label>
+          <label>Contracts per trade<input name="contracts_per_trade" type="number" min="1" value="1"><small class="helper">Fixed position size for every accepted signal.</small></label>
+          <label>Max trades per symbol/session<input name="maximum_trades_per_symbol_day" type="number" min="1" value="3"><small class="helper">Stops repeated entries in one symbol during the same market session.</small></label>
+          <label>Re-entry cooldown minutes<input name="reentry_cooldown_minutes" type="number" min="0" value="30"><small class="helper">Minimum wait after an exit before that symbol can enter again.</small></label>
         </div>
         <label class="choice">
           <input name="same_direction_spy_qqq_single_exposure" type="checkbox" checked>
@@ -565,7 +597,7 @@
           </p>
           <span class="dependency-reason" data-dependency-reason-for="invalidation_formula">Set by Trigger family: trend persistence.</span>
         </div>
-        <label class="choice"><input name="profit_target_enabled" type="checkbox" checked><span>Profit target</span></label>
+        <label class="choice"><input name="profit_target_enabled" type="checkbox" checked><span><strong>Profit target</strong><small>Always active on the certified adapter; choose its calculation below.</small></span></label>
         <div class="field-grid">
           <label>Profit mode
             <select name="profit_target_mode">
@@ -573,11 +605,11 @@
               <option value="legacy_percent">Legacy percent</option>
             </select>
           </label>
-          <label>Friction multiple<input name="profit_friction_multiple" type="number" min="0" step="0.5" value="3"></label>
-          <label>Legacy target %<input name="profit_legacy_percent" type="number" min="0.01" step="0.01" value="20"></label>
+          <label>Friction multiple<input name="profit_friction_multiple" type="number" min="0" step="0.5" value="3"><small class="helper">Profit required as a multiple of entry-and-exit friction.</small></label>
+          <label>Legacy target %<input name="profit_legacy_percent" type="number" min="0.01" step="0.01" value="20"><small class="helper">Option-premium return used only in legacy-percent mode.</small></label>
         </div>
-        <label class="choice"><input name="time_stop_enabled" type="checkbox" checked><span>Time stop</span></label>
-        <label>Time-stop minutes<input name="time_stop_minutes" type="number" min="1" value="60"></label>
+        <label class="choice"><input name="time_stop_enabled" type="checkbox" checked><span><strong>Time stop</strong><small>Always active on the certified adapter.</small></span></label>
+        <label>Time-stop minutes<input name="time_stop_minutes" type="number" min="1" value="60"><small class="helper">Maximum minutes in the position before an exit.</small></label>
         <div id="forced_eod_close" class="read-only-card"><strong>Forced EOD close</strong><p>15:55 ET · always on</p></div>
         <label class="choice"><input name="premium_stop_enabled" type="checkbox"><span><strong>Premium-% stop-loss</strong><small>Default off; 67.6% of prior losses came from this exit harvesting noise</small></span></label>
         <label>Premium stop %<input name="premium_stop_percent" type="number" min="0.01" step="0.01" value="10"></label>
@@ -611,7 +643,7 @@
               <p class="eyebrow">Effective configuration</p>
               <h3 id="review-title">What this route will actually use</h3>
             </div>
-            <p class="helper">Muted rows are recorded for the adapter but ignored by the current legacy route.</p>
+            <p id="review-mode-help" class="helper">Every row below is queue-effective for the selected adapter family.</p>
           </div>
           <div class="table-scroll review-scroll" tabindex="0"
             aria-label="Effective configuration review by stage">
@@ -641,7 +673,7 @@
           </dl>
         </div>
         <details class="envelope-preview">
-          <summary>View adapter-only portal-engine-params.v1 envelope</summary>
+          <summary id="envelope-preview-summary">View exact portal-engine-params.v1 envelope</summary>
           <pre id="engine-envelope"></pre>
         </details>
         <div class="report-audit-preview" aria-label="Report and run audit stamps">
@@ -708,7 +740,7 @@
               Insufficient evidence · n &lt; 60
             </span>
           </div>
-          <p id="results-empty" class="helper">No Phase-2 result loaded yet. Column structure is ready for the adapter payload.</p>
+          <p id="results-empty" class="helper">No result is loaded in this control session. Generated reports include the columns previewed below.</p>
           <div id="headline_metrics" class="metric-grid dependency-target">
             <div><span>Closed trades</span><strong id="result-trades">—</strong></div>
             <div><span>Average MAE</span><strong id="result-mae">—</strong></div>
@@ -762,7 +794,7 @@
     aria-labelledby="burn-title" aria-describedby="burn-copy" hidden>
     <div class="dialog-body">
       <p class="eyebrow">Irreversible evidence decision</p>
-      <h2 id="burn-title">Use the holdout?</h2>
+      <h2 id="burn-title">Use protected evidence?</h2>
       <p id="burn-copy" class="definition">
         Holdout data proves a finished strategy ONCE. Reading results here
         permanently burns it for this strategy family.
@@ -770,10 +802,10 @@
       <label class="choice">
         <input id="burn-ack" name="holdout_burn_acknowledgement" type="checkbox"
           aria-describedby="burn-copy">
-        <span><strong>I understand and want to use the holdout.</strong><small>This acknowledgement is recorded in the request, report, and run log.</small></span>
+        <span><strong id="burn-ack-label">I understand and want to use protected evidence.</strong><small>This acknowledgement is recorded in the request, report, and run log.</small></span>
       </label>
       <div class="dialog-actions">
-        <button id="burn-confirm" class="button" type="button" disabled>Acknowledge and use holdout</button>
+        <button id="burn-confirm" class="button" type="button" disabled>Acknowledge and continue</button>
         <button id="burn-cancel" class="button secondary" type="button">Keep discovery window</button>
       </div>
     </div>

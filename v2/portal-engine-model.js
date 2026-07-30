@@ -233,7 +233,7 @@
     }
     const windowPreset = String(values.window_preset || "");
     if (
-      !["discovery", "custom_discovery", "validation", "holdout"].includes(
+      !["discovery", "custom_discovery", "all", "validation", "holdout"].includes(
         windowPreset,
       )
     ) {
@@ -245,9 +245,18 @@
       throw inputError("Start date cannot be later than end date.", "start_date");
     }
     const acknowledged = Boolean(values.holdout_burn_acknowledgement);
-    if (["validation", "holdout"].includes(windowPreset) && !acknowledged) {
+    const protectedWindow = ["all", "validation", "holdout"].includes(
+      windowPreset,
+    );
+    if (protectedWindow && !acknowledged) {
       throw inputError(
         "Acknowledge the one-time protected-window decision.",
+        "holdout_burn_acknowledgement",
+      );
+    }
+    if (!protectedWindow && acknowledged) {
+      throw inputError(
+        "Reusable discovery windows cannot carry a protected-window acknowledgement.",
         "holdout_burn_acknowledgement",
       );
     }
@@ -310,7 +319,7 @@
     }
 
     const reportWatermarks = [
-      ...(["validation", "holdout"].includes(windowPreset)
+      ...(protectedWindow
         ? ["HOLDOUT RUN"]
         : []),
       ...(commissionPreset === "zero" ? ["ZERO-COST SIMULATION"] : []),
@@ -318,7 +327,7 @@
       ...(minimumDte === 0 ? ["OUTSIDE PREREGISTERED SCOPE"] : []),
     ];
     const runLogStamps = [
-      ...(["validation", "holdout"].includes(windowPreset)
+      ...(protectedWindow
         ? ["holdout_burn_acknowledged=true"]
         : []),
       `dataset_label=${dataset === "v2-year" ? "v2-year" : "v1-study"}`,

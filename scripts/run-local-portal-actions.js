@@ -59,11 +59,70 @@ async function main() {
         return;
       }
       if (request.method() === "POST") {
+        intercepted.at(-1).body = JSON.parse(request.postData() || "{}");
         request.respond({
           status: 200,
           contentType: "application/json",
           headers,
           body: JSON.stringify({ run_id: "123456" }),
+        });
+      } else if (parsed.pathname === "/api/dataset-capabilities") {
+        request.respond({
+          status: 200,
+          contentType: "application/json",
+          headers,
+          body: JSON.stringify({
+            schema_version:
+              "mbbot.backtest-control.dataset-capabilities.v1",
+            generated_at_utc: "2026-07-30T16:45:35Z",
+            datasets: [
+              {
+                id: "v1",
+                available: true,
+                validated: true,
+                sessions: 62,
+                latest_session: "2026-07-24",
+                symbols: ["AAPL", "NVDA", "QQQ", "SPY", "TSLA"],
+                windows: [
+                  {
+                    id: "discovery",
+                    start: "2026-04-27",
+                    end: "2026-05-22",
+                  },
+                  {
+                    id: "holdout",
+                    start: "2026-05-26",
+                    end: "2026-07-24",
+                  },
+                ],
+              },
+              {
+                id: "v2-year",
+                available: true,
+                validated: true,
+                sessions: 254,
+                latest_session: "2026-07-29",
+                symbols: ["AAPL", "NVDA", "QQQ", "SPY", "TSLA"],
+                windows: [
+                  {
+                    id: "discovery",
+                    start: "2025-07-25",
+                    end: "2026-05-22",
+                  },
+                  {
+                    id: "validation",
+                    start: "2026-05-26",
+                    end: "2026-06-26",
+                  },
+                  {
+                    id: "holdout",
+                    start: "2026-06-29",
+                    end: "2026-07-29",
+                  },
+                ],
+              },
+            ],
+          }),
         });
       } else {
         request.respond({
@@ -89,6 +148,111 @@ async function main() {
     });
     await page.waitForFunction(
       () => document.getElementById("safety-form")?.dataset.initializing !== "true",
+    );
+
+    assert(
+      !(await page.$eval(
+        '#dataset_version option[value="v2-year"]',
+        (option) => option.disabled,
+      )),
+      "Certified v2-year dataset stayed disabled",
+    );
+    const recommendedV1Window = await page.evaluate(() => ({
+      title: document
+        .querySelector('[data-window-title="discovery"]')
+        .textContent.trim(),
+      start: document.getElementById("start_date").value,
+      end: document.getElementById("end_date").value,
+    }));
+    assert(
+      recommendedV1Window.title === "Recommended — 4-week discovery" &&
+        recommendedV1Window.start === "2026-04-27" &&
+        recommendedV1Window.end === "2026-05-22",
+      "v1 did not bind its recommended 4-week discovery block",
+    );
+    await page.select("#dataset_version", "v2-year");
+    const recommendedWindow = await page.evaluate(() => ({
+      title: document
+        .querySelector('[data-window-title="discovery"]')
+        .textContent.trim(),
+      description: document
+        .querySelector('[data-window-description="discovery"]')
+        .textContent.trim(),
+      start: document.getElementById("start_date").value,
+      end: document.getElementById("end_date").value,
+    }));
+    assert(
+      recommendedWindow.title === "Recommended — 10-month discovery",
+      "Year dataset did not name its recommended 10-month block",
+    );
+    assert(
+      recommendedWindow.start === "2025-07-25" &&
+        recommendedWindow.end === "2026-05-22",
+      "Year recommended dates did not match the capability manifest",
+    );
+
+    await page.click(
+      'input[name="window_preset"][value="custom_discovery"]',
+    );
+    await page.$eval("#start_date", (input) => {
+      input.value = "2025-11-03";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await page.$eval("#end_date", (input) => {
+      input.value = "2025-12-15";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    assert(
+      await page.evaluate(
+        () =>
+          document.getElementById("start_date").value === "2025-11-03" &&
+          document.getElementById("end_date").value === "2025-12-15",
+      ),
+      "Custom dates were overwritten by the dependency renderer",
+    );
+    await page.$eval("#end_date", (input) => {
+      input.value = "2025-10-01";
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    assert(
+      await page.evaluate(
+        () =>
+          !document.getElementById("window-date-error").hidden &&
+          document
+            .querySelector('[role="tab"][data-stage="0"]')
+            .getAttribute("data-valid") === "false" &&
+          document.getElementById("validate-button").disabled,
+      ),
+      "Reversed custom dates did not fail closed with a visible message",
+    );
+
+    await page.click('input[name="window_preset"][value="all"]');
+    await page.waitForFunction(
+      () => document.getElementById("burn-dialog").open,
+    );
+    assert(
+      await page.$eval(
+        "#burn-copy",
+        (copy) =>
+          copy.textContent.includes("includes Validation and Holdout") &&
+          copy.textContent.includes("permanently burns it"),
+      ),
+      "All-data dialog did not explain the protected-evidence burn",
+    );
+    await page.click("#burn-ack");
+    await page.click("#burn-confirm");
+    assert(
+      await page.evaluate(
+        () =>
+          document.getElementById("start_date").value === "2025-07-25" &&
+          document.getElementById("end_date").value === "2026-07-29" &&
+          !document.getElementById("holdout_page_watermark").hidden &&
+          !document.getElementById("holdout_report_watermark").hidden &&
+          !document.getElementById("holdout_run_log_stamp").hidden,
+      ),
+      "All-data acknowledgement did not bind dates and audit stamps",
     );
 
     const nextButtons = [];
@@ -232,6 +396,24 @@ async function main() {
       ),
       "Queued report was not followed to completion",
     );
+    const adapterPost = intercepted.find(
+      (request) =>
+        request.method === "POST" &&
+        request.pathname === "/api/backtests" &&
+        Boolean(request.body?.inputs?.request_envelope),
+    );
+    const adapterEnvelope = JSON.parse(
+      adapterPost?.body?.inputs?.request_envelope || "{}",
+    );
+    assert(adapterPost, "Adapter request body was not captured");
+    assert(
+      adapterEnvelope.provenance?.dataset === "v2-year" &&
+        adapterEnvelope.provenance?.window_preset === "all" &&
+        adapterEnvelope.provenance?.holdout_burn_acknowledgement === true &&
+        adapterEnvelope.window?.start === "2025-07-25" &&
+        adapterEnvelope.window?.end === "2026-07-29",
+      "Queued adapter request did not preserve v2-year All-window evidence",
+    );
 
     process.stdout.write(
       `${JSON.stringify(
@@ -239,12 +421,26 @@ async function main() {
           url,
           viewport: "360x800",
           next_buttons: nextButtons.length,
+          recommended_v1_window: recommendedV1Window,
+          recommended_year_window: recommendedWindow,
+          custom_date_validation: "passed",
+          protected_all_window: "passed",
           risk_default: "disabled",
           risk_enable_disable: "passed",
           runner_key_editable: true,
           validate_keyboard: "passed",
           queue_pointer: "adapter and legacy passed",
-          intercepted_report_route: intercepted,
+          queued_adapter_window: {
+            dataset: adapterEnvelope.provenance.dataset,
+            preset: adapterEnvelope.provenance.window_preset,
+            start: adapterEnvelope.window.start,
+            end: adapterEnvelope.window.end,
+            watermarks: adapterEnvelope.provenance.report_watermarks,
+            run_log_stamps: adapterEnvelope.provenance.run_log_stamps,
+          },
+          intercepted_report_route: intercepted.map(
+            ({ method, pathname }) => ({ method, pathname }),
+          ),
         },
         null,
         2,

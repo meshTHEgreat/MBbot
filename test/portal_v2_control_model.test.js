@@ -76,6 +76,41 @@ test("holdout requires explicit acknowledgement", () => {
   assert.equal(inputs.end_date, "2026-07-24");
 });
 
+test("year discovery and all-data presets use their dataset-specific boundaries", () => {
+  const discovery = model.buildInputs(
+    values({
+      dataset_version: "v2-year",
+      window_preset: "discovery",
+      start_date: "2025-07-25",
+      end_date: "2026-05-22",
+    }),
+  );
+  assert.equal(discovery.dataset_profile, "portal-legacy-v2-year");
+  assert.equal(discovery.start_date, "2025-07-25");
+  assert.equal(discovery.end_date, "2026-05-22");
+
+  assert.throws(
+    () =>
+      model.buildInputs(
+        values({
+          dataset_version: "v2-year",
+          window_preset: "all",
+        }),
+      ),
+    /protected evidence/,
+  );
+  const all = model.buildInputs(
+    values({
+      dataset_version: "v2-year",
+      window_preset: "all",
+      holdout_burn_acknowledgement: true,
+    }),
+  );
+  assert.equal(all.start_date, "2025-07-25");
+  assert.equal(all.end_date, "2026-07-29");
+  assert.match(model.sentence(all), /HOLDOUT RUN/);
+});
+
 test("zero cost requires explicit unrealistic-cost acknowledgement", () => {
   assert.throws(
     () =>

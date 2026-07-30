@@ -19,7 +19,7 @@ State terms:
 | Element | Stage | State model | Fix applied |
 |---|---:|---|---|
 | Dataset (`dataset_version`) | 0 | Effective on legacy; adapter-editable otherwise | Added accessible state marker, affected-control chips, and explicit unavailable-v2 reason. |
-| Window preset (`window_preset`) | 0 | Effective; holdout is acknowledged | Preserved discovery/custom/holdout choices; linked state marker, burn dialog, watermark, and run-log stamp. |
+| Window preset (`window_preset`) | 0 | Effective; All/Validation/Holdout are protected | Dataset-specific Recommended, Custom-inside-recommended, All available, Validation, and Holdout choices now render their actual capability-receipt dates; protected choices share the acknowledgement, watermark, and run-log stamp. |
 | Holdout acknowledgement (`burn-ack`) | 0 | Acknowledged; only active in the holdout dialog | Added warning-state marker and explicit checkbox gate in the ARIA alertdialog. |
 | Start date (`start_date`) | 0 | Effective only for Custom; dependency-locked for presets | Keeps the actual preset dates visible and names Window preset as the locking cause. |
 | End date (`end_date`) | 0 | Effective only for Custom; dependency-locked for presets | Keeps the actual preset dates visible and names Window preset as the locking cause. |
@@ -107,11 +107,11 @@ State terms:
 |---|---:|---|---|
 | Optional default shell | 1, 3, 4, 6, 7 | “Using defaults” never blocks validation | Added exact default summary, Customize, and Reset to defaults. |
 | State legend | Global | Always visible | Added accessible text for ✅ effective, 🟡 adapter-only, 🔒 unavailable, and ⚠ acknowledgement. |
-| Route banner | Global and 8 | Persistent, family-derived | Announces queue-effective legacy or envelope-only adapter-pending mode. |
+| Route banner | Global and 8 | Persistent, family-derived | Announces the queue-effective legacy compatibility or parity-certified adapter route. |
 | Stage stepper | 0–8 | APG tabs; free navigation | Added required/optional subtext, validity names, arrow/Home/End behavior, and stable focus. |
 | Next buttons | 0–7 | Stage progression only | Added real buttons; Enter advances and focus moves to the next panel heading. |
 | Review table | 8 | Effective versus ignored | Added one row per prior stage, muted ignored rows, adapter-only tags, and Edit links. |
 | Config sentence and SHA | 8 | Exact current request | Added effective legacy sentence/SHA or adapter envelope sentence/SHA with provenance. |
 | Audit stamps | 8 | Conditional and persistent | Holdout, zero-cost, dual-cost, outside-scope, and legacy-baseline stamps reflect the graph. |
 | Validate only | 8 | Local, exact-request gate | Any configuration edit invalidates; access-key typing does not alter request bytes. |
-| Queue backtest | 8 | Enabled only for the validated queueable request | Remains disabled for adapter-pending families and is the only run-starting control. |
+| Queue backtest | 8 | Enabled only for the exact validated request | Supports the legacy compatibility and five certified adapter families; it is the only run-starting control. |

@@ -239,6 +239,12 @@
         "description": "Validation is protected evidence and requires the same explicit acknowledgement, watermark, and run-log stamp."
       },
       {
+        "cause": "window_preset",
+        "condition": { "equals": "all" },
+        "targets": ["window_preset", "burn-ack"],
+        "description": "All available data includes protected Validation and Holdout evidence, so acknowledgement, watermark, and run-log stamp are mandatory."
+      },
+      {
         "cause": "commission_preset",
         "condition": { "equals": "zero" },
         "targets": ["commission_preset", "unrealistic_costs_acknowledged"],
@@ -509,6 +515,8 @@
             "v1": {
               "discovery_start": "2026-04-27",
               "discovery_end": "2026-05-22",
+              "all_start": "2026-04-27",
+              "all_end": "2026-07-24",
               "holdout_start": "2026-05-26",
               "holdout_end": "2026-07-24",
               "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
@@ -516,11 +524,13 @@
             "v2-year": {
               "discovery_start": "2025-07-25",
               "discovery_end": "2026-05-22",
+              "all_start": "2025-07-25",
+              "all_end": "2026-07-29",
               "validation_start": "2026-05-26",
               "validation_end": "2026-06-26",
               "holdout_start": "2026-06-29",
-              "holdout_end": "2026-07-24",
-              "latest_session": "2026-07-24",
+              "holdout_end": "2026-07-29",
+              "latest_session": "2026-07-29",
               "symbols": ["SPY", "QQQ", "AAPL", "NVDA", "TSLA"]
             }
           }
@@ -700,7 +710,7 @@
     {
       "id": "holdout-burn-guard",
       "cause": "window_preset",
-      "condition": { "one_of": ["validation", "holdout"] },
+      "condition": { "one_of": ["all", "validation", "holdout"] },
       "effects": [
         {
           "targets": ["burn-ack", "burn-dialog"],
@@ -718,7 +728,7 @@
       "cause": "holdout_burn_acknowledgement",
       "condition": {
         "all": [
-          { "control": "window_preset", "one_of": ["validation", "holdout"] },
+          { "control": "window_preset", "one_of": ["all", "validation", "holdout"] },
           { "control": "holdout_burn_acknowledgement", "truthy": true }
         ]
       },
@@ -743,8 +753,8 @@
         {
           "targets": ["start_date", "end_date"],
           "behavior": "enable",
-          "reason": "Editable because Window preset is Custom inside discovery.",
-          "inactive_reason": "Read-only because Window preset supplies these dates; choose Custom inside discovery to edit them."
+          "reason": "Editable because Window preset is Custom dates inside recommended block.",
+          "inactive_reason": "Read-only because Window preset supplies these dates; choose Custom dates inside recommended block to edit them."
         }
       ]
     },
@@ -755,10 +765,19 @@
         {
           "targets": ["start_date", "end_date"],
           "behavior": "mapped_value",
+          "update_when_cause_changes_only": true,
           "values": {
             "discovery": {
               "start_date": "2026-04-27",
               "end_date": "2026-05-22"
+            },
+            "custom_discovery": {
+              "start_date": "2026-04-27",
+              "end_date": "2026-05-22"
+            },
+            "all": {
+              "start_date": "2026-04-27",
+              "end_date": "2026-07-24"
             },
             "validation": {
               "start_date": "2026-05-26",
