@@ -242,6 +242,31 @@ test("default envelope matches the certified P1 request and risk defaults", () =
   assert.equal(envelope.provenance.adapter_status, "parity_certified_connected");
 });
 
+test("three-month and year dataset choices keep their exact window identity", () => {
+  const threeMonth = engine.buildEnvelope(baseValues());
+  assert.equal(threeMonth.provenance.dataset, "v1");
+  assert.equal(threeMonth.provenance.dataset_label, "v1-study");
+  assert.equal(threeMonth.provenance.window_preset, "discovery");
+  assert.deepEqual(threeMonth.window, {
+    start: "2026-04-27",
+    end: "2026-05-22",
+  });
+
+  const year = engine.buildEnvelope(
+    baseValues({
+      dataset_version: "v2-year",
+      start_date: "2025-07-25",
+      end_date: "2026-05-22",
+    }),
+  );
+  assert.equal(year.provenance.dataset, "v2-year");
+  assert.equal(year.provenance.dataset_label, "v2-year");
+  assert.deepEqual(year.window, {
+    start: "2025-07-25",
+    end: "2026-05-22",
+  });
+});
+
 test("portal-engine-params.v1 envelopes pass the versioned JSON Schema", () => {
   const schema = JSON.parse(
     fs.readFileSync(
@@ -546,6 +571,10 @@ test("HTML contains the guided review flow, result surfaces, and production word
   assert.match(html, /id="state-legend-items"/);
   assert.match(html, /id="risk_enabled"[^>]+type="checkbox"[^>]+hidden/);
   assert.match(html, /id="queue-action-help"/);
+  assert.match(
+    html,
+    /<option value="v1">v1 [^<]*3 months [^<]*62 sessions<\/option>/,
+  );
   assert.match(html, /value="all"/);
   assert.match(script, /Recommended — 10-month discovery/);
   assert.doesNotMatch(html, /You have run 14 configs/);
@@ -560,6 +589,8 @@ test("HTML contains the guided review flow, result surfaces, and production word
   assert.match(html, /Per-symbol evidence/);
   assert.match(html, /Insufficient evidence/);
   assert.doesNotMatch(`${html}\n${script}\n${model}`, /preview runner/i);
+  assert.match(script, /The ui: v2 report is live/);
+  assert.doesNotMatch(script, /Report generated/);
 });
 
 test("only report-file pushes trigger the public Pages workflow", () => {

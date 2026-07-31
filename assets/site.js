@@ -792,27 +792,29 @@
       if (!/^reports\/github-\d+-\d+\.html$/.test(reportPath || "")) {
         throw new Error("The runner returned an invalid report path.");
       }
+      const reportId = reportPath.match(/(github-\d+-\d+)\.html$/)?.[1];
       setRunnerState(
         "publishing",
         "Publishing verified report",
-        "The replay passed verification. Waiting for GitHub Pages to publish it.",
+        "The replay passed verification. Waiting for the report page and shared index to reach GitHub Pages.",
         "The calculation is complete; the archive is updating.",
       );
-      for (let attempt = 0; attempt < 60; attempt += 1) {
+      for (let attempt = 0; attempt < 90; attempt += 1) {
         try {
-          const separator = reportPath.includes("?") ? "&" : "?";
-          const response = await fetch(
-            `${reportPath}${separator}published=${Date.now()}`,
-            { cache: "no-store" },
-          );
-          if (response.ok) {
+          const marker = `published=${Date.now()}`;
+          const [reportResponse, indexResponse] = await Promise.all([
+            fetch(`${reportPath}?${marker}`, { cache: "no-store" }),
+            fetch(`reports/report-index.md?${marker}`, { cache: "no-store" }),
+          ]);
+          const index = indexResponse.ok ? await indexResponse.text() : "";
+          if (reportResponse.ok && index.includes(reportId)) {
             resultLink.href = reportPath;
             resultActions.hidden = false;
             clearAccessKey();
             setRunnerState(
               "success",
               "Report published",
-              "The verified run is now available in the archive and comparison view.",
+              "The verified run is live and listed in the shared report index.",
               "Your experiment is ready to inspect.",
             );
             return;
@@ -823,7 +825,7 @@
         await wait(10_000);
       }
       throw new Error(
-        "The backtest completed, but the report is still waiting for GitHub Pages. Refresh the archive shortly.",
+        "The backtest finished and committed its report, but GitHub Pages did not publish it. Do not rerun the backtest; the existing report can be recovered from its publication commit.",
       );
     }
 

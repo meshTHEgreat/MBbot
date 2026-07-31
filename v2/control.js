@@ -1800,6 +1800,45 @@
     return payload;
   }
 
+  async function waitForPublishedReport(reportPath) {
+    const reportId = reportPath.match(/(github-\d+-\d+)\.html$/)?.[1];
+    if (!reportId) {
+      throw new Error("The runner returned an invalid v2 report path.");
+    }
+    const localPath = reportPath.replace(/^v2\//, "");
+    setStatus(
+      "publishing",
+      "Publishing report",
+      "The backtest finished. Waiting for the report page and shared index to reach GitHub Pages.",
+    );
+    for (let attempt = 0; attempt < 90; attempt += 1) {
+      try {
+        const marker = `published=${Date.now()}`;
+        const [reportResponse, indexResponse] = await Promise.all([
+          fetch(`${localPath}?${marker}`, { cache: "no-store" }),
+          fetch(`../reports/report-index.md?${marker}`, { cache: "no-store" }),
+        ]);
+        const index = indexResponse.ok ? await indexResponse.text() : "";
+        if (reportResponse.ok && index.includes(reportId)) {
+          resultLink.href = localPath;
+          resultLink.hidden = false;
+          setStatus(
+            "success",
+            "Report published",
+            "The ui: v2 report is live under /v2/reports and listed in the shared report index.",
+          );
+          return;
+        }
+      } catch {
+        // Pages can briefly return a stale artifact while deploying a report.
+      }
+      await delay(10000);
+    }
+    throw new Error(
+      "The backtest finished and committed its report, but GitHub Pages did not publish it. Do not rerun the backtest; the existing report can be recovered from its publication commit.",
+    );
+  }
+
   async function followRun(runId, key) {
     for (let attempt = 0; attempt < 1080; attempt += 1) {
       const payload = await gatewayRequest(
@@ -1826,13 +1865,7 @@
         if (!/^v2\/reports\/github-\d+-\d+\.html$/.test(path)) {
           throw new Error("The runner returned an invalid v2 report path.");
         }
-        resultLink.href = path.replace(/^v2\//, "");
-        resultLink.hidden = false;
-        setStatus(
-          "success",
-          "Report generated",
-          "The ui: v2 report is publishing under /v2/reports.",
-        );
+        await waitForPublishedReport(path);
         return;
       }
       await delay(payload.status === "queued" ? 15000 : 10000);

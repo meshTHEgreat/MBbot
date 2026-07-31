@@ -39,6 +39,22 @@ async function main() {
   await page.setRequestInterception(true);
   page.on("request", (request) => {
     const parsed = new URL(request.url());
+    if (parsed.pathname.endsWith("/v2/reports/github-123456-1.html")) {
+      request.respond({
+        status: 200,
+        contentType: "text/html",
+        body: "<!doctype html><title>Published test report</title>",
+      });
+      return;
+    }
+    if (parsed.pathname.endsWith("/reports/report-index.md")) {
+      request.respond({
+        status: 200,
+        contentType: "text/markdown",
+        body: "[Open](../v2/reports/github-123456-1.html)",
+      });
+      return;
+    }
     if (
       parsed.hostname === "mbbot-backtest-dispatch.alhazmimeshari.workers.dev"
     ) {
@@ -255,6 +271,23 @@ async function main() {
       "All-data acknowledgement did not bind dates and audit stamps",
     );
 
+    await page.select("#dataset_version", "v1");
+    const queuedThreeMonthWindow = await page.evaluate(() => ({
+      dataset: document.getElementById("dataset_version").value,
+      preset: document.querySelector(
+        'input[name="window_preset"]:checked',
+      ).value,
+      start: document.getElementById("start_date").value,
+      end: document.getElementById("end_date").value,
+    }));
+    assert(
+      queuedThreeMonthWindow.dataset === "v1" &&
+        queuedThreeMonthWindow.preset === "discovery" &&
+        queuedThreeMonthWindow.start === "2026-04-27" &&
+        queuedThreeMonthWindow.end === "2026-05-22",
+      "Switching back to the three-month dataset did not reset the exact discovery window",
+    );
+
     const nextButtons = [];
     for (let stage = 0; stage < 8; stage += 1) {
       await page.click(`[role="tab"][data-stage="${stage}"]`);
@@ -438,7 +471,7 @@ async function main() {
         !document.getElementById("result-link").hidden &&
         document
           .querySelector("#run-status strong")
-          .textContent.includes("Report generated"),
+          .textContent.includes("Report published"),
     );
 
     await page.click('[role="tab"][data-stage="2"]');
@@ -467,7 +500,7 @@ async function main() {
         !document.getElementById("result-link").hidden &&
         document
           .querySelector("#run-status strong")
-          .textContent.includes("Report generated"),
+          .textContent.includes("Report published"),
     );
 
     assert(
@@ -497,12 +530,14 @@ async function main() {
     );
     assert(adapterPost, "Adapter request body was not captured");
     assert(
-      adapterEnvelope.provenance?.dataset === "v2-year" &&
-        adapterEnvelope.provenance?.window_preset === "all" &&
-        adapterEnvelope.provenance?.holdout_burn_acknowledgement === true &&
-        adapterEnvelope.window?.start === "2025-07-25" &&
-        adapterEnvelope.window?.end === "2026-07-29",
-      "Queued adapter request did not preserve v2-year All-window evidence",
+      adapterEnvelope.provenance?.dataset === "v1" &&
+        adapterEnvelope.provenance?.dataset_label === "v1-study" &&
+        adapterEnvelope.provenance?.window_preset === "discovery" &&
+        adapterEnvelope.provenance?.holdout_burn_acknowledgement === false &&
+        adapterEnvelope.window?.start === "2026-04-27" &&
+        adapterEnvelope.window?.end === "2026-05-22" &&
+        adapterPost.body.inputs.dataset_profile === "portal-adapter-v1-study",
+      "Queued adapter request did not preserve the three-month v1 discovery route",
     );
 
     process.stdout.write(
@@ -523,6 +558,12 @@ async function main() {
           runner_key_editable: true,
           validate_keyboard: "passed",
           queue_pointer: "adapter and legacy passed",
+          protected_year_window_ui: {
+            dataset: "v2-year",
+            preset: "all",
+            start: "2025-07-25",
+            end: "2026-07-29",
+          },
           queued_adapter_window: {
             dataset: adapterEnvelope.provenance.dataset,
             preset: adapterEnvelope.provenance.window_preset,
