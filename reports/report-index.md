@@ -2,10 +2,11 @@
 
 This index contains reports produced by both the classic and v2 portals. Rows are ordered newest first.
 
-- **Index updated (UTC):** `2026-08-01T01:21:50.998106Z`
+- **Index updated (UTC):** `2026-08-01T10:06:58.908791Z`
 
 | Report | Title | Timestamp (UTC) | File | UI | Dataset |
 |---:|---|---|---|---|---|
+| #122 | Baseline replay / Workflow #122 | `2026-08-01T10:03:24.401929Z` | [Open](github-30694378286-1.html) | `classic` | `v1` |
 | #121 | HOLDOUT RUN — Baseline replay / Workflow #121 | `2026-08-01T01:18:14.560416Z` | [Open](github-30676485860-1.html) | `classic` | `v1` |
 | #120 | HOLDOUT RUN / ZERO-COST SIMULATION — Baseline replay / Workflow #120 | `2026-08-01T00:43:19.509179Z` | [Open](github-30676036760-1.html) | `classic` | `v1` |
 | #119 | HOLDOUT RUN / ZERO-COST SIMULATION — Baseline replay / Workflow #119 | `2026-08-01T00:08:17.743455Z` | [Open](github-30674037056-1.html) | `classic` | `v1` |
