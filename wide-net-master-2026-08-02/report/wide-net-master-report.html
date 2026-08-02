@@ -470,18 +470,22 @@
     .candidate-callout strong { display: block; margin-bottom: 8px; font-size: 1.15rem; }
     .candidate-callout p { margin-bottom: 0; }
     .effect-layout { display: grid; gap: 24px; }
+    .effect-layout > * { min-width: 0; }
     .effect-list { display: grid; gap: 22px; }
     .effect-row { display: grid; gap: 7px; }
     .effect-title { font-size: .85rem; font-weight: 760; overflow-wrap: anywhere; }
     .lollipop {
       position: relative;
-      height: 42px;
+      height: 58px;
       border-radius: 10px;
-      background: linear-gradient(to right, transparent calc(50% - .5px), var(--line-strong) calc(50% - .5px), var(--line-strong) calc(50% + .5px), transparent calc(50% + .5px));
+      background:
+        linear-gradient(var(--line), var(--line)) 0 13px / 100% 1px no-repeat,
+        linear-gradient(var(--line), var(--line)) 0 29px / 100% 1px no-repeat,
+        linear-gradient(to right, transparent calc(50% - .5px), var(--line-strong) calc(50% - .5px), var(--line-strong) calc(50% + .5px), transparent calc(50% + .5px));
     }
     .lollipop::before, .lollipop::after {
       position: absolute;
-      bottom: -17px;
+      bottom: 0;
       color: var(--muted);
       font-family: var(--font-mono);
       font-size: .65rem;
@@ -498,7 +502,7 @@
     }
     .effect-dot.train { top: 13px; background: var(--accent); }
     .effect-dot.heldout { top: 29px; border: 3px solid var(--ink); background: var(--surface); }
-    .effect-values { display: flex; gap: 18px; color: var(--muted); font-family: var(--font-mono); font-size: .7rem; }
+    .effect-values { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-family: var(--font-mono); font-size: .7rem; }
     .effect-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; color: var(--muted); font-size: .75rem; }
     .legend-key { display: inline-flex; align-items: center; gap: 7px; }
     .legend-symbol { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); }
@@ -760,6 +764,23 @@
       .rule-metrics { grid-template-columns: repeat(4, 1fr); }
       .method-grid { grid-template-columns: 1fr 1fr; }
       .proof-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 539px) {
+      .effect-layout { gap: 18px; }
+      .effect-legend { margin-bottom: 12px; }
+      .effect-list { gap: 14px; }
+      .effect-row {
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 16px;
+      }
+      .effect-title { font-size: .9rem; }
+      .effect-values { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+      .effect-values span { min-width: 0; }
+      .effect-values span:last-child { grid-column: 1 / -1; }
     }
 
     @media (max-width: 767px) and (max-height: 740px) {
