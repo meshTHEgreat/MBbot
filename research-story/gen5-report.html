@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gen 5 — The Replication</title>
+<style>
+:root{--surface:#fcfcfb;--panel:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--line:#e3e2de;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--neg:#e34948;--pos:#008300;--warnbg:#fff7e6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--panel:#242422;--ink:#fff;--ink2:#c3c2b7;--line:#3a3936;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--neg:#e66767;--pos:#4caf50;--warnbg:#2e2618}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--surface);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:4rem}
+header{padding:1.4rem 1rem .7rem}
+h1{font-size:1.35rem;line-height:1.25}
+.sub{color:var(--ink2);font-size:.9rem;margin-top:.3rem}
+nav{position:sticky;top:0;background:var(--surface);z-index:10;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+nav a{flex:0 0 auto;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-size:.88rem;min-height:44px;display:flex;align-items:center}
+section{padding:1.3rem 1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.18rem;margin-bottom:.35rem}
+h3{font-size:1rem;margin:1rem 0 .35rem}
+.lede{color:var(--ink2);font-size:.92rem;margin-bottom:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.8rem 0}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.tile .v{font-size:1.28rem;font-weight:700;letter-spacing:-.02em}
+.tile .k{font-size:.78rem;color:var(--ink2);margin-top:.15rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--pos);color:#fff}
+svg{display:block;max-width:100%}
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.8rem;color:var(--ink2);margin:.4rem 0;align-items:center}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font-size:.84rem;width:100%;min-width:480px}
+th,td{padding:.5rem .6rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600}
+.insight{max-width:44rem}
+.insight p{margin:.7rem 0}
+.callout{background:var(--panel);border-left:4px solid var(--s1);border-radius:8px;padding:.8rem .9rem;margin:.9rem 0;font-size:.92rem}
+.callout.warn{border-left-color:var(--s4)}
+.small{font-size:.8rem;color:var(--ink2)}
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);padding:.35rem .6rem;border-radius:8px;font-size:.78rem;z-index:50;display:none;max-width:260px;white-space:normal}
+footer{padding:1rem;color:var(--ink2);font-size:.78rem}
+</style></head><body>
+<div class="tt" id="tt" role="status"></div>
+<header><h1>Generation 5 — the replication</h1>
+<div class="sub">The morning × tight-liquidity trade class, tested on two years of data acquired after the hypothesis was frozen · 517 sessions per symbol · 2023-07-03 → 2025-07-24 · independently re-verified</div></header>
+<nav aria-label="Sections"><a href="#verdict">Verdict</a><a href="#factorial">Factorial</a><a href="#time">Across time</a><a href="#exec">Execution</a><a href="#insights">Insights</a></nav>
+
+<section id="verdict">
+<h2>Verdict: <span class="badge">✓ REPLICATED</span></h2>
+<p class="lede">First independently confirmed effect in the program's history — on data that did not exist in any prior analysis, with a timestamp proof that the hypothesis was frozen before the first byte arrived.</p>
+<div class="tiles">
+<div class="tile"><div class="v">+$2.96</div><div class="k">Δ vs matched outside-class controls, per contract at midpoint</div></div>
+<div class="tile"><div class="v">p = 0.0013</div><div class="k">one-sided, session-blocked · frozen bar was 0.0125</div></div>
+<div class="tile"><div class="v">+$0.80</div><div class="k">simultaneous 98.75% lower bound</div></div>
+<div class="tile"><div class="v">Both +</div><div class="k">SPY +$1.38 · QQQ +$4.45 — the "SPY-only" ghost inverted</div></div>
+</div>
+<p class="small">All four frozen replication criteria passed. My independent sign-flip randomization: p = 0.0009 — same answer via a different test. Acquisition cost: 3,677 of 32,000 budgeted requests for 1.16 billion validated rows.</p>
+</section>
+
+<section id="factorial">
+<h2>The factorial — where the effect lives</h2>
+<p class="lede">Four cells: Morning/Later × Tight-liquid/Ordinary. Bars show each cell's midpoint expectancy per contract with 98.75% intervals — the localization the design existed to produce.</p>
+<div id="cells"></div>
+<h3>The three contrasts</h3>
+<div id="contrasts"></div>
+<p class="small">Reading: <strong>liquidity is the engine</strong> (+$9.63, LB +$7.91); morning <em>on average</em> subtracts (−$7.95) — but note the interaction (+$5.54, LB +$2.71): the morning×tight combination behaves better than its parts predict. Coding caution on record: with an interaction this size, "morning is negative" conceals structure — the later×tight cell is the strongest absolute cell (+$5.31), while morning×tight is +$0.13. The replicated Δ is a <em>relative</em> result: the class beats matched outside-class trades; its absolute drift is not separately established.</p>
+</section>
+
+<section id="time">
+<h2>Stability across two years</h2>
+<p class="lede">Monthly mean of the session-level Δ (condition minus matched control). A real effect should be diffuse, not one lucky quarter.</p>
+<div id="monthly"></div>
+<h3>Session-level distribution</h3>
+<div id="shist"></div>
+<p class="small">517 sessions across three regimes. Individual sessions are noisy (that's options); the effect is the persistent tilt, not the individual days.</p>
+</section>
+
+<section id="exec">
+<h2>Execution bounds — proven ≤ likely ≤ optimistic</h2>
+<p class="lede">The tick study reclassified under three defensibility levels per the review: proven (queue-consistent), likely (probabilistic model), optimistic (any eligible trade through the limit). Values = total expectancy per trade including missed fills, pooled.</p>
+<div id="bounds"></div>
+<p class="small">The midpoint-limit policy reaches <strong>+$1.01 at the optimistic bound</strong> — so execution rescue is no longer conclusively dead; it is unresolved pending broker-level evidence. The immediate-cross baseline stays −$0.84. Nothing here is deployable; the bound exists to direct the next measurement, not to promise the money.</p>
+</section>
+
+<section id="insights" class="insight">
+<h2>Insights — what this means and why</h2>
+
+<h3>1. What "replicated" actually bought</h3>
+<p>Every prior positive number in this program came from data that had already been searched. This one didn't: the condition was frozen — formulas, thresholds, matching rules, hashed with a timestamp — and only then were 2023–2025 purchased and opened. The +$2.96 survived contact with two years of unseen market across three regimes, in both symbols, at p ≈ 0.001. That is the difference between "we found something in our data" and "the market does this."</p>
+
+<h3>2. The inversion is quiet vindication</h3>
+<p>Campaign 3's tempting story was "it works on SPY, not QQQ." The matched-baseline analysis called that noise, and the gates refused to let SPY-only ship. On fresh data, QQQ (+$4.45) now <em>leads</em> SPY (+$1.38). Anyone who had followed the seductive path — drop QQQ, trade SPY — would have optimized into the noise and away from the stronger half. The discipline that felt pedantic in Campaign 3 just paid for itself measurably.</p>
+
+<h3>3. Relative is not absolute — the distinction that governs everything next</h3>
+<p>The class beats comparable trades taken elsewhere/elsewhen by $2.96. But its own absolute expectancy at midpoint is +$0.13 with an interval spanning zero — and execution costs sit on top of that. Translation: the market treats these contracts <em>less unfavorably</em>, but "less unfavorable" only becomes an income stream if a forecast layer can select the subset with genuinely favorable movement. That is precisely G5-B's single objective, and why its gates demand absolute conservative profit with a frozen $2/contract margin — not just improvement over the baseline.</p>
+
+<h3>4. The factorial's surprise: liquidity is the engine, morning is the seasoning</h3>
+<p>The liquidity contrast (+$9.63) dwarfs everything. Tight, actively-quoted contracts are simply a different economic environment from wide ones. Three candidate mechanisms — cheaper friction, faster information incorporation, or liquidity as a proxy for favorable underlying states — are now an explicit study item, because a forecast model that secretly rediscovers "spread is narrow" under another feature name would be an expensive tautology. Meanwhile the later×tight cell's strength (+$5.31) seeds the preregistered whole-session challenger — as a new lineage, not a quiet edit to the replicated class.</p>
+
+<h3>5. The execution bound moved from "dead" to "unresolved" — handle with care</h3>
+<p>+$1.01 exists only at the optimistic ceiling — counting fills that public data cannot prove would have happened. The honest statement: public data can no longer refute execution rescue, and only small real orders can settle it. Hence the parallel measurement workstream: shadow logging, broker lifecycle tests, then tiny preregistered live probes measuring fill physics — never conditioned on forecast winners, never confused with strategy deployment.</p>
+
+<h3>6. The program's position, stated plainly</h3>
+<p>After five generations: one replicated relative effect, an execution frontier measured to its public-data limits, a 200+ trial registry, sealed confirmation blocks still unspent, and a forecast study (G5-B) whose foundation guards — lookahead audit on the liquidity inputs, measurement-error reruns — run before any model is fit. Nothing is tradable yet. But for the first time, the program is studying a confirmed property of the market rather than searching for one.</p>
+
+<div class="callout warn">Bottom line: the boxed question is now live — can underlying information identify which eligible morning trades contain enough movement to clear the measured execution frontier? Everything before this was earning the right to ask it.</div>
+</section>
+
+<footer>Generation 5 (gen5-2026-07-31) · replication archive 2023-07-03 → 2025-07-24, SPY+QQQ, DTE ≤ 7, 1m grid · prereg hash provably precedes first data request · frozen suites 71/41/26 green · sealed blocks untouched · independently re-verified.</footer>
+
+<script>
+const D={"cells":{"LO":{"pt":-1.54,"lo":-3.72,"hi":0.86},"LT":{"pt":5.31,"lo":3.54,"hi":7.16},"MO":{"pt":-12.27,"lo":-14.45,"hi":-10.11},"MT":{"pt":0.13,"lo":-1.92,"hi":2.24}},"inf":{"delta_condition":{"pt":2.96,"lo":0.8,"p":0.0013199868001319986},"interaction":{"pt":5.54,"lo":2.71,"p":9.99990000099999e-06},"liquidity_main_effect":{"pt":9.63,"lo":7.91,"p":9.99990000099999e-06},"time_main_effect":{"pt":-7.95,"lo":-10.5,"p":1.0}},"monthly":[{"m":"2023-07","v":-3.26},{"m":"2023-08","v":0.29},{"m":"2023-09","v":-6.1},{"m":"2023-10","v":3.3},{"m":"2023-11","v":2.24},{"m":"2023-12","v":1.58},{"m":"2024-01","v":4.74},{"m":"2024-02","v":3.36},{"m":"2024-03","v":5.91},{"m":"2024-04","v":-3.22},{"m":"2024-05","v":9.42},{"m":"2024-06","v":4.64},{"m":"2024-07","v":6.66},{"m":"2024-08","v":8.31},{"m":"2024-09","v":11.71},{"m":"2024-10","v":5.35},{"m":"2024-11","v":-1.72},{"m":"2024-12","v":2.77},{"m":"2025-01","v":1.17},{"m":"2025-02","v":1.73},{"m":"2025-03","v":-0.28},{"m":"2025-04","v":1.27},{"m":"2025-05","v":4.06},{"m":"2025-06","v":7.7},{"m":"2025-07","v":1.48}],"hist":{"counts":[6,2,2,3,1,4,2,8,8,9,12,29,25,54,62,65,60,44,25,18,19,16,4,9,3,5,5,4,4,9],"edges":[-60.0,-56.0,-52.0,-48.0,-44.0,-40.0,-36.0,-32.0,-28.0,-24.0,-20.0,-16.0,-12.0,-8.0,-4.0,0.0,4.0,8.0,12.0,16.0,20.0,24.0,28.0,32.0,36.0,40.0,44.0,48.0,52.0,56.0,60.0]},"bounds":[{"pol":"P1_immediate_marketable","sym":"ALL","proven":-0.84,"likely":-0.84,"optimistic":-0.84},{"pol":"P2_midpoint_limit_then_cancel","sym":"ALL","proven":0.0,"likely":0.32,"optimistic":1.01},{"pol":"P3_partial_spread_then_cross","sym":"ALL","proven":-0.74,"likely":-0.69,"optimistic":-0.57}],"perSym":{"SPY":1.3787,"QQQ":4.4544},"facts":{"sessions":517,"rows_b":1.163,"requests":3677,"window":"2023-07-03 \u2192 2025-07-24"}};
+const cs=getComputedStyle(document.documentElement);const col=v=>cs.getPropertyValue(v).trim();
+const tt=document.getElementById("tt");
+function showTT(h,x,y){tt.innerHTML=h;tt.style.display="block";const r=tt.getBoundingClientRect();tt.style.left=Math.min(x+10,innerWidth-r.width-8)+"px";tt.style.top=Math.max(8,y-r.height-10)+"px"}
+function hideTT(){tt.style.display="none"}
+document.addEventListener("scroll",hideTT,{passive:true});
+
+/* factorial cells with CI whiskers */
+(function(){const el=document.getElementById("cells");const W=Math.min(640,el.clientWidth||340);
+ const order=[["MT","Morning × Tight (the class)"],["LT","Later × Tight"],["MO","Morning × Ordinary"],["LO","Later × Ordinary"]];
+ const vals=order.map(([k])=>D.cells[k]);
+ const min=Math.min(...vals.map(v=>v.lo)),max=Math.max(...vals.map(v=>v.hi));
+ const x=v=>30+(v-min)/(max-min)*(W-60);
+ const BH=30,G=14;const H=order.length*(BH+G)+16;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Factorial cell means with intervals">`;
+ s+=`<line x1="${x(0)}" y1="6" x2="${x(0)}" y2="${H-10}" stroke="${col("--line")}" stroke-width="1.5"/>`;
+ order.forEach(([k,label],i)=>{const c=D.cells[k];const y=10+i*(BH+G);
+  const barc=c.pt>=0?col("--pos"):col("--neg");
+  s+=`<text x="${x(min)}" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${label}</text>`;
+  s+=`<line x1="${x(c.lo)}" y1="${y+10}" x2="${x(c.hi)}" y2="${y+10}" stroke="${col("--ink2")}" stroke-width="2"/>`;
+  s+=`<line x1="${x(c.lo)}" y1="${y+5}" x2="${x(c.lo)}" y2="${y+15}" stroke="${col("--ink2")}" stroke-width="2"/>`;
+  s+=`<line x1="${x(c.hi)}" y1="${y+5}" x2="${x(c.hi)}" y2="${y+15}" stroke="${col("--ink2")}" stroke-width="2"/>`;
+  s+=`<circle data-k="${k}" cx="${x(c.pt)}" cy="${y+10}" r="6" fill="${barc}" stroke="${col("--surface")}" stroke-width="2"/>`;
+  s+=`<text x="${x(c.pt)}" y="${y+30}" font-size="10.5" text-anchor="middle" fill="${col("--ink2")}">$${c.pt}</text>`;});
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("circle").forEach(ci=>{const c=D.cells[ci.dataset.k];
+  const f=ev=>{const p=ev.touches?ev.touches[0]:ev;showTT(`point $${c.pt} · 98.75% [${c.lo}, ${c.hi}]`,p.clientX,p.clientY)};
+  ci.addEventListener("pointerenter",f);ci.addEventListener("pointerdown",f);ci.addEventListener("pointerleave",hideTT);});})();
+
+/* contrasts */
+(function(){const el=document.getElementById("contrasts");const W=Math.min(640,el.clientWidth||340);
+ const rows=[["liquidity_main_effect","Liquidity (tight − ordinary)"],["time_main_effect","Time (morning − later)"],["interaction","Interaction (the class premium)"],["delta_condition","Δ condition vs matched controls"]];
+ const vals=rows.map(([k])=>D.inf[k]);
+ const min=Math.min(...vals.map(v=>v.lo),-1),max=Math.max(...vals.map(v=>v.pt))+2;
+ const x=v=>30+(v-min)/(max-min)*(W-40);
+ const BH=24,G=16;const H=rows.length*(BH+G)+10;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Factorial contrasts">`;
+ s+=`<line x1="${x(0)}" y1="4" x2="${x(0)}" y2="${H-6}" stroke="${col("--line")}" stroke-width="1.5"/>`;
+ rows.forEach(([k,label],i)=>{const c=D.inf[k];const y=8+i*(BH+G);
+  const barc=c.pt>=0?col("--pos"):col("--neg");
+  const x0=x(Math.min(0,c.pt)),x1=x(Math.max(0,c.pt));
+  s+=`<text x="${x(min)}" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${label}</text>`;
+  s+=`<rect data-k="${k}" x="${x0}" y="${y}" width="${Math.max(1.5,x1-x0)}" height="${BH-10}" rx="4" fill="${barc}"/>`;
+  s+=`<text x="${c.pt>=0?x1+4:x0-4}" y="${y+11}" font-size="11" text-anchor="${c.pt>=0?"start":"end"}" fill="${col("--ink2")}">$${c.pt} (LB ${c.lo})</text>`;});
+ s+="</svg>";el.innerHTML=s;})();
+
+/* monthly series */
+(function(){const el=document.getElementById("monthly");const W=Math.min(720,el.clientWidth||360),H=180,ml=8,mr=8,mt=10,mb=22;
+ const pts=D.monthly;const vs=pts.map(p=>p.v);
+ const min=Math.min(0,...vs),max=Math.max(0,...vs);
+ const x=i=>ml+i/(pts.length-1)*(W-ml-mr), y=v=>mt+(max-v)/(max-min||1)*(H-mt-mb);
+ let path=pts.map((p,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join("");
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly mean delta condition" id="msvg">`;
+ s+=`<line x1="${ml}" y1="${y(0)}" x2="${W-mr}" y2="${y(0)}" stroke="${col("--line")}"/>`;
+ s+=`<path d="${path}" fill="none" stroke="${col("--s1")}" stroke-width="2"/>`;
+ pts.forEach((p,i)=>{s+=`<circle data-i="${i}" cx="${x(i)}" cy="${y(p.v)}" r="4" fill="${p.v>=0?col("--pos"):col("--neg")}" stroke="${col("--surface")}" stroke-width="1.5"/>`});
+ s+=`<text x="${ml}" y="${H-6}" font-size="10" fill="${col("--ink2")}">${pts[0].m}</text><text x="${W-mr}" y="${H-6}" font-size="10" text-anchor="end" fill="${col("--ink2")}">${pts[pts.length-1].m}</text>`;
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("circle").forEach(ci=>{const p=D.monthly[+ci.dataset.i];
+  const f=ev=>{const e=ev.touches?ev.touches[0]:ev;showTT(`<b>${p.m}</b> mean Δ $${p.v}`,e.clientX,e.clientY)};
+  ci.addEventListener("pointerenter",f);ci.addEventListener("pointerdown",f);ci.addEventListener("pointerleave",hideTT);});})();
+
+/* session histogram */
+(function(){const el=document.getElementById("shist");const W=Math.min(680,el.clientWidth||360),H=150,ml=8,mr=8,mt=6,mb=24;
+ const h=D.hist;const n=h.counts.length;const cmax=Math.max(...h.counts);
+ const x=i=>ml+i/n*(W-ml-mr), bw=(W-ml-mr)/n-1, y=v=>mt+(1-v/cmax)*(H-mt-mb);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Session-level delta distribution">`;
+ h.counts.forEach((c,i)=>{const mid=(h.edges[i]+h.edges[i+1])/2;
+  s+=`<rect x="${x(i)}" y="${y(c)}" width="${bw}" height="${H-mb-y(c)}" rx="2" fill="${mid>=0?col("--pos"):col("--neg")}" opacity=".7"/>`});
+ s+=`<text x="${ml}" y="${H-8}" font-size="10" fill="${col("--ink2")}">$${h.edges[0]}</text><text x="${(W)/2}" y="${H-8}" font-size="10" text-anchor="middle" fill="${col("--ink2")}">session mean Δ (clipped ±$60)</text><text x="${W-mr}" y="${H-8}" font-size="10" text-anchor="end" fill="${col("--ink2")}">$${h.edges[h.edges.length-1]}</text>`;
+ s+="</svg>";el.innerHTML=s;})();
+
+/* execution bounds dot-range chart */
+(function(){const el=document.getElementById("bounds");const W=Math.min(640,el.clientWidth||340);
+ const names={P1_immediate_marketable:"P1 — immediate marketable",P2_midpoint_limit_then_cancel:"P2 — midpoint limit, else cancel",P3_partial_spread_then_cross:"P3 — partial spread, else cross"};
+ const rows=D.bounds;
+ const min=Math.min(...rows.map(r=>r.proven),-1.2),max=Math.max(...rows.map(r=>r.optimistic),1.4);
+ const x=v=>30+(v-min)/(max-min)*(W-50);
+ const BH=30,G=16;const H=rows.length*(BH+G)+14;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Execution bounds per policy">`;
+ s+=`<line x1="${x(0)}" y1="6" x2="${x(0)}" y2="${H-8}" stroke="${col("--line")}" stroke-width="1.5"/>`;
+ rows.forEach((r,i)=>{const y=12+i*(BH+G);
+  s+=`<text x="${x(min)}" y="${y-2}" font-size="10.5" fill="${col("--ink")}">${names[r.pol]||r.pol}</text>`;
+  s+=`<line x1="${x(r.proven)}" y1="${y+9}" x2="${x(r.optimistic)}" y2="${y+9}" stroke="${col("--ink2")}" stroke-width="2"/>`;
+  [["proven","--neg"],["likely","--s4"],["optimistic","--s3"]].forEach(([k,c])=>{
+   s+=`<circle data-p="${r.pol}" data-k="${k}" cx="${x(r[k])}" cy="${y+9}" r="6" fill="${col(c)}" stroke="${col("--surface")}" stroke-width="2"/>`;});
+  s+=`<text x="${x(r.optimistic)+8}" y="${y+13}" font-size="10.5" fill="${col("--ink2")}">$${r.optimistic}</text>`;});
+ s+="</svg>";
+ el.innerHTML=s+'<div class="legend"><span><span class="sw" style="background:var(--neg)"></span>proven</span><span><span class="sw" style="background:var(--s4)"></span>likely</span><span><span class="sw" style="background:var(--s3)"></span>optimistic</span></div>';
+ el.querySelectorAll("circle").forEach(ci=>{const r=D.bounds.find(b=>b.pol===ci.dataset.p);const k=ci.dataset.k;
+  const f=ev=>{const e=ev.touches?ev.touches[0]:ev;showTT(`<b>${(names[r.pol]||r.pol)}</b><br>${k}: $${r[k]}/trade incl. misses`,e.clientX,e.clientY)};
+  ci.addEventListener("pointerenter",f);ci.addEventListener("pointerdown",f);ci.addEventListener("pointerleave",hideTT);});})();
+</script></body></html>

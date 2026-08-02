@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G5-B — The Forecast Test</title>
+<style>
+:root{--surface:#fcfcfb;--panel:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--line:#e3e2de;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--neg:#e34948;--pos:#008300;--warnbg:#fff7e6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--panel:#242422;--ink:#fff;--ink2:#c3c2b7;--line:#3a3936;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--neg:#e66767;--pos:#4caf50;--warnbg:#2e2618}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--surface);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:4rem}
+header{padding:1.4rem 1rem .7rem}
+h1{font-size:1.35rem;line-height:1.25}
+.sub{color:var(--ink2);font-size:.9rem;margin-top:.3rem}
+nav{position:sticky;top:0;background:var(--surface);z-index:10;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+nav a{flex:0 0 auto;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-size:.88rem;min-height:44px;display:flex;align-items:center}
+section{padding:1.3rem 1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.18rem;margin-bottom:.35rem}
+h3{font-size:1rem;margin:1rem 0 .35rem}
+.lede{color:var(--ink2);font-size:.92rem;margin-bottom:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.8rem 0}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.tile .v{font-size:1.28rem;font-weight:700;letter-spacing:-.02em}
+.tile .k{font-size:.78rem;color:var(--ink2);margin-top:.15rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--neg);color:#fff}
+svg{display:block;max-width:100%}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font-size:.82rem;width:100%;min-width:560px}
+th,td{padding:.45rem .6rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600}
+.insight{max-width:44rem}
+.insight p{margin:.7rem 0}
+.callout{background:var(--panel);border-left:4px solid var(--s1);border-radius:8px;padding:.8rem .9rem;margin:.9rem 0;font-size:.92rem}
+.callout.warn{border-left-color:var(--s4)}
+.small{font-size:.8rem;color:var(--ink2)}
+.pf{font-weight:700}
+.pass{color:var(--pos)} .fail{color:var(--neg)}
+footer{padding:1rem;color:var(--ink2);font-size:.78rem}
+</style></head><body>
+<header><h1>G5-B — the forecast test</h1>
+<div class="sub">Can a model select which class trades to take? · 45,467 out-of-fold predictions · 726 sessions · verdict per the frozen gates — and restated per external review</div></header>
+<nav aria-label="Sections"><a href="#verdict">Verdict</a><a href="#guards">Foundation</a><a href="#gates">The gates</a><a href="#funnel">Friction funnel</a><a href="#insights">Insights</a></nav>
+
+<section id="verdict">
+<h2>Verdict: <span class="badge">✕ FORECAST INCREMENT FAILED</span></h2>
+<p class="lede">Restated per external review — the original "gates held at 13 cents" framing was misleading. The decisive failures: the forecast lower bound was deeply negative, and the selected model lost to a one-line rule.</p>
+<div class="tiles">
+<div class="tile"><div class="v">−$12.24</div><div class="k">forecast-increment 95% lower bound (needed &gt; 0)</div></div>
+<div class="tile"><div class="v">−$20.23</div><div class="k">selected model vs the trivial trailing-sign benchmark</div></div>
+<div class="tile"><div class="v">21.5%</div><div class="k">of midpoint edge surviving conservative execution — fragile</div></div>
+<div class="tile"><div class="v">0</div><div class="k">sealed blocks opened. Nothing bent.</div></div>
+</div>
+<p class="small">What did hold: the first complete strategy with positive point estimates on all three ledgers (+$8.71 / +$1.87 / +$2.03, stress +$0.57). Encouraging arithmetic; not evidence. The registered benchmark that beat the model earns exactly one literal test (G6) under a hard terminal rule.</p>
+</section>
+
+<section id="guards">
+<h2>Foundation guards — the part that passed brilliantly</h2>
+<p class="lede">Before any modeling: is the liquidity condition causally clean, and is the replicated effect real economics or a measurement artifact? Δ vs matched controls under five pricing schemes:</p>
+<div id="g0b"></div>
+<p class="small">The audit traced all 124,509 condition rows to raw quote timestamps — zero lookahead failures. And the effect is <strong>larger under executable ask-to-bid pricing (+$4.11) than at midpoint (+$2.96)</strong> — the class advantage is real economics. Attenuation under update-frequency matching partly matches away the treatment itself (disclosed).</p>
+</section>
+
+<section id="gates">
+<h2>All eighteen gate conditions</h2>
+<p class="lede">Frozen before results existed. G1 = does the forecast add information; G2 = is the complete strategy economically viable.</p>
+<div class="tablewrap"><table><thead><tr><th>Gate</th><th>Condition</th><th>Observed</th><th>Threshold</th><th></th></tr></thead><tbody id="gtab"></tbody></table></div>
+</section>
+
+<section id="funnel">
+<h2>The friction funnel</h2>
+<p class="lede">The selected subset's per-contract expectancy as execution assumptions harden. Retention — not the point estimate — is what the review flagged as decisive.</p>
+<div id="funnel_c"></div>
+<h3>G6-L challenger: the unselected class loses everywhere</h3>
+<div class="tablewrap"><table><thead><tr><th>Arm</th><th>Opportunities</th><th>Ledger A (mid)</th><th>Ledger B (conserv.)</th><th>Stress</th></tr></thead><tbody id="atab"></tbody></table></div>
+<p class="small">All three arms negative on Ledger B — taking every eligible class trade loses money. Only selection can save it, and the selection layer is what just failed. The whole-session expansion is closed.</p>
+</section>
+
+<section id="insights" class="insight">
+<h2>Insights — what this means and why</h2>
+
+<h3>1. The honest headline, corrected</h3>
+<p>The first framing of this result emphasized that the economics missed the frozen $2.00 margin by thirteen cents. External review rejected that emphasis, and it was right to: the forecast-information gate failed by <em>twelve dollars</em>, not thirteen cents. A model whose increment lower bound is −$12.24, whose coverage curve is non-monotone, and which loses to "did the price go up recently?" by $20 has not almost-passed anything. The scorecard is retired. The thirteen cents leaves the story.</p>
+
+<h3>2. What the guards proved is the durable asset</h3>
+<p>The replicated class effect survived the two attacks that could have voided it: no lookahead in the liquidity inputs (124,509 rows, zero failures), and the effect <em>grows</em> under executable pricing. Whatever else happens, the program owns one causally-clean, replication-confirmed fact about the market. Its correct classification — per review — is an <strong>eligibility filter</strong>: a prerequisite for taking a trade, not a reason to take one. A class can beat a worse class while both lose money; this one's own absolute bound still spans zero.</p>
+
+<h3>3. The one thread that survives, and why it's allowed to</h3>
+<p>The trailing-sign rule was registered as a benchmark <em>before</em> its result was known — which is the only reason it may be tested at all. It beat a model that had every advantage. But G5-B is <em>selection</em> evidence for it, not confirmation: the entire lineage — MACD → trend persistence → ORB → condition class → scorecard → trailing-sign — is one adaptive search, and every transition was motivated by the previous failure. So the rule gets exactly one literal, frozen test (G6), preceded by a gauntlet that can kill it cheaply: a standalone economics dossier ("beat the scorecard" could still mean "less negative"), a vehicle comparison (would plain shares beat options for this weak a forecast?), and a power analysis (can 23 sealed sessions even answer the question?). If it fails — the branch closes, by a rule written down before the test.</p>
+
+<h3>4. The fragility lesson</h3>
+<p>Even the positive-everywhere selected subset kept only 21.5% of its midpoint edge after conservative execution, 6.5% under stress. A strategy living in that band is one provider discrepancy or one regime shift from negative. The revised standard replaces the flat $2 margin with three simultaneous criteria — absolute session-level lower bound above zero, a safety reserve above measured execution/provider/operational uncertainty, and a retention floor — because a point estimate that is positive-but-thin is not a margin of safety; it's a rounding error with good posture.</p>
+
+<h3>5. Where the program actually stands</h3>
+<p>Six generations. Established: a reproducible engine, causal cleanliness, an execution frontier, a replicated eligibility regime, and a registry of 200+ retired ideas. Not established: any validated forecast, any absolute profitability, any reason yet to trade. The review's warning is the one to keep: a process can become so good at explaining each failure and generating its successor that it never reaches a terminal decision. G6 exists to be incapable of that — it ends in confirmation or in <code>retired_morning_tight_directional_long_option_branch</code>, with the forbidden-mutations list pre-committed in writing.</p>
+
+<div class="callout warn">Bottom line: replicated tradeability regime ≠ validated forecast ≠ profitable strategy. One exact rule gets one exact test. Then the branch is confirmed or closed — and either outcome will be true, which after 200 retired ideas is the program's entire value.</div>
+</section>
+
+<footer>G5-B (gen5b-2026-07-31) · guards G0a clean, G0b survives · gates frozen before results · sealed blocks untouched · suites 71/41/26/53 green · restated per external review 2026-07-31 · independently re-verified.</footer>
+
+<script>
+const D={"gates":[{"g":"G1","c":"model_eligible_before_pnl","obs":true,"thr":true,"p":true},{"g":"G1","c":"matched_primary_coverage","obs":0.937,"thr":0.8,"p":true},{"g":"G1","c":"conservative_LCB_delta_forecast","obs":-12.24,"thr":0.0,"p":false},{"g":"G1","c":"SPY_delta_forecast","obs":-1.304,"thr":0.0,"p":false},{"g":"G1","c":"QQQ_delta_forecast","obs":9.376,"thr":0.0,"p":true},{"g":"G1","c":"positive_temporal_folds","obs":5,"thr":3,"p":true},{"g":"G1","c":"coverage_curve_monotone","obs":false,"thr":true,"p":false},{"g":"G1","c":"final_delta_minus_simple_benchmark_delta","obs":-20.232,"thr":0.0,"p":false},{"g":"G1","c":"beats_random_thinning_97_5_percentile","obs":true,"thr":true,"p":true},{"g":"G2","c":"Ledger_A_midpoint_point_estimate","obs":8.713,"thr":0.0,"p":true},{"g":"G2","c":"Ledger_B_reference_point_estimate","obs":1.873,"thr":2.0,"p":false},{"g":"G2","c":"Ledger_C_level2_likely_point_estimate","obs":2.026,"thr":0.0,"p":true},{"g":"G2","c":"Ledger_B_stress_point_estimate","obs":0.573,"thr":-2.0,"p":true},{"g":"G2","c":"pooled_ECE","obs":0.025,"thr":0.05,"p":true},{"g":"G2","c":"absolute_calibration_intercept","obs":0.025,"thr":0.1,"p":true},{"g":"G2","c":"calibration_slope_lower","obs":0.871,"thr":0.75,"p":true},{"g":"G2","c":"calibration_slope_upper","obs":0.871,"thr":1.25,"p":true},{"g":"G2","c":"Brier_skill_vs_foldwise_training_prevalence","obs":0.0,"thr":0.0,"p":true}],"g0b":[{"k":"ask_to_bid","v":4.11},{"k":"comparable_update_frequency","v":1.05},{"k":"midpoint_original","v":2.96},{"k":"quote_age_matched","v":2.78},{"k":"trade_confirmed","v":1.84}],"funnel":[{"k":"Midpoint (Ledger A)","v":8.71},{"k":"Conservative (Ledger B)","v":1.87},{"k":"Calibrated-likely (Ledger C)","v":2.03},{"k":"Stress","v":0.57}],"retention":{"ref":21.5,"stress":6.5},"arms":[{"arm":"morning_tight","A":-2.04,"B":-8.79,"S":-10.09,"n":52258},{"arm":"whole_session_tight","A":-1.74,"B":-8.55,"S":-9.85,"n":61314},{"arm":"non_morning_tight","A":0.07,"B":-6.21,"S":-7.51,"n":47206}],"facts":{"oof":45467,"sessions":726,"avreq":70}};
+const cs=getComputedStyle(document.documentElement);const col=v=>cs.getPropertyValue(v).trim();
+/* G0b bars */
+(function(){const el=document.getElementById("g0b");const W=Math.min(640,el.clientWidth||340);
+ const names={midpoint_original:"Midpoint (original)",ask_to_bid:"Ask-to-bid EXECUTABLE",quote_age_matched:"Quote-age matched",trade_confirmed:"Trade-confirmed",comparable_update_frequency:"Update-frequency matched"};
+ const order=["midpoint_original","ask_to_bid","quote_age_matched","trade_confirmed","comparable_update_frequency"];
+ const rows=order.map(k=>D.g0b.find(r=>r.k===k)).filter(Boolean);
+ const max=Math.max(...rows.map(r=>r.v));const x=v=>4+v/max*(W-90);
+ const BH=26,G=12;const H=rows.length*(BH+G)+8;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Delta condition under pricing schemes">`;
+ rows.forEach((r,i)=>{const y=4+i*(BH+G);
+  const hl=r.k==="ask_to_bid";
+  s+=`<text x="4" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${names[r.k]}</text>`;
+  s+=`<rect x="4" y="${y+2}" width="${x(r.v)-4}" height="${BH-10}" rx="4" fill="${hl?col("--s3"):col("--s1")}"/>`;
+  s+=`<text x="${x(r.v)+5}" y="${y+14}" font-size="11.5" fill="${col("--ink2")}">$${r.v.toFixed(2)}</text>`;});
+ s+="</svg>";el.innerHTML=s;})();
+/* gates table */
+(function(){const tb=document.getElementById("gtab");
+ const nice=s=>s.replace(/_/g," ");
+ D.gates.forEach(g=>{const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${g.g}</td><td>${nice(g.c)}</td><td>${g.obs}</td><td>${g.thr}</td><td class="pf ${g.p?"pass":"fail"}">${g.p?"✓ pass":"✕ FAIL"}</td>`;
+  tb.appendChild(tr);});})();
+/* funnel */
+(function(){const el=document.getElementById("funnel_c");const W=Math.min(600,el.clientWidth||340);
+ const rows=D.funnel;const max=Math.max(...rows.map(r=>r.v));const x=v=>4+Math.max(0,v)/max*(W-110);
+ const BH=28,G=14;const H=rows.length*(BH+G)+8;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Expectancy under hardening execution">`;
+ rows.forEach((r,i)=>{const y=4+i*(BH+G);
+  s+=`<text x="4" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${r.k}</text>`;
+  s+=`<rect x="4" y="${y+2}" width="${x(r.v)-4}" height="${BH-10}" rx="4" fill="${r.v>=2?col("--s3"):(r.v>0?col("--s4"):col("--neg"))}"/>`;
+  s+=`<text x="${x(r.v)+5}" y="${y+15}" font-size="11.5" fill="${col("--ink2")}">$${r.v.toFixed(2)}</text>`;});
+ s+="</svg>";
+ el.innerHTML=s+`<p class="small">Retention: ${D.retention.ref}% reference · ${D.retention.stress}% stress — the review's fragility flag.</p>`;})();
+/* arms */
+(function(){const tb=document.getElementById("atab");
+ const nm={morning_tight:"Morning × tight (the class, unselected)",whole_session_tight:"Whole-session tight",non_morning_tight:"Non-morning tight"};
+ D.arms.forEach(a=>{const tr=document.createElement("tr");
+  const c=v=>`<td style="color:${v<0?"var(--neg)":"var(--pos)"}">$${v.toFixed(2)}</td>`;
+  tr.innerHTML=`<td>${nm[a.arm]||a.arm}</td><td>${a.n.toLocaleString()}</td>${c(a.A)}${c(a.B)}${c(a.S)}`;
+  tb.appendChild(tr);});})();
+</script></body></html>

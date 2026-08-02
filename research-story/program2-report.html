@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Program 2 — Instruments &amp; Structure</title>
+<style>
+:root{--surface:#fcfcfb;--panel:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--line:#e3e2de;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--neg:#e34948;--pos:#008300;--warnbg:#fff7e6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--panel:#242422;--ink:#fff;--ink2:#c3c2b7;--line:#3a3936;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--neg:#e66767;--pos:#4caf50;--warnbg:#2e2618}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--surface);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:4rem}
+header{padding:1.4rem 1rem .7rem}
+h1{font-size:1.35rem;line-height:1.25}
+.sub{color:var(--ink2);font-size:.9rem;margin-top:.3rem}
+nav{position:sticky;top:0;background:var(--surface);z-index:10;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+nav a{flex:0 0 auto;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-size:.88rem;min-height:44px;display:flex;align-items:center}
+section{padding:1.3rem 1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.18rem;margin-bottom:.35rem}
+h3{font-size:1rem;margin:1rem 0 .35rem}
+.lede{color:var(--ink2);font-size:.92rem;margin-bottom:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.8rem 0}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.tile .v{font-size:1.28rem;font-weight:700;letter-spacing:-.02em}
+.tile .k{font-size:.78rem;color:var(--ink2);margin-top:.15rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--warnbg);color:var(--ink)}
+svg{display:block;max-width:100%}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font-size:.84rem;width:100%;min-width:460px}
+th,td{padding:.5rem .6rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600}
+.insight{max-width:44rem}
+.insight p{margin:.7rem 0}
+.callout{background:var(--panel);border-left:4px solid var(--s1);border-radius:8px;padding:.8rem .9rem;margin:.9rem 0;font-size:.92rem}
+.callout.warn{border-left-color:var(--s4)}
+.small{font-size:.8rem;color:var(--ink2)}
+.ok{color:var(--pos);font-weight:700}.miss{color:var(--neg);font-weight:700}
+footer{padding:1rem;color:var(--ink2);font-size:.78rem}
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);padding:.35rem .6rem;border-radius:8px;font-size:.78rem;z-index:50;display:none;max-width:260px;white-space:normal}
+</style></head><body>
+<div class="tt" id="tt" role="status"></div>
+<header><h1>Program 2 — instruments &amp; structure</h1>
+<div class="sub">The parallel-permitted package: structural postmortem, era audit, and outcome-blind scaffolding — built while the pipeline qualification runs · zero outcome columns read, enforced and receipted</div></header>
+<nav aria-label="Sections"><a href="#verdict">Verdict</a><a href="#events">The event truth</a><a href="#eras">Era audit</a><a href="#insights">Insights</a></nav>
+
+<section id="verdict">
+<h2>Verdict: instruments ready · <span class="badge">⚠ archive_incomplete</span></h2>
+<p class="lede">Everything buildable without looking at outcomes is built and tested. One hard fact surfaced: the development eras have no local data yet.</p>
+<div class="tiles">
+<div class="tile"><div class="v">1,473</div><div class="k">real event clusters behind 9,098 "opportunities" — the honest evidence count</div></div>
+<div class="tile"><div class="v">0</div><div class="k">local sessions for 2019 / 2020 / 2021 / 2022 — capability was verified, possession never was</div></div>
+<div class="tile"><div class="v">38/38</div><div class="k">structural + synthetic tests green; era-refusal fires before any reader runs</div></div>
+<div class="tile"><div class="v">0</div><div class="k">outcome columns read — automated ban passed over the full report</div></div>
+</div>
+</section>
+
+<section id="events">
+<h2>The event truth — what 9,098 opportunities really were</h2>
+<p class="lede">The postmortem's core deliverable: overlapping per-contract signals collapse into canonical events. Median cluster = 3 orders; one underlying move generated 168.</p>
+<div id="cluster"></div>
+<h3>Why the portfolio rejected 8,205 of them</h3>
+<div id="reasons"></div>
+<p class="small">7,656 rejected orders arrived while a position in that symbol already existed — the duplication mechanism, named and measured. 267 event onsets fired simultaneously on SPY and QQQ; 1,156 events had multiple contracts expressing the same move. Future unit of analysis: one canonical decision per symbol per event, semantics preregistered per hypothesis (onset false→true, frozen reset), locked structurally — no outcome ever consulted in deriving this.</p>
+</section>
+
+<section id="eras">
+<h2>Era audit — the reviewer's design meets the disk</h2>
+<p class="lede">Program 2's era architecture: develop on 2019+2021, stress on 2020, transport-test on 2022, veto on 2023–2026. The audit checked what actually exists locally.</p>
+<div class="tablewrap"><table><thead><tr><th>Era</th><th>Role</th><th>Year</th><th>Calendar sessions</th><th>Local data</th></tr></thead><tbody id="eratab"></tbody></table></div>
+<p class="small">The recent era (1-R) is complete and <em>stage-locked</em> — readable only when its stage opens. The three empty eras need one bounded Alpha Vantage pull (~96 month-requests, SPY+QQQ, 2019–2022; API capability for the full range was live-verified 2026-07-31, including the 2020-03 crash month). Until then, Phase 1 has instruments and no development substrate — which is exactly what the audit exists to say out loud.</p>
+</section>
+
+<section id="insights" class="insight">
+<h2>Insights — what this means and why</h2>
+
+<h3>1. The evidence count just deflated by 6× — and that's a gift</h3>
+<p>Every prior per-opportunity statistic silently claimed 9,098 observations. The structural truth is 1,473 events — one underlying move spawning a median of 3 and up to 168 "independent" opportunities. This is the measured confirmation of the consultant's core statistical warning, and it cuts both ways: apparent sample sizes shrink, but so does the mystery of why opportunity-level means kept inverting at portfolio level. From here on, the event is the unit; anything counted per-order is decoration.</p>
+
+<h3>2. Capability is not possession</h3>
+<p>The era audit returned a verdict no one wanted and everyone needed: the development years exist at the provider but not on disk. The earlier probe proved Alpha Vantage <em>serves</em> 2019; nobody ever <em>pulled</em> it. A research program was one unnoticed assumption away from scheduling Phase 1 against data it doesn't have. The audit-before-trust rule caught it for the price of a table scan — and the remedy is ~96 requests.</p>
+
+<h3>3. The instruments are blind by construction, not by promise</h3>
+<p>The scaffold's era locks refuse out-of-stage reads <em>before</em> the file reader is invoked, with a demonstration receipt; the report generator runs an automated outcome-number ban over its own output. When Phase 1 finally opens, the machinery that runs it will have spent its whole existence physically unable to peek — which is the only kind of pre-registration that survives contact with convenience.</p>
+
+<h3>4. A defect was found mid-run and handled like a result</h3>
+<p>The postmortem's first pass had a horizon-enforcement defect. It was separately preregistered as a correction, fixed, and fully rerun — the authoritative numbers are the rerun's. Six generations of discipline showing up in the small moments, unsupervised.</p>
+
+<h3>5. What blocks Phase 1 now — a checklist of exactly two things</h3>
+<p>(1) The development-era pull: 2019–2022 SPY/QQQ bars, one bounded session, ~96 requests. (2) The Windows pipeline qualification: 20 consecutive delivered sessions — the clock that started when the daily job was repaired. Instruments: done. Structure: known. Everything else is waiting on data that is now precisely specified.</p>
+
+<div class="callout warn">Bottom line: this package converts Program 2 from a plan into a loaded instrument — event semantics grounded in measured structure, eras audited against reality, and a scaffold that cannot cheat. The two missing pieces are downloads, not decisions.</div>
+</section>
+
+<footer>Program 2 parallel package (program2-2026-07-31) · 542 sessions / 994 symbol-sessions / 1,473 events analyzed structurally · 139-entry manifest verified · frozen suites 71/41/26/53 green · zero outcome reads, receipted · independently re-verified.</footer>
+
+<script>
+const D={"eff":{"event_clusters":1473,"orders":9098,"sessions":542,"symbol_sessions":994},"opc":{"count":1473,"maximum":168,"median":3.0,"minimum":1,"p90":14.0},"sim":{"active_symbol_bars":3379,"both_symbols_active_bars":978,"same_direction_state_bars":978,"simultaneous_event_onsets":267},"dup":{"events_with_multiple_contracts":1156,"events_with_repeated_contract_rows":0},"reasons":[{"k":"symbol_concurrency","v":4707},{"k":"cross_symbol_same_direction","v":2262},{"k":"accepted","v":893},{"k":"premium_per_position_cap","v":775},{"k":"symbol_cooldown","v":340},{"k":"direction_cooldown","v":121}],"existingPos":7656,"eras":[{"era":"1-D","year":2019,"sessions":252,"availSymSess":0},{"era":"1-D","year":2021,"sessions":252,"availSymSess":0},{"era":"1-R","year":2023,"sessions":250,"availSymSess":252},{"era":"1-R","year":2024,"sessions":252,"availSymSess":504},{"era":"1-R","year":2025,"sessions":250,"availSymSess":500},{"era":"1-R","year":2026,"sessions":102,"availSymSess":204},{"era":"1-S","year":2020,"sessions":253,"availSymSess":0},{"era":"1-T","year":2022,"sessions":251,"availSymSess":0}],"scaffoldTests":38,"manifest":139};
+const cs=getComputedStyle(document.documentElement);const col=v=>cs.getPropertyValue(v).trim();
+const tt=document.getElementById("tt");
+function showTT(h,x,y){tt.innerHTML=h;tt.style.display="block";const r=tt.getBoundingClientRect();tt.style.left=Math.min(x+10,innerWidth-r.width-8)+"px";tt.style.top=Math.max(8,y-r.height-10)+"px"}
+function hideTT(){tt.style.display="none"}
+document.addEventListener("scroll",hideTT,{passive:true});
+
+/* cluster-size summary as labelled dot-line */
+(function(){const el=document.getElementById("cluster");const W=Math.min(640,el.clientWidth||340),H=110;
+ const o=D.opc; const pts=[["min",o.minimum],["median",o.median],["p90",o["p90"]],["max",o.maximum]];
+ const x=v=>30+(Math.log10(Math.max(v,1))/Math.log10(o.maximum))*(W-70);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Opportunities per event cluster (log scale)">`;
+ s+=`<line x1="30" y1="52" x2="${W-40}" y2="52" stroke="${col("--line")}" stroke-width="2"/>`;
+ pts.forEach(([k,v])=>{s+=`<circle cx="${x(v)}" cy="52" r="7" fill="${col(k==="max"?"--neg":"--s1")}" stroke="${col("--surface")}" stroke-width="2"/>`;
+  s+=`<text x="${x(v)}" y="30" font-size="11" text-anchor="middle" fill="${col("--ink")}">${v}</text>`;
+  s+=`<text x="${x(v)}" y="80" font-size="10" text-anchor="middle" fill="${col("--ink2")}">${k}</text>`;});
+ s+=`<text x="${W-38}" y="56" font-size="10" fill="${col("--ink2")}">log scale</text></svg>`;
+ el.innerHTML=s;})();
+
+/* rejection reasons bars */
+(function(){const el=document.getElementById("reasons");const W=Math.min(640,el.clientWidth||340);
+ const rows=D.reasons.filter(r=>r.k!=="accepted");
+ const max=Math.max(...rows.map(r=>r.v));
+ const nice={cross_symbol_same_direction:"Cross-symbol same direction",direction_cooldown:"Direction cooldown",premium_per_position_cap:"Premium cap",symbol_concurrency:"Symbol concurrency",symbol_cooldown:"Symbol cooldown"};
+ const BH=24,G=12;const H=rows.length*(BH+G)+8;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Portfolio rejection reasons">`;
+ rows.forEach((r,i)=>{const y=4+i*(BH+G);const w=r.v/max*(W-160);
+  s+=`<text x="4" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${nice[r.k]||r.k}</text>`;
+  s+=`<rect x="4" y="${y+2}" width="${Math.max(w,2)}" height="${BH-10}" rx="4" fill="${col("--s2")}"/>`;
+  s+=`<text x="${8+w}" y="${y+13}" font-size="11" fill="${col("--ink2")}">${r.v.toLocaleString()}</text>`;});
+ s+="</svg>";
+ el.innerHTML=s+`<p class="small">Accepted: ${D.reasons.find(r=>r.k==="accepted").v} · orders arriving with an existing position: ${D.existingPos.toLocaleString()}</p>`;})();
+
+/* era table */
+(function(){const tb=document.getElementById("eratab");
+ const role={"1-D":"Development","1-S":"Stress (reserved)","1-T":"Transport test","1-R":"Recent veto (stage-locked)"};
+ D.eras.forEach(r=>{const tr=document.createElement("tr");
+  const avail=r.availSymSess>0;
+  tr.innerHTML=`<td>${r.era}</td><td>${role[r.era]||""}</td><td>${r.year}</td><td>${r.sessions}</td><td class="${avail?"ok":"miss"}">${avail?("✓ "+r.availSymSess+" sym-sessions"):"✕ none"}</td>`;
+  tb.appendChild(tr);});})();
+</script></body></html>

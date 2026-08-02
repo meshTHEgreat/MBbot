@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campaign 4 — Phase B: The Closing Argument</title>
+<style>
+:root{--surface:#fcfcfb;--panel:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--line:#e3e2de;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--neg:#e34948;--pos:#008300;--warnbg:#fff7e6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--panel:#242422;--ink:#fff;--ink2:#c3c2b7;--line:#3a3936;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--neg:#e66767;--pos:#4caf50;--warnbg:#2e2618}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--surface);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:4rem}
+header{padding:1.4rem 1rem .7rem}
+h1{font-size:1.35rem;line-height:1.25}
+.sub{color:var(--ink2);font-size:.9rem;margin-top:.3rem}
+nav{position:sticky;top:0;background:var(--surface);z-index:10;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+nav a{flex:0 0 auto;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-size:.88rem;min-height:44px;display:flex;align-items:center}
+section{padding:1.3rem 1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.18rem;margin-bottom:.35rem}
+h3{font-size:1rem;margin:1rem 0 .35rem}
+.lede{color:var(--ink2);font-size:.92rem;margin-bottom:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.8rem 0}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.tile .v{font-size:1.28rem;font-weight:700;letter-spacing:-.02em}
+.tile .k{font-size:.78rem;color:var(--ink2);margin-top:.15rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .6rem;border-radius:999px;font-size:.8rem;font-weight:600;background:var(--warnbg)}
+svg{display:block;max-width:100%}
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.8rem;color:var(--ink2);margin:.4rem 0;align-items:center}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font-size:.83rem;width:100%;min-width:560px}
+th,td{padding:.5rem .6rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:.7rem 0}
+.chip{min-height:44px;padding:.4rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);font-size:.85rem;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--s1);box-shadow:inset 0 0 0 1px var(--s1)}
+.insight{max-width:44rem}
+.insight p{margin:.7rem 0}
+.callout{background:var(--panel);border-left:4px solid var(--s1);border-radius:8px;padding:.8rem .9rem;margin:.9rem 0;font-size:.92rem}
+.callout.warn{border-left-color:var(--s4)}
+.small{font-size:.8rem;color:var(--ink2)}
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);padding:.35rem .6rem;border-radius:8px;font-size:.78rem;z-index:50;display:none;max-width:260px;white-space:normal}
+footer{padding:1rem;color:var(--ink2);font-size:.78rem}
+.vs{display:grid;grid-template-columns:1fr;gap:.7rem;margin:.9rem 0}
+@media(min-width:700px){.vs{grid-template-columns:1fr 1fr}}
+.vs .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.9rem}
+.vs .card h4{font-size:.95rem;margin-bottom:.3rem}
+.vs .big{font-size:1.5rem;font-weight:700}
+</style></head><body>
+<div class="tt" id="tt" role="status"></div>
+<header><h1>Campaign 4 — Phase B: the closing argument</h1>
+<div class="sub">Trigger incrementality · tick-execution frontier · pathwise attribution · atlas v2 · full-pipeline null — every test preregistered, every number independently re-verified</div></header>
+<nav aria-label="Sections"><a href="#verdict">Verdict</a><a href="#tension">The tension</a><a href="#w1">Incrementality</a><a href="#w2">Execution</a><a href="#atlas">Atlas v2</a><a href="#insights">Insights</a></nav>
+
+<section id="verdict">
+<h2>Verdict</h2>
+<p class="lede">Campaign 3's opening-range family: <span class="badge">retired — no incremental trigger edge</span>. The execution-rescue path: terminated on evidence. And yet the discovery data holds its most surprising defense.</p>
+<div class="tiles">
+<div class="tile"><div class="v">93.6th</div><div class="k">trigger vs condition-only entries — needed 97.5th. Retired.</div></div>
+<div class="tile"><div class="v">22.5%</div><div class="k">of the execution gap recoverable — 36.5% was needed just for zero</div></div>
+<div class="tile"><div class="v">p ≈ 0.024</div><div class="k">family-wise, after simulating the FULL selection pipeline 250×</div></div>
+<div class="tile"><div class="v">86.7%</div><div class="k">of option-grid cells robust under stress costs, wider spreads, latency</div></div>
+</div>
+</section>
+
+<section id="tension">
+<h2>The tension — two verdicts, both true</h2>
+<div class="vs">
+<div class="card"><h4>The pipeline null says: something is real</h4><div class="big">2.0%</div>
+<p class="small">Only 5 of 250 shuffled worlds, run through the complete screen→advance→test machinery, produced a winner as strong as ours. Family-wise p ≈ 0.024 — the result got <em>stronger</em> after paying the full selection penalty.</p></div>
+<div class="card"><h4>The incrementality test says: it isn't the trigger</h4><div class="big">p = 0.055</div>
+<p class="small">Against entries at neutral times under identical conditions (same mornings, tight spreads, contracts, holds), the breakout trigger cleared no preregistered bar.</p></div>
+</div>
+<h3>Null distribution of the winning family's p-value (250 resamples)</h3>
+<div id="nullhist"></div>
+<p class="small">Median null winner: p = 1.00 (most shuffled worlds produce no credible winner at all). Our 0.055 sits in the extreme left tail — the marker.</p>
+<div class="callout">Joint reading: the <strong>trade class</strong> (morning, tight spreads, liquid near-the-money contracts) carries weak positive drift that survives every correction. The breakout ceremony on top of it adds nothing measurable. The signal is the conditions.</div>
+</section>
+
+<section id="w1">
+<h2>Incrementality — the trigger against five baselines</h2>
+<p class="lede">Each bar: ORB's percentile against 1,000 matched baseline sets of that type. The line at 97.5 is the preregistered promotion bar. Nothing crosses it.</p>
+<div id="w1chart"></div>
+<div class="tablewrap"><table><thead><tr><th>Baseline</th><th>ORB percentile</th><th>one-sided p</th><th>Δ mean $/trade</th></tr></thead><tbody id="w1tab"></tbody></table></div>
+<p class="small">Closest call: direction-matched (95.8th, p 0.042) — still short. The weakest comparison — raw opening-range direction without the refinements — shows the refinements themselves carried most of the apparent selectivity.</p>
+</section>
+
+<section id="w2">
+<h2>Execution frontier — what tick data actually allows</h2>
+<p class="lede">Four preregistered order policies simulated on tick trade-quote windows for all 566 trades plus matched controls — frozen before any tick data was seen. Four quantities reported separately; the trap of "savings among filled orders" is shown next to what missed fills cost.</p>
+<div class="filters" role="group" aria-label="Population"><span id="popchips"></span></div>
+<div class="tablewrap"><table><thead><tr><th>Policy</th><th>Symbol</th><th>Savings if filled $</th><th>Fill rate %</th><th>Missed-trade cost $</th><th>Total expectancy $</th></tr></thead><tbody id="w2tab"></tbody></table></div>
+<p class="small">The decisive facts: best-policy recovery = 22.45% of the $5.27 gap (36.54% needed for zero), and <strong>zero queue-consistent passive fills</strong> anywhere in the windows — resting orders at the midpoint were a fantasy on this book. Verdict: execution-rescue path terminated by its own preregistered stop criteria.</p>
+</section>
+
+<section id="atlas">
+<h2>Atlas v2 — from “alive” to “robust”</h2>
+<p class="lede">Phase A's 95.2% "alive" used a weak bar (oracle median &gt; 0). Cells are now scored: robust = still viable under stress commissions, +25% wider spreads, and one-bar latency. This is the feasibility statement of record.</p>
+<div id="atlaschart"></div>
+<div class="legend"><span><span class="sw" style="background:var(--s3)"></span>robust</span><span><span class="sw" style="background:var(--s1)"></span>viable</span><span><span class="sw" style="background:var(--s4)"></span>marginal</span><span><span class="sw" style="background:var(--neg)"></span>dead</span></div>
+<p class="small">SPY/QQQ remain ~97% robust — the vehicle is fine where we trade. AAPL's 55% explains itself: thin early chains, wide books. Attribution note: the Delta-driven conclusion survived provider Vega, exclusion of all carried-forward IV, and every ordering sensitivity — 565/566 paths validated.</p>
+</section>
+
+<section id="insights" class="insight">
+<h2>Insights — what this means and why</h2>
+
+<h3>1. The program just did the hardest thing in quantitative research</h3>
+<p>It found its first statistically defensible effect — family-wise p ≈ 0.024 after simulating its own entire selection process — and then <strong>retired the strategy built on it anyway</strong>, because two preregistered tests showed the strategy deserved no credit for the effect. Most research programs do the opposite: weak effect, strong attachment. The discipline held exactly when it was most expensive to hold.</p>
+
+<h3>2. Why the pipeline null and the incrementality test don't contradict</h3>
+<p>The pipeline null asks: <em>could random data produce a winner this good through our machinery?</em> Almost never — so something in the data is real. The incrementality test asks a sharper question: <em>does the breakout trigger beat doing nothing-in-particular at the same times, in the same contracts?</em> No. Both can be true when the profitability lives in <strong>where and when</strong> the strategy trades rather than in <strong>why</strong> it pulls the trigger. A year of data now says: morning, tight-spread, near-the-money long options drift slightly positive at the midpoint. That is a property of the market's microstructure clock, not a trading strategy — yet.</p>
+
+<h3>3. The execution study bought certainty, cheaply</h3>
+<p>The $5.27 round-trip gap was modeled; now it's measured. Best achievable recovery with preregistered policies: 22.45% — and the tick windows contained zero queue-consistent passive fills, meaning the comfortable story ("just rest at mid and earn the spread") had no factual basis on this book. This number is an asset: every future strategy will be judged against a calibrated execution frontier instead of optimism or pessimism. The reviewer's warning that the study could become a second overfitting layer was neutralized the only way possible — the policy family and stop criteria were hashed 29 minutes before the first tick arrived.</p>
+
+<h3>4. What survived, precisely</h3>
+<p>Three things. The <strong>conditions-effect</strong> — the weak drift in the morning trade class, now the program's only live hypothesis, and one that requires a forecast layer on better inputs to become a strategy. The <strong>instrument</strong> — 86.7% of the option grid robust under stressed costs; SPY/QQQ near 97%. And the <strong>process</strong> — sealed validation and holdout blocks still unspent after four campaigns, a 200+ trial registry, an execution frontier, and a full causal-audit suite. The program's balance sheet is: zero deployable strategies, exceptional infrastructure, one honest lead.</p>
+
+<h3>5. What happens next, and what should not</h3>
+<p>Next: the underlying-data decision (a stock feed pilot for SPY/QQQ — the forecast layer needs real inputs: volume, true ranges, VWAP, realized volatility), and a new preregistered generation targeting the conditions-effect, with controls drawn <em>outside</em> the eligibility windows to avoid circularity. Not next: reopening any retired family with new parameters; reading the sealed blocks; treating 22.45% execution recovery as improvable by wishing; or interpreting the conditions-drift as tradable before it survives its own adversarial test. The registry remembers everything — including that 181 attempts came before whatever passes next.</p>
+
+<div class="callout warn">Bottom line: Campaign 3 is closed with the strongest negative result the program has produced — not "it didn't work," but "here is exactly what worked (the conditions), exactly what didn't (the trigger, the execution rescue), and exactly what it would take to change the answer." That specificity is what four campaigns of discipline were for.</div>
+</section>
+
+<footer>Campaign 4 Phase B (campaign4-phaseB-2026-07-30) · 21 preregistrations ↔ 21 results · provider usage: 519/3,000 + 3,396/6,000 requests · frozen suites 71+41+26 green before and after · sealed blocks untouched · independently re-verified.</footer>
+
+<script>
+const D={"w1":[{"name":"condition_only","p":0.055079,"pct":93.6,"diff":null},{"name":"direction_matched","p":0.0423,"pct":95.8,"diff":3.65},{"name":"volatility_matched","p":0.0907,"pct":90.0,"diff":2.8},{"name":"sign_of_recent_return","p":0.0669,"pct":93.3,"diff":3.17},{"name":"opening_range_direction_without_refinements","p":0.2334,"pct":76.8,"diff":1.53}],"w2cols":["ledger_label","population","policy","symbol","eligible_observations","analysis_denominator","entry_fills","passive_fills","canceled_unfilled","unavailable","savings_if_filled","fill_rate","missed_trade_opportunity_cost","total_expectancy_including_misses","status"],"w4":{"AAPL":{"dead_cells":175,"marginal_cells":15,"populated_cells":460,"robust_cells":254,"viable_cells":96},"ALL":{"dead_cells":305,"marginal_cells":31,"populated_cells":2515,"robust_cells":2180,"viable_cells":184},"NVDA":{"dead_cells":89,"marginal_cells":11,"populated_cells":470,"robust_cells":382,"viable_cells":58},"QQQ":{"dead_cells":7,"marginal_cells":3,"populated_cells":535,"robust_cells":524,"viable_cells":6},"SPY":{"dead_cells":11,"marginal_cells":2,"populated_cells":530,"robust_cells":512,"viable_cells":15},"TSLA":{"dead_cells":23,"marginal_cells":0,"populated_cells":520,"robust_cells":508,"viable_cells":9}},"nullHist":{"counts":[5,3,2,6,7,4,2,1,2,3,0,2,0,2,1,3,1,0,1,0,0,0,1,0,204],"edges":[0.014,0.054,0.093,0.133,0.172,0.212,0.251,0.29,0.33,0.369,0.409,0.448,0.488,0.527,0.566,0.606,0.645,0.685,0.724,0.763,0.803,0.842,0.882,0.921,0.961,1.0]},"nullStats":{"obs":0.055019,"share":2.0,"addone":0.0239,"median":1.0,"n":250},"w2":[{"pol":"P1_immediate_marketable","sym":"ALL","pop":"primary","sif":0.0,"fr":56.2,"moc":0.0,"tot":-0.84},{"pol":"P1_immediate_marketable","sym":"SPY","pop":"primary","sif":0.0,"fr":64.2,"moc":0.0,"tot":-0.59},{"pol":"P1_immediate_marketable","sym":"QQQ","pop":"primary","sif":0.0,"fr":49.7,"moc":0.0,"tot":-1.04},{"pol":"P2_midpoint_limit_then_cancel","sym":"ALL","pop":"primary","sif":null,"fr":0.0,"moc":-2.09,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"SPY","pop":"primary","sif":null,"fr":0.0,"moc":-3.56,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"QQQ","pop":"primary","sif":null,"fr":0.0,"moc":-0.9,"tot":0.0},{"pol":"P3_partial_spread_then_cross","sym":"ALL","pop":"primary","sif":-0.41,"fr":51.2,"moc":0.0,"tot":-0.74},{"pol":"P3_partial_spread_then_cross","sym":"SPY","pop":"primary","sif":-0.35,"fr":57.9,"moc":0.0,"tot":-0.1},{"pol":"P3_partial_spread_then_cross","sym":"QQQ","pop":"primary","sif":-0.48,"fr":45.8,"moc":0.0,"tot":-1.26},{"pol":"P4_broker_PI_placeholder","sym":"ALL","pop":"primary","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"SPY","pop":"primary","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"QQQ","pop":"primary","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P1_immediate_marketable","sym":"ALL","pop":"matched_non_signal","sif":0.0,"fr":32.5,"moc":0.0,"tot":-1.4},{"pol":"P1_immediate_marketable","sym":"SPY","pop":"matched_non_signal","sif":0.0,"fr":39.4,"moc":0.0,"tot":-1.55},{"pol":"P1_immediate_marketable","sym":"QQQ","pop":"matched_non_signal","sif":0.0,"fr":26.9,"moc":0.0,"tot":-1.28},{"pol":"P2_midpoint_limit_then_cancel","sym":"ALL","pop":"matched_non_signal","sif":null,"fr":0.0,"moc":-1.06,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"SPY","pop":"matched_non_signal","sif":null,"fr":0.0,"moc":-1.61,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"QQQ","pop":"matched_non_signal","sif":null,"fr":0.0,"moc":-0.6,"tot":0.0},{"pol":"P3_partial_spread_then_cross","sym":"ALL","pop":"matched_non_signal","sif":0.3,"fr":27.4,"moc":0.0,"tot":-1.0},{"pol":"P3_partial_spread_then_cross","sym":"SPY","pop":"matched_non_signal","sif":0.21,"fr":33.9,"moc":0.0,"tot":-1.07},{"pol":"P3_partial_spread_then_cross","sym":"QQQ","pop":"matched_non_signal","sif":0.42,"fr":22.1,"moc":0.0,"tot":-0.94},{"pol":"P4_broker_PI_placeholder","sym":"ALL","pop":"matched_non_signal","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"SPY","pop":"matched_non_signal","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"QQQ","pop":"matched_non_signal","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P1_immediate_marketable","sym":"ALL","pop":"other_cell","sif":0.0,"fr":29.3,"moc":0.0,"tot":-1.52},{"pol":"P1_immediate_marketable","sym":"SPY","pop":"other_cell","sif":0.0,"fr":35.4,"moc":0.0,"tot":-1.35},{"pol":"P1_immediate_marketable","sym":"QQQ","pop":"other_cell","sif":0.0,"fr":24.4,"moc":0.0,"tot":-1.65},{"pol":"P2_midpoint_limit_then_cancel","sym":"ALL","pop":"other_cell","sif":null,"fr":0.0,"moc":-0.02,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"SPY","pop":"other_cell","sif":null,"fr":0.0,"moc":-0.61,"tot":0.0},{"pol":"P2_midpoint_limit_then_cancel","sym":"QQQ","pop":"other_cell","sif":null,"fr":0.0,"moc":0.46,"tot":0.0},{"pol":"P3_partial_spread_then_cross","sym":"ALL","pop":"other_cell","sif":-0.53,"fr":24.9,"moc":0.0,"tot":-1.13},{"pol":"P3_partial_spread_then_cross","sym":"SPY","pop":"other_cell","sif":-0.2,"fr":31.9,"moc":0.0,"tot":-0.8},{"pol":"P3_partial_spread_then_cross","sym":"QQQ","pop":"other_cell","sif":-0.98,"fr":19.2,"moc":0.0,"tot":-1.4},{"pol":"P4_broker_PI_placeholder","sym":"ALL","pop":"other_cell","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"SPY","pop":"other_cell","sif":null,"fr":null,"moc":null,"tot":null},{"pol":"P4_broker_PI_placeholder","sym":"QQQ","pop":"other_cell","sif":null,"fr":null,"moc":null,"tot":null}]};
+const cs=getComputedStyle(document.documentElement);const col=v=>cs.getPropertyValue(v).trim();
+const tt=document.getElementById("tt");
+function showTT(h,x,y){tt.innerHTML=h;tt.style.display="block";const r=tt.getBoundingClientRect();tt.style.left=Math.min(x+10,innerWidth-r.width-8)+"px";tt.style.top=Math.max(8,y-r.height-10)+"px"}
+function hideTT(){tt.style.display="none"}
+document.addEventListener("scroll",hideTT,{passive:true});
+
+/* null histogram */
+(function(){const el=document.getElementById("nullhist");const W=Math.min(680,el.clientWidth||360),H=170,ml=8,mr=8,mt=8,mb=26;
+ const h=D.nullHist;const n=h.counts.length;const cmax=Math.max(...h.counts);
+ const x=i=>ml+i/n*(W-ml-mr), bw=(W-ml-mr)/n-1, y=v=>mt+(1-v/cmax)*(H-mt-mb);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Null distribution of winning p-values">`;
+ h.counts.forEach((c,i)=>{s+=`<rect x="${x(i)}" y="${y(c)}" width="${bw}" height="${H-mb-y(c)}" rx="2" fill="${col("--s1")}" opacity=".75"/>`});
+ const lo=h.edges[0],hi=h.edges[h.edges.length-1];
+ const lx=ml+(D.nullStats.obs-lo)/(hi-lo)*(W-ml-mr);
+ s+=`<line x1="${lx}" y1="${mt}" x2="${lx}" y2="${H-mb}" stroke="${col("--s2")}" stroke-width="2.5"/>`;
+ s+=`<text x="${lx+5}" y="${mt+12}" font-size="11" fill="${col("--ink")}">observed 0.055 — 2.0% tail</text>`;
+ s+=`<text x="${ml}" y="${H-8}" font-size="10" fill="${col("--ink2")}">p=${lo}</text><text x="${W-mr}" y="${H-8}" font-size="10" text-anchor="end" fill="${col("--ink2")}">p=${hi}</text>`;
+ s+="</svg>";el.innerHTML=s;})();
+
+/* W1 chart */
+(function(){const el=document.getElementById("w1chart");const W=Math.min(620,el.clientWidth||340);
+ const names={condition_only:"Condition-only (the pivot)",direction_matched:"Direction-matched",volatility_matched:"Volatility-matched",sign_of_recent_return:"Sign of recent return",opening_range_direction_without_refinements:"OR direction, no refinements"};
+ const rows=D.w1;const BH=26,G=10;const H=rows.length*(BH+G)+30;
+ const x=v=>40+v/100*(W-52);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="ORB percentile vs baselines">`;
+ s+=`<line x1="${x(97.5)}" y1="6" x2="${x(97.5)}" y2="${H-18}" stroke="${col("--ink2")}" stroke-width="2" stroke-dasharray="4 3"/>`;
+ s+=`<text x="${x(97.5)}" y="${H-4}" font-size="10" text-anchor="middle" fill="${col("--ink2")}">97.5 bar</text>`;
+ rows.forEach((r,i)=>{const y=8+i*(BH+G);
+  s+=`<rect data-i="${i}" x="${x(0)}" y="${y}" width="${x(r.pct)-x(0)}" height="${BH-8}" rx="4" fill="${col("--s1")}"/>`;
+  s+=`<text x="${x(r.pct)+4}" y="${y+13}" font-size="11" fill="${col("--ink2")}">${r.pct}</text>`;
+  s+=`<text x="${x(0)}" y="${y-2}" font-size="10.5" fill="${col("--ink")}">${names[r.name]||r.name}</text>`;});
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("rect").forEach(rc=>{const r=D.w1[+rc.dataset.i];
+  const f=ev=>{const p=ev.touches?ev.touches[0]:ev;showTT(`<b>${names[r.name]||r.name}</b><br>percentile ${r.pct} · p ${r.p}${r.diff!=null?` · Δ $${r.diff}/trade`:""}`,p.clientX,p.clientY)};
+  rc.addEventListener("pointerenter",f);rc.addEventListener("pointerdown",f);rc.addEventListener("pointerleave",hideTT);});
+ const tb=document.getElementById("w1tab");
+ rows.forEach(r=>{const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${names[r.name]||r.name}</td><td>${r.pct}</td><td>${r.p}</td><td>${r.diff==null?"—":"$"+r.diff}</td>`;tb.appendChild(tr);});})();
+
+/* W2 table with population filter */
+let pop="primary";
+(function(){const pc=document.getElementById("popchips");
+ const pops=[...new Set(D.w2.map(r=>r.pop))];
+ const label={primary:"566 frozen trades",matched_non_signal:"Matched non-signal windows",other_cell:"Other-cell sample"};
+ pops.forEach(p=>{const b=document.createElement("button");b.className="chip";b.textContent=label[p]||p;
+  b.setAttribute("aria-pressed",p===pop);
+  b.addEventListener("click",()=>{pop=p;pc.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",(label[pop]||pop)===x.textContent));drawW2();});
+  pc.appendChild(b);});})();
+const polName={p1_immediate_marketable:"P1 marketable now",p2_midpoint_then_cancel:"P2 midpoint, else cancel",p3_partial_spread_then_cross:"P3 partial-spread, else cross",p4_broker_pi_placeholder:"P4 broker-PI (placeholder)"};
+function drawW2(){const tb=document.getElementById("w2tab");tb.innerHTML="";
+ D.w2.filter(r=>r.pop===pop).forEach(r=>{const tr=document.createElement("tr");
+  const t=r.tot;
+  tr.innerHTML=`<td>${polName[r.pol]||r.pol}</td><td>${r.sym}</td><td>${r.sif==null?"—":"$"+r.sif}</td><td>${r.fr==null?"—":r.fr+"%"}</td><td>${r.moc==null?"—":"$"+r.moc}</td><td style="color:${t!=null&&t<0?"var(--neg)":"var(--pos)"}">${t==null?"—":"$"+t}</td>`;
+  tb.appendChild(tr);});}
+drawW2();
+
+/* atlas stacked bars */
+(function(){const el=document.getElementById("atlaschart");const W=Math.min(640,el.clientWidth||340);
+ const order=["SPY","QQQ","TSLA","NVDA","AAPL"];
+ const cats=[["robust_cells","--s3"],["viable_cells","--s1"],["marginal_cells","--s4"],["dead_cells","--neg"]];
+ const BH=28,G=12;const H=order.length*(BH+G)+8;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Atlas v2 cell categories per symbol">`;
+ order.forEach((sym,i)=>{const d=D.w4[sym];if(!d)return;const y=4+i*(BH+G);
+  const tot=d.populated_cells;let xx=54;
+  s+=`<text x="4" y="${y+18}" font-size="12.5" fill="${col("--ink")}">${sym}</text>`;
+  cats.forEach(([k,c])=>{const w=(d[k]||0)/tot*(W-60-8);
+   if(w>0){s+=`<rect data-s="${sym}" data-k="${k}" x="${xx}" y="${y}" width="${Math.max(w-2,1)}" height="${BH-8}" rx="3" fill="${col(c)}"/>`;
+    if(w>34)s+=`<text x="${xx+w/2-1}" y="${y+14}" font-size="10" text-anchor="middle" fill="${col("--surface")}">${Math.round((d[k]||0)/tot*100)}%</text>`;}
+   xx+=w;});});
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("rect").forEach(rc=>{const d=D.w4[rc.dataset.s];const k=rc.dataset.k;
+  const nice={robust_cells:"robust",viable_cells:"viable",marginal_cells:"marginal",dead_cells:"dead"};
+  const f=ev=>{const p=ev.touches?ev.touches[0]:ev;showTT(`<b>${rc.dataset.s}</b> ${nice[k]}: ${d[k]} of ${d.populated_cells} cells (${(d[k]/d.populated_cells*100).toFixed(1)}%)`,p.clientX,p.clientY)};
+  rc.addEventListener("pointerenter",f);rc.addEventListener("pointerdown",f);rc.addEventListener("pointerleave",hideTT);});})();
+</script></body></html>

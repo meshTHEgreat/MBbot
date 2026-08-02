@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Program 3 — The Structural Verdict</title>
+<style>
+:root{--surface:#fcfcfb;--panel:#f4f4f2;--ink:#0b0b0b;--ink2:#52514e;--line:#e3e2de;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--neg:#e34948;--pos:#008300;--warnbg:#fff7e6}
+@media (prefers-color-scheme:dark){:root{--surface:#1a1a19;--panel:#242422;--ink:#fff;--ink2:#c3c2b7;--line:#3a3936;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--neg:#e66767;--pos:#4caf50;--warnbg:#2e2618}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--surface);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:4rem}
+header{padding:1.4rem 1rem .7rem}
+h1{font-size:1.35rem;line-height:1.25}
+.sub{color:var(--ink2);font-size:.9rem;margin-top:.3rem}
+nav{position:sticky;top:0;background:var(--surface);z-index:10;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+nav a{flex:0 0 auto;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink);font-size:.88rem;min-height:44px;display:flex;align-items:center}
+section{padding:1.3rem 1rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.18rem;margin-bottom:.35rem}
+h3{font-size:1rem;margin:1rem 0 .35rem}
+.lede{color:var(--ink2);font-size:.92rem;margin-bottom:.9rem}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.8rem 0}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.tile .v{font-size:1.28rem;font-weight:700;letter-spacing:-.02em}
+.tile .k{font-size:.78rem;color:var(--ink2);margin-top:.15rem}
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .7rem;border-radius:999px;font-size:.85rem;font-weight:700;background:var(--neg);color:#fff}
+svg{display:block;max-width:100%}
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;font-size:.8rem;color:var(--ink2);margin:.4rem 0;align-items:center}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;font-size:.82rem;width:100%;min-width:620px}
+th,td{padding:.45rem .55rem;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink2);font-weight:600;cursor:pointer}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:.7rem 0}
+.chip{min-height:44px;padding:.4rem .8rem;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);font-size:.85rem;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--s1);box-shadow:inset 0 0 0 1px var(--s1)}
+.insight{max-width:44rem}
+.insight p{margin:.7rem 0}
+.callout{background:var(--panel);border-left:4px solid var(--s1);border-radius:8px;padding:.8rem .9rem;margin:.9rem 0;font-size:.92rem}
+.callout.warn{border-left-color:var(--s4)}
+.small{font-size:.8rem;color:var(--ink2)}
+.tt{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);padding:.35rem .6rem;border-radius:8px;font-size:.78rem;z-index:50;display:none;max-width:270px;white-space:normal}
+footer{padding:1rem;color:var(--ink2);font-size:.78rem}
+</style></head><body>
+<div class="tt" id="tt" role="status"></div>
+<header><h1>Program 3 — the structural verdict</h1>
+<div class="sub">Is buying 1–4 DTE options intraday negative-EV regardless of signal quality? · 148,441 observations · preregistered decision rule, frozen before any data read · both archives · independently re-verified</div></header>
+<nav aria-label="Sections"><a href="#verdict">Verdict</a><a href="#gap">The gap</a><a href="#mech">Mechanism</a><a href="#insights">Insights</a></nav>
+
+<section id="verdict">
+<h2>Verdict: <span class="badge">✕ RETIREMENT INDICATED</span></h2>
+<p class="lede">Zero surviving states. Not "we found no signal" — the instrument itself is priced above what it delivers, inside our own trading window, in every state we are allowed to trade.</p>
+<div class="tiles">
+<div class="tile"><div class="v">−$1.4 to −$1.7</div><div class="k">realized minus implied move per straddle, BEFORE costs, in every confirmatory state</div></div>
+<div class="tile"><div class="v">p = 1.000</div><div class="k">one-sided test for a positive gap, in the strongest states</div></div>
+<div class="tile"><div class="v">power 1.00</div><div class="k">at the frozen minimum economic effect — this is a measured negative, not an underpowered null</div></div>
+<div class="tile"><div class="v">0</div><div class="k">states survived · 1,020/1,020 exploratory rows non-decisional · sealed blocks untouched</div></div>
+</div>
+<p class="small">The preregistered escape hatch was real: any state where the realized intraday move exceeded implied plus conservative cost would have kept the buy side open. None did — in either archive, either symbol group, either DTE bucket, either volatility regime.</p>
+</section>
+
+<section id="gap">
+<h2>The gap, state by state</h2>
+<p class="lede">Each bar: mean realized-minus-implied move per straddle (dollars, before trading costs). Zero is the break-even line; the frozen minimum economic effect (MEE, the round-trip cost that would have to be cleared) is marked. Everything is left of both.</p>
+<div class="filters" role="group" aria-label="Archive filter">
+<button class="chip" data-a="all" aria-pressed="true">Both archives</button>
+<button class="chip" data-a="y2026">2025–26 (5 symbols)</button>
+<button class="chip" data-a="repl">2023–25 replication (SPY+QQQ)</button>
+</div>
+<div id="gapchart"></div>
+<div class="legend"><span><span class="sw" style="background:var(--neg)"></span>gap (mean, $/straddle)</span><span>| marker = zero</span><span>⌁ = MEE ($1.32)</span></div>
+<h3>Full cell table</h3>
+<div class="tablewrap"><table id="ctab"><thead><tr><th>State</th><th>Archive</th><th>Mean gap $</th><th>95% LB</th><th>p</th><th>Sessions</th><th>Power@MEE</th><th>Admissible</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="mech">
+<h2>Mechanism — where the premium actually lives</h2>
+<p class="lede">Bakshi–Kapadia delta-hedged returns isolate the volatility premium from direction. Median per-premium return, intraday hold vs held-to-expiry, by archive/group/regime — the test of whether an intraday-only window dodges the overnight-concentrated premium.</p>
+<div id="bkchart"></div>
+<div class="legend"><span><span class="sw" style="background:var(--s1)"></span>intraday hold</span><span><span class="sw" style="background:var(--s2)"></span>held to expiry</span><span>values = median % of premium</span></div>
+<p class="small">Intraday is negative in all nine regime slices — but <strong>less negative than to-expiry in eight of nine</strong>. Our own archive reproduces the published finding: most of the buyer's premium is paid overnight, and closing before the bell avoids the bulk of it. It just doesn't avoid enough, because the intraday implied move still exceeds the intraday realized move. Reported as decision-informing context (decisional=false on every row), never as a gate.</p>
+</section>
+
+<section id="insights" class="insight">
+<h2>Insights — what this means and why</h2>
+
+<h3>1. Seven generations of "no" just became one "why"</h3>
+<p>Every prior verdict said a particular signal failed. This one says something categorically different: across 148,441 observations, the market's implied intraday move exceeds its realized intraday move by $1.4–1.7 per straddle — <em>before</em> anyone pays a spread. The instrument is priced above what it delivers in our window. No trigger, filter, forecast, or execution tactic could have changed that, because the deficit exists before a strategy is even applied. Six generations weren't failing to find the signal; they were paying to enter a game with a negative table stake.</p>
+
+<h3>2. This is a measured negative, not an underpowered null — and that distinction is everything</h3>
+<p>The program's own critique was that its machinery could say "no" far more easily than "yes," and that low-power fails should be recorded as inconclusive. So the standard for this verdict was set higher: power at the frozen minimum effect reached 1.00 in the replication archive and 0.94–0.9998 in the admissible 2025–26 cells. The p-values are 1.000 against a positive gap — the maximum the test can express. If the buy side had a positive-EV state anywhere in the frozen grid, this design would have found it.</p>
+
+<h3>3. The mechanism came out backwards from the original thesis — and that's the interesting part</h3>
+<p>The first consultation attributed the buyer's disadvantage to the variance risk premium. The second corrected it: the literature localizes that premium to the <em>overnight</em> window, so an intraday-only mandate should largely sidestep it. Our archive says both are right and neither is sufficient. Intraday delta-hedged returns are indeed far less negative than to-expiry ones — the overnight dodge is real and measurable in our own data. Yet the intraday gap is still negative, so the retirement rationale lands somewhere sharper than either prediction: <strong>even after avoiding the overnight premium, the intraday implied move is priced above the realized one, and friction is charged on top of an already-negative expectation.</strong></p>
+
+<h3>4. What the frozen escape hatch proves about the process</h3>
+<p>The decision rule was written, hashed, and registered before a single gap was computed, with a genuine way out: one preregistered state showing realized &gt; implied + cost, replicated across archives, and the buy side stayed open. The rule then ran on data nobody had seen, produced an empty survivor list, and the verdict wrote itself. There was no judgment call to make — which is precisely why this answer can be trusted in a way that none of the program's earlier "we decided to stop" moments could be.</p>
+
+<h3>5. What survives, and where the machinery points now</h3>
+<p>The engine, the audits, the registry, the sealed blocks — all intact and now attached to a structural fact rather than a search. Three assets carry forward: the <strong>execution-technology deliverable</strong> (the replicated eligibility filter and the measured fill-bounds frontier — real, literature-backed, useful to any strategy on either side of the trade); the <strong>ship-as-shares design</strong> (the same directional questions, expressed in an instrument with no premium to overpay); and the <strong>short-premium scoping</strong>, which follows directly from this verdict — if buyers systematically overpay for the intraday move, the compensated side of that same trade is where the machinery should look next, under a mandate the user has yet to grant and a tail-risk budget it has yet to design.</p>
+
+<div class="callout warn">Bottom line: the question "can we find a signal good enough to trade 1–4 DTE options intraday?" is answered — not by exhaustion, but by measurement. The instrument was never the right vehicle for the signals available. Knowing that, with receipts, after seven generations of increasingly disciplined search, is the most valuable thing this program has produced.</div>
+</section>
+
+<footer>Program 3 (program3-2026-07-31) · Track A frozen verdict retirement_indicated · 148,441 observations across both archives · MEE $1.32 · run 27.2 min · 61/61 program tests + frozen suites 71/41/26/53 green · 210 sealed filenames excluded · zero tradeable 0DTE rows · zero network attempts · manifest verifier OK · independently re-verified.</footer>
+
+<script>
+const D={"cells":[{"state":"high|mid_1030_1400|etf|dte12","mean":-1.924,"lb":-2.165,"p":1.0,"n":79,"pw":1.0,"adm":true,"arch":"y2026"},{"state":"high|mid_1030_1400|etf|dte34","mean":-1.745,"lb":-1.963,"p":1.0,"n":77,"pw":1.0,"adm":true,"arch":"y2026"},{"state":"high|mid_1030_1400|single|dte12","mean":-1.682,"lb":-2.418,"p":1.0,"n":10,"pw":0.295,"adm":false,"arch":"y2026"},{"state":"high|mid_1030_1400|single|dte34","mean":-2.392,"lb":-2.881,"p":0.9695,"n":7,"pw":0.22,"adm":false,"arch":"y2026"},{"state":"high|morning_0945_1030|etf|dte12","mean":-1.402,"lb":-2.009,"p":0.9996,"n":79,"pw":0.951,"adm":true,"arch":"y2026"},{"state":"high|morning_0945_1030|etf|dte34","mean":-1.561,"lb":-2.082,"p":0.9997,"n":77,"pw":0.955,"adm":true,"arch":"y2026"},{"state":"high|morning_0945_1030|single|dte12","mean":-3.589,"lb":-4.778,"p":1.0,"n":3,"pw":0.119,"adm":false,"arch":"y2026"},{"state":"high|morning_0945_1030|single|dte34","mean":-3.015,"lb":-4.095,"p":1.0,"n":2,"pw":0.093,"adm":false,"arch":"y2026"},{"state":"low|mid_1030_1400|etf|dte12","mean":-1.541,"lb":-1.806,"p":1.0,"n":85,"pw":1.0,"adm":true,"arch":"y2026"},{"state":"low|mid_1030_1400|etf|dte34","mean":-1.525,"lb":-1.743,"p":1.0,"n":68,"pw":1.0,"adm":true,"arch":"y2026"},{"state":"low|mid_1030_1400|single|dte12","mean":-1.524,"lb":-2.303,"p":1.0,"n":23,"pw":0.577,"adm":false,"arch":"y2026"},{"state":"low|mid_1030_1400|single|dte34","mean":-1.412,"lb":-2.043,"p":0.9999,"n":25,"pw":0.612,"adm":false,"arch":"y2026"},{"state":"low|morning_0945_1030|etf|dte12","mean":-1.756,"lb":-2.121,"p":1.0,"n":85,"pw":1.0,"adm":true,"arch":"y2026"},{"state":"low|morning_0945_1030|etf|dte34","mean":-1.385,"lb":-1.881,"p":0.9983,"n":68,"pw":0.939,"adm":true,"arch":"y2026"},{"state":"low|morning_0945_1030|single|dte12","mean":-1.902,"lb":-2.569,"p":1.0,"n":17,"pw":0.457,"adm":false,"arch":"y2026"},{"state":"low|morning_0945_1030|single|dte34","mean":-0.756,"lb":-2.771,"p":0.9887,"n":15,"pw":0.413,"adm":false,"arch":"y2026"},{"state":"high|mid_1030_1400|etf|dte12","mean":-1.605,"lb":-1.806,"p":1.0,"n":362,"pw":1.0,"adm":true,"arch":"repl"},{"state":"high|mid_1030_1400|etf|dte34","mean":-1.638,"lb":-1.808,"p":1.0,"n":362,"pw":1.0,"adm":true,"arch":"repl"},{"state":"high|morning_0945_1030|etf|dte12","mean":-1.578,"lb":-1.823,"p":1.0,"n":361,"pw":1.0,"adm":true,"arch":"repl"},{"state":"high|morning_0945_1030|etf|dte34","mean":-1.685,"lb":-1.824,"p":1.0,"n":360,"pw":1.0,"adm":true,"arch":"repl"},{"state":"low|mid_1030_1400|etf|dte12","mean":-1.716,"lb":-1.778,"p":1.0,"n":177,"pw":1.0,"adm":true,"arch":"repl"},{"state":"low|mid_1030_1400|etf|dte34","mean":-1.7,"lb":-1.782,"p":1.0,"n":175,"pw":1.0,"adm":true,"arch":"repl"},{"state":"low|morning_0945_1030|etf|dte12","mean":-1.695,"lb":-1.83,"p":1.0,"n":177,"pw":1.0,"adm":true,"arch":"repl"},{"state":"low|morning_0945_1030|etf|dte34","mean":-1.706,"lb":-1.853,"p":1.0,"n":175,"pw":1.0,"adm":true,"arch":"repl"}],"bk":[{"arch":"repl","grp":"etf","reg":"high","mech":"intraday","medS":-6.657,"medP":-10.91,"n":40},{"arch":"repl","grp":"etf","reg":"high","mech":"to_expiry","medS":-17.074,"medP":-34.41,"n":40},{"arch":"repl","grp":"etf","reg":"low","mech":"intraday","medS":-6.818,"medP":-10.04,"n":40},{"arch":"repl","grp":"etf","reg":"low","mech":"to_expiry","medS":-24.341,"medP":-43.57,"n":40},{"arch":"repl","grp":"etf","reg":"mid","mech":"intraday","medS":-1.399,"medP":-2.14,"n":40},{"arch":"repl","grp":"etf","reg":"mid","mech":"to_expiry","medS":-2.116,"medP":-3.49,"n":40},{"arch":"y2026","grp":"etf","reg":"high","mech":"intraday","medS":-1.88,"medP":-3.65,"n":40},{"arch":"y2026","grp":"etf","reg":"high","mech":"to_expiry","medS":-7.429,"medP":-17.94,"n":40},{"arch":"y2026","grp":"etf","reg":"low","mech":"intraday","medS":-0.671,"medP":-1.66,"n":40},{"arch":"y2026","grp":"etf","reg":"low","mech":"to_expiry","medS":-6.244,"medP":-13.68,"n":40},{"arch":"y2026","grp":"etf","reg":"mid","mech":"intraday","medS":-1.289,"medP":-3.89,"n":39},{"arch":"y2026","grp":"etf","reg":"mid","mech":"to_expiry","medS":-3.628,"medP":-8.3,"n":39},{"arch":"y2026","grp":"single","reg":"high","mech":"intraday","medS":-3.052,"medP":-2.66,"n":32},{"arch":"y2026","grp":"single","reg":"high","mech":"to_expiry","medS":-9.172,"medP":-8.37,"n":32},{"arch":"y2026","grp":"single","reg":"low","mech":"intraday","medS":-3.651,"medP":-2.08,"n":38},{"arch":"y2026","grp":"single","reg":"low","mech":"to_expiry","medS":-2.252,"medP":-1.87,"n":38},{"arch":"y2026","grp":"single","reg":"mid","mech":"intraday","medS":-2.575,"medP":-1.88,"n":44},{"arch":"y2026","grp":"single","reg":"mid","mech":"to_expiry","medS":-12.194,"medP":-8.93,"n":44}],"mee":1.32,"nobs":148441,"wall":27.2,"exploratory":1020};
+const cs=getComputedStyle(document.documentElement);const col=v=>cs.getPropertyValue(v).trim();
+const tt=document.getElementById("tt");
+function showTT(h,x,y){tt.innerHTML=h;tt.style.display="block";const r=tt.getBoundingClientRect();tt.style.left=Math.min(x+10,innerWidth-r.width-8)+"px";tt.style.top=Math.max(8,y-r.height-10)+"px"}
+function hideTT(){tt.style.display="none"}
+document.addEventListener("scroll",hideTT,{passive:true});
+let arch="all";
+const label=s=>s.replace(/\|/g," · ").replace(/_/g," ");
+
+function drawGap(){
+ const rows=D.cells.filter(c=>arch==="all"||c.arch===arch)
+   .slice().sort((a,b)=>b.mean-a.mean);
+ const el=document.getElementById("gapchart");
+ const W=Math.min(700,el.clientWidth||360),BH=15,G=4;
+ const H=rows.length*(BH+G)+26;
+ const min=Math.min(...rows.map(r=>r.mean),-D.mee-0.2), max=0.35;
+ const x=v=>210+(v-min)/(max-min)*(W-225);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mean gap per state">`;
+ s+=`<line x1="${x(0)}" y1="6" x2="${x(0)}" y2="${H-18}" stroke="${col("--ink2")}" stroke-width="1.5"/>`;
+ s+=`<line x1="${x(-D.mee)}" y1="6" x2="${x(-D.mee)}" y2="${H-18}" stroke="${col("--s4")}" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+ rows.forEach((r,i)=>{const y=8+i*(BH+G);
+  s+=`<text x="2" y="${y+BH-3}" font-size="8.5" fill="${col("--ink2")}">${label(r.state)}</text>`;
+  s+=`<rect data-i="${i}" x="${x(r.mean)}" y="${y}" width="${Math.max(x(0)-x(r.mean),1.5)}" height="${BH}" rx="3" fill="${col(r.adm?"--neg":"--s4")}" opacity="${r.adm?1:0.55}"/>`;});
+ s+=`<text x="${x(0)}" y="${H-4}" font-size="9.5" text-anchor="middle" fill="${col("--ink2")}">0</text>`;
+ s+=`<text x="${x(-D.mee)}" y="${H-4}" font-size="9.5" text-anchor="middle" fill="${col("--s4")}">MEE</text>`;
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("rect").forEach(rc=>{const r=rows[+rc.dataset.i];
+  const f=ev=>{const p=ev.touches?ev.touches[0]:ev;
+   showTT(`<b>${label(r.state)}</b> (${r.arch})<br>mean gap $${r.mean} · 95% LB $${r.lb}<br>p ${r.p} · ${r.n} sessions · power ${r.pw}${r.adm?"":"<br><i>not admissible</i>"}`,p.clientX,p.clientY)};
+  rc.addEventListener("pointerenter",f);rc.addEventListener("pointerdown",f);rc.addEventListener("pointerleave",hideTT);});
+ const tb=document.querySelector("#ctab tbody");tb.innerHTML="";
+ rows.forEach(r=>{const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${label(r.state)}</td><td>${r.arch}</td><td style="color:var(--neg)">${r.mean.toFixed(3)}</td><td>${r.lb.toFixed(3)}</td><td>${r.p.toFixed(3)}</td><td>${r.n}</td><td>${r.pw.toFixed(3)}</td><td>${r.adm?"✓":"—"}</td>`;
+  tb.appendChild(tr);});
+}
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+ document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed","false"));
+ c.setAttribute("aria-pressed","true");arch=c.dataset.a;drawGap();}));
+
+/* BK paired bars: intraday vs to_expiry per slice */
+(function(){const el=document.getElementById("bkchart");const W=Math.min(700,el.clientWidth||360);
+ const keys=[...new Set(D.bk.map(r=>`${r.arch}|${r.grp}|${r.reg}`))];
+ const BH=13,G=6,RG=12;const H=keys.length*(2*BH+G+RG)+20;
+ const vals=D.bk.map(r=>r.medP);
+ const min=Math.min(...vals,0), max=Math.max(...vals,0);
+ const x=v=>150+(v-min)/(max-min||1)*(W-170);
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Delta-hedged returns intraday vs to expiry">`;
+ keys.forEach((k,i)=>{const y0=10+i*(2*BH+G+RG);
+  const [a,g,r]=k.split("|");
+  s+=`<text x="2" y="${y0+BH}" font-size="9" fill="${col("--ink2")}">${a} · ${g} · ${r}</text>`;
+  ["intraday","to_expiry"].forEach((m,j)=>{
+   const row=D.bk.find(z=>z.arch===a&&z.grp===g&&z.reg===r&&z.mech===m);
+   if(!row)return;const y=y0+j*(BH+2);
+   const c=col(m==="intraday"?"--s1":"--s2");
+   s+=`<rect data-a="${a}" data-g="${g}" data-r="${r}" data-m="${m}" x="${x(Math.min(0,row.medP))}" y="${y}" width="${Math.max(Math.abs(x(row.medP)-x(0)),1.5)}" height="${BH-2}" rx="3" fill="${c}"/>`;
+   s+=`<text x="${x(Math.min(0,row.medP))-4}" y="${y+BH-4}" font-size="9" text-anchor="end" fill="${col("--ink2")}">${row.medP.toFixed(1)}%</text>`;});});
+ s+=`<line x1="${x(0)}" y1="4" x2="${x(0)}" y2="${H-8}" stroke="${col("--ink2")}" stroke-width="1.5"/>`;
+ s+="</svg>";el.innerHTML=s;
+ el.querySelectorAll("rect").forEach(rc=>{const d=rc.dataset;
+  const row=D.bk.find(z=>z.arch===d.a&&z.grp===d.g&&z.reg===d.r&&z.mech===d.m);
+  const f=ev=>{const p=ev.touches?ev.touches[0]:ev;
+   showTT(`<b>${d.m.replace("_"," ")}</b> · ${d.a} ${d.g} ${d.r}<br>median ${row.medP.toFixed(2)}% of premium<br>${row.n} paths · decisional=false`,p.clientX,p.clientY)};
+  rc.addEventListener("pointerenter",f);rc.addEventListener("pointerdown",f);rc.addEventListener("pointerleave",hideTT);});})();
+drawGap();addEventListener("resize",drawGap);
+</script></body></html>
