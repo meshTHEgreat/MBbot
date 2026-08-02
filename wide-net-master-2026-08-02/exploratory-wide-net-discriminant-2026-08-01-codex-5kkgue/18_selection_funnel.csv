@@ -1,0 +1,7 @@
+stage_or_reason,count
+accepted_entries,3487
+entry_quote_failed_recheck,1272
+missing_or_duplicate_entry_contract_row,5
+no_eligible_contract_at_decision,3
+scheduled_slots,4805
+zero_signal,38

@@ -1,0 +1,23 @@
+filename,format,contents,rows_or_sheets
+00_study_index.xlsx,xlsx,"Index, formulas, scope, key results, limitations, environment",7 sheets
+01_data_verification.xlsx,xlsx,Input hashes; every used source file; schemas; value domains; funnel; timezone/no-lookahead checks,12 sheets
+02_wide_net_entries.csv,csv,One row per accepted entry with entry-time-only predictors and contract/fill fields,3487
+03_exit_outcomes.csv,csv,"One row per trade-exit rule; bid exit, reason, P&L, return, label",24409
+04_effect_sizes_numeric.csv,csv,"Winner/loser numeric effects by exit and split: Cliff delta, Hedges g, medians, p/q",1806
+05_effect_sizes_categorical.csv,csv,"Categorical counts, rates, odds ratios, Cramer's V, p/q by exit and split",441
+06_rules_and_leaves.xlsx,xlsx,"Tree model summaries, exact rule expressions, leaf stats/membership, importances, encoders",5 sheets
+07_setup_performance.csv,csv,"Baseline/inclusion/exclusion/combined/quality metrics for train, held-out, full by exit",105
+08_exit_label_sensitivity.xlsx,xlsx,"Exit-specific labels, pairwise agreement/kappa/confusion, exit reasons",4 sheets
+09_balance_summary.csv,csv,"Shared-account end balance, P&L, drawdown, cash use, capital skips per exit/setup",35
+10_balance_paths.csv,csv,Every account entry/exit ledger event with cash and realized balance,123888
+11_monthly_results.csv,csv,"Executed trade metrics and cumulative balance by month, exit, setup",384
+12_selected_setup_trades.csv,csv,"All train-selected headline setup trades, features, outcomes, execution status",75
+13_symbol_results.csv,csv,"Executed metrics by symbol, exit, setup",171
+14_rule_membership.csv,csv,Leaf and inclusion/exclusion/combination/quality membership for every trade-exit,24409
+15_source_file_verification.csv,csv,"Expected/actual SHA-256, bytes, rows for every source Parquet read",3260
+16_exit_reason_summary.csv,csv,Counts by exit status and exit reason,17
+17_rule_feature_importance.csv,csv,Nonzero shallow-tree feature importances by exit,43
+18_selection_funnel.csv,csv,"Scheduled slots, acceptance, and every skip reason",6
+19_effect_stability.csv,csv,Training versus held-out Cliff-delta direction and magnitude survival,602
+SPREADSHEET_INDEX.csv,csv,This small spreadsheet index,22
+20_output_validation.csv,csv,Read-back verification for every indexed spreadsheet,22

@@ -10,6 +10,7 @@ on:
       - "reports/**"
       - "v2/data/**"
       - "v2/reports/**"
+      - "wide-net-master-2026-08-02/**"
 
 permissions:
   contents: read
@@ -38,6 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           test -f index.html
+          approved_wide_net_csv="./wide-net-master-2026-08-02/exploratory-wide-net-discriminant-2026-08-01-codex-5kkgue/*.csv"
           prohibited="$(find . -type f \( \
             -name '.env' -o \
             -name '*.dbn' -o \
@@ -46,11 +48,12 @@ jobs:
             -name '*.toml' -o \
             -name '*.py' -o \
             -name '*.pem' \
-          \) -print -quit)"
+          \) ! -path "$approved_wide_net_csv" -print -quit)"
           if [[ -n "$prohibited" ]]; then
             echo "Static Pages artifact contains prohibited local/data file: $prohibited" >&2
             exit 1
           fi
+          test "$(find ./wide-net-master-2026-08-02/exploratory-wide-net-discriminant-2026-08-01-codex-5kkgue -maxdepth 1 -type f -name '*.csv' | wc -l)" -eq 18
 
       - name: Upload report site
         uses: actions/upload-pages-artifact@v5
