@@ -1,0 +1,43 @@
+{
+  "paper_only": true,
+  "schema_version": "mbbot.live-trades.feed.v1",
+  "source": "Local append-only MBbot alert events",
+  "strategies": {
+    "a2_pt40_sl20_combined_v1": {
+      "closed": 0,
+      "expectancy": null,
+      "flats": 0,
+      "id": "a2_pt40_sl20_combined_v1",
+      "losses": 0,
+      "max_realized_drawdown": "0",
+      "open": 0,
+      "profit_factor": null,
+      "realized_pnl": "0",
+      "short_name": "A2 PT40/SL20",
+      "status": "exploratory_post_hoc_paper",
+      "title": "A2 exact PT40/SL20 + combined keep filter",
+      "trades": 0,
+      "win_rate_percent": null,
+      "wins": 0
+    },
+    "workflow_125": {
+      "closed": 0,
+      "expectancy": null,
+      "flats": 0,
+      "id": "workflow_125",
+      "losses": 0,
+      "max_realized_drawdown": "0",
+      "open": 0,
+      "profit_factor": null,
+      "realized_pnl": "0",
+      "short_name": "Workflow #125",
+      "status": "baseline_replay",
+      "title": "Baseline replay / Workflow #125",
+      "trades": 0,
+      "win_rate_percent": null,
+      "wins": 0
+    }
+  },
+  "trades": [],
+  "updated_at": null
+}
