@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+        content="Searchable MBbot paper-trade entries and exits, separated by live observation strategy.">
+  <title>Live paper trades · MBbot Research Desk</title>
+  <link rel="stylesheet" href="assets/styles.css?v=20260802-live1">
+  <link rel="stylesheet" href="assets/live-trades.css?v=20260802-live1">
+  <script src="assets/site.js?v=20260802-live1" defer></script>
+  <script src="assets/live-trades-model.js?v=20260802-live1" defer></script>
+  <script src="assets/live-trades.js?v=20260802-live1" defer></script>
+</head>
+<body data-page="live-trades">
+  <a class="skip-link" href="#main-content">Skip to live paper trades</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MBbot Research Desk home">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <span>
+        <strong>MBbot Research Desk</strong>
+        <small>Paper-trade tape</small>
+      </span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="index.html#archive">Archive</a>
+      <a href="compare.html">Compare</a>
+      <a href="live.html" aria-current="page">Live trades</a>
+      <a href="learn.html">Learn</a>
+      <button class="quiet-button theme-toggle" type="button" aria-label="Use light theme">
+        <span aria-hidden="true">◐</span><span class="theme-label">Light</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content" class="live-page" data-live-trades-page
+        data-feed-url="https://api.github.com/repos/meshTHEgreat/MBbot/contents/feed/trades.json?ref=live-trades">
+    <section class="live-hero" aria-labelledby="live-title">
+      <div class="live-hero-copy">
+        <p class="kicker">Local paper ledger · entries linked to exits</p>
+        <h1 id="live-title">See the signal.<br><em>Follow the outcome.</em></h1>
+        <p class="lede">
+          Every entry keeps its strike, expiry, observed price, strategy, and
+          Trade ID. When the exit arrives, the same record closes with its
+          actual observed bid, reason, return, and paper P&amp;L.
+        </p>
+      </div>
+      <aside class="live-connection-card" aria-labelledby="mirror-title">
+        <div>
+          <p class="section-label">Action-free trade mirror</p>
+          <strong id="mirror-title">The trading loop stays local.</strong>
+          <p>
+            The page reads a data-only Git branch. Trade uploads do not build
+            or redeploy this site and cannot interrupt Telegram alerts.
+          </p>
+        </div>
+        <div>
+          <p class="live-feed-state" id="live-feed-status" role="status"
+             aria-live="polite">Connecting to the local trade mirror…</p>
+          <button class="live-refresh" id="live-refresh" type="button">
+            Refresh trade records
+          </button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="live-boundary" aria-label="Paper-trading boundaries">
+      <article>
+        <span>Execution</span>
+        <strong>Observed quotes only</strong>
+        <p>Entries use the recorded ask. Exits use the recorded bid.</p>
+      </article>
+      <article>
+        <span>Purpose</span>
+        <strong>Paper observation</strong>
+        <p>No broker connection, order placement, or assumed threshold fill.</p>
+      </article>
+      <article>
+        <span>Publishing</span>
+        <strong>Separate from detection</strong>
+        <p>Failed uploads retry later without blocking signals or exits.</p>
+      </article>
+    </section>
+
+    <section class="strategy-switcher" aria-labelledby="strategy-switcher-title">
+      <header class="strategy-switcher-heading">
+        <div>
+          <p class="section-label">Two ledgers · never combined</p>
+          <h2 id="strategy-switcher-title">Choose the strategy.</h2>
+        </div>
+        <p>
+          Each view maintains its own trades, filters, statistics, disclosure,
+          and exit model. Switching views never blends their results.
+        </p>
+      </header>
+      <div class="strategy-tabs" role="tablist" aria-label="Live strategy ledger">
+        <button class="strategy-tab" id="tab-workflow-125" type="button"
+                role="tab" aria-selected="true" aria-controls="panel-workflow-125"
+                data-strategy-tab="workflow_125">
+          <span class="strategy-tab-mark" aria-hidden="true">125</span>
+          <span class="strategy-tab-copy">
+            <strong>Workflow #125</strong>
+            <small>Baseline replay · PT50 / SL75</small>
+          </span>
+          <span class="strategy-tab-count" data-strategy-count>0 trades</span>
+        </button>
+        <button class="strategy-tab" id="tab-a2" type="button" role="tab"
+                aria-selected="false" aria-controls="panel-a2" tabindex="-1"
+                data-strategy-tab="a2_pt40_sl20_combined_v1">
+          <span class="strategy-tab-mark" aria-hidden="true">A2</span>
+          <span class="strategy-tab-copy">
+            <strong>A2 PT40/SL20</strong>
+            <small>Combined keep filter · exploratory</small>
+          </span>
+          <span class="strategy-tab-count" data-strategy-count>0 trades</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="live-strategy-panel" id="panel-workflow-125" role="tabpanel"
+             aria-labelledby="tab-workflow-125" data-strategy-panel="workflow_125">
+      <header class="live-strategy-heading">
+        <div>
+          <p class="section-label">Baseline replay / Workflow #125</p>
+          <h2>Workflow #125 ledger</h2>
+          <p>
+            Momentum, MACD, SMI, RSI, Delta, spread, and contract gates using
+            the frozen Workflow #125 alert configuration.
+          </p>
+        </div>
+        <aside class="strategy-disclosure">
+          <strong>Baseline paper replay</strong>
+          Entry at observed ask. Profit target +50%, stop -75%, configured
+          signal exits, and time exit are evaluated against observed bids.
+        </aside>
+      </header>
+
+      <div class="live-metrics" aria-label="Workflow #125 performance summary">
+        <article class="live-metric"><span>Open</span><strong data-metric="open">0</strong></article>
+        <article class="live-metric"><span>Closed</span><strong data-metric="closed">0</strong></article>
+        <article class="live-metric"><span>Win rate</span><strong data-metric="win_rate">—</strong></article>
+        <article class="live-metric"><span>Realized P&amp;L</span><strong data-metric="realized_pnl">$0.00</strong></article>
+        <article class="live-metric"><span>Expectancy</span><strong data-metric="expectancy">—</strong></article>
+      </div>
+
+      <div class="live-controls" aria-label="Workflow #125 trade filters">
+        <label class="live-control">
+          <span>Search this strategy</span>
+          <input type="search" data-filter="query" autocomplete="off"
+                 placeholder="Trade ID, symbol, strike, expiry, or reason…">
+        </label>
+        <label class="live-control">
+          <span>Status</span>
+          <select data-filter="status">
+            <option value="all">All statuses</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+        <label class="live-control">
+          <span>Result</span>
+          <select data-filter="result">
+            <option value="all">All results</option>
+            <option value="win">Wins</option>
+            <option value="loss">Losses</option>
+            <option value="flat">Flats</option>
+            <option value="open">Open</option>
+          </select>
+        </label>
+        <label class="live-control">
+          <span>Order</span>
+          <select data-filter="order">
+            <option value="newest">Newest entry</option>
+            <option value="oldest">Oldest entry</option>
+            <option value="pnl_high">Highest P&amp;L</option>
+            <option value="pnl_low">Lowest P&amp;L</option>
+          </select>
+        </label>
+        <button class="live-clear" type="button" data-clear-filters>Clear</button>
+      </div>
+      <div class="live-list-heading">
+        <h3>Trade records</h3>
+        <output data-visible-count aria-live="polite">0 of 0 trades</output>
+      </div>
+      <div class="live-trade-list" data-trade-list></div>
+      <div class="live-empty" data-trade-empty>
+        <strong>No matching Workflow #125 trades.</strong>
+        The first local entry will appear here after its data-only push.
+      </div>
+    </section>
+
+    <section class="live-strategy-panel" id="panel-a2" role="tabpanel"
+             aria-labelledby="tab-a2" data-strategy-panel="a2_pt40_sl20_combined_v1"
+             hidden>
+      <header class="live-strategy-heading">
+        <div>
+          <p class="section-label">A2 exact PT40/SL20 + combined keep filter</p>
+          <h2>A2 PT40/SL20 ledger</h2>
+          <p>
+            Fixed observation slots, nearest 0.50 absolute Delta selection,
+            five-minute contract recheck, and frozen combined tree leaves.
+          </p>
+        </div>
+        <aside class="strategy-disclosure strategy-disclosure--a2">
+          <strong>Exploratory post-hoc candidate</strong>
+          No edge is established. Entry uses actual ask; exits use the first
+          actual bid at +40% or -20%, otherwise the exact 15:55 ET bid.
+        </aside>
+      </header>
+
+      <div class="live-metrics" aria-label="A2 strategy performance summary">
+        <article class="live-metric"><span>Open</span><strong data-metric="open">0</strong></article>
+        <article class="live-metric"><span>Closed</span><strong data-metric="closed">0</strong></article>
+        <article class="live-metric"><span>Win rate</span><strong data-metric="win_rate">—</strong></article>
+        <article class="live-metric"><span>Realized P&amp;L</span><strong data-metric="realized_pnl">$0.00</strong></article>
+        <article class="live-metric"><span>Expectancy</span><strong data-metric="expectancy">—</strong></article>
+      </div>
+
+      <div class="live-controls" aria-label="A2 trade filters">
+        <label class="live-control">
+          <span>Search this strategy</span>
+          <input type="search" data-filter="query" autocomplete="off"
+                 placeholder="Trade ID, symbol, strike, leaf, or exit reason…">
+        </label>
+        <label class="live-control">
+          <span>Status</span>
+          <select data-filter="status">
+            <option value="all">All statuses</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+        <label class="live-control">
+          <span>Result</span>
+          <select data-filter="result">
+            <option value="all">All results</option>
+            <option value="win">Wins</option>
+            <option value="loss">Losses</option>
+            <option value="flat">Flats</option>
+            <option value="open">Open</option>
+          </select>
+        </label>
+        <label class="live-control">
+          <span>Order</span>
+          <select data-filter="order">
+            <option value="newest">Newest entry</option>
+            <option value="oldest">Oldest entry</option>
+            <option value="pnl_high">Highest P&amp;L</option>
+            <option value="pnl_low">Lowest P&amp;L</option>
+          </select>
+        </label>
+        <button class="live-clear" type="button" data-clear-filters>Clear</button>
+      </div>
+      <div class="live-list-heading">
+        <h3>Trade records</h3>
+        <output data-visible-count aria-live="polite">0 of 0 trades</output>
+      </div>
+      <div class="live-trade-list" data-trade-list></div>
+      <div class="live-empty" data-trade-empty>
+        <strong>No matching A2 trades.</strong>
+        The first retained combined-filter entry will appear here after its
+        data-only push.
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>MBbot Research Desk · paper observations only</span>
+    <span>Public derived records · no API or Telegram credentials</span>
+  </footer>
+</body>
+</html>

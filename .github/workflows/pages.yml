@@ -8,6 +8,10 @@ on:
     paths:
       - "data/**"
       - "reports/**"
+      - "live.html"
+      - "assets/live-trades.css"
+      - "assets/live-trades-model.js"
+      - "assets/live-trades.js"
       - "v2/data/**"
       - "v2/reports/**"
       - "wide-net-master-2026-08-02/**"
