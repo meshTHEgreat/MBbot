@@ -143,7 +143,8 @@ document.addEventListener("scroll",hideTT,{passive:true});
  const rows=[["liquidity_main_effect","Liquidity (tight − ordinary)"],["time_main_effect","Time (morning − later)"],["interaction","Interaction (the class premium)"],["delta_condition","Δ condition vs matched controls"]];
  const vals=rows.map(([k])=>D.inf[k]);
  const min=Math.min(...vals.map(v=>v.lo),-1),max=Math.max(...vals.map(v=>v.pt))+2;
- const x=v=>30+(v-min)/(max-min)*(W-40);
+ const valueWidth=Math.min(116,W*.42),plotRight=W-valueWidth;
+ const x=v=>30+(v-min)/(max-min)*(plotRight-40);
  const BH=24,G=16;const H=rows.length*(BH+G)+10;
  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Factorial contrasts">`;
  s+=`<line x1="${x(0)}" y1="4" x2="${x(0)}" y2="${H-6}" stroke="${col("--line")}" stroke-width="1.5"/>`;
@@ -152,7 +153,7 @@ document.addEventListener("scroll",hideTT,{passive:true});
   const x0=x(Math.min(0,c.pt)),x1=x(Math.max(0,c.pt));
   s+=`<text x="${x(min)}" y="${y-1}" font-size="10.5" fill="${col("--ink")}">${label}</text>`;
   s+=`<rect data-k="${k}" x="${x0}" y="${y}" width="${Math.max(1.5,x1-x0)}" height="${BH-10}" rx="4" fill="${barc}"/>`;
-  s+=`<text x="${c.pt>=0?x1+4:x0-4}" y="${y+11}" font-size="11" text-anchor="${c.pt>=0?"start":"end"}" fill="${col("--ink2")}">$${c.pt} (LB ${c.lo})</text>`;});
+  s+=`<text x="${W-4}" y="${y+11}" font-size="11" text-anchor="end" fill="${col("--ink2")}">$${c.pt} (LB ${c.lo})</text>`;});
  s+="</svg>";el.innerHTML=s;})();
 
 /* monthly series */

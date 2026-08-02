@@ -205,12 +205,14 @@ Object.entries(D.formal.gates).forEach(([k,v])=>{const li=document.createElement
 /* per-symbol bars */
 (function(){const el=document.getElementById("symchart");const W=Math.min(560,el.clientWidth||340);
 const d=D.formal.perSym;const max=Math.max(...Object.values(d).map(v=>Math.abs(v.net)));
-const x0=W*0.55;let s=`<svg viewBox="0 0 ${W} 84" role="img" aria-label="Net P&L per symbol">`;
-Object.entries(d).forEach(([sym,v],i)=>{const y=10+i*36;const w=Math.abs(v.net)/max*(W*0.4);
+const plotLeft=36,valueLeft=Math.max(plotLeft+80,W-126),plotRight=valueLeft-8;
+const x0=(plotLeft+plotRight)/2,barMax=(plotRight-plotLeft)/2;
+let s=`<svg viewBox="0 0 ${W} 84" role="img" aria-label="Net P&L per symbol">`;
+Object.entries(d).forEach(([sym,v],i)=>{const y=10+i*36;const w=Math.abs(v.net)/max*barMax;
  const xx=v.net<0?x0-w:x0;const c=v.net<0?col("--neg"):col("--pos");
  s+=`<text x="4" y="${y+15}" font-size="13" fill="${col("--ink")}">${sym}</text>`;
  s+=`<rect x="${xx}" y="${y}" width="${Math.max(w,2)}" height="20" rx="3" fill="${c}"/>`;
- s+=`<text x="${v.net<0?xx-4:xx+w+4}" y="${y+15}" font-size="12" fill="${col("--ink2")}" text-anchor="${v.net<0?"end":"start"}">$${v.net.toFixed(0)} · ${v.n} trades</text>`;});
+ s+=`<text x="${W-4}" y="${y+15}" font-size="12" fill="${col("--ink2")}" text-anchor="end">$${v.net.toFixed(0)} · ${v.n} trades</text>`;});
 s+=`<line x1="${x0}" y1="4" x2="${x0}" y2="80" stroke="${col("--line")}"/></svg>`;el.innerHTML=s;})();
 
 /* cumulative line */
