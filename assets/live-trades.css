@@ -64,6 +64,35 @@
   color: var(--text-muted);
 }
 
+.live-agent-exports {
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.live-export-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.live-export-links a {
+  padding: 7px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text);
+  font-family: var(--font-data);
+  font-size: 0.74rem;
+  text-decoration: none;
+}
+
+.live-export-links a:hover,
+.live-export-links a:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .live-feed-state {
   display: flex;
   align-items: flex-start;
