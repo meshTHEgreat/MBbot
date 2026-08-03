@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 0,
       "max_realized_drawdown": "0",
-      "open": 2,
+      "open": 4,
       "profit_factor": null,
       "realized_pnl": "416",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 4,
+      "trades": 6,
       "win_rate_percent": "100",
       "wins": 2
     },
@@ -39,6 +39,88 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "TSLA260805P00322500",
+      "details": {
+        "cash_after_entry": "98390.9999999999999500",
+        "decision_time": "2026-08-03T12:25:00-04:00",
+        "entry_delta": "0.5012",
+        "entry_spread_percent": "1.724137931034491304994054697",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-3.430718122263972483089994510",
+        "option_vwap_deviation_pct": "-16.92548664608018009701654761",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.1982403392255175871729483200",
+        "underlying_return_15m_pct": "-0.4512440117446978828619996900"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "5.8500000000000005",
+        "bid": "5.75",
+        "quote_time": "2026-08-03T12:30:00-04:00",
+        "time": "2026-08-03T12:30:00-04:00",
+        "underlying_price": "322.09000000000003"
+      },
+      "exit": null,
+      "expiration": "2026-08-05",
+      "opened_at": "2026-08-03T12:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "4.68000000000000040",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "322.5",
+      "symbol": "TSLA",
+      "target_bid": "8.19000000000000070",
+      "trade_id": "A2C-20260803-TSLA-1225",
+      "updated_at": "2026-08-03T16:32:53.022680+00:00"
+    },
+    {
+      "closed_at": null,
+      "contract_id": "NVDA260807P00207500",
+      "details": {
+        "cash_after_entry": "98976.00",
+        "decision_time": "2026-08-03T12:25:00-04:00",
+        "entry_delta": "0.5046",
+        "entry_spread_percent": "2.5",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-4.568503404645771961172550350",
+        "option_vwap_deviation_pct": "-17.40956626092919595405451739",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.0772333573292170794262074600",
+        "underlying_return_15m_pct": "-0.0048290515742708132122851100"
+      },
+      "dte": 4,
+      "entry": {
+        "ask": "4.05",
+        "bid": "3.95",
+        "quote_time": "2026-08-03T12:30:00-04:00",
+        "time": "2026-08-03T12:30:00-04:00",
+        "underlying_price": "207.07"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-03T12:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "3.240",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "207.5",
+      "symbol": "NVDA",
+      "target_bid": "5.670",
+      "trade_id": "A2C-20260803-NVDA-1225",
+      "updated_at": "2026-08-03T16:32:51.731770+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "TSLA260807C00325000",
@@ -226,5 +308,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-03T16:19:48.317488+00:00"
+  "updated_at": "2026-08-03T16:32:53.022680+00:00"
 }
