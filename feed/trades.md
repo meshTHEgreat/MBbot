@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-03T16:43:49.690227+00:00`
+- Updated: `2026-08-03T17:40:06.767324+00:00`
 - Records: 6
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 6 | 3 | 3 | 2 | 1 | 0 | 66.66666666666666666666666667% | +$276.00 | +$92.00 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 6 | 2 | 4 | 2 | 2 | 0 | 50% | +$191.00 | +$47.75 |
 
 ## Workflow #125 trades
 
@@ -47,7 +47,7 @@ _No paper trades recorded yet._
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260803-TSLA-1225 | open | TSLA 322.5 PUT 2026-08-05 | 2026-08-03T12:30:00-04:00 | +$5.85 | — | — | open | — | — | — |
-| A2C-20260803-NVDA-1225 | open | NVDA 207.5 PUT 2026-08-07 | 2026-08-03T12:30:00-04:00 | +$4.05 | — | — | open | — | — | — |
+| A2C-20260803-NVDA-1225 | closed | NVDA 207.5 PUT 2026-08-07 | 2026-08-03T12:30:00-04:00 | +$4.05 | 2026-08-03T13:28:00-04:00 | +$3.20 | loss | -20.98765432098765432098765432% | -$85.00 | stop_loss_20 |
 | A2C-20260803-TSLA-1125 | closed | TSLA 325.0 CALL 2026-08-07 | 2026-08-03T11:30:00-04:00 | +$6.75 | 2026-08-03T12:42:00-04:00 | +$5.35 | loss | -20.74074074074073333333333333% | -$140.00 | stop_loss_20 |
 | A2C-20260803-QQQ-1125 | closed | QQQ 697.0 CALL 2026-08-04 | 2026-08-03T11:30:00-04:00 | +$3.06 | 2026-08-03T12:18:00-04:00 | +$4.32 | win | 41.17647058823529411764705880% | +$126.00 | profit_target_40 |
 | A2C-20260803-NVDA-1125 | open | NVDA 207.5 CALL 2026-08-07 | 2026-08-03T11:30:00-04:00 | +$3.60 | — | — | open | — | — | — |
