@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-04T14:41:19.456646+00:00`
+- Updated: `2026-08-04T14:59:19.174699+00:00`
 - Records: 13
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 13 | 2 | 11 | 3 | 7 | 1 | 27.27272727272727272727272727% | -$23.00 | -$2.09 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 13 | 1 | 12 | 3 | 8 | 1 | 25% | -$102.00 | -$8.50 |
 
 ## Workflow #125 trades
 
@@ -47,7 +47,7 @@ _No paper trades recorded yet._
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260804-TSLA-1025 | open | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$7.25 | — | — | open | — | — | — |
-| A2C-20260804-SPY-1025 | open | SPY 765.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$3.62 | — | — | open | — | — | — |
+| A2C-20260804-SPY-1025 | closed | SPY 765.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$3.62 | 2026-08-04T10:59:00-04:00 | +$2.83 | loss | -21.82320441988950276243093923% | -$79.00 | stop_loss_20 |
 | A2C-20260804-AAPL-1025 | closed | AAPL 307.5 CALL 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$3.55 | 2026-08-04T10:41:00-04:00 | +$2.80 | loss | -21.12676056338027990478079746% | -$75.00 | stop_loss_20 |
 | A2C-20260803-TSLA-1425 | closed | TSLA 322.5 PUT 2026-08-07 | 2026-08-03T14:30:00-04:00 | +$7.60 | 2026-08-03T15:55:00-04:00 | +$7.60 | flat | 0% | $0.00 | end_of_session_1555 |
 | A2C-20260803-SPY-1425 | closed | SPY 758.0 PUT 2026-08-04 | 2026-08-03T14:30:00-04:00 | +$1.90 | 2026-08-03T15:03:00-04:00 | +$1.48 | loss | -22.10526315789474094182825485% | -$42.00 | stop_loss_20 |
