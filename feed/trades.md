@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-04T17:22:40.136182+00:00`
-- Records: 17
+- Updated: `2026-08-04T17:32:28.346520+00:00`
+- Records: 19
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 17 | 2 | 15 | 3 | 11 | 1 | 20% | -$502.00 | -$33.47 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 19 | 4 | 15 | 3 | 11 | 1 | 20% | -$502.00 | -$33.47 |
 
 ## Workflow #125 trades
 
@@ -46,6 +46,8 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260804-NVDA-1325 | open | NVDA 212.5 CALL 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$2.92 | — | — | open | — | — | — |
+| A2C-20260804-AAPL-1325 | open | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$4.20 | — | — | open | — | — | — |
 | A2C-20260804-TSLA-1225 | closed | TSLA 325.0 PUT 2026-08-05 | 2026-08-04T12:30:00-04:00 | +$4.50 | 2026-08-04T13:22:00-04:00 | +$3.45 | loss | -23.33333333333333333333333333% | -$105.00 | stop_loss_20 |
 | A2C-20260804-NVDA-1225 | open | NVDA 210.0 CALL 2026-08-07 | 2026-08-04T12:30:00-04:00 | +$3.60 | — | — | open | — | — | — |
 | A2C-20260804-TSLA-1125 | closed | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T11:30:00-04:00 | +$7.05 | 2026-08-04T13:22:00-04:00 | +$5.55 | loss | -21.27659574468085106382978723% | -$150.00 | stop_loss_20 |
