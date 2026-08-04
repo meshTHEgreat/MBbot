@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-04T14:59:19.174699+00:00`
-- Records: 13
+- Updated: `2026-08-04T15:32:27.930134+00:00`
+- Records: 15
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 13 | 1 | 12 | 3 | 8 | 1 | 25% | -$102.00 | -$8.50 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 15 | 3 | 12 | 3 | 8 | 1 | 25% | -$102.00 | -$8.50 |
 
 ## Workflow #125 trades
 
@@ -46,6 +46,8 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260804-TSLA-1125 | open | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T11:30:00-04:00 | +$7.05 | — | — | open | — | — | — |
+| A2C-20260804-NVDA-1125 | open | NVDA 210.0 CALL 2026-08-05 | 2026-08-04T11:30:00-04:00 | +$2.14 | — | — | open | — | — | — |
 | A2C-20260804-TSLA-1025 | open | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$7.25 | — | — | open | — | — | — |
 | A2C-20260804-SPY-1025 | closed | SPY 765.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$3.62 | 2026-08-04T10:59:00-04:00 | +$2.83 | loss | -21.82320441988950276243093923% | -$79.00 | stop_loss_20 |
 | A2C-20260804-AAPL-1025 | closed | AAPL 307.5 CALL 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$3.55 | 2026-08-04T10:41:00-04:00 | +$2.80 | loss | -21.12676056338027990478079746% | -$75.00 | stop_loss_20 |
