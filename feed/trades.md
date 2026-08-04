@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-04T19:38:16.320250+00:00`
+- Updated: `2026-08-04T19:50:16.506532+00:00`
 - Records: 20
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 20 | 2 | 18 | 5 | 12 | 1 | 27.77777777777777777777777778% | -$346.00 | -$19.22 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 20 | 1 | 19 | 5 | 13 | 1 | 26.31578947368421052631578947% | -$450.00 | -$23.68 |
 
 ## Workflow #125 trades
 
@@ -46,7 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260804-AAPL-1425 | open | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T14:30:00-04:00 | +$3.90 | — | — | open | — | — | — |
+| A2C-20260804-AAPL-1425 | closed | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T14:30:00-04:00 | +$3.90 | 2026-08-04T15:50:00-04:00 | +$2.86 | loss | -26.66666666666666666666666667% | -$104.00 | stop_loss_20 |
 | A2C-20260804-NVDA-1325 | open | NVDA 212.5 CALL 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$2.92 | — | — | open | — | — | — |
 | A2C-20260804-AAPL-1325 | closed | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$4.20 | 2026-08-04T15:38:00-04:00 | +$3.35 | loss | -20.23809523809523809523809524% | -$85.00 | stop_loss_20 |
 | A2C-20260804-TSLA-1225 | closed | TSLA 325.0 PUT 2026-08-05 | 2026-08-04T12:30:00-04:00 | +$4.50 | 2026-08-04T13:22:00-04:00 | +$3.45 | loss | -23.33333333333333333333333333% | -$105.00 | stop_loss_20 |
