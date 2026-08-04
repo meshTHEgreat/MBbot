@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-04T18:32:25.068112+00:00`
+- Updated: `2026-08-04T18:37:41.646498+00:00`
 - Records: 20
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 20 | 4 | 16 | 4 | 11 | 1 | 25% | -$416.00 | -$26.00 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 20 | 3 | 17 | 5 | 11 | 1 | 29.41176470588235294117647059% | -$261.00 | -$15.35 |
 
 ## Workflow #125 trades
 
@@ -50,7 +50,7 @@ _No paper trades recorded yet._
 | A2C-20260804-NVDA-1325 | open | NVDA 212.5 CALL 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$2.92 | — | — | open | — | — | — |
 | A2C-20260804-AAPL-1325 | open | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$4.20 | — | — | open | — | — | — |
 | A2C-20260804-TSLA-1225 | closed | TSLA 325.0 PUT 2026-08-05 | 2026-08-04T12:30:00-04:00 | +$4.50 | 2026-08-04T13:22:00-04:00 | +$3.45 | loss | -23.33333333333333333333333333% | -$105.00 | stop_loss_20 |
-| A2C-20260804-NVDA-1225 | open | NVDA 210.0 CALL 2026-08-07 | 2026-08-04T12:30:00-04:00 | +$3.60 | — | — | open | — | — | — |
+| A2C-20260804-NVDA-1225 | closed | NVDA 210.0 CALL 2026-08-07 | 2026-08-04T12:30:00-04:00 | +$3.60 | 2026-08-04T14:37:00-04:00 | +$5.15 | win | 43.05555555555555555555555560% | +$155.00 | profit_target_40 |
 | A2C-20260804-TSLA-1125 | closed | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T11:30:00-04:00 | +$7.05 | 2026-08-04T13:22:00-04:00 | +$5.55 | loss | -21.27659574468085106382978723% | -$150.00 | stop_loss_20 |
 | A2C-20260804-NVDA-1125 | closed | NVDA 210.0 CALL 2026-08-05 | 2026-08-04T11:30:00-04:00 | +$2.14 | 2026-08-04T13:38:00-04:00 | +$3.00 | win | 40.18691588785046728971962620% | +$86.00 | profit_target_40 |
 | A2C-20260804-TSLA-1025 | closed | TSLA 325.0 PUT 2026-08-07 | 2026-08-04T10:30:00-04:00 | +$7.25 | 2026-08-04T13:12:00-04:00 | +$5.80 | loss | -20.0% | -$145.00 | stop_loss_20 |
