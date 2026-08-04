@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 11,
       "max_realized_drawdown": "918.00000000000001",
-      "open": 3,
+      "open": 4,
       "profit_factor": "0.5972894482090997038016510338",
       "realized_pnl": "-416.00000000000001",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 19,
+      "trades": 20,
       "win_rate_percent": "25",
       "wins": 4
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "AAPL260807P00310000",
+      "details": {
+        "cash_after_entry": "98121.9999999999999900",
+        "decision_time": "2026-08-04T14:25:00-04:00",
+        "entry_delta": "0.521",
+        "entry_spread_percent": "2.597402597402589509192106595",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-2.226387048825411186867870880",
+        "option_vwap_deviation_pct": "-11.16504854368932038834951456",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.1000472567332295112157924900",
+        "underlying_return_15m_pct": "-0.1516422533393560043879460500"
+      },
+      "dte": 3,
+      "entry": {
+        "ask": "3.9",
+        "bid": "3.8000000000000003",
+        "quote_time": "2026-08-04T14:30:00-04:00",
+        "time": "2026-08-04T14:30:00-04:00",
+        "underlying_price": "309.47"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-04T14:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "3.12",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "310.0",
+      "symbol": "AAPL",
+      "target_bid": "5.46",
+      "trade_id": "A2C-20260804-AAPL-1425",
+      "updated_at": "2026-08-04T18:32:25.068112+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "NVDA260807C00212500",
@@ -995,5 +1036,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-04T17:38:12.051767+00:00"
+  "updated_at": "2026-08-04T18:32:25.068112+00:00"
 }
