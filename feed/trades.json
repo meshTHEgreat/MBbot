@@ -4,20 +4,20 @@
   "source": "Local append-only MBbot alert events",
   "strategies": {
     "a2_pt40_sl20_combined_v1": {
-      "closed": 20,
-      "expectancy": "-21.849999999999999",
+      "closed": 21,
+      "expectancy": "-25.80952380952380857142857143",
       "flats": 1,
       "id": "a2_pt40_sl20_combined_v1",
-      "losses": 13,
-      "max_realized_drawdown": "918.00000000000001",
-      "open": 3,
-      "profit_factor": "0.6423895253682487917971397269",
-      "realized_pnl": "-436.99999999999998",
+      "losses": 14,
+      "max_realized_drawdown": "957.99999999999998",
+      "open": 2,
+      "profit_factor": "0.591559909570459701646119747",
+      "realized_pnl": "-541.99999999999998",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
       "trades": 23,
-      "win_rate_percent": "30",
+      "win_rate_percent": "28.57142857142857142857142857",
       "wins": 6
     },
     "workflow_125": {
@@ -81,10 +81,11 @@
       "updated_at": "2026-08-05T16:32:33.046768+00:00"
     },
     {
-      "closed_at": null,
+      "closed_at": "2026-08-05T12:47:00-04:00",
       "contract_id": "TSLA260807P00322500",
       "details": {
         "cash_after_entry": "98488.0000000000000200",
+        "cash_after_exit": "98343.0000000000000200",
         "decision_time": "2026-08-05T11:25:00-04:00",
         "entry_delta": "0.4965",
         "entry_spread_percent": "2",
@@ -92,6 +93,7 @@
         "opening_low_distance_pct": "-0.4403920109167597072323533100",
         "option_vwap_deviation_pct": "8.552631578947356518351800600",
         "option_vwap_was_imputed": false,
+        "realized_pnl_after": "-541.9999999999999800",
         "underlying_acceleration_5m_pct": "-0.3285147160347462683802543600",
         "underlying_return_15m_pct": "-0.3553879909762445976030170000"
       },
@@ -103,15 +105,24 @@
         "time": "2026-08-05T11:30:00-04:00",
         "underlying_price": "322.44"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "stop_loss_20"
+        ],
+        "ask": "4.15",
+        "bid": "4.0",
+        "reason": "stop_loss_20",
+        "time": "2026-08-05T12:47:00-04:00"
+      },
       "expiration": "2026-08-07",
+      "gross_pnl": "-105",
       "opened_at": "2026-08-05T11:30:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-105",
+      "result": "loss",
+      "return_percent": "-20.79207920792079207920792079",
       "right": "put",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "4.040",
       "strategy_id": "a2_pt40_sl20_combined_v1",
       "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
@@ -119,7 +130,7 @@
       "symbol": "TSLA",
       "target_bid": "7.070",
       "trade_id": "A2C-20260805-TSLA-1125",
-      "updated_at": "2026-08-05T15:32:32.388110+00:00"
+      "updated_at": "2026-08-05T16:47:17.443188+00:00"
     },
     {
       "closed_at": null,
@@ -1203,5 +1214,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-05T16:32:33.046768+00:00"
+  "updated_at": "2026-08-05T16:47:17.443188+00:00"
 }
