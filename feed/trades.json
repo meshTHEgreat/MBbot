@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 15,
       "max_realized_drawdown": "1067.99999999999993",
-      "open": 1,
+      "open": 3,
       "profit_factor": "0.5462769659011830562637986333",
       "realized_pnl": "-651.99999999999993",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 23,
+      "trades": 25,
       "win_rate_percent": "27.27272727272727272727272727",
       "wins": 6
     },
@@ -39,6 +39,88 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "NVDA260807C00222500",
+      "details": {
+        "cash_after_entry": "98284.0000000000000500",
+        "decision_time": "2026-08-05T14:25:00-04:00",
+        "entry_delta": "0.4667",
+        "entry_spread_percent": "0.7936507936507935878054925674",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "-2.116521503677963807031003200",
+        "option_vwap_deviation_pct": "8.407079646017689521497376500",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.081561940605194274146876700",
+        "underlying_return_15m_pct": "0.385068406269819697381534800"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "2.5300000000000002",
+        "bid": "2.5100000000000002",
+        "quote_time": "2026-08-05T14:30:00-04:00",
+        "time": "2026-08-05T14:30:00-04:00",
+        "underlying_price": "221.59"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-05T14:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "2.02400000000000016",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "222.5",
+      "symbol": "NVDA",
+      "target_bid": "3.54200000000000028",
+      "trade_id": "A2C-20260805-NVDA-1425",
+      "updated_at": "2026-08-05T18:32:20.846216+00:00"
+    },
+    {
+      "closed_at": null,
+      "contract_id": "AAPL260807P00307500",
+      "details": {
+        "cash_after_entry": "98537.0000000000000700",
+        "decision_time": "2026-08-05T14:25:00-04:00",
+        "entry_delta": "0.4515",
+        "entry_spread_percent": "1.252609603340292275574112735",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "-0.7913342414218070190697696000",
+        "option_vwap_deviation_pct": "-1.287553648068656652360515020",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.1166663690573003872773051000",
+        "underlying_return_15m_pct": "-0.1004373886278956649501971200"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "2.41",
+        "bid": "2.38",
+        "quote_time": "2026-08-05T14:30:00-04:00",
+        "time": "2026-08-05T14:30:00-04:00",
+        "underlying_price": "308.34000000000003"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-05T14:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "1.928",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "307.5",
+      "symbol": "AAPL",
+      "target_bid": "3.374",
+      "trade_id": "A2C-20260805-AAPL-1425",
+      "updated_at": "2026-08-05T18:32:20.482748+00:00"
+    },
     {
       "closed_at": "2026-08-05T13:50:00-04:00",
       "contract_id": "TSLA260807C00322500",
@@ -1225,5 +1307,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-05T17:50:15.758313+00:00"
+  "updated_at": "2026-08-05T18:32:20.846216+00:00"
 }
