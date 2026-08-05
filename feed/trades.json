@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 13,
       "max_realized_drawdown": "918.00000000000001",
-      "open": 0,
+      "open": 1,
       "profit_factor": "0.6423895253682487917971397269",
       "realized_pnl": "-436.99999999999998",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 20,
+      "trades": 21,
       "win_rate_percent": "30",
       "wins": 6
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "TSLA260807P00325000",
+      "details": {
+        "cash_after_entry": "98993.0000000000000200",
+        "decision_time": "2026-08-05T10:25:00-04:00",
+        "entry_delta": "0.5169",
+        "entry_spread_percent": "2.666666666666666666666666667",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-1.221576048493799809224899230",
+        "option_vwap_deviation_pct": "-5.511042517610697941070865340",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "0.0799730320338108736251003300",
+        "underlying_return_15m_pct": "-0.4106272791346183311371924100"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "5.7",
+        "bid": "5.55",
+        "quote_time": "2026-08-05T10:30:00-04:00",
+        "time": "2026-08-05T10:30:00-04:00",
+        "underlying_price": "324.99"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-05T10:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "4.56",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "325.0",
+      "symbol": "TSLA",
+      "target_bid": "7.98",
+      "trade_id": "A2C-20260805-TSLA-1025",
+      "updated_at": "2026-08-05T14:32:46.939283+00:00"
+    },
     {
       "closed_at": "2026-08-04T15:50:00-04:00",
       "contract_id": "AAPL260807P00310000",
@@ -1080,5 +1121,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-04T19:55:16.370630+00:00"
+  "updated_at": "2026-08-05T14:32:46.939283+00:00"
 }
