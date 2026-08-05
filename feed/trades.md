@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-05T14:32:46.939283+00:00`
-- Records: 21
+- Updated: `2026-08-05T15:32:32.388110+00:00`
+- Records: 22
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 21 | 1 | 20 | 6 | 13 | 1 | 30% | -$437.00 | -$21.85 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 22 | 2 | 20 | 6 | 13 | 1 | 30% | -$437.00 | -$21.85 |
 
 ## Workflow #125 trades
 
@@ -46,6 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260805-TSLA-1125 | open | TSLA 322.5 PUT 2026-08-07 | 2026-08-05T11:30:00-04:00 | +$5.05 | — | — | open | — | — | — |
 | A2C-20260805-TSLA-1025 | open | TSLA 325.0 PUT 2026-08-07 | 2026-08-05T10:30:00-04:00 | +$5.70 | — | — | open | — | — | — |
 | A2C-20260804-AAPL-1425 | closed | AAPL 310.0 PUT 2026-08-07 | 2026-08-04T14:30:00-04:00 | +$3.90 | 2026-08-04T15:50:00-04:00 | +$2.86 | loss | -26.66666666666666666666666667% | -$104.00 | stop_loss_20 |
 | A2C-20260804-NVDA-1325 | closed | NVDA 212.5 CALL 2026-08-07 | 2026-08-04T13:30:00-04:00 | +$2.92 | 2026-08-04T15:55:00-04:00 | +$3.05 | win | 4.452054794520558219178082200% | +$13.00 | end_of_session_1555 |
