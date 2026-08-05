@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 13,
       "max_realized_drawdown": "918.00000000000001",
-      "open": 2,
+      "open": 3,
       "profit_factor": "0.6423895253682487917971397269",
       "realized_pnl": "-436.99999999999998",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 22,
+      "trades": 23,
       "win_rate_percent": "30",
       "wins": 6
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "TSLA260807C00322500",
+      "details": {
+        "cash_after_entry": "97943.0000000000000200",
+        "decision_time": "2026-08-05T12:25:00-04:00",
+        "entry_delta": "0.5465",
+        "entry_spread_percent": "1.851851851851842506858710562",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-0.5606666047145556484837220800",
+        "option_vwap_deviation_pct": "-14.09708637907958406259652012",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "0.080605062614876984742122000",
+        "underlying_return_15m_pct": "0.198640553710543468139917400"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "5.45",
+        "bid": "5.3500000000000005",
+        "quote_time": "2026-08-05T12:30:00-04:00",
+        "time": "2026-08-05T12:30:00-04:00",
+        "underlying_price": "322.83"
+      },
+      "exit": null,
+      "expiration": "2026-08-07",
+      "opened_at": "2026-08-05T12:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "4.360",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "322.5",
+      "symbol": "TSLA",
+      "target_bid": "7.630",
+      "trade_id": "A2C-20260805-TSLA-1225",
+      "updated_at": "2026-08-05T16:32:33.046768+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "TSLA260807P00322500",
@@ -1162,5 +1203,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-05T15:32:32.388110+00:00"
+  "updated_at": "2026-08-05T16:32:33.046768+00:00"
 }
