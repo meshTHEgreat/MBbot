@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-06T18:32:41.835219+00:00`
+- Updated: `2026-08-06T19:51:09.564030+00:00`
 - Records: 30
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 30 | 3 | 27 | 7 | 19 | 1 | 25.92592592592592592592592593% | -$937.00 | -$34.70 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 30 | 2 | 28 | 7 | 20 | 1 | 25% | -$1,017.00 | -$36.32 |
 
 ## Workflow #125 trades
 
@@ -46,7 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260806-NVDA-1425 | open | NVDA 220.0 CALL 2026-08-10 | 2026-08-06T14:30:00-04:00 | +$3.10 | — | — | open | — | — | — |
+| A2C-20260806-NVDA-1425 | closed | NVDA 220.0 CALL 2026-08-10 | 2026-08-06T14:30:00-04:00 | +$3.10 | 2026-08-06T15:51:00-04:00 | +$2.30 | loss | -25.80645161290321612903225806% | -$80.00 | stop_loss_20 |
 | A2C-20260806-TSLA-1125 | open | TSLA 322.5 PUT 2026-08-10 | 2026-08-06T11:30:00-04:00 | +$5.45 | — | — | open | — | — | — |
 | A2C-20260806-TSLA-1025 | closed | TSLA 322.5 CALL 2026-08-10 | 2026-08-06T10:30:00-04:00 | +$4.40 | 2026-08-06T12:02:00-04:00 | +$3.40 | loss | -22.72727272727272727272727273% | -$100.00 | stop_loss_20 |
 | A2C-20260806-SPY-1025 | open | SPY 772.0 PUT 2026-08-10 | 2026-08-06T10:30:00-04:00 | +$4.26 | — | — | open | — | — | — |
