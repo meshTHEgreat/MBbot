@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-06T14:33:07.582594+00:00`
-- Records: 28
+- Updated: `2026-08-06T15:32:53.678409+00:00`
+- Records: 29
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 28 | 3 | 25 | 7 | 17 | 1 | 28% | -$754.00 | -$30.16 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 29 | 4 | 25 | 7 | 17 | 1 | 28% | -$754.00 | -$30.16 |
 
 ## Workflow #125 trades
 
@@ -46,6 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260806-TSLA-1125 | open | TSLA 322.5 PUT 2026-08-10 | 2026-08-06T11:30:00-04:00 | +$5.45 | — | — | open | — | — | — |
 | A2C-20260806-TSLA-1025 | open | TSLA 322.5 CALL 2026-08-10 | 2026-08-06T10:30:00-04:00 | +$4.40 | — | — | open | — | — | — |
 | A2C-20260806-SPY-1025 | open | SPY 772.0 PUT 2026-08-10 | 2026-08-06T10:30:00-04:00 | +$4.26 | — | — | open | — | — | — |
 | A2C-20260806-QQQ-1025 | open | QQQ 718.0 CALL 2026-08-07 | 2026-08-06T10:30:00-04:00 | +$3.97 | — | — | open | — | — | — |
