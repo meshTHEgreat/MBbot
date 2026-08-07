@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 22,
       "max_realized_drawdown": "1432.99999999999991",
-      "open": 2,
+      "open": 5,
       "profit_factor": "0.5498211548288196796061672405",
       "realized_pnl": "-880.99999999999986",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 35,
+      "trades": 38,
       "win_rate_percent": "30.3030303030303030303030303",
       "wins": 10
     },
@@ -39,6 +39,129 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "SPY260810P00772000",
+      "details": {
+        "cash_after_entry": "97622.0000000000001300",
+        "decision_time": "2026-08-07T13:25:00-04:00",
+        "entry_delta": "0.47450000000000003",
+        "entry_spread_percent": "0.9569377990430622009569377990",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "-0.1645290840782484777820961300",
+        "option_vwap_deviation_pct": "-3.010449806974090287555816050",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.0815852343765725480491758500",
+        "underlying_return_15m_pct": "-0.0453221107154418905794755600"
+      },
+      "dte": 3,
+      "entry": {
+        "ask": "2.1",
+        "bid": "2.08",
+        "quote_time": "2026-08-07T13:30:00-04:00",
+        "time": "2026-08-07T13:30:00-04:00",
+        "underlying_price": "771.9"
+      },
+      "exit": null,
+      "expiration": "2026-08-10",
+      "opened_at": "2026-08-07T13:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "1.68",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "772.0",
+      "symbol": "SPY",
+      "target_bid": "2.94",
+      "trade_id": "A2C-20260807-SPY-1325",
+      "updated_at": "2026-08-07T17:36:22.023200+00:00"
+    },
+    {
+      "closed_at": null,
+      "contract_id": "QQQ260811P00721000",
+      "details": {
+        "cash_after_entry": "97832.0000000000001300",
+        "decision_time": "2026-08-07T13:25:00-04:00",
+        "entry_delta": "0.49000000000000005",
+        "entry_spread_percent": "0.8988764044943820224719101124",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "-0.2428734005051766730507674800",
+        "option_vwap_deviation_pct": "-5.472636815920387645107794360",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.1470457541410755986830956200",
+        "underlying_return_15m_pct": "-0.1039803685064259867736971300"
+      },
+      "dte": 4,
+      "entry": {
+        "ask": "4.47",
+        "bid": "4.43",
+        "quote_time": "2026-08-07T13:30:00-04:00",
+        "time": "2026-08-07T13:30:00-04:00",
+        "underlying_price": "720.54"
+      },
+      "exit": null,
+      "expiration": "2026-08-11",
+      "opened_at": "2026-08-07T13:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "3.576",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "721.0",
+      "symbol": "QQQ",
+      "target_bid": "6.258",
+      "trade_id": "A2C-20260807-QQQ-1325",
+      "updated_at": "2026-08-07T17:36:21.675247+00:00"
+    },
+    {
+      "closed_at": null,
+      "contract_id": "AAPL260810C00312500",
+      "details": {
+        "cash_after_entry": "98279.0000000000001300",
+        "decision_time": "2026-08-07T13:25:00-04:00",
+        "entry_delta": "0.5335",
+        "entry_spread_percent": "2.695417789757417717104641786",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-0.5722140528099130490377853100",
+        "option_vwap_deviation_pct": "-5.472636815920402440533650160",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "0.022372052710502516549064500",
+        "underlying_return_15m_pct": "0.156885345628021643774213200"
+      },
+      "dte": 3,
+      "entry": {
+        "ask": "1.8800000000000001",
+        "bid": "1.83",
+        "quote_time": "2026-08-07T13:30:00-04:00",
+        "time": "2026-08-07T13:30:00-04:00",
+        "underlying_price": "312.82"
+      },
+      "exit": null,
+      "expiration": "2026-08-10",
+      "opened_at": "2026-08-07T13:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "1.50400000000000008",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "312.5",
+      "symbol": "AAPL",
+      "target_bid": "2.63200000000000014",
+      "trade_id": "A2C-20260807-AAPL-1325",
+      "updated_at": "2026-08-07T17:36:17.678958+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "TSLA260810P00330000",
@@ -1838,5 +1961,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-07T16:34:02.577644+00:00"
+  "updated_at": "2026-08-07T17:36:22.023200+00:00"
 }
