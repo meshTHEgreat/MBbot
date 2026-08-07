@@ -4,20 +4,20 @@
   "source": "Local append-only MBbot alert events",
   "strategies": {
     "a2_pt40_sl20_combined_v1": {
-      "closed": 33,
-      "expectancy": "-26.69696969696969272727272727",
+      "closed": 34,
+      "expectancy": "-27.02941176470587852941176471",
       "flats": 1,
       "id": "a2_pt40_sl20_combined_v1",
-      "losses": 22,
+      "losses": 23,
       "max_realized_drawdown": "1432.99999999999991",
-      "open": 5,
-      "profit_factor": "0.5498211548288196796061672405",
-      "realized_pnl": "-880.99999999999986",
+      "open": 4,
+      "profit_factor": "0.5393483709273183493571020283",
+      "realized_pnl": "-918.99999999999987",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
       "trades": 38,
-      "win_rate_percent": "30.3030303030303030303030303",
+      "win_rate_percent": "29.41176470588235294117647059",
       "wins": 10
     },
     "workflow_125": {
@@ -122,10 +122,11 @@
       "updated_at": "2026-08-07T17:36:21.675247+00:00"
     },
     {
-      "closed_at": null,
+      "closed_at": "2026-08-07T14:18:00-04:00",
       "contract_id": "AAPL260810C00312500",
       "details": {
         "cash_after_entry": "98279.0000000000001300",
+        "cash_after_exit": "97772.0000000000001300",
         "decision_time": "2026-08-07T13:25:00-04:00",
         "entry_delta": "0.5335",
         "entry_spread_percent": "2.695417789757417717104641786",
@@ -133,6 +134,7 @@
         "opening_low_distance_pct": "-0.5722140528099130490377853100",
         "option_vwap_deviation_pct": "-5.472636815920402440533650160",
         "option_vwap_was_imputed": false,
+        "realized_pnl_after": "-918.9999999999998700",
         "underlying_acceleration_5m_pct": "0.022372052710502516549064500",
         "underlying_return_15m_pct": "0.156885345628021643774213200"
       },
@@ -144,15 +146,24 @@
         "time": "2026-08-07T13:30:00-04:00",
         "underlying_price": "312.82"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "stop_loss_20"
+        ],
+        "ask": "1.55",
+        "bid": "1.5",
+        "reason": "stop_loss_20",
+        "time": "2026-08-07T14:18:00-04:00"
+      },
       "expiration": "2026-08-10",
+      "gross_pnl": "-38.00000000000001",
       "opened_at": "2026-08-07T13:30:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-38.00000000000001",
+      "result": "loss",
+      "return_percent": "-20.21276595744681275464010865",
       "right": "call",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "1.50400000000000008",
       "strategy_id": "a2_pt40_sl20_combined_v1",
       "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
@@ -160,7 +171,7 @@
       "symbol": "AAPL",
       "target_bid": "2.63200000000000014",
       "trade_id": "A2C-20260807-AAPL-1325",
-      "updated_at": "2026-08-07T17:36:17.678958+00:00"
+      "updated_at": "2026-08-07T18:18:21.583103+00:00"
     },
     {
       "closed_at": null,
@@ -1961,5 +1972,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-07T17:36:22.023200+00:00"
+  "updated_at": "2026-08-07T18:18:21.583103+00:00"
 }
