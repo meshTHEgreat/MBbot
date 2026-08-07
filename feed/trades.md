@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-07T14:41:33.501557+00:00`
+- Updated: `2026-08-07T14:54:31.985147+00:00`
 - Records: 33
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 33 | 2 | 31 | 9 | 21 | 1 | 29.03225806451612903225806452% | -$1,016.00 | -$32.77 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 33 | 1 | 32 | 10 | 21 | 1 | 31.25% | -$841.00 | -$26.28 |
 
 ## Workflow #125 trades
 
@@ -46,7 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260807-TSLA-1025 | open | TSLA 327.5 CALL 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$3.90 | — | — | open | — | — | — |
+| A2C-20260807-TSLA-1025 | closed | TSLA 327.5 CALL 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$3.90 | 2026-08-07T10:48:00-04:00 | +$5.65 | win | 44.87179487179487179487179490% | +$175.00 | profit_target_40 |
 | A2C-20260807-QQQ-1025 | closed | QQQ 720.0 CALL 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$4.68 | 2026-08-07T10:40:00-04:00 | +$3.63 | loss | -22.43589743589743589743589744% | -$105.00 | stop_loss_20 |
 | A2C-20260807-NVDA-1025 | open | NVDA 222.5 PUT 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$1.86 | — | — | open | — | — | — |
 | A2C-20260806-NVDA-1425 | closed | NVDA 220.0 CALL 2026-08-10 | 2026-08-06T14:30:00-04:00 | +$3.10 | 2026-08-06T15:51:00-04:00 | +$2.30 | loss | -25.80645161290321612903225806% | -$80.00 | stop_loss_20 |
