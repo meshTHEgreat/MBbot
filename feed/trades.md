@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-07T15:29:05.338914+00:00`
-- Records: 33
+- Updated: `2026-08-07T16:34:02.577644+00:00`
+- Records: 35
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 33 | 0 | 33 | 10 | 22 | 1 | 30.3030303030303030303030303% | -$881.00 | -$26.70 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 35 | 2 | 33 | 10 | 22 | 1 | 30.3030303030303030303030303% | -$881.00 | -$26.70 |
 
 ## Workflow #125 trades
 
@@ -46,6 +46,8 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260807-TSLA-1225 | open | TSLA 330.0 PUT 2026-08-10 | 2026-08-07T12:30:00-04:00 | +$4.45 | — | — | open | — | — | — |
+| A2C-20260807-NVDA-1225 | open | NVDA 222.5 PUT 2026-08-10 | 2026-08-07T12:30:00-04:00 | +$2.07 | — | — | open | — | — | — |
 | A2C-20260807-TSLA-1025 | closed | TSLA 327.5 CALL 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$3.90 | 2026-08-07T10:48:00-04:00 | +$5.65 | win | 44.87179487179487179487179490% | +$175.00 | profit_target_40 |
 | A2C-20260807-QQQ-1025 | closed | QQQ 720.0 CALL 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$4.68 | 2026-08-07T10:40:00-04:00 | +$3.63 | loss | -22.43589743589743589743589744% | -$105.00 | stop_loss_20 |
 | A2C-20260807-NVDA-1025 | closed | NVDA 222.5 PUT 2026-08-10 | 2026-08-07T10:30:00-04:00 | +$1.86 | 2026-08-07T11:23:00-04:00 | +$1.46 | loss | -21.50537634408602150537634409% | -$40.00 | stop_loss_20 |
