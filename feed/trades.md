@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-07T18:18:21.583103+00:00`
+- Updated: `2026-08-07T19:11:13.228420+00:00`
 - Records: 38
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 38 | 4 | 34 | 10 | 23 | 1 | 29.41176470588235294117647059% | -$919.00 | -$27.03 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 38 | 3 | 35 | 10 | 24 | 1 | 28.57142857142857142857142857% | -$963.00 | -$27.51 |
 
 ## Workflow #125 trades
 
@@ -46,7 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260807-SPY-1325 | open | SPY 772.0 PUT 2026-08-10 | 2026-08-07T13:30:00-04:00 | +$2.10 | — | — | open | — | — | — |
+| A2C-20260807-SPY-1325 | closed | SPY 772.0 PUT 2026-08-10 | 2026-08-07T13:30:00-04:00 | +$2.10 | 2026-08-07T15:11:00-04:00 | +$1.66 | loss | -20.95238095238094761904761905% | -$44.00 | stop_loss_20 |
 | A2C-20260807-QQQ-1325 | open | QQQ 721.0 PUT 2026-08-11 | 2026-08-07T13:30:00-04:00 | +$4.47 | — | — | open | — | — | — |
 | A2C-20260807-AAPL-1325 | closed | AAPL 312.5 CALL 2026-08-10 | 2026-08-07T13:30:00-04:00 | +$1.88 | 2026-08-07T14:18:00-04:00 | +$1.50 | loss | -20.21276595744681275464010865% | -$38.00 | stop_loss_20 |
 | A2C-20260807-TSLA-1225 | open | TSLA 330.0 PUT 2026-08-10 | 2026-08-07T12:30:00-04:00 | +$4.45 | — | — | open | — | — | — |
