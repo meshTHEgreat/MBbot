@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-10T17:36:56.995942+00:00`
+- Updated: `2026-08-10T19:12:15.782804+00:00`
 - Records: 43
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 43 | 3 | 40 | 11 | 28 | 1 | 27.5% | -$1,255.00 | -$31.37 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 43 | 2 | 41 | 11 | 29 | 1 | 26.82926829268292682926829268% | -$1,335.00 | -$32.56 |
 
 ## Workflow #125 trades
 
@@ -49,7 +49,7 @@ _No paper trades recorded yet._
 | A2C-20260810-TSLA-1325 | open | TSLA 330.0 PUT 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$6.25 | — | — | open | — | — | — |
 | A2C-20260810-NVDA-1325 | open | NVDA 220.0 CALL 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$2.79 | — | — | open | — | — | — |
 | A2C-20260810-TSLA-1125 | closed | TSLA 330.0 CALL 2026-08-12 | 2026-08-10T11:30:00-04:00 | +$4.40 | 2026-08-10T11:40:00-04:00 | +$3.50 | loss | -20.45454545454545454545454545% | -$90.00 | stop_loss_20 |
-| A2C-20260810-AAPL-1125 | open | AAPL 307.5 PUT 2026-08-14 | 2026-08-10T11:30:00-04:00 | +$4.00 | — | — | open | — | — | — |
+| A2C-20260810-AAPL-1125 | closed | AAPL 307.5 PUT 2026-08-14 | 2026-08-10T11:30:00-04:00 | +$4.00 | 2026-08-10T15:12:00-04:00 | +$3.20 | loss | -20.0% | -$80.00 | stop_loss_20 |
 | A2C-20260810-AAPL-1025 | closed | AAPL 307.5 CALL 2026-08-14 | 2026-08-10T10:30:00-04:00 | +$3.50 | 2026-08-10T12:12:00-04:00 | +$2.73 | loss | -22.00% | -$77.00 | stop_loss_20 |
 | A2C-20260807-SPY-1325 | closed | SPY 772.0 PUT 2026-08-10 | 2026-08-07T13:30:00-04:00 | +$2.10 | 2026-08-07T15:11:00-04:00 | +$1.66 | loss | -20.95238095238094761904761905% | -$44.00 | stop_loss_20 |
 | A2C-20260807-QQQ-1325 | closed | QQQ 721.0 PUT 2026-08-11 | 2026-08-07T13:30:00-04:00 | +$4.47 | 2026-08-07T15:54:00-04:00 | +$3.55 | loss | -20.58165548098433333333333333% | -$92.00 | stop_loss_20 |
