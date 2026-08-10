@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-10T15:38:31.657894+00:00`
+- Updated: `2026-08-10T15:46:55.277230+00:00`
 - Records: 41
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 41 | 3 | 38 | 11 | 26 | 1 | 28.94736842105263157894736842% | -$1,088.00 | -$28.63 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 41 | 2 | 39 | 11 | 27 | 1 | 28.20512820512820512820512821% | -$1,178.00 | -$30.21 |
 
 ## Workflow #125 trades
 
@@ -46,7 +46,7 @@ _No paper trades recorded yet._
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260810-TSLA-1125 | open | TSLA 330.0 CALL 2026-08-12 | 2026-08-10T11:30:00-04:00 | +$4.40 | — | — | open | — | — | — |
+| A2C-20260810-TSLA-1125 | closed | TSLA 330.0 CALL 2026-08-12 | 2026-08-10T11:30:00-04:00 | +$4.40 | 2026-08-10T11:40:00-04:00 | +$3.50 | loss | -20.45454545454545454545454545% | -$90.00 | stop_loss_20 |
 | A2C-20260810-AAPL-1125 | open | AAPL 307.5 PUT 2026-08-14 | 2026-08-10T11:30:00-04:00 | +$4.00 | — | — | open | — | — | — |
 | A2C-20260810-AAPL-1025 | open | AAPL 307.5 CALL 2026-08-14 | 2026-08-10T10:30:00-04:00 | +$3.50 | — | — | open | — | — | — |
 | A2C-20260807-SPY-1325 | closed | SPY 772.0 PUT 2026-08-10 | 2026-08-07T13:30:00-04:00 | +$2.10 | 2026-08-07T15:11:00-04:00 | +$1.66 | loss | -20.95238095238094761904761905% | -$44.00 | stop_loss_20 |
