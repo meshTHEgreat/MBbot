@@ -27,18 +27,54 @@
       "id": "workflow_125",
       "losses": 0,
       "max_realized_drawdown": "0",
-      "open": 0,
+      "open": 1,
       "profit_factor": null,
       "realized_pnl": "0",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
-      "trades": 0,
+      "trades": 1,
       "win_rate_percent": null,
       "wins": 0
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "SPY260811P00772000",
+      "details": {
+        "delta": "-0.5685",
+        "momentum_percent": "62.60869565217390759924385630",
+        "rsi": "60.03886830511234880450212480",
+        "signal_bar_time": "2026-08-11T12:27:00-04:00",
+        "spread_percent": "1.069518716577550744945523178"
+      },
+      "dte": 0,
+      "entry": {
+        "ask": "0.9400000000000001",
+        "bid": "0.93",
+        "quote_time": "2026-08-11T12:27:00-04:00",
+        "time": "2026-08-11T12:27:00-04:00",
+        "underlying_price": "771.66"
+      },
+      "exit": null,
+      "expiration": "2026-08-11",
+      "opened_at": "2026-08-11T12:27:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "0.235000000000000025",
+      "strategy_id": "workflow_125",
+      "strategy_name": "Baseline replay / Workflow #125",
+      "strike": "772.0",
+      "symbol": "SPY",
+      "target_bid": "1.41000000000000015",
+      "trade_id": "W125-20260811-SPY-1227",
+      "updated_at": "2026-08-11T16:28:26.341623+00:00"
+    },
     {
       "closed_at": "2026-08-10T15:55:00-04:00",
       "contract_id": "TSLA260814P00330000",
@@ -2276,5 +2312,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-10T19:55:16.256563+00:00"
+  "updated_at": "2026-08-11T16:28:26.341623+00:00"
 }

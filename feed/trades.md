@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-10T19:55:16.256563+00:00`
-- Records: 43
+- Updated: `2026-08-11T16:28:26.341623+00:00`
+- Records: 44
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -35,12 +35,14 @@ OR
 
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Baseline replay / Workflow #125 | baseline_replay | 0 | 0 | 0 | 0 | 0 | 0 | — | $0.00 | — |
+| Baseline replay / Workflow #125 | baseline_replay | 1 | 1 | 0 | 0 | 0 | 0 | — | $0.00 | — |
 | A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 43 | 0 | 43 | 11 | 31 | 1 | 25.5813953488372093023255814% | -$1,464.00 | -$34.05 |
 
 ## Workflow #125 trades
 
-_No paper trades recorded yet._
+| Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
+|---|---|---|---|---:|---|---:|---|---:|---:|---|
+| W125-20260811-SPY-1227 | open | SPY 772.0 PUT 2026-08-11 | 2026-08-11T12:27:00-04:00 | +$0.94 | — | — | open | — | — | — |
 
 ## A2 PT40/SL20 combined trades
 
