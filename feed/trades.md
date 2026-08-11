@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-11T16:28:26.341623+00:00`
-- Records: 44
+- Updated: `2026-08-11T16:32:16.111063+00:00`
+- Records: 45
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 1 | 1 | 0 | 0 | 0 | 0 | — | $0.00 | — |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 43 | 0 | 43 | 11 | 31 | 1 | 25.5813953488372093023255814% | -$1,464.00 | -$34.05 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 44 | 1 | 43 | 11 | 31 | 1 | 25.5813953488372093023255814% | -$1,464.00 | -$34.05 |
 
 ## Workflow #125 trades
 
@@ -48,6 +48,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260811-AAPL-1225 | open | AAPL 307.5 PUT 2026-08-14 | 2026-08-11T12:30:00-04:00 | +$3.25 | — | — | open | — | — | — |
 | A2C-20260810-TSLA-1325 | closed | TSLA 330.0 PUT 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$6.25 | 2026-08-10T15:55:00-04:00 | +$5.30 | loss | -15.200% | -$95.00 | end_of_session_1555 |
 | A2C-20260810-NVDA-1325 | closed | NVDA 220.0 CALL 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$2.79 | 2026-08-10T15:55:00-04:00 | +$2.45 | loss | -12.18637992831541218637992832% | -$34.00 | end_of_session_1555 |
 | A2C-20260810-TSLA-1125 | closed | TSLA 330.0 CALL 2026-08-12 | 2026-08-10T11:30:00-04:00 | +$4.40 | 2026-08-10T11:40:00-04:00 | +$3.50 | loss | -20.45454545454545454545454545% | -$90.00 | stop_loss_20 |
