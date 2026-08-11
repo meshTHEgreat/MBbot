@@ -21,20 +21,20 @@
       "wins": 12
     },
     "workflow_125": {
-      "closed": 1,
-      "expectancy": "46.69999999999999",
+      "closed": 2,
+      "expectancy": "20.20000000000001",
       "flats": 0,
       "id": "workflow_125",
-      "losses": 0,
-      "max_realized_drawdown": "0",
-      "open": 1,
-      "profit_factor": null,
-      "realized_pnl": "46.69999999999999",
+      "losses": 1,
+      "max_realized_drawdown": "6.29999999999997",
+      "open": 0,
+      "profit_factor": "7.412698412698446409674981104",
+      "realized_pnl": "40.40000000000002",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
       "trades": 2,
-      "win_rate_percent": "100",
+      "win_rate_percent": "50",
       "wins": 1
     }
   },
@@ -81,7 +81,7 @@
       "updated_at": "2026-08-11T18:32:25.054611+00:00"
     },
     {
-      "closed_at": null,
+      "closed_at": "2026-08-11T15:20:00-04:00",
       "contract_id": "NVDA260812P00220000",
       "details": {
         "delta": "-0.666",
@@ -98,15 +98,24 @@
         "time": "2026-08-11T12:51:00-04:00",
         "underlying_price": "217.92000000000002"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "time_exit"
+        ],
+        "ask": "3.15",
+        "bid": "3.0500000000000003",
+        "reason": "time_exit",
+        "time": "2026-08-11T15:20:00-04:00"
+      },
       "expiration": "2026-08-12",
+      "gross_pnl": "-4.99999999999997",
       "opened_at": "2026-08-11T12:51:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-6.29999999999997",
+      "result": "loss",
+      "return_percent": "-1.612903225806441935483870970",
       "right": "put",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "0.775",
       "strategy_id": "workflow_125",
       "strategy_name": "Baseline replay / Workflow #125",
@@ -114,7 +123,7 @@
       "symbol": "NVDA",
       "target_bid": "4.65",
       "trade_id": "W125-20260811-NVDA-1251",
-      "updated_at": "2026-08-11T16:52:15.528262+00:00"
+      "updated_at": "2026-08-11T19:20:03.580930+00:00"
     },
     {
       "closed_at": "2026-08-11T14:25:00-04:00",
@@ -2450,5 +2459,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-11T18:32:25.054611+00:00"
+  "updated_at": "2026-08-11T19:20:03.580930+00:00"
 }
