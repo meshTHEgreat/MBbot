@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-11T16:52:15.528262+00:00`
+- Updated: `2026-08-11T17:05:03.336752+00:00`
 - Records: 46
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -35,7 +35,7 @@ OR
 
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Baseline replay / Workflow #125 | baseline_replay | 2 | 2 | 0 | 0 | 0 | 0 | — | $0.00 | — |
+| Baseline replay / Workflow #125 | baseline_replay | 2 | 1 | 1 | 1 | 0 | 0 | 100% | +$46.70 | +$46.70 |
 | A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 44 | 1 | 43 | 11 | 31 | 1 | 25.5813953488372093023255814% | -$1,464.00 | -$34.05 |
 
 ## Workflow #125 trades
@@ -43,7 +43,7 @@ OR
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | W125-20260811-NVDA-1251 | open | NVDA 220.0 PUT 2026-08-12 | 2026-08-11T12:51:00-04:00 | +$3.10 | — | — | open | — | — | — |
-| W125-20260811-SPY-1227 | open | SPY 772.0 PUT 2026-08-11 | 2026-08-11T12:27:00-04:00 | +$0.94 | — | — | open | — | — | — |
+| W125-20260811-SPY-1227 | closed | SPY 772.0 PUT 2026-08-11 | 2026-08-11T12:27:00-04:00 | +$0.94 | 2026-08-11T13:05:00-04:00 | +$1.42 | win | 51.06382978723402648257129920% | +$46.70 | profit_target |
 
 ## A2 PT40/SL20 combined trades
 
