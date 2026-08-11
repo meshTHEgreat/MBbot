@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-11T18:25:33.691613+00:00`
-- Records: 46
+- Updated: `2026-08-11T18:32:25.054611+00:00`
+- Records: 47
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 1 | 1 | 1 | 0 | 0 | 100% | +$46.70 | +$46.70 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 44 | 0 | 44 | 12 | 31 | 1 | 27.27272727272727272727272727% | -$1,319.00 | -$29.98 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 45 | 1 | 44 | 12 | 31 | 1 | 27.27272727272727272727272727% | -$1,319.00 | -$29.98 |
 
 ## Workflow #125 trades
 
@@ -49,6 +49,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260811-TSLA-1425 | open | TSLA 332.5 CALL 2026-08-14 | 2026-08-11T14:30:00-04:00 | +$4.20 | — | — | open | — | — | — |
 | A2C-20260811-AAPL-1225 | closed | AAPL 307.5 PUT 2026-08-14 | 2026-08-11T12:30:00-04:00 | +$3.25 | 2026-08-11T14:25:00-04:00 | +$4.70 | win | 44.61538461538461538461538460% | +$145.00 | profit_target_40 |
 | A2C-20260810-TSLA-1325 | closed | TSLA 330.0 PUT 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$6.25 | 2026-08-10T15:55:00-04:00 | +$5.30 | loss | -15.200% | -$95.00 | end_of_session_1555 |
 | A2C-20260810-NVDA-1325 | closed | NVDA 220.0 CALL 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$2.79 | 2026-08-10T15:55:00-04:00 | +$2.45 | loss | -12.18637992831541218637992832% | -$34.00 | end_of_session_1555 |
