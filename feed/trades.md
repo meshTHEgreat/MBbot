@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-12T16:35:09.846329+00:00`
+- Updated: `2026-08-12T16:46:44.965419+00:00`
 - Records: 49
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 47 | 1 | 46 | 13 | 32 | 1 | 28.26086956521739130434782609% | -$1,297.00 | -$28.20 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 47 | 0 | 47 | 13 | 33 | 1 | 27.6595744680851063829787234% | -$1,334.00 | -$28.38 |
 
 ## Workflow #125 trades
 
@@ -50,7 +50,7 @@ OR
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260812-NVDA-1125 | closed | NVDA 225.0 CALL 2026-08-14 | 2026-08-12T11:30:00-04:00 | +$2.00 | 2026-08-12T12:35:00-04:00 | +$1.57 | loss | -21.500% | -$43.00 | stop_loss_20 |
-| A2C-20260812-AAPL-1125 | open | AAPL 300.0 PUT 2026-08-14 | 2026-08-12T11:30:00-04:00 | +$1.84 | — | — | open | — | — | — |
+| A2C-20260812-AAPL-1125 | closed | AAPL 300.0 PUT 2026-08-14 | 2026-08-12T11:30:00-04:00 | +$1.84 | 2026-08-12T12:45:00-04:00 | +$1.47 | loss | -20.10869565217391304347826087% | -$37.00 | stop_loss_20 |
 | A2C-20260811-TSLA-1425 | closed | TSLA 332.5 CALL 2026-08-14 | 2026-08-11T14:30:00-04:00 | +$4.20 | 2026-08-11T15:55:00-04:00 | +$4.85 | win | 15.47619047619048809523809520% | +$65.00 | end_of_session_1555 |
 | A2C-20260811-AAPL-1225 | closed | AAPL 307.5 PUT 2026-08-14 | 2026-08-11T12:30:00-04:00 | +$3.25 | 2026-08-11T14:25:00-04:00 | +$4.70 | win | 44.61538461538461538461538460% | +$145.00 | profit_target_40 |
 | A2C-20260810-TSLA-1325 | closed | TSLA 330.0 PUT 2026-08-14 | 2026-08-10T13:30:00-04:00 | +$6.25 | 2026-08-10T15:55:00-04:00 | +$5.30 | loss | -15.200% | -$95.00 | end_of_session_1555 |
