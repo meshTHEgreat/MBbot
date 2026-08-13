@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-13T18:49:53.954947+00:00`
+- Updated: `2026-08-13T19:07:14.859344+00:00`
 - Records: 61
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 59 | 9 | 50 | 16 | 33 | 1 | 32% | -$1,003.00 | -$20.06 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 59 | 8 | 51 | 17 | 33 | 1 | 33.33333333333333333333333333% | -$910.00 | -$17.84 |
 
 ## Workflow #125 trades
 
@@ -54,7 +54,7 @@ OR
 | A2C-20260813-TSLA-1325 | closed | TSLA 337.5 CALL 2026-08-17 | 2026-08-13T13:30:00-04:00 | +$4.00 | 2026-08-13T14:49:00-04:00 | +$5.80 | win | 45.00% | +$180.00 | profit_target_40 |
 | A2C-20260813-NVDA-1325 | open | NVDA 225.0 CALL 2026-08-17 | 2026-08-13T13:30:00-04:00 | +$2.70 | — | — | open | — | — | — |
 | A2C-20260813-AAPL-1325 | open | AAPL 302.5 CALL 2026-08-17 | 2026-08-13T13:30:00-04:00 | +$3.05 | — | — | open | — | — | — |
-| A2C-20260813-SPY-1225 | open | SPY 776.0 CALL 2026-08-14 | 2026-08-13T12:30:00-04:00 | +$2.27 | — | — | open | — | — | — |
+| A2C-20260813-SPY-1225 | closed | SPY 776.0 CALL 2026-08-14 | 2026-08-13T12:30:00-04:00 | +$2.27 | 2026-08-13T15:07:00-04:00 | +$3.20 | win | 40.96916299559471365638766520% | +$93.00 | profit_target_40 |
 | A2C-20260813-QQQ-1225 | open | QQQ 732.0 CALL 2026-08-17 | 2026-08-13T12:30:00-04:00 | +$4.03 | — | — | open | — | — | — |
 | A2C-20260813-NVDA-1225 | open | NVDA 225.0 CALL 2026-08-17 | 2026-08-13T12:30:00-04:00 | +$2.75 | — | — | open | — | — | — |
 | A2C-20260813-AAPL-1225 | open | AAPL 302.5 CALL 2026-08-17 | 2026-08-13T12:30:00-04:00 | +$3.15 | — | — | open | — | — | — |
