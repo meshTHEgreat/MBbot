@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-12T19:55:18.544074+00:00`
-- Records: 50
+- Updated: `2026-08-13T15:32:31.544968+00:00`
+- Records: 52
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 48 | 0 | 48 | 14 | 33 | 1 | 29.16666666666666666666666667% | -$1,328.00 | -$27.67 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 50 | 2 | 48 | 14 | 33 | 1 | 29.16666666666666666666666667% | -$1,328.00 | -$27.67 |
 
 ## Workflow #125 trades
 
@@ -49,6 +49,8 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260813-TSLA-1125 | open | TSLA 335.0 CALL 2026-08-17 | 2026-08-13T11:30:00-04:00 | +$3.60 | — | — | open | — | — | — |
+| A2C-20260813-NVDA-1125 | open | NVDA 225.0 CALL 2026-08-17 | 2026-08-13T11:30:00-04:00 | +$2.42 | — | — | open | — | — | — |
 | A2C-20260812-SPY-1325 | closed | SPY 773.0 PUT 2026-08-14 | 2026-08-12T13:30:00-04:00 | +$2.60 | 2026-08-12T15:55:00-04:00 | +$2.66 | win | 2.307692307692307692307692300% | +$6.00 | end_of_session_1555 |
 | A2C-20260812-NVDA-1125 | closed | NVDA 225.0 CALL 2026-08-14 | 2026-08-12T11:30:00-04:00 | +$2.00 | 2026-08-12T12:35:00-04:00 | +$1.57 | loss | -21.500% | -$43.00 | stop_loss_20 |
 | A2C-20260812-AAPL-1125 | closed | AAPL 300.0 PUT 2026-08-14 | 2026-08-12T11:30:00-04:00 | +$1.84 | 2026-08-12T12:45:00-04:00 | +$1.47 | loss | -20.10869565217391304347826087% | -$37.00 | stop_loss_20 |
