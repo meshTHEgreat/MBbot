@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-14T16:32:06.863033+00:00`
-- Records: 67
+- Updated: `2026-08-14T17:32:16.110818+00:00`
+- Records: 68
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 65 | 4 | 61 | 21 | 39 | 1 | 34.42622950819672131147540984% | -$816.00 | -$13.38 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 66 | 5 | 61 | 21 | 39 | 1 | 34.42622950819672131147540984% | -$816.00 | -$13.38 |
 
 ## Workflow #125 trades
 
@@ -49,6 +49,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260814-TSLA-1325 | open | TSLA 340.0 CALL 2026-08-17 | 2026-08-14T13:30:00-04:00 | +$3.20 | — | — | open | — | — | — |
 | A2C-20260814-NVDA-1225 | open | NVDA 225.0 CALL 2026-08-17 | 2026-08-14T12:30:00-04:00 | +$2.15 | — | — | open | — | — | — |
 | A2C-20260814-TSLA-1125 | closed | TSLA 337.5 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$4.00 | 2026-08-14T11:54:00-04:00 | +$3.20 | loss | -20.0% | -$80.00 | stop_loss_20 |
 | A2C-20260814-SPY-1125 | open | SPY 776.0 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$1.69 | — | — | open | — | — | — |
