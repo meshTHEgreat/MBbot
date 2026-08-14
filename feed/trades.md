@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-13T19:55:09.507243+00:00`
-- Records: 61
+- Updated: `2026-08-14T14:32:30.652011+00:00`
+- Records: 62
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 59 | 0 | 59 | 21 | 37 | 1 | 35.59322033898305084745762712% | -$689.00 | -$11.68 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 60 | 1 | 59 | 21 | 37 | 1 | 35.59322033898305084745762712% | -$689.00 | -$11.68 |
 
 ## Workflow #125 trades
 
@@ -49,6 +49,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260814-AAPL-1025 | open | AAPL 305.0 PUT 2026-08-17 | 2026-08-14T10:30:00-04:00 | +$1.88 | — | — | open | — | — | — |
 | A2C-20260813-NVDA-1425 | closed | NVDA 225.0 CALL 2026-08-17 | 2026-08-13T14:30:00-04:00 | +$2.89 | 2026-08-13T15:55:00-04:00 | +$2.63 | loss | -8.996539792387543252595155710% | -$26.00 | end_of_session_1555 |
 | A2C-20260813-AAPL-1425 | closed | AAPL 302.5 CALL 2026-08-17 | 2026-08-13T14:30:00-04:00 | +$3.10 | 2026-08-13T15:55:00-04:00 | +$3.95 | win | 27.41935483870967741935483870% | +$85.00 | end_of_session_1555 |
 | A2C-20260813-TSLA-1325 | closed | TSLA 337.5 CALL 2026-08-17 | 2026-08-13T13:30:00-04:00 | +$4.00 | 2026-08-13T14:49:00-04:00 | +$5.80 | win | 45.00% | +$180.00 | profit_target_40 |
