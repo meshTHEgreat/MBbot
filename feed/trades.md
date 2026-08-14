@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-14T18:28:50.352188+00:00`
+- Updated: `2026-08-14T18:53:05.802348+00:00`
 - Records: 68
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 66 | 3 | 63 | 22 | 40 | 1 | 34.92063492063492063492063492% | -$721.00 | -$11.44 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 66 | 2 | 64 | 22 | 41 | 1 | 34.375% | -$779.00 | -$12.17 |
 
 ## Workflow #125 trades
 
@@ -53,7 +53,7 @@ OR
 | A2C-20260814-NVDA-1225 | closed | NVDA 225.0 CALL 2026-08-17 | 2026-08-14T12:30:00-04:00 | +$2.15 | 2026-08-14T14:27:00-04:00 | +$1.70 | loss | -20.93023255813953488372093023% | -$45.00 | stop_loss_20 |
 | A2C-20260814-TSLA-1125 | closed | TSLA 337.5 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$4.00 | 2026-08-14T11:54:00-04:00 | +$3.20 | loss | -20.0% | -$80.00 | stop_loss_20 |
 | A2C-20260814-SPY-1125 | open | SPY 776.0 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$1.69 | — | — | open | — | — | — |
-| A2C-20260814-QQQ-1125 | open | QQQ 729.0 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$2.65 | — | — | open | — | — | — |
+| A2C-20260814-QQQ-1125 | closed | QQQ 729.0 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$2.65 | 2026-08-14T14:51:00-04:00 | +$2.07 | loss | -21.88679245283018867924528302% | -$58.00 | stop_loss_20 |
 | A2C-20260814-NVDA-1125 | open | NVDA 225.0 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$1.56 | — | — | open | — | — | — |
 | A2C-20260814-AAPL-1025 | closed | AAPL 305.0 PUT 2026-08-17 | 2026-08-14T10:30:00-04:00 | +$1.88 | 2026-08-14T11:23:00-04:00 | +$1.41 | loss | -25.00000000000000398936170213% | -$47.00 | stop_loss_20 |
 | A2C-20260813-NVDA-1425 | closed | NVDA 225.0 CALL 2026-08-17 | 2026-08-13T14:30:00-04:00 | +$2.89 | 2026-08-13T15:55:00-04:00 | +$2.63 | loss | -8.996539792387543252595155710% | -$26.00 | end_of_session_1555 |

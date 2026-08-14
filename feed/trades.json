@@ -4,20 +4,20 @@
   "source": "Local append-only MBbot alert events",
   "strategies": {
     "a2_pt40_sl20_combined_v1": {
-      "closed": 63,
-      "expectancy": "-11.44444444444444063492063492",
+      "closed": 64,
+      "expectancy": "-12.17187499999999625",
       "flats": 1,
       "id": "a2_pt40_sl20_combined_v1",
-      "losses": 40,
+      "losses": 41,
       "max_realized_drawdown": "1879.99999999999982",
-      "open": 3,
-      "profit_factor": "0.7476373818690935307271138846",
-      "realized_pnl": "-720.99999999999976",
+      "open": 2,
+      "profit_factor": "0.7327615780445969866032734216",
+      "realized_pnl": "-778.99999999999976",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
       "trades": 66,
-      "win_rate_percent": "34.92063492063492063492063492",
+      "win_rate_percent": "34.375",
       "wins": 22
     },
     "workflow_125": {
@@ -237,10 +237,11 @@
       "updated_at": "2026-08-14T15:32:23.343719+00:00"
     },
     {
-      "closed_at": null,
+      "closed_at": "2026-08-14T14:51:00-04:00",
       "contract_id": "QQQ260817P00729000",
       "details": {
         "cash_after_entry": "98843.0000000000001900",
+        "cash_after_exit": "98896.0000000000002400",
         "decision_time": "2026-08-14T11:25:00-04:00",
         "entry_delta": "0.46580000000000005",
         "entry_spread_percent": "0.7575757575757575757575757576",
@@ -248,6 +249,7 @@
         "opening_low_distance_pct": "0.437753869799099791415084000",
         "option_vwap_deviation_pct": "49.57599051882127294992463470",
         "option_vwap_was_imputed": false,
+        "realized_pnl_after": "-778.9999999999997600",
         "underlying_acceleration_5m_pct": "-0.2355969309722045706106778600",
         "underlying_return_15m_pct": "-0.2013174653172461961955107600"
       },
@@ -259,15 +261,24 @@
         "time": "2026-08-14T11:30:00-04:00",
         "underlying_price": "728.72"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "stop_loss_20"
+        ],
+        "ask": "2.08",
+        "bid": "2.07",
+        "reason": "stop_loss_20",
+        "time": "2026-08-14T14:51:00-04:00"
+      },
       "expiration": "2026-08-17",
+      "gross_pnl": "-58",
       "opened_at": "2026-08-14T11:30:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-58",
+      "result": "loss",
+      "return_percent": "-21.88679245283018867924528302",
       "right": "put",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "2.120",
       "strategy_id": "a2_pt40_sl20_combined_v1",
       "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
@@ -275,7 +286,7 @@
       "symbol": "QQQ",
       "target_bid": "3.710",
       "trade_id": "A2C-20260814-QQQ-1125",
-      "updated_at": "2026-08-14T15:32:22.988808+00:00"
+      "updated_at": "2026-08-14T18:53:05.802348+00:00"
     },
     {
       "closed_at": null,
@@ -3529,5 +3540,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-14T18:28:50.352188+00:00"
+  "updated_at": "2026-08-14T18:53:05.802348+00:00"
 }
