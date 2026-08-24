@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-14T19:55:06.584038+00:00`
-- Records: 68
+- Updated: `2026-08-24T14:32:30.720124+00:00`
+- Records: 71
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 66 | 0 | 66 | 22 | 43 | 1 | 33.33333333333333333333333333% | -$806.00 | -$12.21 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 69 | 3 | 66 | 22 | 43 | 1 | 33.33333333333333333333333333% | -$806.00 | -$12.21 |
 
 ## Workflow #125 trades
 
@@ -49,6 +49,9 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260824-TSLA-1025 | open | TSLA 355.0 CALL 2026-08-28 | 2026-08-24T10:30:00-04:00 | +$6.75 | — | — | open | — | — | — |
+| A2C-20260824-QQQ-1025 | open | QQQ 704.0 CALL 2026-08-25 | 2026-08-24T10:30:00-04:00 | +$3.09 | — | — | open | — | — | — |
+| A2C-20260824-NVDA-1025 | open | NVDA 210.0 CALL 2026-08-28 | 2026-08-24T10:30:00-04:00 | +$6.00 | — | — | open | — | — | — |
 | A2C-20260814-TSLA-1325 | closed | TSLA 340.0 CALL 2026-08-17 | 2026-08-14T13:30:00-04:00 | +$3.20 | 2026-08-14T14:19:00-04:00 | +$4.60 | win | 43.75000000000001562500% | +$140.00 | profit_target_40 |
 | A2C-20260814-NVDA-1225 | closed | NVDA 225.0 CALL 2026-08-17 | 2026-08-14T12:30:00-04:00 | +$2.15 | 2026-08-14T14:27:00-04:00 | +$1.70 | loss | -20.93023255813953488372093023% | -$45.00 | stop_loss_20 |
 | A2C-20260814-TSLA-1125 | closed | TSLA 337.5 PUT 2026-08-17 | 2026-08-14T11:30:00-04:00 | +$4.00 | 2026-08-14T11:54:00-04:00 | +$3.20 | loss | -20.0% | -$80.00 | stop_loss_20 |
