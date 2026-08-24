@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-24T19:47:06.654663+00:00`
+- Updated: `2026-08-24T19:53:07.091241+00:00`
 - Records: 77
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 75 | 5 | 70 | 23 | 46 | 1 | 32.85714285714285714285714286% | -$958.00 | -$13.69 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 75 | 4 | 71 | 23 | 47 | 1 | 32.39436619718309859154929577% | -$1,078.00 | -$15.18 |
 
 ## Workflow #125 trades
 
@@ -50,7 +50,7 @@ OR
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260824-QQQ-1325 | open | QQQ 708.0 PUT 2026-08-28 | 2026-08-24T13:30:00-04:00 | +$6.24 | — | — | open | — | — | — |
-| A2C-20260824-NVDA-1225 | open | NVDA 212.5 CALL 2026-08-28 | 2026-08-24T12:30:00-04:00 | +$5.55 | — | — | open | — | — | — |
+| A2C-20260824-NVDA-1225 | closed | NVDA 212.5 CALL 2026-08-28 | 2026-08-24T12:30:00-04:00 | +$5.55 | 2026-08-24T15:53:00-04:00 | +$4.35 | loss | -21.62162162162161261261261261% | -$120.00 | stop_loss_20 |
 | A2C-20260824-AAPL-1225 | closed | AAPL 312.5 CALL 2026-08-28 | 2026-08-24T12:30:00-04:00 | +$3.25 | 2026-08-24T15:47:00-04:00 | +$2.54 | loss | -21.84615384615384615384615385% | -$71.00 | stop_loss_20 |
 | A2C-20260824-SPY-1125 | open | SPY 764.0 CALL 2026-08-28 | 2026-08-24T11:30:00-04:00 | +$4.44 | — | — | open | — | — | — |
 | A2C-20260824-NVDA-1125 | open | NVDA 210.0 CALL 2026-08-28 | 2026-08-24T11:30:00-04:00 | +$6.30 | — | — | open | — | — | — |
