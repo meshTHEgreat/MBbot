@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-24T17:32:42.224605+00:00`
+- Updated: `2026-08-24T18:47:14.016014+00:00`
 - Records: 77
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 2 | 0 | 2 | 1 | 1 | 0 | 50% | +$40.40 | +$20.20 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 75 | 7 | 68 | 23 | 44 | 1 | 33.82352941176470588235294118% | -$747.00 | -$10.99 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 75 | 6 | 69 | 23 | 45 | 1 | 33.33333333333333333333333333% | -$887.00 | -$12.86 |
 
 ## Workflow #125 trades
 
@@ -55,7 +55,7 @@ OR
 | A2C-20260824-SPY-1125 | open | SPY 764.0 CALL 2026-08-28 | 2026-08-24T11:30:00-04:00 | +$4.44 | — | — | open | — | — | — |
 | A2C-20260824-NVDA-1125 | open | NVDA 210.0 CALL 2026-08-28 | 2026-08-24T11:30:00-04:00 | +$6.30 | — | — | open | — | — | — |
 | A2C-20260824-AAPL-1125 | closed | AAPL 312.5 CALL 2026-08-28 | 2026-08-24T11:30:00-04:00 | +$3.55 | 2026-08-24T12:11:00-04:00 | +$2.83 | loss | -20.28169014084507715929379091% | -$72.00 | stop_loss_20 |
-| A2C-20260824-TSLA-1025 | open | TSLA 355.0 CALL 2026-08-28 | 2026-08-24T10:30:00-04:00 | +$6.75 | — | — | open | — | — | — |
+| A2C-20260824-TSLA-1025 | closed | TSLA 355.0 CALL 2026-08-28 | 2026-08-24T10:30:00-04:00 | +$6.75 | 2026-08-24T14:47:00-04:00 | +$5.35 | loss | -20.74074074074073333333333333% | -$140.00 | stop_loss_20 |
 | A2C-20260824-QQQ-1025 | closed | QQQ 704.0 CALL 2026-08-25 | 2026-08-24T10:30:00-04:00 | +$3.09 | 2026-08-24T10:42:00-04:00 | +$4.40 | win | 42.39482200647249190938511330% | +$131.00 | profit_target_40 |
 | A2C-20260824-NVDA-1025 | open | NVDA 210.0 CALL 2026-08-28 | 2026-08-24T10:30:00-04:00 | +$6.00 | — | — | open | — | — | — |
 | A2C-20260814-TSLA-1325 | closed | TSLA 340.0 CALL 2026-08-17 | 2026-08-14T13:30:00-04:00 | +$3.20 | 2026-08-14T14:19:00-04:00 | +$4.60 | win | 43.75000000000001562500% | +$140.00 | profit_target_40 |
