@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 51,
       "max_realized_drawdown": "1879.99999999999982",
-      "open": 0,
+      "open": 1,
       "profit_factor": "0.6403705783267827826138152392",
       "realized_pnl": "-1280.99999999999966",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 76,
+      "trades": 77,
       "win_rate_percent": "31.57894736842105263157894737",
       "wins": 24
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "NVDA260828C00210000",
+      "details": {
+        "cash_after_entry": "98049.0000000000003400",
+        "decision_time": "2026-08-25T11:25:00-04:00",
+        "entry_delta": "0.5474",
+        "entry_spread_percent": "0.7490636704119850187265917603",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-0.0854660272541664688286406200",
+        "option_vwap_deviation_pct": "-13.15920294958366129499979286",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "0.061772616424053171547201600",
+        "underlying_return_15m_pct": "0.033247838890472119312244700"
+      },
+      "dte": 3,
+      "entry": {
+        "ask": "6.7",
+        "bid": "6.65",
+        "quote_time": "2026-08-25T11:30:00-04:00",
+        "time": "2026-08-25T11:30:00-04:00",
+        "underlying_price": "210.61"
+      },
+      "exit": null,
+      "expiration": "2026-08-28",
+      "opened_at": "2026-08-25T11:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "5.36",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "210.0",
+      "symbol": "NVDA",
+      "target_bid": "9.38",
+      "trade_id": "A2C-20260825-NVDA-1125",
+      "updated_at": "2026-08-25T15:32:26.996729+00:00"
+    },
     {
       "closed_at": "2026-08-25T11:01:00-04:00",
       "contract_id": "AAPL260828C00310000",
@@ -4082,5 +4123,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-25T15:01:34.392610+00:00"
+  "updated_at": "2026-08-25T15:32:26.996729+00:00"
 }
