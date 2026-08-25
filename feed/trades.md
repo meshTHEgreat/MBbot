@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-25T19:20:10.122667+00:00`
+- Updated: `2026-08-25T19:55:10.355760+00:00`
 - Records: 84
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 3 | 0 | 3 | 1 | 2 | 0 | 33.33333333333333333333333333% | -$0.90 | -$0.30 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 81 | 4 | 77 | 24 | 52 | 1 | 31.16883116883116883116883117% | -$1,406.00 | -$18.26 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 81 | 2 | 79 | 26 | 52 | 1 | 32.91139240506329113924050633% | -$1,276.00 | -$16.15 |
 
 ## Workflow #125 trades
 
@@ -53,8 +53,8 @@ OR
 | A2C-20260825-QQQ-1325 | open | QQQ 710.0 CALL 2026-08-27 | 2026-08-25T13:30:00-04:00 | +$4.09 | — | — | open | — | — | — |
 | A2C-20260825-TSLA-1225 | closed | TSLA 355.0 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$5.90 | 2026-08-25T14:25:00-04:00 | +$4.65 | loss | -21.18644067796610169491525424% | -$125.00 | stop_loss_20 |
 | A2C-20260825-SPY-1225 | open | SPY 766.0 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$3.85 | — | — | open | — | — | — |
-| A2C-20260825-NVDA-1225 | open | NVDA 212.5 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$6.10 | — | — | open | — | — | — |
-| A2C-20260825-NVDA-1125 | open | NVDA 210.0 CALL 2026-08-28 | 2026-08-25T11:30:00-04:00 | +$6.70 | — | — | open | — | — | — |
+| A2C-20260825-NVDA-1225 | closed | NVDA 212.5 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$6.10 | 2026-08-25T15:55:00-04:00 | +$6.40 | win | 4.918032786885237301800591200% | +$30.00 | end_of_session_1555 |
+| A2C-20260825-NVDA-1125 | closed | NVDA 210.0 CALL 2026-08-28 | 2026-08-25T11:30:00-04:00 | +$6.70 | 2026-08-25T15:55:00-04:00 | +$7.70 | win | 14.92537313432835820895522390% | +$100.00 | end_of_session_1555 |
 | A2C-20260825-AAPL-1025 | closed | AAPL 310.0 CALL 2026-08-28 | 2026-08-25T10:30:00-04:00 | +$3.25 | 2026-08-25T11:01:00-04:00 | +$2.55 | loss | -21.53846153846152923076923077% | -$70.00 | stop_loss_20 |
 | A2C-20260824-QQQ-1325 | closed | QQQ 708.0 PUT 2026-08-28 | 2026-08-24T13:30:00-04:00 | +$6.24 | 2026-08-24T15:55:00-04:00 | +$6.38 | win | 2.243589743589743589743589700% | +$14.00 | end_of_session_1555 |
 | A2C-20260824-NVDA-1225 | closed | NVDA 212.5 CALL 2026-08-28 | 2026-08-24T12:30:00-04:00 | +$5.55 | 2026-08-24T15:53:00-04:00 | +$4.35 | loss | -21.62162162162161261261261261% | -$120.00 | stop_loss_20 |
