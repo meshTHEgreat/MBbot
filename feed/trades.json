@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 51,
       "max_realized_drawdown": "1879.99999999999982",
-      "open": 4,
+      "open": 5,
       "profit_factor": "0.6403705783267827826138152392",
       "realized_pnl": "-1280.99999999999966",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 80,
+      "trades": 81,
       "win_rate_percent": "31.57894736842105263157894737",
       "wins": 24
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "QQQ260827C00710000",
+      "details": {
+        "cash_after_entry": "96055.0000000000002900",
+        "decision_time": "2026-08-25T13:25:00-04:00",
+        "entry_delta": "0.48910000000000003",
+        "entry_spread_percent": "0.7361963190183925928713914713",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "0.198653103778635633576601200",
+        "option_vwap_deviation_pct": "-11.18012422360248447204968944",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.1140643419881565482336014700",
+        "underlying_return_15m_pct": "0.007044932579995209445845600"
+      },
+      "dte": 2,
+      "entry": {
+        "ask": "4.09",
+        "bid": "4.0600000000000005",
+        "quote_time": "2026-08-25T13:30:00-04:00",
+        "time": "2026-08-25T13:30:00-04:00",
+        "underlying_price": "709.78"
+      },
+      "exit": null,
+      "expiration": "2026-08-27",
+      "opened_at": "2026-08-25T13:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "3.272",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "710.0",
+      "symbol": "QQQ",
+      "target_bid": "5.726",
+      "trade_id": "A2C-20260825-QQQ-1325",
+      "updated_at": "2026-08-25T17:32:26.035062+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "TSLA260828C00355000",
@@ -4246,5 +4287,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-25T16:32:23.582633+00:00"
+  "updated_at": "2026-08-25T17:32:26.035062+00:00"
 }
