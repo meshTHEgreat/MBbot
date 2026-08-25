@@ -21,26 +21,26 @@
       "wins": 24
     },
     "workflow_125": {
-      "closed": 2,
-      "expectancy": "20.20000000000001",
+      "closed": 3,
+      "expectancy": "-0.2999999999999933333333333333",
       "flats": 0,
       "id": "workflow_125",
-      "losses": 1,
-      "max_realized_drawdown": "6.29999999999997",
-      "open": 1,
-      "profit_factor": "7.412698412698446409674981104",
-      "realized_pnl": "40.40000000000002",
+      "losses": 2,
+      "max_realized_drawdown": "47.59999999999997",
+      "open": 0,
+      "profit_factor": "0.9810924369747903242179224631",
+      "realized_pnl": "-0.89999999999998",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
       "trades": 3,
-      "win_rate_percent": "50",
+      "win_rate_percent": "33.33333333333333333333333333",
       "wins": 1
     }
   },
   "trades": [
     {
-      "closed_at": null,
+      "closed_at": "2026-08-25T15:20:00-04:00",
       "contract_id": "QQQ260825P00710000",
       "details": {
         "delta": "-0.7138",
@@ -57,15 +57,24 @@
         "time": "2026-08-25T14:03:00-04:00",
         "underlying_price": "709.12"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "time_exit"
+        ],
+        "ask": "0.77",
+        "bid": "0.76",
+        "reason": "time_exit",
+        "time": "2026-08-25T15:20:00-04:00"
+      },
       "expiration": "2026-08-25",
+      "gross_pnl": "-40",
       "opened_at": "2026-08-25T14:03:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-41.3",
+      "result": "loss",
+      "return_percent": "-34.48275862068965517241379310",
       "right": "put",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "0.2900",
       "strategy_id": "workflow_125",
       "strategy_name": "Baseline replay / Workflow #125",
@@ -73,7 +82,7 @@
       "symbol": "QQQ",
       "target_bid": "1.740",
       "trade_id": "W125-20260825-QQQ-1403",
-      "updated_at": "2026-08-25T18:03:36.052106+00:00"
+      "updated_at": "2026-08-25T19:20:10.122667+00:00"
     },
     {
       "closed_at": null,
@@ -4334,5 +4343,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-25T18:25:21.189557+00:00"
+  "updated_at": "2026-08-25T19:20:10.122667+00:00"
 }
