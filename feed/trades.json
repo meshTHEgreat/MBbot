@@ -27,18 +27,54 @@
       "id": "workflow_125",
       "losses": 1,
       "max_realized_drawdown": "6.29999999999997",
-      "open": 0,
+      "open": 1,
       "profit_factor": "7.412698412698446409674981104",
       "realized_pnl": "40.40000000000002",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
-      "trades": 2,
+      "trades": 3,
       "win_rate_percent": "50",
       "wins": 1
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "QQQ260825P00710000",
+      "details": {
+        "delta": "-0.7138",
+        "momentum_percent": "29.77528089887641011235955060",
+        "rsi": "61.58103744636303222557326424",
+        "signal_bar_time": "2026-08-25T14:03:00-04:00",
+        "spread_percent": "0.8658008658008571053765858961"
+      },
+      "dte": 0,
+      "entry": {
+        "ask": "1.16",
+        "bid": "1.1500000000000001",
+        "quote_time": "2026-08-25T14:03:00-04:00",
+        "time": "2026-08-25T14:03:00-04:00",
+        "underlying_price": "709.12"
+      },
+      "exit": null,
+      "expiration": "2026-08-25",
+      "opened_at": "2026-08-25T14:03:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "0.2900",
+      "strategy_id": "workflow_125",
+      "strategy_name": "Baseline replay / Workflow #125",
+      "strike": "710.0",
+      "symbol": "QQQ",
+      "target_bid": "1.740",
+      "trade_id": "W125-20260825-QQQ-1403",
+      "updated_at": "2026-08-25T18:03:36.052106+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "QQQ260827C00710000",
@@ -4287,5 +4323,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-25T17:32:26.035062+00:00"
+  "updated_at": "2026-08-25T18:03:36.052106+00:00"
 }
