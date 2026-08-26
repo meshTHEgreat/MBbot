@@ -27,18 +27,54 @@
       "id": "workflow_125",
       "losses": 2,
       "max_realized_drawdown": "47.59999999999997",
-      "open": 0,
+      "open": 1,
       "profit_factor": "0.9810924369747903242179224631",
       "realized_pnl": "-0.89999999999998",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
-      "trades": 3,
+      "trades": 4,
       "win_rate_percent": "33.33333333333333333333333333",
       "wins": 1
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "AAPL260826C00312500",
+      "details": {
+        "delta": "0.7149",
+        "momentum_percent": "57.57575757575757575757575760",
+        "rsi": "60.21389113128515569131457556",
+        "signal_bar_time": "2026-08-26T12:09:00-04:00",
+        "spread_percent": "1.282051282051282051282051282"
+      },
+      "dte": 0,
+      "entry": {
+        "ask": "1.57",
+        "bid": "1.55",
+        "quote_time": "2026-08-26T12:09:00-04:00",
+        "time": "2026-08-26T12:09:00-04:00",
+        "underlying_price": "313.68"
+      },
+      "exit": null,
+      "expiration": "2026-08-26",
+      "opened_at": "2026-08-26T12:09:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "0.3925",
+      "strategy_id": "workflow_125",
+      "strategy_name": "Baseline replay / Workflow #125",
+      "strike": "312.5",
+      "symbol": "AAPL",
+      "target_bid": "2.355",
+      "trade_id": "W125-20260826-AAPL-1209",
+      "updated_at": "2026-08-26T16:10:14.946936+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "NVDA260828P00210000",
@@ -4428,5 +4464,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-26T14:32:21.258556+00:00"
+  "updated_at": "2026-08-26T16:10:14.946936+00:00"
 }

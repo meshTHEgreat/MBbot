@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-26T14:32:21.258556+00:00`
-- Records: 85
+- Updated: `2026-08-26T16:10:14.946936+00:00`
+- Records: 86
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -35,13 +35,14 @@ OR
 
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Baseline replay / Workflow #125 | baseline_replay | 3 | 0 | 3 | 1 | 2 | 0 | 33.33333333333333333333333333% | -$0.90 | -$0.30 |
+| Baseline replay / Workflow #125 | baseline_replay | 4 | 1 | 3 | 1 | 2 | 0 | 33.33333333333333333333333333% | -$0.90 | -$0.30 |
 | A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 82 | 1 | 81 | 28 | 52 | 1 | 34.56790123456790123456790123% | -$1,202.00 | -$14.84 |
 
 ## Workflow #125 trades
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| W125-20260826-AAPL-1209 | open | AAPL 312.5 CALL 2026-08-26 | 2026-08-26T12:09:00-04:00 | +$1.57 | — | — | open | — | — | — |
 | W125-20260825-QQQ-1403 | closed | QQQ 710.0 PUT 2026-08-25 | 2026-08-25T14:03:00-04:00 | +$1.16 | 2026-08-25T15:20:00-04:00 | +$0.76 | loss | -34.48275862068965517241379310% | -$41.30 | time_exit |
 | W125-20260811-NVDA-1251 | closed | NVDA 220.0 PUT 2026-08-12 | 2026-08-11T12:51:00-04:00 | +$3.10 | 2026-08-11T15:20:00-04:00 | +$3.05 | loss | -1.612903225806441935483870970% | -$6.30 | time_exit |
 | W125-20260811-SPY-1227 | closed | SPY 772.0 PUT 2026-08-11 | 2026-08-11T12:27:00-04:00 | +$0.94 | 2026-08-11T13:05:00-04:00 | +$1.42 | win | 51.06382978723402648257129920% | +$46.70 | profit_target |
