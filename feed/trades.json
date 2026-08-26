@@ -21,26 +21,26 @@
       "wins": 28
     },
     "workflow_125": {
-      "closed": 3,
-      "expectancy": "-0.2999999999999933333333333333",
+      "closed": 4,
+      "expectancy": "-21.549999999999995",
       "flats": 0,
       "id": "workflow_125",
-      "losses": 2,
-      "max_realized_drawdown": "47.59999999999997",
-      "open": 1,
-      "profit_factor": "0.9810924369747903242179224631",
-      "realized_pnl": "-0.89999999999998",
+      "losses": 3,
+      "max_realized_drawdown": "132.89999999999997",
+      "open": 0,
+      "profit_factor": "0.3513920240782543306377781967",
+      "realized_pnl": "-86.19999999999998",
       "short_name": "Workflow #125",
       "status": "baseline_replay",
       "title": "Baseline replay / Workflow #125",
       "trades": 4,
-      "win_rate_percent": "33.33333333333333333333333333",
+      "win_rate_percent": "25",
       "wins": 1
     }
   },
   "trades": [
     {
-      "closed_at": null,
+      "closed_at": "2026-08-26T13:45:00-04:00",
       "contract_id": "AAPL260826C00312500",
       "details": {
         "delta": "0.7149",
@@ -57,15 +57,24 @@
         "time": "2026-08-26T12:09:00-04:00",
         "underlying_price": "313.68"
       },
-      "exit": null,
+      "exit": {
+        "all_reasons": [
+          "opposite_macd"
+        ],
+        "ask": "0.77",
+        "bid": "0.73",
+        "reason": "opposite_macd",
+        "time": "2026-08-26T13:45:00-04:00"
+      },
       "expiration": "2026-08-26",
+      "gross_pnl": "-84",
       "opened_at": "2026-08-26T12:09:00-04:00",
       "paper_only": true,
-      "pnl": null,
-      "result": "open",
-      "return_percent": null,
+      "pnl": "-85.3",
+      "result": "loss",
+      "return_percent": "-53.50318471337579617834394904",
       "right": "call",
-      "status": "open",
+      "status": "closed",
       "stop_bid": "0.3925",
       "strategy_id": "workflow_125",
       "strategy_name": "Baseline replay / Workflow #125",
@@ -73,7 +82,7 @@
       "symbol": "AAPL",
       "target_bid": "2.355",
       "trade_id": "W125-20260826-AAPL-1209",
-      "updated_at": "2026-08-26T16:10:14.946936+00:00"
+      "updated_at": "2026-08-26T17:45:08.513275+00:00"
     },
     {
       "closed_at": null,
@@ -4464,5 +4473,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-26T16:10:14.946936+00:00"
+  "updated_at": "2026-08-26T17:45:08.513275+00:00"
 }
