@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-26T18:32:19.558254+00:00`
+- Updated: `2026-08-26T18:49:45.328834+00:00`
 - Records: 89
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 4 | 0 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 85 | 4 | 81 | 28 | 52 | 1 | 34.56790123456790123456790123% | -$1,202.00 | -$14.84 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 85 | 3 | 82 | 28 | 53 | 1 | 34.14634146341463414634146341% | -$1,255.00 | -$15.30 |
 
 ## Workflow #125 trades
 
@@ -53,7 +53,7 @@ OR
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260826-TSLA-1425 | open | TSLA 345.0 PUT 2026-08-28 | 2026-08-26T14:30:00-04:00 | +$4.95 | — | — | open | — | — | — |
 | A2C-20260826-SPY-1425 | open | SPY 766.0 PUT 2026-08-28 | 2026-08-26T14:30:00-04:00 | +$3.51 | — | — | open | — | — | — |
-| A2C-20260826-AAPL-1425 | open | AAPL 312.5 PUT 2026-08-28 | 2026-08-26T14:30:00-04:00 | +$2.23 | — | — | open | — | — | — |
+| A2C-20260826-AAPL-1425 | closed | AAPL 312.5 PUT 2026-08-28 | 2026-08-26T14:30:00-04:00 | +$2.23 | 2026-08-26T14:48:00-04:00 | +$1.70 | loss | -23.76681614349775784753363229% | -$53.00 | stop_loss_20 |
 | A2C-20260826-NVDA-1025 | open | NVDA 210.0 PUT 2026-08-28 | 2026-08-26T10:30:00-04:00 | +$5.80 | — | — | open | — | — | — |
 | A2C-20260825-QQQ-1325 | closed | QQQ 710.0 CALL 2026-08-27 | 2026-08-25T13:30:00-04:00 | +$4.09 | 2026-08-25T15:55:00-04:00 | +$4.74 | win | 15.89242053789731051344743280% | +$65.00 | end_of_session_1555 |
 | A2C-20260825-TSLA-1225 | closed | TSLA 355.0 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$5.90 | 2026-08-25T14:25:00-04:00 | +$4.65 | loss | -21.18644067796610169491525424% | -$125.00 | stop_loss_20 |
