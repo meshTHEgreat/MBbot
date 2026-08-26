@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-25T19:55:10.708076+00:00`
-- Records: 84
+- Updated: `2026-08-26T14:32:21.258556+00:00`
+- Records: 85
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 3 | 0 | 3 | 1 | 2 | 0 | 33.33333333333333333333333333% | -$0.90 | -$0.30 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 81 | 0 | 81 | 28 | 52 | 1 | 34.56790123456790123456790123% | -$1,202.00 | -$14.84 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 82 | 1 | 81 | 28 | 52 | 1 | 34.56790123456790123456790123% | -$1,202.00 | -$14.84 |
 
 ## Workflow #125 trades
 
@@ -50,6 +50,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260826-NVDA-1025 | open | NVDA 210.0 PUT 2026-08-28 | 2026-08-26T10:30:00-04:00 | +$5.80 | — | — | open | — | — | — |
 | A2C-20260825-QQQ-1325 | closed | QQQ 710.0 CALL 2026-08-27 | 2026-08-25T13:30:00-04:00 | +$4.09 | 2026-08-25T15:55:00-04:00 | +$4.74 | win | 15.89242053789731051344743280% | +$65.00 | end_of_session_1555 |
 | A2C-20260825-TSLA-1225 | closed | TSLA 355.0 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$5.90 | 2026-08-25T14:25:00-04:00 | +$4.65 | loss | -21.18644067796610169491525424% | -$125.00 | stop_loss_20 |
 | A2C-20260825-SPY-1225 | closed | SPY 766.0 CALL 2026-08-28 | 2026-08-25T12:30:00-04:00 | +$3.85 | 2026-08-25T15:55:00-04:00 | +$3.94 | win | 2.337662337662337662337662300% | +$9.00 | end_of_session_1555 |
