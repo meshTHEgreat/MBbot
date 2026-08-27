@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-27T18:32:40.985479+00:00`
+- Updated: `2026-08-27T18:55:56.661760+00:00`
 - Records: 97
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 4 | 0 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 93 | 4 | 89 | 30 | 58 | 1 | 33.70786516853932584269662921% | -$1,532.00 | -$17.21 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 93 | 3 | 90 | 31 | 58 | 1 | 34.44444444444444444444444444% | -$1,459.00 | -$16.21 |
 
 ## Workflow #125 trades
 
@@ -54,7 +54,7 @@ OR
 | A2C-20260827-AAPL-1425 | open | AAPL 315.0 PUT 2026-08-31 | 2026-08-27T14:30:00-04:00 | +$3.10 | — | — | open | — | — | — |
 | A2C-20260827-TSLA-1325 | open | TSLA 355.0 PUT 2026-08-31 | 2026-08-27T13:30:00-04:00 | +$5.50 | — | — | open | — | — | — |
 | A2C-20260827-SPY-1325 | closed | SPY 772.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$2.30 | 2026-08-27T14:26:00-04:00 | +$3.23 | win | 40.43478260869563385633270320% | +$93.00 | profit_target_40 |
-| A2C-20260827-AAPL-1325 | open | AAPL 315.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$1.66 | — | — | open | — | — | — |
+| A2C-20260827-AAPL-1325 | closed | AAPL 315.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$1.66 | 2026-08-27T14:55:00-04:00 | +$2.39 | win | 43.97590361445782265205399910% | +$73.00 | profit_target_40 |
 | A2C-20260827-AAPL-1225 | open | AAPL 315.0 PUT 2026-08-31 | 2026-08-27T12:30:00-04:00 | +$2.88 | — | — | open | — | — | — |
 | A2C-20260827-TSLA-1125 | closed | TSLA 352.5 PUT 2026-08-28 | 2026-08-27T11:30:00-04:00 | +$3.90 | 2026-08-27T12:45:00-04:00 | +$3.10 | loss | -20.51282051282051282051282051% | -$80.00 | stop_loss_20 |
 | A2C-20260827-QQQ-1125 | closed | QQQ 719.0 PUT 2026-08-31 | 2026-08-27T11:30:00-04:00 | +$4.53 | 2026-08-27T13:02:00-04:00 | +$3.52 | loss | -22.29580573951434878587196468% | -$101.00 | stop_loss_20 |
