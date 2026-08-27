@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-27T17:32:20.136743+00:00`
+- Updated: `2026-08-27T18:26:09.097770+00:00`
 - Records: 96
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 4 | 0 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 92 | 4 | 88 | 29 | 58 | 1 | 32.95454545454545454545454545% | -$1,625.00 | -$18.47 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 92 | 3 | 89 | 30 | 58 | 1 | 33.70786516853932584269662921% | -$1,532.00 | -$17.21 |
 
 ## Workflow #125 trades
 
@@ -52,7 +52,7 @@ OR
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260827-TSLA-1325 | open | TSLA 355.0 PUT 2026-08-31 | 2026-08-27T13:30:00-04:00 | +$5.50 | — | — | open | — | — | — |
-| A2C-20260827-SPY-1325 | open | SPY 772.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$2.30 | — | — | open | — | — | — |
+| A2C-20260827-SPY-1325 | closed | SPY 772.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$2.30 | 2026-08-27T14:26:00-04:00 | +$3.23 | win | 40.43478260869563385633270320% | +$93.00 | profit_target_40 |
 | A2C-20260827-AAPL-1325 | open | AAPL 315.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$1.66 | — | — | open | — | — | — |
 | A2C-20260827-AAPL-1225 | open | AAPL 315.0 PUT 2026-08-31 | 2026-08-27T12:30:00-04:00 | +$2.88 | — | — | open | — | — | — |
 | A2C-20260827-TSLA-1125 | closed | TSLA 352.5 PUT 2026-08-28 | 2026-08-27T11:30:00-04:00 | +$3.90 | 2026-08-27T12:45:00-04:00 | +$3.10 | loss | -20.51282051282051282051282051% | -$80.00 | stop_loss_20 |
