@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 58,
       "max_realized_drawdown": "2040.9999999999997",
-      "open": 3,
+      "open": 4,
       "profit_factor": "0.6317307692307692779678254438",
       "realized_pnl": "-1531.99999999999973",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 92,
+      "trades": 93,
       "win_rate_percent": "33.70786516853932584269662921",
       "wins": 30
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "AAPL260831P00315000",
+      "details": {
+        "cash_after_entry": "97154.0000000000002600",
+        "decision_time": "2026-08-27T14:25:00-04:00",
+        "entry_delta": "0.5371",
+        "entry_spread_percent": "5.298013245033112582781456954",
+        "keep_branch": "high_delta_vwap_opening_low (leaf 10)",
+        "opening_low_distance_pct": "-1.359007001909611712285168680",
+        "option_vwap_deviation_pct": "-2.605863192182419940795127800",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.0381776533469076100789004800",
+        "underlying_return_15m_pct": "-0.0508970606947448784832675900"
+      },
+      "dte": 4,
+      "entry": {
+        "ask": "3.1",
+        "bid": "2.94",
+        "quote_time": "2026-08-27T14:30:00-04:00",
+        "time": "2026-08-27T14:30:00-04:00",
+        "underlying_price": "314.2"
+      },
+      "exit": null,
+      "expiration": "2026-08-31",
+      "opened_at": "2026-08-27T14:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "put",
+      "status": "open",
+      "stop_bid": "2.48",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "315.0",
+      "symbol": "AAPL",
+      "target_bid": "4.34",
+      "trade_id": "A2C-20260827-AAPL-1425",
+      "updated_at": "2026-08-27T18:32:40.985479+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "TSLA260831P00355000",
@@ -4971,5 +5012,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-27T18:26:09.097770+00:00"
+  "updated_at": "2026-08-27T18:32:40.985479+00:00"
 }
