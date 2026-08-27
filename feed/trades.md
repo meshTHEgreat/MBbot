@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-27T16:32:22.466727+00:00`
+- Updated: `2026-08-27T16:46:43.192444+00:00`
 - Records: 93
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 4 | 0 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 89 | 3 | 86 | 29 | 56 | 1 | 33.72093023255813953488372093% | -$1,444.00 | -$16.79 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 89 | 2 | 87 | 29 | 57 | 1 | 33.33333333333333333333333333% | -$1,524.00 | -$17.52 |
 
 ## Workflow #125 trades
 
@@ -52,7 +52,7 @@ OR
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
 | A2C-20260827-AAPL-1225 | open | AAPL 315.0 PUT 2026-08-31 | 2026-08-27T12:30:00-04:00 | +$2.88 | — | — | open | — | — | — |
-| A2C-20260827-TSLA-1125 | open | TSLA 352.5 PUT 2026-08-28 | 2026-08-27T11:30:00-04:00 | +$3.90 | — | — | open | — | — | — |
+| A2C-20260827-TSLA-1125 | closed | TSLA 352.5 PUT 2026-08-28 | 2026-08-27T11:30:00-04:00 | +$3.90 | 2026-08-27T12:45:00-04:00 | +$3.10 | loss | -20.51282051282051282051282051% | -$80.00 | stop_loss_20 |
 | A2C-20260827-QQQ-1125 | open | QQQ 719.0 PUT 2026-08-31 | 2026-08-27T11:30:00-04:00 | +$4.53 | — | — | open | — | — | — |
 | A2C-20260827-NVDA-1025 | closed | NVDA 225.0 PUT 2026-08-31 | 2026-08-27T10:30:00-04:00 | +$2.90 | 2026-08-27T11:00:00-04:00 | +$2.32 | loss | -20.0% | -$58.00 | stop_loss_20 |
 | A2C-20260826-TSLA-1425 | closed | TSLA 345.0 PUT 2026-08-28 | 2026-08-26T14:30:00-04:00 | +$4.95 | 2026-08-26T15:01:00-04:00 | +$3.85 | loss | -22.22222222222222222222222222% | -$110.00 | stop_loss_20 |
