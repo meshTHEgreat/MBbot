@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-28T18:32:08.206632+00:00`
+- Updated: `2026-08-28T18:37:30.413796+00:00`
 - Records: 103
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -35,14 +35,14 @@ OR
 
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Baseline replay / Workflow #125 | baseline_replay | 5 | 1 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
+| Baseline replay / Workflow #125 | baseline_replay | 5 | 0 | 5 | 1 | 4 | 0 | 20% | -$147.50 | -$29.50 |
 | A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 98 | 2 | 96 | 32 | 63 | 1 | 33.33333333333333333333333333% | -$1,695.00 | -$17.66 |
 
 ## Workflow #125 trades
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| W125-20260828-SPY-1303 | open | SPY 770.0 PUT 2026-08-28 | 2026-08-28T13:03:00-04:00 | +$1.65 | — | — | open | — | — | — |
+| W125-20260828-SPY-1303 | closed | SPY 770.0 PUT 2026-08-28 | 2026-08-28T13:03:00-04:00 | +$1.65 | 2026-08-28T14:37:00-04:00 | +$1.05 | loss | -36.36363636363636749311294766% | -$61.30 | opposite_macd |
 | W125-20260826-AAPL-1209 | closed | AAPL 312.5 CALL 2026-08-26 | 2026-08-26T12:09:00-04:00 | +$1.57 | 2026-08-26T13:45:00-04:00 | +$0.73 | loss | -53.50318471337579617834394904% | -$85.30 | opposite_macd |
 | W125-20260825-QQQ-1403 | closed | QQQ 710.0 PUT 2026-08-25 | 2026-08-25T14:03:00-04:00 | +$1.16 | 2026-08-25T15:20:00-04:00 | +$0.76 | loss | -34.48275862068965517241379310% | -$41.30 | time_exit |
 | W125-20260811-NVDA-1251 | closed | NVDA 220.0 PUT 2026-08-12 | 2026-08-11T12:51:00-04:00 | +$3.10 | 2026-08-11T15:20:00-04:00 | +$3.05 | loss | -1.612903225806441935483870970% | -$6.30 | time_exit |
