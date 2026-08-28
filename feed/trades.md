@@ -3,7 +3,7 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-28T18:43:55.423212+00:00`
+- Updated: `2026-08-28T19:55:11.969336+00:00`
 - Records: 103
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 5 | 0 | 5 | 1 | 4 | 0 | 20% | -$147.50 | -$29.50 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 98 | 1 | 97 | 32 | 64 | 1 | 32.98969072164948453608247423% | -$1,731.00 | -$17.85 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 98 | 0 | 98 | 33 | 64 | 1 | 33.67346938775510204081632653% | -$1,710.00 | -$17.45 |
 
 ## Workflow #125 trades
 
@@ -52,7 +52,7 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
-| A2C-20260828-NVDA-1425 | open | NVDA 217.5 PUT 2026-08-31 | 2026-08-28T14:30:00-04:00 | +$1.85 | — | — | open | — | — | — |
+| A2C-20260828-NVDA-1425 | closed | NVDA 217.5 PUT 2026-08-31 | 2026-08-28T14:30:00-04:00 | +$1.85 | 2026-08-28T15:55:00-04:00 | +$2.06 | win | 11.35135135135135135135135140% | +$21.00 | end_of_session_1555 |
 | A2C-20260828-NVDA-1325 | closed | NVDA 220.0 CALL 2026-08-31 | 2026-08-28T13:30:00-04:00 | +$1.73 | 2026-08-28T14:43:00-04:00 | +$1.37 | loss | -20.80924855491329479768786127% | -$36.00 | stop_loss_20 |
 | A2C-20260828-TSLA-1025 | closed | TSLA 352.5 PUT 2026-08-31 | 2026-08-28T10:30:00-04:00 | +$3.80 | 2026-08-28T10:52:00-04:00 | +$3.00 | loss | -21.05263157894737465373961219% | -$80.00 | stop_loss_20 |
 | A2C-20260828-SPY-1025 | closed | SPY 772.0 CALL 2026-09-01 | 2026-08-28T10:30:00-04:00 | +$2.49 | 2026-08-28T10:45:00-04:00 | +$3.52 | win | 41.36546184738955823293172690% | +$103.00 | profit_target_40 |
