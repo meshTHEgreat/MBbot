@@ -3,8 +3,8 @@
 > Machine-generated, paper-only observations. No broker orders were placed.
 
 - Feed schema: `mbbot.live-trades.feed.v1`
-- Updated: `2026-08-27T19:55:10.301497+00:00`
-- Records: 97
+- Updated: `2026-08-28T14:32:28.261962+00:00`
+- Records: 100
 - Companion files: `trades.csv` for flat analysis and `trades.json` for the full nested record.
 
 This public projection intentionally excludes API keys, Telegram credentials, Telegram message text, and private provider receipts. Entry and exit records map through the same permanent Trade ID. All timestamps use ISO 8601 offsets; empty values mean unavailable or not applicable.
@@ -36,7 +36,7 @@ OR
 | Strategy | Research status | Trades | Open | Closed | Wins | Losses | Flats | Win rate | Realized P&L | Expectancy |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | Baseline replay / Workflow #125 | baseline_replay | 4 | 0 | 4 | 1 | 3 | 0 | 25% | -$86.20 | -$21.55 |
-| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 93 | 0 | 93 | 31 | 61 | 1 | 33.33333333333333333333333333% | -$1,663.00 | -$17.88 |
+| A2 exact PT40/SL20 + combined keep filter | exploratory_post_hoc_paper | 96 | 3 | 93 | 31 | 61 | 1 | 33.33333333333333333333333333% | -$1,663.00 | -$17.88 |
 
 ## Workflow #125 trades
 
@@ -51,6 +51,9 @@ OR
 
 | Trade ID | Status | Contract | Entry time | Entry ask | Exit time | Exit bid | Result | Return | Net P&L | Exit reason |
 |---|---|---|---|---:|---|---:|---|---:|---:|---|
+| A2C-20260828-TSLA-1025 | open | TSLA 352.5 PUT 2026-08-31 | 2026-08-28T10:30:00-04:00 | +$3.80 | — | — | open | — | — | — |
+| A2C-20260828-SPY-1025 | open | SPY 772.0 CALL 2026-09-01 | 2026-08-28T10:30:00-04:00 | +$2.49 | — | — | open | — | — | — |
+| A2C-20260828-NVDA-1025 | open | NVDA 225.0 CALL 2026-08-31 | 2026-08-28T10:30:00-04:00 | +$2.38 | — | — | open | — | — | — |
 | A2C-20260827-AAPL-1425 | closed | AAPL 315.0 PUT 2026-08-31 | 2026-08-27T14:30:00-04:00 | +$3.10 | 2026-08-27T15:55:00-04:00 | +$2.47 | loss | -20.32258064516129032258064516% | -$63.00 | stop_loss_20 |
 | A2C-20260827-TSLA-1325 | closed | TSLA 355.0 PUT 2026-08-31 | 2026-08-27T13:30:00-04:00 | +$5.50 | 2026-08-27T15:55:00-04:00 | +$4.50 | loss | -18.18181818181818181818181818% | -$100.00 | end_of_session_1555 |
 | A2C-20260827-SPY-1325 | closed | SPY 772.0 PUT 2026-08-28 | 2026-08-27T13:30:00-04:00 | +$2.30 | 2026-08-27T14:26:00-04:00 | +$3.23 | win | 40.43478260869563385633270320% | +$93.00 | profit_target_40 |
