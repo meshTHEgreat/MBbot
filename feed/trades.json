@@ -10,13 +10,13 @@
       "id": "a2_pt40_sl20_combined_v1",
       "losses": 63,
       "max_realized_drawdown": "2110.99999999999977",
-      "open": 0,
+      "open": 1,
       "profit_factor": "0.6232496110246721862530415368",
       "realized_pnl": "-1694.99999999999977",
       "short_name": "A2 PT40/SL20",
       "status": "exploratory_post_hoc_paper",
       "title": "A2 exact PT40/SL20 + combined keep filter",
-      "trades": 96,
+      "trades": 97,
       "win_rate_percent": "33.33333333333333333333333333",
       "wins": 32
     },
@@ -39,6 +39,47 @@
     }
   },
   "trades": [
+    {
+      "closed_at": null,
+      "contract_id": "NVDA260831C00220000",
+      "details": {
+        "cash_after_entry": "98132.0000000000002300",
+        "decision_time": "2026-08-28T13:25:00-04:00",
+        "entry_delta": "0.4184",
+        "entry_spread_percent": "1.749271137026239067055393586",
+        "keep_branch": "low_delta_acceleration (leaves 3/4)",
+        "opening_low_distance_pct": "2.820958302852967264081931200",
+        "option_vwap_deviation_pct": "-37.41618238712561715132831335",
+        "option_vwap_was_imputed": false,
+        "underlying_acceleration_5m_pct": "-0.3518206765936683228452706900",
+        "underlying_return_15m_pct": "0.270480905881813597396048200"
+      },
+      "dte": 3,
+      "entry": {
+        "ask": "1.73",
+        "bid": "1.7",
+        "quote_time": "2026-08-28T13:30:00-04:00",
+        "time": "2026-08-28T13:30:00-04:00",
+        "underlying_price": "218.72"
+      },
+      "exit": null,
+      "expiration": "2026-08-31",
+      "opened_at": "2026-08-28T13:30:00-04:00",
+      "paper_only": true,
+      "pnl": null,
+      "result": "open",
+      "return_percent": null,
+      "right": "call",
+      "status": "open",
+      "stop_bid": "1.384",
+      "strategy_id": "a2_pt40_sl20_combined_v1",
+      "strategy_name": "A2 exact PT40/SL20 + combined keep filter",
+      "strike": "220.0",
+      "symbol": "NVDA",
+      "target_bid": "2.422",
+      "trade_id": "A2C-20260828-NVDA-1325",
+      "updated_at": "2026-08-28T17:31:54.195222+00:00"
+    },
     {
       "closed_at": null,
       "contract_id": "SPY260828P00770000",
@@ -5248,5 +5289,5 @@
       "updated_at": "2026-08-03T15:59:01.837487+00:00"
     }
   ],
-  "updated_at": "2026-08-28T17:04:15.601102+00:00"
+  "updated_at": "2026-08-28T17:31:54.195222+00:00"
 }
